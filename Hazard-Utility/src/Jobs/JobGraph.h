@@ -17,13 +17,7 @@ public:
 	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
 	const std::vector<Ref<GraphStage>>& GetStages() const { return m_Stages; }
 	Ref<GraphStage> GetNextStage();
-	Ref<GraphStage> AddStage()
-	{
-		Ref<GraphStage> stage = Ref<GraphStage>::Create(m_Stages.size(), 0.0f);
-		stage->m_JobGraph = this;
-		m_Stages.push_back(stage);
-		return stage;
-	}
+	Ref<GraphStage> AddStage();
 
 	void CombineStages(Ref<JobGraph> graph, uint32_t offset = 0)
 	{
@@ -33,6 +27,7 @@ public:
 			Ref<GraphStage> stage = GetStage(i + offset);
 			if (!stage) 
 				stage = AddStage();
+
 			stage->m_JobGraph = this;
 			stage->QueueJobs(stages[i]->m_Jobs);
 		}
@@ -61,6 +56,7 @@ public:
 
 private:
 	void OnStageFinished();
+
 private:
 	std::string m_Name;
 	std::vector<Ref<GraphStage>> m_Stages;

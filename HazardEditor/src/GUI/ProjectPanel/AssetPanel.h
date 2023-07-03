@@ -4,49 +4,60 @@
 #include "Project/ProjectManager.h"
 #include "AssetPanelItem.h"
 
-namespace UI {
+namespace UI
+{
 
-    enum AssetPanelFlags : uint32_t
-    {
-        AssetPanelFlags_SettingsOpen = BIT(0)
-    };
+	enum AssetPanelFlags : uint32_t
+	{
+		AssetPanelFlags_SettingsOpen = BIT(0)
+	};
 
-	struct FolderStructureData 
+	struct FolderStructureData
 	{
 		std::filesystem::path Path;
 		std::vector<FolderStructureData> SubFolders;
 	};
 
-	class AssetPanel : public Hazard::ImUI::Panel {
+	class AssetPanel : public Hazard::ImUI::Panel
+	{
 	public:
 		AssetPanel();
 
-		void Update() override {};
+		void Update() override
+		{
+		};
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 		bool OnWindowFocus(WindowFocusEvent& e);
 
-		void SetRootFolder(const std::filesystem::path& path) { 
+		void SetRootFolder(const std::filesystem::path& path)
+		{
 			m_RootPath = path;
 			m_CurrentPath = path;
 
 			m_FolderData = GenerateFolderStructure();
 			RefreshFolderItems();
 		};
-        void Refresh()
-        {
-            m_FolderData = GenerateFolderStructure();
-            RefreshFolderItems();
-        }
+		void Refresh()
+		{
+			m_FolderData = GenerateFolderStructure();
+			RefreshFolderItems();
+		}
 		void RefreshFolderItems();
-		std::filesystem::path& GetRootDirectory() { return m_RootPath; }
-		std::filesystem::path& GetOpenDirectory() { return m_CurrentPath; }
+		std::filesystem::path& GetRootDirectory()
+		{
+			return m_RootPath;
+		}
+		std::filesystem::path& GetOpenDirectory()
+		{
+			return m_CurrentPath;
+		}
 
 		void OpenImport();
 
 	private:
 		void DrawToolbar();
-        void DrawSettings();
+		void DrawSettings();
 		void DrawFolderTreeView();
 		void DrawContents();
 		void DrawContextMenu();
@@ -56,24 +67,22 @@ namespace UI {
 
 		std::vector<FolderStructureData> GenerateFolderStructure();
 		std::vector<FolderStructureData> GenerateSubFolderData(const std::filesystem::path& folder);
-		
+
 		void GoToFolderDepth(const std::filesystem::path& path, uint32_t index);
 
 	private:
 		void CreateFolder(const std::filesystem::path& path);
-		void CreateWorld(const std::filesystem::path& path);
-		void CreateMaterial(const std::filesystem::path& path);
 
 	private:
 		std::filesystem::path m_RootPath;
 		std::filesystem::path m_CurrentPath;
 		std::vector<FolderStructureData> m_FolderData;
 		std::vector<AssetPanelItem> m_CurrentItems;
-        std::vector<std::filesystem::path> m_Paths;
-        
+		std::vector<std::filesystem::path> m_Paths;
+
 		std::vector<Ref<Hazard::Texture2DAsset>> m_Textures;
-        
-        float m_Scale = 100.0f;
-        uint32_t m_Flags = 0;
+
+		float m_Scale = 100.0f;
+		uint32_t m_Flags = 0;
 	};
 }

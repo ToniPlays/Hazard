@@ -10,26 +10,26 @@ class GraphStage : public RefCount
 	friend class JobSystem;
 	friend class JobGraph;
 	friend class Job;
+
 public:
 	GraphStage(uint32_t index, float weight) : m_StageIndex(index), m_Weight(weight) {}
 	~GraphStage();
 
 	float GetWeight() const { return m_Weight; }
 	void SetWeight(float weight) { m_Weight = weight; }
-
 	const std::vector<Ref<Job>>& GetJobs() { return m_Jobs; }
+	float GetProgress();
+	uint32_t GetStageIndex() const { return m_StageIndex; }
+    Ref<GraphStage> GetGraphStage(uint32_t index);
 
 	void QueueJobs(const std::vector<Ref<Job>>& jobs);
-	float GetProgress();
-
-	uint32_t GetStageIndex() const { return m_StageIndex; }
 
 	Ref<JobGraph> GetGraph()
 	{
-		if (!m_JobGraph) return nullptr;
+		if (!m_JobGraph) 
+			return nullptr;
 		return m_JobGraph;
 	}
-    Ref<GraphStage> GetGraphStage(uint32_t index);
     
 	template<typename T>
 	T GetResult()

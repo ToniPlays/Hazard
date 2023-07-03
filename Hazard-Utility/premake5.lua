@@ -24,6 +24,7 @@ project "Hazard-Utility"
 		"%{wks.location}/Hazard/vendor/spdlog/include",
 	}
 
-	links {
+	links 
+	{
 		"yaml-cpp"
 	}

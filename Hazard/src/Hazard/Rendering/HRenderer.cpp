@@ -49,10 +49,7 @@ namespace Hazard
         HZR_TIMED_FUNCTION();
 
 		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
-		if (!mesh) return;
-        if (!mesh->IsValid()) return;
-
-		//TODO: Fix this
+		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), nullptr, id);
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count, int id)
 	{
@@ -67,7 +64,20 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-        HZR_TIMED_FUNCTION();
+		HZR_TIMED_FUNCTION();
+
+		//TODO: Fix this somehow?
+
+		MeshInstance instance = {};
+		instance.Transform.MRow0 = { transform[0][0], transform[1][0], transform[2][0], transform[3][0] };
+		instance.Transform.MRow1 = { transform[0][1], transform[1][1], transform[2][1], transform[3][1] };
+		instance.Transform.MRow2 = { transform[0][2], transform[1][2], transform[2][2], transform[3][2] };
+		instance.ID = id;
+
+		auto& mesh = s_Engine->GetDrawList().MeshList[material.Raw()][(uint64_t)vertexBuffer.Raw()];
+		mesh.VertexBuffer = vertexBuffer;
+		mesh.IndexBuffer = indexBuffer;
+		mesh.Instances.push_back(instance);
 	}
 
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count)

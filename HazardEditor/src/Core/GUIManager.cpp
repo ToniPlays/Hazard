@@ -58,21 +58,13 @@ void GUIManager::Init()
 	m_PanelManager.AddRenderable<UI::PerformanceDebugPanel>();
 	m_PanelManager.AddRenderable<UI::AssetManagerDebugPanel>();
 	m_PanelManager.AddRenderable<UI::ProjectTodoPanel>();
+	m_PanelManager.AddRenderable<UI::ProjectSettingsPanel>();
 	m_PanelManager.AddRenderable<UI::Console>();
 	m_PanelManager.AddRenderable<UI::AssetPanel>();
 	m_PanelManager.AddRenderable<UI::ScriptCreatePanel>();
     m_PanelManager.AddRenderable<UI::MaterialEditor>();
     m_PanelManager.AddRenderable<UI::AssetImporterPanel>();
-
 	m_PanelManager.AddRenderable<UI::ProgressOverlay>();
-
-	//Initialize default image sampler
-
-	SamplerCreateInfo samplerInfo = {};
-	samplerInfo.DebugName = "UIImageSampler";
-	samplerInfo.MinFilter = FilterMode::Linear;
-	samplerInfo.MagFilter = FilterMode::Linear;
-	samplerInfo.Wrapping = ImageWrap::Repeat;
 }
 
 void GUIManager::Update()

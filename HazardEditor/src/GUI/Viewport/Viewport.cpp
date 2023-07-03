@@ -387,7 +387,7 @@ namespace UI
 		ImUI::ScopedStyleStack rounding(ImGuiStyleVar_ChildRounding, 5, ImGuiStyleVar_FrameRounding, 4);
 
 		ImGui::SetCursorPosX(12);
-		ImGui::BeginChild("##settingsView", { 200, 160 }, false);
+		ImGui::BeginChild("##settingsView", { 240, 160 }, false);
 
 		ImGui::Dummy({ 0, 3 });
 
@@ -406,7 +406,7 @@ namespace UI
 		if (ImUI::Checkbox("Light icons", lightIcons))
 			m_ViewportSettings ^= ViewportSettingsFlags_LightIcons;
 
-		ImGui::SetColumnWidth(0, 100);
+		ImGui::SetColumnWidth(0, 110);
 		float cameraSpeed = m_EditorCamera.GetSpeedMultiplier();
 		if (ImUI::SliderFloat("Camera speed", cameraSpeed, 1.0f, 0.01f, 5.0f))
 			m_EditorCamera.SetSpeedMultiplier(cameraSpeed);

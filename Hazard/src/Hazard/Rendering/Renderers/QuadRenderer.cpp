@@ -9,10 +9,6 @@
 
 namespace Hazard
 {
-	QuadRenderer::QuadRenderer()
-	{
-
-	}
 	void QuadRenderer::Init()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -61,14 +57,6 @@ namespace Hazard
 		region.Data = m_QuadBatch->GetData();
 		region.Size = m_QuadBatch->GetDataSize();
 		region.Offset = 0;
-
-		m_VertexBuffer->SetData(region);
-		/*Ref<Shader> shader = m_Material->GetPipeline()->GetShader();
-
-		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
-			shader->Set("u_Textures", i, m_Data.TextureSlots[i]);
-		*/
-		//HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount());
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture)
 	{
@@ -173,9 +161,6 @@ namespace Hazard
 				offset += 4;
 			}
 
-			//m_VertexBuffer = GPUBuffer::Create(nullptr);
-			//m_IndexBuffer = GPUBuffer::Create(nullptr);
-
 			hdelete[] indices;
 		}
 
@@ -188,8 +173,10 @@ namespace Hazard
 	{
 		if (!texture) return 0.0f;
 
-		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) {
-			if (m_Data.TextureSlots[i] == texture) {
+		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
+		{
+			if (m_Data.TextureSlots[i] == texture) 
+			{
 				return (float)i;
 			}
 		}

@@ -13,42 +13,6 @@ AssetPack EditorAssetPackBuilder::CreateAssetPack(const std::vector<AssetPackEle
 
 	return pack;
 }
-CachedBuffer EditorAssetPackBuilder::AssetPackToBuffer(const AssetPack& pack)
-{
-	AssetPackHeader header = {};
-	header.Handle = pack.Handle;
-	header.ElementCount = pack.ElementCount;
-
-	size_t dataSize = 0;
-
-	for (auto& element : pack.Elements)
-		dataSize += element.Data.Size;
-
-	CachedBuffer buffer(sizeof(AssetPackHeader) + sizeof(AssetPackElementHeader) * pack.ElementCount + dataSize);
-
-	uint32_t dataOffset = 0;
-
-	buffer.Write(header);
-
-	//Write headers
-	for (auto& element : pack.Elements)
-	{
-		AssetPackElementHeader elementHeader = {};
-		elementHeader.Type = (uint32_t)element.Type;
-		elementHeader.AssetDataSize = element.Data.Size;
-		elementHeader.AssetDataOffset = dataOffset;
-		elementHeader.Handle = element.Handle;
-
-		buffer.Write(elementHeader);
-
-		dataOffset += element.Data.Size;
-	}
-	//Write actual asset data
-	for (auto& element : pack.Elements)
-		buffer.Write(element.Data);
-
-	return buffer;
-}
 
 void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::filesystem::path& path)
 {
@@ -56,7 +20,7 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 
 	std::vector<AssetPackElement> elements = { element };
 	AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
-	CachedBuffer buffer = EditorAssetPackBuilder::AssetPackToBuffer(pack);
+	CachedBuffer buffer = AssetPack::ToBuffer(pack);
 
 	//Save asset pack and generate meta file
 
@@ -93,6 +57,7 @@ void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesyst
 	element.Type = AssetType::Image;
 	element.AssetPackHandle = INVALID_ASSET_HANDLE;
 	element.Handle = settings.Handle;
+	element.AddressableName = File::GetName(file);
 	element.Data = data;
 
 	job->GetStage()->SetResult(element);
@@ -168,6 +133,7 @@ void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesyste
 	result.Handle = settings.Handle;
 	result.Type = AssetType::Mesh;
 	result.Data = data;
+	result.AddressableName = File::GetName(file);
 
 	job->GetStage()->SetResult(result);
 }
@@ -201,6 +167,7 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 	result.Type = AssetType::Shader;
 	result.Data = data;
 	result.Handle = AssetHandle();
+	result.AddressableName = File::GetName(file);
 
 	job->GetStage()->SetResult(result);
 }
@@ -221,6 +188,7 @@ void EditorAssetPackBuilder::MaterialAssetPackJob(Ref<Job> job, const std::files
 	result.Type = AssetType::Material;
 	result.Data = data;
 	result.Handle = settings.Handle;
+	result.AddressableName = File::GetName(file);
 
 	job->GetStage()->SetResult(result);
 }

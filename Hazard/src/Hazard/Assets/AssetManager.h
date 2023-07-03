@@ -42,7 +42,7 @@ namespace Hazard
 			s_AssetLoader.m_Loaders[type] = CreateScope<T>(std::forward<Args>(args)...);
 		}
 		static AssetHandle ImportAssetPack(const AssetPack& pack, const std::filesystem::path& path);
-		static AssetHandle ImportAsset(const AssetPackElement& pack, std::string name = "");
+		static AssetHandle ImportAsset(const AssetPackElement& element);
 		static AssetHandle GetHandleFromKey(const std::string& key);
 		static Buffer GetAssetData(AssetHandle handle);
 
@@ -82,7 +82,9 @@ namespace Hazard
 
 				//Load asset async and wait
 				Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
-				if (!graph) return nullptr;
+				if (!graph) 
+					return nullptr;
+
 				graph->Execute();
 
 				Ref<Asset> asset = graph->GetResult<Ref<Asset>>();
@@ -152,6 +154,27 @@ namespace Hazard
 
 			s_LoadedAssets[metadata.Handle] = asset;
 			return metadata.Handle;
+		}
+		static AssetHandle CreateNewAsset(AssetType type, const std::filesystem::path& path)
+		{
+			Ref<JobGraph> graph = s_AssetLoader.Create(type, path);
+			if (!graph) 
+				return INVALID_ASSET_HANDLE;
+
+			graph->Execute();
+
+			if (!File::Exists(path)) 
+				return INVALID_ASSET_HANDLE;
+			
+			CachedBuffer buffer = File::ReadBinaryFile(path);
+			AssetPack pack = AssetPack::Create(buffer);
+			AssetManager::ImportAssetPack(pack, path);
+
+			//TODO: This is bad
+			AssetHandle handle = pack.Elements[0].Handle;
+			pack.Free();
+
+			return handle;
 		}
 
 	private:

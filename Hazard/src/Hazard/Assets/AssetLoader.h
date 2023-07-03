@@ -14,6 +14,7 @@ namespace Hazard
 
 		Ref<JobGraph> Load(AssetMetadata& metadata);
 		Ref<JobGraph> Save(Ref<Asset>& asset);
+		Ref<JobGraph> Create(AssetType type, const std::filesystem::path& path);
 
 	private:
 		std::unordered_map<AssetType, Scope<IAssetLoader>> m_Loaders;

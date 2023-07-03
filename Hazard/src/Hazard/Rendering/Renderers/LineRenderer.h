@@ -20,26 +20,20 @@ namespace Hazard
 	class LineRenderer
 	{
 	public:
-		LineRenderer();
+		LineRenderer() = default;
 		~LineRenderer() = default;
 		LineRenderer(const LineRenderer&) = delete;
 		LineRenderer(const LineRenderer&&) = delete;
 
 		void Init();
-
 		void BeginScene();
 		void EndScene();
-
 		void BeginBatch();
-
 		void Flush();
+
 		void SubmitLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color);
 
-		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) {
-			if (renderPass == m_RenderPass) return;
-			m_RenderPass = renderPass;
-			CreateResources(renderPass);
-		};
+		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass);
 		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
 
 	private:

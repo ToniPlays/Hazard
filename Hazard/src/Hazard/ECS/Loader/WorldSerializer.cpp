@@ -5,9 +5,9 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
 
-namespace Hazard {
-
-	bool WorldSerializer::SerializeEditor(const std::filesystem::path& file)
+namespace Hazard
+{
+	Buffer WorldSerializer::Serialize()
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -20,15 +20,14 @@ namespace Hazard {
 				Entity entity{ entityID, m_World.Raw() };
 				if (entity)
 					SerializeEntityEditor(entity, out);
-				});
 			});
+		});
 		out << YAML::EndMap;
 
-		std::ofstream fout(file);
-		fout << out.c_str();
-		fout.close();
-
-		return true;
+		Buffer result;
+		result.Allocate(out.size() * sizeof(char));
+		result.Write(out.c_str(), result.Size);
+		return result;
 	}
 	void WorldSerializer::SerializeEntityEditor(Entity& entity, YAML::Emitter& out)
 	{

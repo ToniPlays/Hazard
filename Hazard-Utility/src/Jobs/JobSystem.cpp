@@ -5,14 +5,6 @@
 #include <spdlog/fmt/fmt.h>
 #include <Profiling/Timer.h>
 
-Thread::Thread(uint32_t threadID) : m_ThreadID(threadID)
-{
-}
-
-Thread::~Thread()
-{
-
-}
 
 JobSystem::JobSystem(uint32_t threads) : m_Running(true)
 {

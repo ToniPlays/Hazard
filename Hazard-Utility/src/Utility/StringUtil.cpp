@@ -3,13 +3,15 @@
 #include <sstream>
 
 
-std::vector<std::string> StringUtil::SplitString(const std::string& string, char delim) {
+std::vector<std::string> StringUtil::SplitString(const std::string& string, char delim) 
+{
 
 	std::vector<std::string> result;
 	std::istringstream f(string);
 	std::string s;
 
-	while (getline(f, s, delim)) {
+	while (getline(f, s, delim)) 
+	{
 		if (!s.empty())
 			result.push_back(s);
 	}
@@ -39,12 +41,13 @@ std::string StringUtil::BytesToString(const size_t& bytes)
 	constexpr uint64_t GB = 1024 * 1024 * 1024;
 	constexpr uint64_t MB = 1024 * 1024;
 	constexpr uint64_t KB = 1024;
+	constexpr uint64_t bufSize = 32;
 
-	char buffer[32];
-	if (bytes > GB) snprintf(buffer, 32, "%.0f GB", (float)bytes / (float)GB);
-	else if (bytes > MB) snprintf(buffer, 32, "%.2f MB", (float)bytes / (float)MB);
-	else if (bytes > KB) snprintf(buffer, 32, "%.2f KB", (float)bytes / (float)KB);
-	else snprintf(buffer, 32, "%.2f bytes", (float)bytes);
+	char buffer[bufSize];
+	if (bytes > MB) snprintf(buffer, bufSize, "%.0f GB", (float)bytes / (float)GB);
+	else if (bytes > MB) snprintf(buffer, bufSize, "%.2f MB", (float)bytes / (float)MB);
+	else if (bytes > KB) snprintf(buffer, bufSize, "%.2f KB", (float)bytes / (float)KB);
+	else snprintf(buffer, bufSize, "%.2f bytes", (float)bytes);
 	return std::string(buffer);
 }
 std::string StringUtil::Replace(const std::string& value, const std::string& find, const std::string& replaceWith)
@@ -54,6 +57,7 @@ std::string StringUtil::Replace(const std::string& value, const std::string& fin
 
 	std::string result = value;
 	size_t pos = 0;
+
 	while ((pos = value.find(find, pos)) != std::string::npos)
 	{
 		result.replace(pos, strlen(find.c_str()), replaceWith);
@@ -68,7 +72,8 @@ std::string& StringUtil::ToLower(std::string& string)
 		[](unsigned char c) { return std::tolower(c); });
 	return string;
 }
-bool StringUtil::IsMatching(const std::string& value, const std::string& compareTo, bool caseSensitive, bool stripWhiteSpaces, bool stripUnderScores) {
+bool StringUtil::IsMatching(const std::string& value, const std::string& compareTo, bool caseSensitive, bool stripWhiteSpaces, bool stripUnderScores) 
+{
 	if (compareTo.empty())
 		return true;
 
@@ -100,10 +105,13 @@ std::string_view StringUtil::Between(const std::string_view& source, const std::
 std::string StringUtil::GetPreprocessor(const char* type, const std::string& source, size_t endPosition, size_t* offset)
 {
 	size_t valueOffset = OffsetOf(source, type, endPosition);
-	if (valueOffset == std::string::npos) {
+
+	if (valueOffset == std::string::npos) 
+	{
 		*offset = std::string::npos;
 		return "";
 	}
+
 	size_t lineEndOffset = source.find_first_of("\r\n", valueOffset);
 	std::string line = source.substr(valueOffset, lineEndOffset - valueOffset);
 	*offset = valueOffset + line.length();

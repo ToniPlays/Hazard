@@ -38,7 +38,7 @@ void EditorAssetManager::LoadEditorAssets()
 		{ "Cube", "Library/cube.obj.hpack"     },
 		{ "Sphere", "Library/sphere.obj.hpack" }
 	};
-	
+
 	Timer timer;
 	for (auto& texture : texturesToLoad)
 	{
@@ -46,6 +46,7 @@ void EditorAssetManager::LoadEditorAssets()
 		AssetHandle packHandle = AssetManager::GetHandleFromKey(texture.Path);
 		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
 		s_Icons[texture.Key] = pack.Elements[0].Handle;
+		pack.Free();
 	}
 
 	for (auto& mesh : meshesToLoad)
@@ -54,6 +55,7 @@ void EditorAssetManager::LoadEditorAssets()
 		AssetHandle packHandle = AssetManager::GetHandleFromKey(mesh.Path);
 		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
 		s_Icons[mesh.Key] = pack.Elements[0].Handle;
+		pack.Free();
 	}
 }
 
@@ -86,9 +88,9 @@ void EditorAssetManager::GenerateAndSavePack(Ref<Job> job, std::filesystem::path
 void EditorAssetManager::ImportEngineAssets()
 {
 	using namespace Hazard;
-	Timer timer;
 	HZR_INFO("Importing engine assets");
 
+	Timer timer;
 	FileCache cache("Library");
 
 	std::vector<Ref<Job>> jobs;
@@ -111,7 +113,7 @@ void EditorAssetManager::ImportEngineAssets()
 	JobPromise<bool> promise = system.QueueGraph<bool>(loadingGraph);
 
 	promise.Wait();
-	
+
 	auto files = File::GetAllInDirectory(cache.GetCachePath(), true);
 	for (auto& file : files)
 	{
@@ -135,46 +137,46 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 
 	switch (type)
 	{
-	case AssetType::Shader:
-	{
-		Ref<JobGraph> graph = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan);
-		if (!graph) break;
+		case AssetType::Shader:
+		{
+			Ref<JobGraph> graph = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan);
+			if (!graph) break;
 
-		AssetPackElement element = graph->Execute()->GetResult<AssetPackElement>();
-		element.Handle = AssetHandle();
-		elements.push_back(element);
-		break;
-	}
-	case AssetType::Image:
-	{
-		Image2DCreateInfo info = {};
-		info.DebugName = File::GetName(path);
-		info.GenerateMips = false;
-		info.Usage = ImageUsage::Texture;
+			AssetPackElement element = graph->Execute()->GetResult<AssetPackElement>();
+			element.Handle = AssetHandle();
+			elements.push_back(element);
+			break;
+		}
+		case AssetType::Image:
+		{
+			Image2DCreateInfo info = {};
+			info.DebugName = File::GetName(path);
+			info.GenerateMips = false;
+			info.Usage = ImageUsage::Texture;
 
-		UI::ImageImportSettings settings = {};
-		settings.GenerateMips = false;
-		settings.FlipOnLoad = true;
+			UI::ImageImportSettings settings = {};
+			settings.GenerateMips = false;
+			settings.FlipOnLoad = true;
 
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
-		element.Handle = AssetHandle();
-		elements.push_back(element);
-		break;
-	}
-	case AssetType::Mesh:
-	{
-		MeshCreateInfo info = {};
-		info.DebugName = File::GetName(path);
+			AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
+			element.Handle = AssetHandle();
+			elements.push_back(element);
+			break;
+		}
+		case AssetType::Mesh:
+		{
+			MeshCreateInfo info = {};
+			info.DebugName = File::GetName(path);
 
-		UI::MeshImportSettings settings = {};
+			UI::MeshImportSettings settings = {};
 
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
-		element.Handle = AssetHandle();
-		elements.push_back(element);
-	}
+			AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
+			element.Handle = AssetHandle();
+			elements.push_back(element);
+		}
 	}
 
 	AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
-	CachedBuffer buffer = EditorAssetPackBuilder::AssetPackToBuffer(pack);
+	CachedBuffer buffer = AssetPack::ToBuffer(pack);
 	return buffer;
 }

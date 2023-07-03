@@ -16,9 +16,8 @@ public:
 	JobPromise(T result) 
 	{
 		if constexpr (IsRef<T>::value)
-		{
 			result->IncRefCount();
-		}
+
 		m_Result.Release();
 		m_Result.Allocate(sizeof(T));
 		m_Result.Write(&result, sizeof(T));
@@ -31,6 +30,8 @@ public:
 	}
 	T Result()
 	{
+		HZR_ASSERT(false, "");
+
 		if (m_JobGraph)
 			return m_JobGraph->GetResult<T>();
 		if (m_Result.Data)

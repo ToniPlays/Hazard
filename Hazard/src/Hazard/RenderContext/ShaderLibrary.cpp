@@ -20,7 +20,7 @@ namespace Hazard
 		{
 			BufferLayout layout = LineVertex::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("LineShader.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("LineShader.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "LineShader.glsl";
@@ -38,7 +38,7 @@ namespace Hazard
 		{
 			BufferLayout layout = QuadVertex::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("QuadShader.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("QuadShader.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "QuadShader.glsl";
@@ -55,7 +55,7 @@ namespace Hazard
 		{
 			BufferLayout layout = Vertex3D::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("PBR_Static.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("PBR_Static.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "PBR_Static.glsl";
@@ -70,7 +70,7 @@ namespace Hazard
 			s_LoadedPipelines["PBR_Static"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
 		{
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("Skybox.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("Skybox.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "Skybox.glsl";
@@ -86,7 +86,7 @@ namespace Hazard
 			s_LoadedPipelines["Skybox"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
 		{
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("EquirectangularToCubemap.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("EquirectangularToCubemap.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "EquirectangularToCubemap.glsl";
@@ -98,7 +98,7 @@ namespace Hazard
 			s_LoadedPipelines["EquirectangularToCubemap"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
 		{
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("EnvironmentIrradiance.glsl.hpack");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("EnvironmentIrradiance.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "EnvironmentIrradiance.glsl";

@@ -8,10 +8,12 @@ namespace UI
 	class ProjectSettingsPanel : public Hazard::ImUI::Panel
 	{
 	public:
-		ProjectSettingsPanel() : Hazard::ImUI::Panel("Project Settings") {};
+		ProjectSettingsPanel() : Hazard::ImUI::Panel("Project Settings", false) {};
 		~ProjectSettingsPanel() = default;
 
-		void OnPanelRenderer();
+		void Update() override {};
+		void OnPanelRender() override;
+		bool OnEvent(Event& e) override { return false; };
 
 	private:
 		void DrawInputSettingsPanel();

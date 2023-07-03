@@ -21,18 +21,18 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		if (pack.ElementCount == 0) return INVALID_ASSET_HANDLE;
+		if (pack.ElementCount == 0)
+			return INVALID_ASSET_HANDLE;
 
 		auto filePath = path.lexically_normal();
 
 		if (s_Registry.Contains(filePath))
 		{
-			HZR_CORE_WARN("Reimporting {} ({})", filePath.string(), pack.Handle);
 			AssetMetadata& metadata = s_Registry.Get(filePath);
 			metadata.LoadState = LoadState::None;
 
 			for (auto& element : pack.Elements)
-				ImportAsset(element, fmt::format("{}", File::GetName(path)));
+				ImportAsset(element);
 
 			return s_Registry.Get(filePath).Handle;
 		}
@@ -47,7 +47,7 @@ namespace Hazard
 		s_Registry[filePath] = metadata;
 
 		for (auto& element : pack.Elements)
-			ImportAsset(element, fmt::format("{}", File::GetName(path)));
+			ImportAsset(element);
 
 		return pack.Handle;
 	}
@@ -56,38 +56,35 @@ namespace Hazard
 	/// </summary>
 	/// <param name="filePath"></param>
 	/// <returns></returns>
-	AssetHandle AssetManager::ImportAsset(const AssetPackElement& asset, std::string key)
+	AssetHandle AssetManager::ImportAsset(const AssetPackElement& element)
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_CORE_WARN("Importing asset: {0} ({1})", element.AddressableName, element.Handle);
 
-		if ((AssetType)asset.Type == AssetType::Undefined)
+		if ((AssetType)element.Type == AssetType::Undefined)
 			return INVALID_ASSET_HANDLE;
 
-		if (s_Registry.Contains(key))
+		if (s_Registry.Contains(element.AddressableName))
 		{
-			Ref<Asset> asset = GetAsset<Asset>(s_Registry.Get(key).Handle);
+			Ref<Asset> asset = GetAsset<Asset>(GetHandleFromKey(element.AddressableName));
 			AssetHandle handle = asset->GetHandle();
 			asset->DecRefCount();
-			HZR_CORE_WARN("Reimporting asset {} with {} references", key, asset->GetRefCount());
-			s_Registry.Get(key).LoadState = LoadState::None;
+			s_Registry.Get(element.AddressableName).LoadState = LoadState::None;
 
 			s_LoadedAssets[asset->GetHandle()] = GetAsset<Asset>(handle);
 
-			return s_Registry.Get(key).Handle;
+			return s_Registry.Get(element.AddressableName).Handle;
 		}
 
 		AssetMetadata metadata = {};
-		metadata.AssetPackHandle = asset.AssetPackHandle;
-		metadata.Type = (AssetType)asset.Type;
-		metadata.Key = key;
-		metadata.Handle = asset.Handle;
+		metadata.AssetPackHandle = element.AssetPackHandle;
+		metadata.Handle = element.Handle;
+		metadata.Type = (AssetType)element.Type;
 		metadata.LoadState = LoadState::None;
+		metadata.Key = element.AddressableName;
 
-		s_Registry[key] = metadata;
-
-		HZR_CORE_INFO("Importing asset as {} ({} from {})", key, asset.Handle, asset.AssetPackHandle);
-
-		return asset.Handle;
+		s_Registry[element.AddressableName] = metadata;
+		return element.Handle;
 	}
 	void AssetManager::RemoveAsset(AssetHandle handle)
 	{
@@ -162,11 +159,9 @@ namespace Hazard
 		HZR_ASSERT(asset, "Asset cannot be nullptr");
 
 		Ref<JobGraph> graph = s_AssetLoader.Save(asset);
-		if (graph)
-		{
-			graph->Execute();
-			return true;
-		}
-		return false;
+		if (!graph) return false;
+
+		graph->Execute();
+		return true;
 	}
 }

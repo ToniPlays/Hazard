@@ -35,20 +35,11 @@ public:
 	void SetJobTag(const std::string& name) { m_JobTag = name; }
 
 	void Execute();
+	void Progress(float progress);
 
 	float GetExecutionTime() { return m_ExecutionTime; }
-	float WaitForUpdate()
-	{
-		m_Progress.wait(m_Progress);
-		return m_Progress;
-	}
+	float WaitForUpdate();
 	float GetProgress() { return m_Progress; }
-
-	void Progress(float progress)
-	{
-		m_Progress = progress;
-		m_Progress.notify_all();
-	}
 
 	template<typename T>
 	T GetInput()

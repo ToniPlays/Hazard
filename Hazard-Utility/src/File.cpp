@@ -92,6 +92,8 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, std::vector<uint32
 }
 bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t size)
 {
+	if (size == 0) return false;
+
 	std::ofstream out(path, std::ios::out | std::ios::binary);
 
 	if (out.is_open())

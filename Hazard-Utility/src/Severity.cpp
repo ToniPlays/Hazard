@@ -1,7 +1,8 @@
 #include "Severity.h"
 
 
-std::string SeverityToString(const Severity& severity) {
+std::string SeverityToString(const Severity& severity) 
+{
 	switch (severity)
 	{
 	case Severity::Debug:		return "Debug";

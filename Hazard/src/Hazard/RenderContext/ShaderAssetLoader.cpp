@@ -49,4 +49,9 @@ namespace Hazard
 	{
 		return nullptr;
 	}
+	Ref<JobGraph> ShaderAssetLoader::Create(const std::filesystem::path& path)
+	{
+		HZR_CORE_ASSERT(false, "");
+		return Ref<JobGraph>();
+	}
 }

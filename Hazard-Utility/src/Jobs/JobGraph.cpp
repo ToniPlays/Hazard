@@ -20,6 +20,14 @@ Ref<GraphStage> JobGraph::GetNextStage()
 	return m_Stages[m_CurrentStage + 1];
 }
 
+Ref<GraphStage> JobGraph::AddStage()
+{
+	Ref<GraphStage> stage = Ref<GraphStage>::Create(m_Stages.size(), 0.0f);
+	stage->m_JobGraph = this;
+	m_Stages.push_back(stage);
+	return stage;
+}
+
 Ref<JobGraph> JobGraph::Execute()
 {
 	for (auto& stage : m_Stages)

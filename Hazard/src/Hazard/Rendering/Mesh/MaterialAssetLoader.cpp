@@ -57,5 +57,10 @@ namespace Hazard
         //File::WriteFile(data.Path, out.c_str());
         return nullptr;
     }
+    Ref<JobGraph> MaterialAssetLoader::Create(const std::filesystem::path& path)
+    {
+        HZR_CORE_ASSERT(false, "");
+        return Ref<JobGraph>();
+    }
 }
 

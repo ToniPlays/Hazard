@@ -24,7 +24,8 @@ namespace Hazard
 		{
 			//Submit sky lights for drawing
 			auto view = m_TargetWorld->GetEntitiesWith<SkyLightComponent>();
-			for (auto& entity : view) {
+			for (auto& entity : view) 
+			{
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& sky = e.GetComponent<SkyLightComponent>();
 				if (!e.IsVisible() || !sky.Active) continue;
@@ -34,7 +35,8 @@ namespace Hazard
 		{
 			//Submit directional lights for drawing
 			auto view = m_TargetWorld->GetEntitiesWith<DirectionalLightComponent>();
-			for (auto& entity : view) {
+			for (auto& entity : view) 
+			{
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& dl = e.GetComponent<DirectionalLightComponent>();
 				if (!e.IsVisible() || !dl.Active) continue;
@@ -44,7 +46,8 @@ namespace Hazard
 		{
 			//Submit point lights for drawing
 			auto view = m_TargetWorld->GetEntitiesWith<PointLightComponent>();
-			for (auto& entity : view) {
+			for (auto& entity : view) 
+			{
 				Entity e = { entity, m_TargetWorld.Raw() };
 				auto& pl = e.GetComponent<PointLightComponent>();
 				if (!e.IsVisible() || !pl.Active) continue;

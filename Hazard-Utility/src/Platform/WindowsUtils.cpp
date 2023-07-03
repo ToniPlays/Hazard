@@ -10,12 +10,9 @@ void PlatformUtils::Messagebox(const char* title, const char* description)
 {
 	const WCHAR* pwcsName; //LPCWSTR
 
-	// required size
 	int size = MultiByteToWideChar(CP_ACP, 0, description, -1, NULL, 0);
-	// allocate it
 	pwcsName = hnew WCHAR[256];
 	MultiByteToWideChar(CP_ACP, 0, description, -1, (LPWSTR)pwcsName, size);
-	// use it....
 
 	MessageBox(NULL, pwcsName, (LPCTSTR)L"Error", MB_OK);
 	hdelete[] pwcsName;

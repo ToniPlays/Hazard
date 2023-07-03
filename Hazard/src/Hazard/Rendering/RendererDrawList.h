@@ -21,7 +21,7 @@ namespace Hazard
 
     struct MeshInstance
     {
-        InstanceTransform Transform;
+        InstanceTransform	 Transform;
         int ID;
     };
 
@@ -79,7 +79,7 @@ namespace Hazard
 		GeometryInclude GeometryFlags = Geometry_All;
 	};
 
-    using MeshDrawList = std::unordered_map<Material*, std::unordered_map<HazardRenderer::GPUBuffer*, RawMesh>>;
+    using MeshDrawList = std::unordered_map<Material*, std::unordered_map<uint64_t, RawMesh>>;
 
     //Draw list for single world context
 	struct RendererDrawList

@@ -47,8 +47,6 @@ namespace Hazard
 		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
 
 		buffer.Release();
-
-		HZR_CORE_TRACE("Loaded image {}", handle);
 	}
 
 	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata)
@@ -64,5 +62,10 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		return nullptr;
+	}
+	Ref<JobGraph> ImageAssetLoader::Create(const std::filesystem::path& path)
+	{
+		HZR_ASSERT(false, "");
+		return Ref<JobGraph>();
 	}
 }

@@ -35,33 +35,11 @@ void HazardProject::ProcessAsset(const std::filesystem::path& path)
 {
 	AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(path));
 
-	if (File::GetFileExtension(path) == ".hpack")
-	{
-		CachedBuffer buffer = File::ReadBinaryFile(path);
-		AssetPack pack = AssetPack::Create(buffer);
-		AssetManager::ImportAssetPack(pack, path);
-	}
-	/*
-	else if(type != AssetType::Folder && type != AssetType::Undefined)
-	{
-		//Asset is a source asset, requires to be added dynamically
+	if (File::GetFileExtension(path) != ".hpack") return;
 
-		if (!File::Exists(path.string() + ".meta"))
-			return;
-
-		std::filesystem::path packFile = path.string() + ".hpack";
-
-		//Use asset pack handle as a pointer to .hpack file
-		AssetPackElement element = {};
-		element.AssetPackHandle = INVALID_ASSET_HANDLE;
-
-		YAML::Node node = YAML::LoadFile(path.string() + ".meta");
-		YamlUtils::Deserialize(node, "UID", element.Handle, AssetHandle());
-		YamlUtils::Deserialize(node, "Type", element.Type, AssetType::Undefined);
-
-		AssetManager::ImportAsset(element, File::GetFileAbsolutePath(path).lexically_normal().string());
-	}
-	*/
+	CachedBuffer buffer = File::ReadBinaryFile(path);
+	AssetPack pack = AssetPack::Create(buffer);
+	AssetManager::ImportAssetPack(pack, path);
 }
 
 void HazardProject::DeserializeGeneral(const YAML::Node& node)

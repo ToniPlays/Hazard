@@ -18,9 +18,11 @@ namespace UI
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		const char* columns[] = { "Status", "Message" };
 
-		ImUI::Table("TodoStatus", columns, 2, size, [&]() {
-			for (auto& assembly : HazardScriptEngine::GetAssemblies())
-			{
+		for (auto& assembly : HazardScriptEngine::GetAssemblies())
+		{
+			ImGui::Text("Assembly: %s", File::GetNameNoExt(assembly->GetSourcePath()).c_str());
+
+			ImUI::Table("TodoStatus", columns, 2, size, [&]() {
 				for (auto& [name, metadata] : assembly->GetScripts())
 				{
 					auto& classAttrib = metadata->Get<TodoAttribute>();
@@ -38,8 +40,9 @@ namespace UI
 						if (attrib) DrawElement(name, n, attrib);
 					}
 				}
-			}
-			});
+				});
+			ImUI::ShiftY(4.0f);
+		}
 	}
 	void ProjectTodoPanel::DrawElement(const std::string& className, const std::string& name, const Ref<TodoAttribute> attrib)
 	{

@@ -32,6 +32,7 @@ namespace UI
 	{
 		HZR_PROFILE_FUNCTION();
         return;
+
 		Ref<World> world = nullptr; // Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		if (!world) return;
 

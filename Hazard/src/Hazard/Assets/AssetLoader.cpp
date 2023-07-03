@@ -33,4 +33,14 @@ namespace Hazard
 		}
 		return m_Loaders[metadata.Type]->Save(asset);
 	}
+	Ref<JobGraph> AssetLoader::Create(AssetType type, const std::filesystem::path& path)
+	{
+		if (m_Loaders.find(type) == m_Loaders.end())
+		{
+			HZR_CORE_ERROR("No loaders for {0}", Utils::AssetTypeToString(type));
+			return nullptr;
+		}
+
+		return m_Loaders[type]->Create(path);
+	}
 }

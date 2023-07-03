@@ -24,3 +24,15 @@ void Job::Execute()
 	if (m_Stage)
 		m_Stage->OnJobFinished();
 }
+
+float Job::WaitForUpdate()
+{
+	m_Progress.wait(m_Progress);
+	return m_Progress;
+}
+
+void Job::Progress(float progress)
+{
+	m_Progress = progress;
+	m_Progress.notify_all();
+}

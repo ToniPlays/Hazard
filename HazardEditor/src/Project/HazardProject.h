@@ -20,7 +20,6 @@ public:
 	bool IsValid() { return !m_Data.ProjectDirectory.empty(); }
 
 	void ProcessAssets();
-
 	void ProcessAsset(const std::filesystem::path& path);
 
 	const ProjectGeneralData& GetProjectData() { return m_Data; }

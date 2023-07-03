@@ -20,8 +20,8 @@ class Thread : public RefCount
 	friend class JobSystem;
 public:
 
-	Thread(uint32_t threadID);
-	~Thread();
+	Thread(uint32_t threadID) : m_ThreadID(threadID) {};
+	~Thread() {};
 
 	uint32_t GetThreadID() const { return m_ThreadID; }
 	bool IsWaiting() const { return m_Status.load() == ThreadStatus::Waiting; }
@@ -52,6 +52,8 @@ public:
 
 	JobPromise<bool> QueueJob(Ref<Job> job);
 	void QueueJobs(const std::vector<Ref<Job>>& jobs);
+	void WaitForJobsToFinish();
+	void Terminate();
 
 	template<typename T>
 	JobPromise<T> QueueGraph(Ref<JobGraph> graph)
@@ -75,14 +77,9 @@ public:
 		return m_JobCount;
 	}
 
-	void WaitForJobsToFinish();
-	void Terminate();
-
 private:
-
 	void QueueGraphJobs(Ref<JobGraph> graph);
 	Ref<Job> FindAvailableJob();
-
 	void ThreadFunc(Ref<Thread> thread);
 
 private:

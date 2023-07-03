@@ -33,10 +33,6 @@ namespace UI
 		}
 		DrawContents();
 		ImGui::Columns();
-
-
-		//if(m_Flags & AssetPanelFlags_SettingsOpen)
-		//    DrawSettings();
 	}
 	bool AssetPanel::OnEvent(Event& e)
 	{
@@ -68,25 +64,29 @@ namespace UI
 		ImGui::BeginChild("Toolbar", size);
 		{
 			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
-			if (ImGui::Button((const char*)ICON_FK_PLUS " ADD", { 75.0, 28.0f })) {
+			if (ImGui::Button((const char*)ICON_FK_PLUS " ADD", { 75.0, 28.0f }))
+			{
 
 			}
 		}
 		ImGui::SameLine(0, 5);
-		if (ImGui::Button((const char*)ICON_FK_EXTERNAL_LINK_SQUARE " Import", { 75.0, 28.0f })) {
+		if (ImGui::Button((const char*)ICON_FK_EXTERNAL_LINK_SQUARE " Import", { 75.0, 28.0f }))
+		{
 			OpenImport();
 		}
 		ImGui::SameLine(0, 5);
-		if (ImGui::Button((const char*)ICON_FK_FILE_TEXT " Save all", { 75.0, 28.0f })) {
-
+		if (ImGui::Button((const char*)ICON_FK_FILE_TEXT " Save all", { 75.0, 28.0f }))
+		{
 		}
+
 		ImGui::SameLine(0, 15);
-		if (ImGui::Button((const char*)ICON_FK_ARROW_CIRCLE_O_LEFT, { 28.0, 28.0f })) {
-
+		if (ImGui::Button((const char*)ICON_FK_ARROW_CIRCLE_O_LEFT, { 28.0, 28.0f }))
+		{
 		}
-		ImGui::SameLine(0, 0);
-		if (ImGui::Button((const char*)ICON_FK_ARROW_CIRCLE_O_RIGHT, { 28.0, 28.0f })) {
 
+		ImGui::SameLine(0, 0);
+		if (ImGui::Button((const char*)ICON_FK_ARROW_CIRCLE_O_RIGHT, { 28.0, 28.0f }))
+		{
 		}
 
 		ImGui::SameLine(0, 5);
@@ -95,9 +95,8 @@ namespace UI
 
 		ImGui::SameLine(size.x - 80, 0);
 		if (ImGui::Button((const char*)ICON_FK_COG " Settings", { 75.0, 28.0f }))
-		{
 			m_Flags |= AssetPanelFlags_SettingsOpen;
-		}
+
 		ImGui::EndChild();
 		ImUI::Separator({ size.x, 2.0f }, style.Frame.FrameColor);
 	}
@@ -129,18 +128,17 @@ namespace UI
 				ImUI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
 					ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
 
-					});
+				});
 				ImUI::Treenode(ProjectManager::GetProjectName().c_str(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen, [&]() {
-					for (const auto& folder : m_FolderData) {
+					for (const auto& folder : m_FolderData)
 						DrawFolderTreeItem(folder);
-					}
-					});
+				});
 
 				ImUI::ContextMenu([&]() {
 					ImUI::MenuItem("Refresh", [&]() {
 						m_FolderData = GenerateFolderStructure();
-						});
 					});
+				});
 			}
 		}
 		ImGui::EndChild();
@@ -154,8 +152,7 @@ namespace UI
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		float panelWidth = size.x - scrollBarrOffset;
 		float cellSize = thumbailSize + 2.0f + paddingForOutline;
-		int columnCount = (int)(panelWidth / cellSize);
-		if (columnCount < 1) columnCount = 1;
+		int columnCount = Math::Max((int)(panelWidth / cellSize), 1);
 
 		size.y -= 32.0f;
 		ImGui::BeginChild("#contentPanel", size);
@@ -166,6 +163,7 @@ namespace UI
 		{
 			AssetMetadata metadata = item.GetMetadata();
 			Ref<Texture2DAsset> itemIcon = item.IsFolder() ? AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Folder")) : GetItemIcon(item.GetMetadata());
+
 			if (!itemIcon) continue;
 
 			item.BeginRender();
@@ -202,72 +200,65 @@ namespace UI
 
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuHeader("Folder");
-		ImUI::MenuItem("New folder", [&]() {
-			CreateFolder(GetOpenDirectory() / "Folder");
-		changed = true;
+			ImUI::MenuItem("New folder", [&]() {
+				CreateFolder(GetOpenDirectory() / "Folder");
+				changed = true;
 			});
-		ImUI::MenuHeader("Import");
-		ImUI::MenuItem("Import asset", [&]() {
-			OpenImport();
-			});
-
-		ImUI::MenuHeader("Quick create");
-		ImUI::MenuItem("Script", [&]() {
-			auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
-		panel->SetDirectory(GetOpenDirectory());
-		panel->Open();
-			});
-		ImUI::MenuItem("World", [&]() {
-			CreateWorld(GetOpenDirectory() / "NewWorld");
-		changed = true;
-			});
-		ImUI::MenuItem("Material", [&]() {
-			CreateMaterial(GetOpenDirectory() / "material");
-		changed |= true;
+			ImUI::MenuHeader("Import");
+			ImUI::MenuItem("Import asset", [&]() {
+				OpenImport();
 			});
 
-		ImUI::MenuHeader("Advanced assets");
-
-		ImUI::Submenu("Animation", [&]() {
-
+			ImUI::MenuHeader("Quick create");
+			ImUI::MenuItem("Script", [&]() {
+				auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+				panel->SetDirectory(GetOpenDirectory());
+				panel->Open();
 			});
-		ImUI::Submenu("Scripts", [&]() {
-			ImUI::MenuItem("Entity script", [&]() {
-				ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
-		panel->SetDirectory(GetOpenDirectory());
-		panel->Open();
-				});
+			ImUI::MenuItem("World", [&]() {
+				AssetManager::CreateNewAsset(AssetType::World, m_CurrentPath / "world.hpack");
+				changed = true;
 			});
-		ImUI::Submenu("Editor", [&]() {
-
-			});
-		ImUI::Submenu("Materials and textures", [&]() {
-
 			ImUI::MenuItem("Material", [&]() {
-				CreateMaterial(GetOpenDirectory() / "material");
-		changed |= true;
+
+				changed |= true;
+			});
+
+			ImUI::MenuHeader("Advanced assets");
+
+			ImUI::Submenu("Animation", [&]() {
+			});
+			ImUI::Submenu("Scripts", [&]() {
+				ImUI::MenuItem("Entity script", [&]() {
+					ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+					panel->SetDirectory(GetOpenDirectory());
+					panel->Open();
+				});
+			});
+			ImUI::Submenu("Editor", [&]() {
+			});
+			ImUI::Submenu("Materials and textures", [&]() {
+
+				ImUI::MenuItem("Material", [&]() {
+
+					changed |= true;
 				});
 
-		ImUI::MenuItem("Shader", [&]() {
-			//EditorAssetManager::CreateAsset(AssetType::Shader, GetOpenDirectory() / "newshader.glsl");
-			changed |= true;
+				ImUI::MenuItem("Shader", [&]() {
+				});
 			});
+			ImUI::Submenu("Physics", [&]() {
 			});
-		ImUI::Submenu("Physics", [&]() {
-
+			ImUI::Submenu("Sounds", [&]() {
 			});
-		ImUI::Submenu("Sounds", [&]() {
-
-			});
-		ImUI::Submenu("User interface", [&]() {
-
+			ImUI::Submenu("User interface", [&]() {
 			});
 
-		ImUI::MenuHeader("Other");
-		ImUI::MenuItem(LBL_SHOW_IN_EXPLORER, [&]() {
-			File::OpenDirectoryInExplorer(m_CurrentPath);
+			ImUI::MenuHeader("Other");
+			ImUI::MenuItem(LBL_SHOW_IN_EXPLORER, [&]() {
+				File::OpenDirectoryInExplorer(m_CurrentPath);
 			});
-			});
+		});
 
 		if (!changed) return;
 
@@ -283,16 +274,17 @@ namespace UI
 		m_CurrentItems.clear();
 		for (auto& item : File::GetAllInDirectory(m_CurrentPath))
 		{
-			if (File::GetFileExtension(item) == ".meta")
+			if (File::GetFileExtension(item) == ".hpack")
 			{
-				AssetHandle handle;
-				YAML::Node node = YAML::LoadFile(item.string());
-				YamlUtils::Deserialize(node, "UID", handle, INVALID_ASSET_HANDLE);
+				CachedBuffer buffer = File::ReadBinaryFile(item);
+				AssetPack pack = AssetPack::Create(buffer);
 
-				if (handle == INVALID_ASSET_HANDLE) continue;
-
-				AssetPanelItem assetItem = AssetPanelItem(handle, File::GetPathNoExt(item));
-				files.push_back(assetItem);
+				for (auto& element : pack.Elements)
+				{
+					AssetPanelItem assetItem = AssetPanelItem(element.Handle, File::GetPathNoExt(item));
+					files.push_back(assetItem);
+				}
+				pack.Free();
 			}
 			else if (File::IsDirectory(item))
 			{
@@ -332,10 +324,11 @@ namespace UI
 			ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
 				//EditorAssetManager::MoveAssetToFolder(handle, m_RootPath);
 				Refresh();
-				});
+			});
 		}
 
-		for (size_t i = m_Paths.size(); i > 0; i--) {
+		for (size_t i = m_Paths.size(); i > 0; i--)
+		{
 
 			const auto& path = m_Paths[i - 1];
 			ImGui::SameLine(0.0f, 8.0f);
@@ -350,7 +343,7 @@ namespace UI
 				ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path](AssetHandle handle) {
 					//EditorAssetManager::MoveAssetToFolder(handle, path);
 					Refresh();
-					});
+				});
 			}
 		}
 	}
@@ -362,18 +355,18 @@ namespace UI
 				m_CurrentPath = folder.Path;
 				RefreshFolderItems();
 			}
-		for (const auto& subfolder : folder.SubFolders)
-		{
-			DrawFolderTreeItem(subfolder);
-		}
-			});
+			for (const auto& subfolder : folder.SubFolders)
+			{
+				DrawFolderTreeItem(subfolder);
+			}
+		});
 
 		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 		{
 			ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path = folder.Path](AssetHandle handle) {
 				//EditorAssetManager::MoveAssetToFolder(handle, path);
 				Refresh();
-				});
+			});
 		}
 	}
 
@@ -384,24 +377,24 @@ namespace UI
 
 		switch (metadata.Type)
 		{
-		case AssetType::Image:
-		{
-			if (metadata.LoadState == LoadState::Loading)
-				break;
-			if (metadata.LoadState == LoadState::None)
+			case AssetType::Image:
 			{
-				JobPromise<Ref<Asset>> asset = AssetManager::GetAssetAsync<Asset>(metadata.Handle);
+				if (metadata.LoadState == LoadState::Loading)
+					break;
+				if (metadata.LoadState == LoadState::None)
+				{
+					JobPromise<Ref<Asset>> asset = AssetManager::GetAssetAsync<Asset>(metadata.Handle);
+					break;
+				}
+				handle = metadata.Handle;
 				break;
 			}
-			handle = metadata.Handle;
-			break;
-		}
-		case AssetType::Script:
-			handle = EditorAssetManager::GetIconHandle("Script"); break;
-		case AssetType::World:
-			handle = EditorAssetManager::GetIconHandle("World"); break;
-		default:
-			handle = EditorAssetManager::GetIconHandle("Default"); break;
+			case AssetType::Script:
+				handle = EditorAssetManager::GetIconHandle("Script"); break;
+			case AssetType::World:
+				handle = EditorAssetManager::GetIconHandle("World"); break;
+			default:
+				handle = EditorAssetManager::GetIconHandle("Default"); break;
 
 		}
 
@@ -462,73 +455,5 @@ namespace UI
 		File::CreateDir(directoryPath);
 
 		Refresh();
-	}
-	void AssetPanel::CreateWorld(const std::filesystem::path& path)
-	{
-		std::filesystem::path worldPath = path.string() + ".hazard";
-		uint32_t suffix = 1;
-
-		while (File::Exists(worldPath))
-			worldPath = path.string() + std::to_string(suffix) + ".hazard";
-
-		Ref<World> newWorld = Ref<World>::Create(path);
-
-		Entity entity = newWorld->CreateEntity("Camera");
-		newWorld->CreateEntity("Entity 1");
-		entity.AddComponent<CameraComponent>();
-
-		YAML::Emitter out;
-		out << YAML::BeginMap;
-		YamlUtils::Serialize(out, "UID", AssetHandle());
-		YamlUtils::Serialize(out, "Type", AssetType::World);
-		out << YAML::EndMap;
-		File::WriteFile(worldPath.string() + ".meta", out.c_str());
-
-		WorldSerializer serializer(newWorld);
-
-		serializer.SerializeEditor(worldPath);
-	}
-	void AssetPanel::CreateMaterial(const std::filesystem::path& path)
-	{
-		std::filesystem::path materialPath = path.string() + ".hmat";
-		uint32_t suffix = 1;
-
-		while (File::Exists(materialPath))
-			materialPath = path.string() + std::to_string(suffix) + ".hmat";
-
-		AssetHandle materialHandle = AssetHandle();
-
-		//Write meta file
-		{
-			YAML::Emitter out;
-			out << YAML::BeginMap;
-			YamlUtils::Serialize(out, "UID", materialHandle);
-			YamlUtils::Serialize(out, "Type", AssetType::Material);
-			YamlUtils::Map(out, "Importer", []() {});
-			out << YAML::EndMap;
-			File::WriteFile(materialPath.string() + ".meta", out.c_str());
-		}
-		//Write hmat file
-		{
-			YAML::Emitter out;
-			out << YAML::BeginMap;
-			YamlUtils::Serialize(out, "Shader", INVALID_ASSET_HANDLE);
-			YamlUtils::Map(out, "Parameters", []() {});
-			YamlUtils::Map(out, "Textures", []() {});
-			out << YAML::EndMap;
-			File::WriteFile(materialPath, out.c_str());
-		}
-
-		MaterialImportSettings settings = {};
-		settings.Handle = materialHandle;
-		settings.PipelineHandle = INVALID_ASSET_HANDLE;
-
-		AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(materialPath, settings)->Execute()->GetResult<AssetPackElement>();
-
-		AssetPack pack = EditorAssetPackBuilder::CreateAssetPack({ element });
-		CachedBuffer buffer = EditorAssetPackBuilder::AssetPackToBuffer(pack);
-		File::WriteBinaryFile(materialPath.string() + ".hpack", buffer.GetData(), buffer.GetSize());
-
-		AssetManager::ImportAssetPack(pack, materialPath.string() + ".hpack");
 	}
 }

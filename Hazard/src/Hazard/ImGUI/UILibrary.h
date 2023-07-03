@@ -55,7 +55,8 @@ namespace Hazard::ImUI
 		callback();
 		ImGui::PopID();
 	}
-	static inline void FocusCurrentWindow() {
+	static inline void FocusCurrentWindow()
+	{
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
 	}
 	static inline bool NavigatedTo()
@@ -78,8 +79,8 @@ namespace Hazard::ImUI
 		const ImVec2 cursor = ImGui::GetCursorScreenPos();
 
 		ImGui::GetWindowDrawList()->AddLine(ImVec2(cursor.x + offsetX, cursor.y + offsetY),
-			ImVec2(cursor.x + width, cursor.y + offsetY),
-			ImGui::ColorConvertFloat4ToU32({ 0.2f, 0.2f, 0.2f, 1.0f }), 1.0f);
+											ImVec2(cursor.x + width, cursor.y + offsetY),
+											ImGui::ColorConvertFloat4ToU32({ 0.2f, 0.2f, 0.2f, 1.0f }), 1.0f);
 
 		if (fullWidth)
 		{
@@ -285,7 +286,7 @@ namespace Hazard::ImUI
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			modified = InputFloat(value, clearValue, speed, min, max, isMixed);
-			});
+		});
 		ImGui::NextColumn();
 		return modified;
 	}
@@ -297,7 +298,7 @@ namespace Hazard::ImUI
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			modified = SliderFloat(value, clearValue, min, max);
-			});
+		});
 		ImGui::NextColumn();
 		return modified;
 	}
@@ -308,7 +309,7 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		Group(name, [&]() {
 			modified |= InputFloat2(value, clearValue, flags);
-			});
+		});
 		ImGui::NextColumn();
 		return modified;
 	}
@@ -321,7 +322,7 @@ namespace Hazard::ImUI
 
 		Group(name, [&]() {
 			modified = InputFloat3(value, clearValue, flags);
-			});
+		});
 		ImGui::NextColumn();
 		return modified;
 	}
@@ -337,7 +338,7 @@ namespace Hazard::ImUI
 		Group(name, [&]() {
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			modified = Checkbox(value);
-			});
+		});
 		ImGui::NextColumn();
 		return modified;
 	}
@@ -351,7 +352,8 @@ namespace Hazard::ImUI
 		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
 		if (ImGui::BeginCombo(id, options[selected]))
 		{
-			for (uint32_t i = 0; i < count; i++) {
+			for (uint32_t i = 0; i < count; i++)
+			{
 				bool isSelected = i == selected;
 
 				if (ImGui::Selectable(options[i], i == currentSelection))
@@ -360,7 +362,8 @@ namespace Hazard::ImUI
 					modified = true;
 					selected = i;
 				}
-				if (isSelected) {
+				if (isSelected)
+				{
 					ImGui::SetItemDefaultFocus();
 				}
 			}
@@ -379,7 +382,8 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		return modified;
 	}
-	static bool ColorPicker(const char* id, Color& color, bool isMixed = false) {
+	static bool ColorPicker(const char* id, Color& color, bool isMixed = false)
+	{
 
 		bool modified = false;
 		ImVec4 col = { color.r, color.g, color.b, color.a };
@@ -404,7 +408,8 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Buttons
 
-	static bool ColoredButton(const char* label, ImVec4 backgroundColor, ImVec4 foregroundColor, ImVec2 buttonSize = { 16, 16 }) {
+	static bool ColoredButton(const char* label, ImVec4 backgroundColor, ImVec4 foregroundColor, ImVec2 buttonSize = { 16, 16 })
+	{
 		ScopedStyleColor textColor(ImGuiCol_Text, foregroundColor);
 		ScopedStyleColor buttonColor(ImGuiCol_Button, backgroundColor);
 
@@ -427,40 +432,40 @@ namespace Hazard::ImUI
 
 		switch (GraphicsContext::GetRenderAPI())
 		{
-#ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL:
-			return (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
-#endif
-#ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan:
-		{
-			Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
-			const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
-			const Ref<Vulkan::VulkanSampler>& vkSampler = sampler.As<Vulkan::VulkanSampler>();
-
-			if (!vkImage->IsValid() && vkSampler->GetVulkanSampler())
+		#ifdef HZR_INCLUDE_OPENGL
+			case RenderAPI::OpenGL:
+				return (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
+			#endif
+			#ifdef HZR_INCLUDE_VULKAN
+			case RenderAPI::Vulkan:
 			{
-				auto& white = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
-				const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();
-				cache[white.Raw()] = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), whiteImageDesc.imageView, whiteImageDesc.imageLayout);
-				return cache[white.Raw()];
-			}
+				Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
+				const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
+				const Ref<Vulkan::VulkanSampler>& vkSampler = sampler.As<Vulkan::VulkanSampler>();
 
-			ImTextureID id = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), imageInfo.imageView, imageInfo.imageLayout);
-			cache[image.Raw()] = id;
-			return id;
-		}
-#endif
-#ifdef HZR_INCLUDE_METAL
-            case RenderAPI::Metal:
-            {
-                cache[image.Raw()] = image.As<Metal::MetalImage2D>()->GetMetalTexture();
-                return cache[image.Raw()];
-            }
-#endif
-            default:
-                HZR_ASSERT(false, "Undefined ImageID");
-                break;
+				if (!vkImage->IsValid() && vkSampler->GetVulkanSampler())
+				{
+					auto& white = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
+					const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();
+					cache[white.Raw()] = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), whiteImageDesc.imageView, whiteImageDesc.imageLayout);
+					return cache[white.Raw()];
+				}
+
+				ImTextureID id = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), imageInfo.imageView, imageInfo.imageLayout);
+				cache[image.Raw()] = id;
+				return id;
+			}
+		#endif
+		#ifdef HZR_INCLUDE_METAL
+			case RenderAPI::Metal:
+			{
+				cache[image.Raw()] = image.As<Metal::MetalImage2D>()->GetMetalTexture();
+				return cache[image.Raw()];
+			}
+		#endif
+			default:
+				HZR_ASSERT(false, "Undefined ImageID");
+				break;
 		}
 
 		return 0;
@@ -480,7 +485,7 @@ namespace Hazard::ImUI
 		ImGui::SameLine(0, 5);
 
 		if (texture)
-			Image(texture->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), texture->GetSampler(), {size, size});
+			Image(texture->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), texture->GetSampler(), { size, size });
 		else
 		{
 			ImVec2 pos = ImGui::GetCursorScreenPos();
@@ -502,7 +507,7 @@ namespace Hazard::ImUI
 		Group(name, [&]() {
 			modified = TextureSlot(text, texture);
 			callback();
-			});
+		});
 		ImGui::NextColumn();
 		return modified;
 	}
@@ -512,7 +517,8 @@ namespace Hazard::ImUI
 	template<typename T>
 	static bool Treenode(const char* title, ImGuiTreeNodeFlags flags, T callback)
 	{
-		if (ImGui::TreeNodeEx(title, flags)) {
+		if (ImGui::TreeNodeEx(title, flags))
+		{
 			callback();
 			ImGui::TreePop();
 			return true;
@@ -523,7 +529,8 @@ namespace Hazard::ImUI
 	template<typename T>
 	static bool Treenode(const char* title, void* id, ImGuiTreeNodeFlags flags, T callback)
 	{
-		if (ImGui::TreeNode(id, title, flags)) {
+		if (ImGui::TreeNode(id, title, flags))
+		{
 
 			callback();
 			ImGui::TreePop();
@@ -533,7 +540,8 @@ namespace Hazard::ImUI
 	}
 	static bool Treenode(const char* title, ImGuiTreeNodeFlags flags)
 	{
-		if (ImGui::TreeNodeEx(title, flags)) {
+		if (ImGui::TreeNodeEx(title, flags))
+		{
 			return true;
 		}
 		return false;
@@ -610,12 +618,14 @@ namespace Hazard::ImUI
 			| ImGuiTableFlags_ScrollY
 			| ImGuiTableFlags_RowBg;
 
-		if (!ImGui::BeginTable(tableName, columnCount, flags, size)) {
+		if (!ImGui::BeginTable(tableName, columnCount, flags, size))
+		{
 			return;
 		}
 
 		//Setup
-		for (uint32_t i = 0; i < columnCount; i++) {
+		for (uint32_t i = 0; i < columnCount; i++)
+		{
 			ImGui::TableSetupColumn(columns[i]);
 		}
 
@@ -627,14 +637,15 @@ namespace Hazard::ImUI
 			ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
 			ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);
 
-			for (uint32_t i = 0; i < columnCount; i++) {
+			for (uint32_t i = 0; i < columnCount; i++)
+			{
 				ImGui::TableSetColumnIndex(i);
 				const char* columnName = ImGui::TableGetColumnName(i);
 				Group(columnName, [&]() {
 					Shift(edgeOffset * 3.0f, edgeOffset * 2.0f);
 					ImGui::TableHeader(columnName);
 					Shift(-edgeOffset * 3.0f, -edgeOffset * 2.0f);
-					});
+				});
 			}
 			ImGui::SetCursorPosX(ImGui::GetCurrentTable()->OuterRect.Min.x);
 			Underline(true, 0.0f, 5.0f);
@@ -646,7 +657,8 @@ namespace Hazard::ImUI
 	}
 
 	template<typename T>
-	static void Table(const char* tableName, const char** columns, uint32_t columnCount, T callback) {
+	static void Table(const char* tableName, const char** columns, uint32_t columnCount, T callback)
+	{
 		Table(tableName, columns, columnCount, ImGui::GetContentRegionAvail(), callback);
 	}
 
@@ -674,7 +686,7 @@ namespace Hazard::ImUI
 
 		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);
 		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(id),
-			&isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnClickRelease);
+												  &isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnClickRelease);
 
 		ImGui::SetItemAllowOverlap();
 		ImGui::PopClipRect();
@@ -684,8 +696,7 @@ namespace Hazard::ImUI
 		// Row colouring
 		//--------------
 
-		auto fillRowWithColour = [](const ImColor& colour)
-		{
+		auto fillRowWithColour = [](const ImColor& colour) {
 			for (int column = 0; column < ImGui::TableGetColumnCount(); column++)
 				ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, colour, column);
 		};
@@ -695,7 +706,8 @@ namespace Hazard::ImUI
 
 		if (selected)
 		{
-			if (isWindowFocused || NavigatedTo()) {
+			if (isWindowFocused || NavigatedTo())
+			{
 				fillRowWithColour(ColorWithMultiplier(bgCol, 1.2f));
 			}
 			else
@@ -755,7 +767,7 @@ namespace Hazard::ImUI
 
 		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);
 		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(id),
-			&isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnDoubleClick);
+												  &isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnDoubleClick);
 
 		ImGui::SetItemAllowOverlap();
 		ImGui::PopClipRect();
@@ -767,7 +779,8 @@ namespace Hazard::ImUI
 #pragma region Menus
 
 	template<typename T>
-	static bool ContextMenu(T callback) {
+	static bool ContextMenu(T callback)
+	{
 		ScopedStyleStack padding(ImGuiStyleVar_WindowPadding, ImVec2(4.0f, 4.0f), ImGuiStyleVar_PopupRounding, 4.0f, ImGuiStyleVar_ItemSpacing, ImVec2(16.0f, 4.0f), ImGuiStyleVar_ChildBorderSize, 0);
 		if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight))
 		{
@@ -778,8 +791,10 @@ namespace Hazard::ImUI
 		return false;
 	}
 	template<typename T>
-	static bool Submenu(const char* label, T callback) {
-		if (ImGui::BeginMenu(label)) {
+	static bool Submenu(const char* label, T callback)
+	{
+		if (ImGui::BeginMenu(label))
+		{
 			callback();
 			ImGui::EndMenu();
 			return true;
@@ -787,15 +802,15 @@ namespace Hazard::ImUI
 		return false;
 	}
 	template<typename T>
-	static void MenuItem(const char* label, T callback) {
-		if (ImGui::MenuItem(label)) {
+	static void MenuItem(const char* label, T callback)
+	{
+		if (ImGui::MenuItem(label))
 			callback();
-		}
 	}
 	static void Separator(ImVec2 size, ImVec4 color);
 
 	static void MenuHeader(const char* label)
-    {
+	{
 		ImGui::PushID(label);
 		const Style& style = StyleManager::GetCurrent();
 		ImGui::TextColored(style.Window.TextDark, "%s", label);
@@ -826,7 +841,7 @@ namespace Hazard::ImUI
 	static bool DragSource(const char* type, T* data, Callback callback)
 	{
 		if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID))
-        {
+		{
 			ImGui::SetDragDropPayload(type, (void*)data, sizeof(T));
 			callback();
 			ImGui::EndDragDropSource();
@@ -837,17 +852,19 @@ namespace Hazard::ImUI
 	template<typename T, typename Callback>
 	static bool DragSource(const AssetType& type, T* data, Callback callback)
 	{
-        return DragSource(Utils::AssetTypeToString(type), data, callback);
+		return DragSource(Utils::AssetTypeToString(type), data, callback);
 	}
 
 	template<typename T, typename Callback>
 	static bool DropTarget(const char* type, Callback callback)
 	{
 		bool accepted = false;
-		if (ImGui::BeginDragDropTarget()) {
+		if (ImGui::BeginDragDropTarget())
+		{
 
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type);
-			if (payload) {
+			if (payload)
+			{
 				callback(*(T*)payload->Data);
 				accepted = true;
 			}
@@ -864,7 +881,7 @@ namespace Hazard::ImUI
 		{
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Utils::AssetTypeToString(type));
 			if (payload)
-            {
+			{
 				callback(*(T*)payload->Data);
 				accepted = true;
 			}
@@ -1177,7 +1194,7 @@ namespace Hazard::ImUI
 		//window->Size = window->SizeFull;
 		return changed;
 		*/
-        return false;
+		return false;
 	}
 
 }

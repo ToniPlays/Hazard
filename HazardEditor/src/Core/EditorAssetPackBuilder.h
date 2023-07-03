@@ -8,12 +8,13 @@
 #include "GUI/AssetTools/AssetImporterPanel.h"
 #include <Hazard/Rendering/Mesh/MaterialAssetLoader.h>
 
+//TODO: Get rid of this mostly
+
 using namespace Hazard;
 class EditorAssetPackBuilder
 {
 public:
 	static AssetPack CreateAssetPack(const std::vector<AssetPackElement> element);
-	static CachedBuffer AssetPackToBuffer(const AssetPack& pack);
 	static void GenerateAndSaveAssetPack(Ref<Job> job, const std::filesystem::path& path);
 
 	static void ImageAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings);

@@ -13,20 +13,21 @@
 
 namespace Hazard
 {
-	class WorldSerializer {
+	class WorldSerializer
+	{
 	public:
 
-		WorldSerializer(Ref<World> world) : m_World(world) {}
+		WorldSerializer(Ref<World> world) : m_World(world)
+		{
+		}
 
 		template<typename T>
 		void TrySerializeEditor(Entity& entity, YAML::Emitter& out)
 		{
-			if (entity.HasComponent<T>()) 
-			{
+			if (entity.HasComponent<T>())
 				SerializeComponentEditor(entity, entity.GetComponent<T>(), out);
-			}
 		}
-		bool SerializeEditor(const std::filesystem::path& file);
+		Buffer Serialize();
 		void SerializeEntityEditor(Entity& entity, YAML::Emitter& out);
 		template<typename T>
 		void SerializeComponentEditor(Entity& entity, T& component, YAML::Emitter& out);
@@ -43,7 +44,7 @@ namespace Hazard
 		{
 			YamlUtils::Map(out, "TagComponent", [&]() {
 				YamlUtils::Serialize(out, "Tag", component.Tag);
-				});
+			});
 		}
 
 		template<>
@@ -53,7 +54,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Translation", component.GetTranslation());
 				YamlUtils::Serialize(out, "Rotation", component.GetRotation());
 				YamlUtils::Serialize(out, "Scale", component.GetScale());
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, CameraComponent& component, YAML::Emitter& out)
@@ -64,7 +65,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Fov", component.GetFov());
 				YamlUtils::Serialize(out, "Size", component.GetSize());
 				YamlUtils::Serialize(out, "Clipping", component.GetClipping());
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, ScriptComponent& component, YAML::Emitter& out)
@@ -73,14 +74,14 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "ModuleName", component.ModuleName);
 
-				if (component.m_Handle) 
+				if (component.m_Handle)
 				{
 					YamlUtils::Map(out, "Fields", [&]() {
 						for (auto& [name, field] : component.m_Handle->GetScript().GetFields())
 							ScriptSerializer::SerializeFieldEditor(component.m_Handle, out, field);
-						});
+					});
 				}
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, SkyLightComponent& component, YAML::Emitter& out)
@@ -92,7 +93,7 @@ namespace Hazard
 
 				if (!component.EnvironmentMap) return;
 				YamlUtils::Serialize<AssetHandle>(out, "EnvironmentMap", component.EnvironmentMap->GetSourceImage()->GetHandle());
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, DirectionalLightComponent& component, YAML::Emitter& out)
@@ -101,7 +102,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.LightColor);
 				YamlUtils::Serialize(out, "Intensity", component.Intensity);
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, PointLightComponent& component, YAML::Emitter& out)
@@ -111,7 +112,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Color", component.LightColor);
 				YamlUtils::Serialize(out, "Intensity", component.Intensity);
 				YamlUtils::Serialize(out, "Radius", component.Radius);
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor<MeshComponent>(Entity& entity, MeshComponent& component, YAML::Emitter& out)
@@ -120,7 +121,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Mesh", component.MeshHandle);
 				YamlUtils::Serialize(out, "Material", component.MaterialHandle);
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, SpriteRendererComponent& component, YAML::Emitter& out)
@@ -129,7 +130,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Color", component.Color);
 				YamlUtils::Serialize(out, "Sprite", component.Texture);
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, Rigidbody2DComponent& component, YAML::Emitter& out)
@@ -139,7 +140,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Type", Physics::BodyTypeToString(component.Type));
 				YamlUtils::Serialize(out, "FixedRotation", component.FixedRotation);
 				YamlUtils::Serialize(out, "UseGravity", component.UseGravity);
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, BoxCollider2DComponent& component, YAML::Emitter& out)
@@ -153,7 +154,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Restitution", component.Restitution);
 				YamlUtils::Serialize(out, "RestitutionThreshold", component.RestitutionThreshold);
 				YamlUtils::Serialize(out, "IsSensor", component.IsSensor);
-				});
+			});
 		}
 		template<>
 		void SerializeComponentEditor(Entity& entity, CircleCollider2DComponent& component, YAML::Emitter& out)
@@ -167,7 +168,7 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Restitution", component.Restitution);
 				YamlUtils::Serialize(out, "RestitutionThreshold", component.RestitutionThreshold);
 				YamlUtils::Serialize(out, "IsSensor", component.IsSensor);
-				});
+			});
 		}
 	};
 }

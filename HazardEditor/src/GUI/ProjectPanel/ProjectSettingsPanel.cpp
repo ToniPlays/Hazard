@@ -3,9 +3,9 @@
 
 namespace UI
 {
-	void ProjectSettingsPanel::OnPanelRenderer()
+	void ProjectSettingsPanel::OnPanelRender()
 	{
-		DrawInputSettingsPanel();
+
 	}
 	void ProjectSettingsPanel::DrawInputSettingsPanel()
 	{

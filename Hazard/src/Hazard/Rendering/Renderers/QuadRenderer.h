@@ -27,19 +27,17 @@ namespace Hazard
 	class QuadRenderer 
 	{
 	public:
-		QuadRenderer();
+		QuadRenderer() = default;
 		~QuadRenderer() = default;
 		QuadRenderer(const QuadRenderer&) = delete;
 		QuadRenderer(const QuadRenderer&&) = delete;
 
 		void Init();
-
 		void BeginScene();
 		void EndScene();
-
 		void BeginBatch();
-
 		void Flush();
+
 		void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture);
 		void SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, Ref<Texture2DAsset> texture);
 		bool IsVisible(const glm::mat4& transform);
