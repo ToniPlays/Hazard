@@ -154,7 +154,12 @@ namespace Hazard
 
 				s_Resources->CameraUniformBuffer->SetData(region);
 
+				//Update materials
+				Ref<Material> defaultMaterial = AssetManager::GetAsset<Material>(s_Resources->PBRMaterialHandle);
+				Ref<Pipeline> defaultPipeline = AssetManager::GetAsset<AssetPointer>(defaultMaterial->GetPipeline())->Value.As<Pipeline>();
+				defaultPipeline->SetRenderPass(camera.RenderPass);
 				commandBuffer->BeginRenderPass(camera.RenderPass);
+
 				m_RasterizedRenderGraph->SetInput("MeshInputInstructions", worldDrawList.GeometryPassInstructions.data(), worldDrawList.GeometryPassInstructions.size() * sizeof(GraphInstruction));
 				m_RasterizedRenderGraph->SetInput("MeshStageInputResources", worldDrawList.Buffers.data(), worldDrawList.Buffers.size() * sizeof(GraphInstruction));
 				m_RasterizedRenderGraph->Execute(commandBuffer);

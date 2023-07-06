@@ -50,7 +50,7 @@ namespace Hazard
 
 		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
 		if (!mesh) return;
-		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), nullptr, id);
+		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetMaterial(), id);
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> material, size_t count, int id)
 	{
@@ -60,7 +60,7 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-		SubmitMesh(transform, vertexBuffer, indexBuffer, material, indexBuffer->GetSize() / 3, id);
+		SubmitMesh(transform, vertexBuffer, indexBuffer, material, indexBuffer->GetSize() / sizeof(uint32_t), id);
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count, int id)
 	{

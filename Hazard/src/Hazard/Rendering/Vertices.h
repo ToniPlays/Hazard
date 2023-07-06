@@ -23,10 +23,10 @@ namespace Hazard
 				{ "a_Tangent",			ShaderDataType::Float3, PerVertex },
 				{ "a_Binormal",			ShaderDataType::Float3, PerVertex },
 				{ "a_TextureCoords",	ShaderDataType::Float2, PerVertex },
-				{ "a_MRow0",			ShaderDataType::Float4, PerInstance },
-                { "a_MRow0",            ShaderDataType::Float4, PerInstance },
-                { "a_MRow0",            ShaderDataType::Float4, PerInstance },
-                { "a_EntityID",         ShaderDataType::Int, PerInstance }
+				//{ "a_MRow0",			ShaderDataType::Float4, PerInstance },
+                //{ "a_MRow0",            ShaderDataType::Float4, PerInstance },
+                //{ "a_MRow0",            ShaderDataType::Float4, PerInstance },
+                //{ "a_EntityID",         ShaderDataType::Int, PerInstance }
 			};
 		}
 	};

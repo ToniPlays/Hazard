@@ -67,7 +67,7 @@ namespace Hazard
         Ref<HazardRenderer::GPUBuffer> TransformBuffer;
 
 		AssetHandle SkyboxPipelineHandle;
-		Ref<Material> PBRMaterial;
+		AssetHandle PBRMaterialHandle;
 
         AssetHandle WhiteTextureHandle;
 		AssetHandle BRDFLut;
@@ -86,7 +86,6 @@ namespace Hazard
 				cameraUBO.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
 
 				CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
-                
 				SkyboxPipelineHandle = AssetManager::GetHandleFromKey("Skybox.glsl");
 
                 auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
@@ -94,6 +93,10 @@ namespace Hazard
                 
 				WhiteTextureHandle = AssetManager::CreateMemoryOnly(AssetType::Image, asset);
 				BRDFLut = AssetManager::GetHandleFromKey("BRDF_LUT.tga");
+
+
+				Ref<Material> defaultMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("PBR_Static"));
+				PBRMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, defaultMaterial);
 
 				CubemapTextureCreateInfo blackCubemap = {};
 				blackCubemap.DebugName = "BlackCubemap";

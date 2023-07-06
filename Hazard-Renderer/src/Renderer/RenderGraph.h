@@ -4,6 +4,8 @@
 #include "RenderGraphInfo.h"
 #include "Backend/Core/RenderCommandBuffer.h"
 
+#include <atomic>
+
 namespace HazardRenderer
 {
 	struct InputResourceData
@@ -20,6 +22,11 @@ namespace HazardRenderer
 		void SetInput(const std::string& input, void* data, uint64_t count);
 		void Execute(Ref<RenderCommandBuffer> commandBuffer);
 
+		float GetExecutionTime()
+		{
+			return m_ExecutionTime;
+		}
+
 		static Ref<RenderGraph> Create(RenderGraphCreateInfo* createInfo);
 
 	private:
@@ -33,5 +40,7 @@ namespace HazardRenderer
 		std::vector<InputResourceData> m_InputResources;
 		std::unordered_map<std::string, uint32_t> m_InputResourceBindings;
 		std::unordered_map<std::string, ImageDependency> m_ImageDependencies;
+
+		std::atomic<float> m_ExecutionTime = 0.0f;
 	};
 }

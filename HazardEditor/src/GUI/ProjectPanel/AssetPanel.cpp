@@ -303,7 +303,7 @@ namespace UI
 
 		auto path = m_CurrentPath;
 
-		while (path != m_RootPath)
+		while (path != m_RootPath && path.has_root_directory())
 		{
 			m_Paths.push_back(path);
 			path = path.parent_path();

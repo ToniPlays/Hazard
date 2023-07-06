@@ -19,20 +19,23 @@ namespace Hazard
 
 		BufferCreateInfo vboInfo = {};
 		vboInfo.Name = createInfo->DebugName;
-		vboInfo.Size = createInfo->VertexCount;
+		vboInfo.Size = createInfo->VertexCount * sizeof(Vertex3D);
 		vboInfo.Data = createInfo->pVertices;
-		vboInfo.UsageFlags = createInfo->UsageFlags;
+		vboInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-		//m_VertexBuffer = GPUBuffer::Create(&vboInfo);
+		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 
 		BufferCreateInfo iboInfo = {};
 		iboInfo.Name = createInfo->DebugName;
-		iboInfo.Size = createInfo->IndexCount;
+		iboInfo.Size = createInfo->IndexCount * sizeof(uint32_t);
 		iboInfo.Data = createInfo->pIndices;
-		iboInfo.UsageFlags = createInfo->UsageFlags;
+		iboInfo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
 
-		//m_IndexBuffer = GPUBuffer::Create(&iboInfo);
+		m_IndexBuffer = GPUBuffer::Create(&iboInfo);
 		m_BoundingBox = createInfo->BoundingBox;
+
+		m_MaterialHandle = RenderEngine::GetResources().PBRMaterialHandle;
+
 	}
 
 	Mesh::Mesh(Ref<HazardRenderer::GPUBuffer> vertexBuffer, Ref<HazardRenderer::GPUBuffer> indexBuffer, Ref<AssetPointer> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer)

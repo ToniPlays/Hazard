@@ -102,7 +102,7 @@ namespace HazardRenderer::Vulkan
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
-		auto setLayouts = m_Shader->GetDescriptorSetLayouts();
+		auto& setLayouts = m_Shader->GetDescriptorSetLayouts();
 		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
 
 		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());

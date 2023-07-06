@@ -3,6 +3,8 @@
 #include "Hazard/Assets/Asset.h"
 #include "Hazard/Core/Core.h"
 #include "HazardRendererCore.h"
+#include "Hazard/Assets/AssetManager.h"
+#include "Material.h"
 #include "../Vertices.h"
 #include <glm/glm.hpp>
 
@@ -20,7 +22,6 @@ namespace Hazard
 		Vertex3D* pVertices;
 		size_t IndexCount;
 		uint32_t* pIndices;
-		uint32_t UsageFlags = 0;
 	};
 
 	struct SubMesh 
@@ -50,11 +51,15 @@ namespace Hazard
 
 		Ref<HazardRenderer::GPUBuffer> GetVertexBuffer() { return m_VertexBuffer; }
 		Ref<HazardRenderer::GPUBuffer> GetIndexBuffer() { return m_IndexBuffer; }
+
+		Ref<Material> GetMaterial() { return AssetManager::GetAsset<Material>(GetMaterialHandle()); }
+		AssetHandle GetMaterialHandle() { return m_MaterialHandle; }
 		const BoundingBox& GetBoundingBox() { return m_BoundingBox; }
 
 	private:
 		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer = nullptr;
 		Ref<HazardRenderer::GPUBuffer> m_IndexBuffer = nullptr;
+		AssetHandle m_MaterialHandle = INVALID_ASSET_HANDLE;
 
 		Buffer m_LocalVertexData;
 		Buffer m_LocalIndexData;

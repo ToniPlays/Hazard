@@ -1,6 +1,8 @@
 #include "EditorAssetPackBuilder.h"
 
 #include "Hazard/Assets/AssetManager.h"
+#include "GUIManager.h"
+#include <GUI/ProjectPanel/AssetPanel.h>
 
 AssetPack EditorAssetPackBuilder::CreateAssetPack(const std::vector<AssetPackElement> element)
 {
@@ -25,9 +27,10 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 	//Save asset pack and generate meta file
 
 	File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
-
 	AssetManager::ImportAssetPack(pack, path);
-
+	auto projectPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>();
+	if (projectPanel)
+		projectPanel->RefreshFolderItems();
 	pack.Free();
 }
 

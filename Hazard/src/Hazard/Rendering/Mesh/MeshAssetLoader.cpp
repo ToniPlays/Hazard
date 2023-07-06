@@ -47,10 +47,9 @@ namespace Hazard
 		MeshCreateInfo info = {};
 		info.DebugName = fmt::format("Mesh {}", handle);
 		info.BoundingBox = header.BoundingBox;
-		info.UsageFlags = 0;
-		info.VertexCount = vertices.size() * sizeof(Vertex3D);
+		info.VertexCount = vertices.size();
 		info.pVertices = vertices.data();
-		info.IndexCount = indices.size() * sizeof(uint32_t);
+		info.IndexCount = indices.size();
 		info.pIndices = indices.data();
 
 		Ref<Mesh> asset = Ref<Mesh>::Create(&info);

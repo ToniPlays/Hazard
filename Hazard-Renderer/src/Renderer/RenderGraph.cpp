@@ -1,5 +1,6 @@
 #include "RenderGraph.h"
 #include "spdlog/fmt/fmt.h"
+#include <MathCore.h>
 
 namespace HazardRenderer
 {
@@ -11,6 +12,7 @@ namespace HazardRenderer
 
 	void RenderGraph::Execute(Ref<RenderCommandBuffer> commandBuffer)
 	{
+		Timer timer;
 		for (const auto& stage : m_Stages)
 		{
 			for (uint64_t i = 0; i < stage.InputCount; i++)
@@ -80,6 +82,7 @@ namespace HazardRenderer
 				}
 			}
 		}
+		m_ExecutionTime = timer.ElapsedMillis();
 	}
 
 	Ref<RenderGraph> RenderGraph::Create(RenderGraphCreateInfo* createInfo)
