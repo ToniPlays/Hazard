@@ -53,6 +53,6 @@ namespace UI
 		bool m_WindowFocused = false;
 
 		bool m_RaytracingSettings = false;
-		uint32_t m_ViewportSettings = ViewportSettingsFlags_LightIcons;
+		uint32_t m_ViewportSettings = ViewportSettingsFlags_LightIcons | ViewportSettingsFlags_CameraFrustum;
 	};
 }

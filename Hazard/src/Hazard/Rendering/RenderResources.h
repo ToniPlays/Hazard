@@ -80,45 +80,20 @@ namespace Hazard
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
 			{
-				/*
-				UniformBufferCreateInfo utilityUbo = {};
-				utilityUbo.Name = "Utility";
-				utilityUbo.Set = 0;
-				utilityUbo.Binding = 0;
-				utilityUbo.Size = sizeof(UtilityUniformData);
-
-				UtilityUniformBuffer = UniformBuffer::Create(&utilityUbo);
-
-				UniformBufferCreateInfo cameraUBO = {};
+				BufferCreateInfo cameraUBO = {};
 				cameraUBO.Name = "Camera";
-				cameraUBO.Set = 0;
-				cameraUBO.Binding = 2;
 				cameraUBO.Size = sizeof(CameraData);
+				cameraUBO.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
 
 				CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
-
-				UniformBufferCreateInfo lightUBO = {};
-				lightUBO.Name = "Lights";
-				lightUBO.Set = 0;
-				lightUBO.Binding = 1;
-				lightUBO.Size = sizeof(LightingData);
-
-				LightUniformBuffer = GPUBuffer::Create(&lightUBO);
                 
-                VertexBufferCreateInfo transformBufferInfo = {};
-                transformBufferInfo.Name = "TransformStorageBuffer";
-                transformBufferInfo.Size = sizeof(InstanceTransform) * 10240;
-                
-                TransformBuffer = GPUBuffer::Create(&transformBufferInfo);
-                
-				//AssetHandle pbrPipeline = AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack");
-				SkyboxPipelineHandle = AssetManager::GetHandleFromKey("Skybox.glsl.hpack");
+				SkyboxPipelineHandle = AssetManager::GetHandleFromKey("Skybox.glsl");
 
                 auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
                 Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
                 
 				WhiteTextureHandle = AssetManager::CreateMemoryOnly(AssetType::Image, asset);
-				BRDFLut = AssetManager::GetHandleFromKey("BRDF_LUT.tga.hpack");
+				BRDFLut = AssetManager::GetHandleFromKey("BRDF_LUT.tga");
 
 				CubemapTextureCreateInfo blackCubemap = {};
 				blackCubemap.DebugName = "BlackCubemap";
@@ -144,7 +119,6 @@ namespace Hazard
 
 				WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
 				data.Release();
-				*/
 
 				SamplerCreateInfo samplerInfo = {};
 				samplerInfo.DebugName = "DefaultImageSampler";

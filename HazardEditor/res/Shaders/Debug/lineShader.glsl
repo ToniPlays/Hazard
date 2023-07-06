@@ -20,8 +20,10 @@ void main()
 layout(location = 0) in vec4 f_Color;
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out uint EntityID;
 
 void main() 
 {
 	color = f_Color;
+	EntityID = 0;
 }

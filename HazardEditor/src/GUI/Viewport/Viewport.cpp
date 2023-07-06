@@ -20,7 +20,7 @@ namespace UI
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 3;
 		frameBufferInfo.ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::RED32I, ImageFormat::Depth } };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, { ImageFormat::RED32I, FramebufferBlendMode::None }, ImageFormat::Depth } };
 		frameBufferInfo.Width = 1280;
 		frameBufferInfo.Height = 720;
 
@@ -80,7 +80,8 @@ namespace UI
 							HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 						else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
 
-						HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
+						if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)
+							HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
 					}
 				}
 			}

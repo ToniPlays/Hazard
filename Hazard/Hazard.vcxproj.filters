@@ -282,12 +282,6 @@
     <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Rasterized\RasterizedRenderer.h">
-      <Filter>src\Hazard\Rendering\Rasterized</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Raytraced\RaytracedRenderer.h">
-      <Filter>src\Hazard\Rendering\Raytraced</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
@@ -1771,12 +1765,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Rasterized\RasterizedRenderer.cpp">
-      <Filter>src\Hazard\Rendering\Rasterized</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Raytraced\RaytracedRenderer.cpp">
-      <Filter>src\Hazard\Rendering\Raytraced</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>

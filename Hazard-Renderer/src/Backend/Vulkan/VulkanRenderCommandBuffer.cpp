@@ -37,18 +37,18 @@ namespace HazardRenderer::Vulkan
 
 		switch (queue)
 		{
-		case HazardRenderer::DeviceQueue::GraphicsBit:
-			m_SubmitQueue = device->GetGraphicsQueue();
-			cmdPoolInfo.queueFamilyIndex = queueIndices.Graphics;
-			break;
-		case HazardRenderer::DeviceQueue::ComputeBit:
-			m_SubmitQueue = device->GetComputeQueue();
-			cmdPoolInfo.queueFamilyIndex = queueIndices.Compute;
-			break;
-		case HazardRenderer::DeviceQueue::TransferBit:
-			m_SubmitQueue = device->GetGraphicsQueue();
-			cmdPoolInfo.queueFamilyIndex = queueIndices.Graphics;
-			break;
+			case HazardRenderer::DeviceQueue::GraphicsBit:
+				m_SubmitQueue = device->GetGraphicsQueue();
+				cmdPoolInfo.queueFamilyIndex = queueIndices.Graphics;
+				break;
+			case HazardRenderer::DeviceQueue::ComputeBit:
+				m_SubmitQueue = device->GetComputeQueue();
+				cmdPoolInfo.queueFamilyIndex = queueIndices.Compute;
+				break;
+			case HazardRenderer::DeviceQueue::TransferBit:
+				m_SubmitQueue = device->GetGraphicsQueue();
+				cmdPoolInfo.queueFamilyIndex = queueIndices.Graphics;
+				break;
 		}
 
 
@@ -221,7 +221,7 @@ namespace HazardRenderer::Vulkan
 			VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin Command Buffer");
 			instance->m_ActiveCommandBuffer = buffer;
 
-			instance->BeginPerformanceQuery_RT();
+			//instance->BeginPerformanceQuery_RT();
 
 			return;
 		}
@@ -240,8 +240,8 @@ namespace HazardRenderer::Vulkan
 
 			VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin Command Buffer");
 
-			instance->BeginPerformanceQuery_RT();
-			});
+			//instance->BeginPerformanceQuery_RT();
+		});
 	}
 	void VulkanRenderCommandBuffer::End()
 	{
@@ -251,7 +251,7 @@ namespace HazardRenderer::Vulkan
 
 		if (m_OwnedBySwapchain)
 		{
-			instance->EndPerformanceQuery_RT();
+			//instance->EndPerformanceQuery_RT();
 			vkEndCommandBuffer(m_ActiveCommandBuffer);
 			m_State = State::Finished;
 			return;
@@ -259,11 +259,11 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance]() mutable {
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
-			instance->EndPerformanceQuery_RT();
+			//instance->EndPerformanceQuery_RT();
 			VK_CHECK_RESULT(vkEndCommandBuffer(instance->m_ActiveCommandBuffer), "Failed to end command buffer");
 			instance->m_ActiveCommandBuffer = nullptr;
 			instance->m_State = State::Finished;
-			});
+		});
 	}
 	void VulkanRenderCommandBuffer::Submit()
 	{
@@ -299,7 +299,7 @@ namespace HazardRenderer::Vulkan
 
 			instance->GetQueryPoolResults_RT();
 
-			});
+		});
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
 	{
@@ -310,7 +310,7 @@ namespace HazardRenderer::Vulkan
 		Renderer::Submit([instance, pass, explicitClear]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BeginRenderPass");
 			instance->BeginRenderPass_RT(pass, explicitClear);
-			});
+		});
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear)
 	{
@@ -382,9 +382,9 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::EndRenderPass");
-		HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
-		vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
-			});
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
+		});
 	}
 	void VulkanRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding)
 	{
@@ -396,12 +396,12 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, buffer, binding]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindVertexBuffer");
-		HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
-		VkBuffer vkBuffer = buffer->GetVulkanBuffer();
-		VkDeviceSize offsets = { 0 };
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
+			VkDeviceSize offsets = { 0 };
 
-		vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, binding, 1, &vkBuffer, &offsets);
-			});
+			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, binding, 1, &vkBuffer, &offsets);
+		});
 	}
 	void VulkanRenderCommandBuffer::SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set)
 	{
@@ -411,8 +411,8 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline, bindingPoint, vkSet, setIndex = set]() mutable {
 			const VkDescriptorSet set = vkSet->GetVulkanDescriptorSet();
-		vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindingPoint, pipeline->GetPipelineLayout(), setIndex, 1, &set, 0, nullptr);
-			});
+			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindingPoint, pipeline->GetPipelineLayout(), setIndex, 1, &set, 0, nullptr);
+		});
 	}
 	void VulkanRenderCommandBuffer::PushConstants(Buffer buffer, uint32_t offset, uint32_t flags)
 	{
@@ -421,26 +421,21 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline, dataBuffer, offset, flags]() mutable {
 			vkCmdPushConstants(instance->m_ActiveCommandBuffer, pipeline->GetPipelineLayout(), VK_SHADER_STAGE_ALL, offset, dataBuffer.Size, dataBuffer.Data);
-		dataBuffer.Release();
-			});
+			dataBuffer.Release();
+		});
 	}
 	void VulkanRenderCommandBuffer::SetPipeline(Ref<Pipeline> pipeline)
 	{
 		HZR_PROFILE_FUNCTION();
 		m_CurrentPipeline = pipeline.As<VulkanPipeline>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
-		float lineWidth = pipeline->GetSpecifications().LineWidth;
 
-
-		Renderer::Submit([instance, pipeline = m_CurrentPipeline, lineWidth]() mutable {
+		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::SetPipeline");
-		HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
-		if (lineWidth > 1.0f)
-			glLineWidth(lineWidth);
-
-		pipeline->Bind(instance->m_ActiveCommandBuffer);
-			});
+			pipeline->Bind(instance->m_ActiveCommandBuffer);
+		});
 	}
 	void VulkanRenderCommandBuffer::Draw(size_t count, Ref<GPUBuffer> indexBuffer)
 	{
@@ -457,20 +452,20 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, buffer, count, instanceCount, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DrawInstanced");
-		HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
-		auto vkPipeline = pipeline->GetVulkanPipeline();
-		auto shader = pipeline->GetShader().As<VulkanShader>();
-		auto layout = pipeline->GetPipelineLayout();
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+			auto vkPipeline = pipeline->GetVulkanPipeline();
+			auto shader = pipeline->GetShader().As<VulkanShader>();
+			auto layout = pipeline->GetPipelineLayout();
 
-		if (buffer)
-		{
-			VkDeviceSize offsets = { 0 };
-			vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, buffer->GetVulkanBuffer(), offsets, VK_INDEX_TYPE_UINT32);
-			vkCmdDrawIndexed(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0, 0);
-			return;
-		}
-		vkCmdDraw(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0);
-			});
+			if (buffer)
+			{
+				VkDeviceSize offsets = { 0 };
+				vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, buffer->GetVulkanBuffer(), offsets, VK_INDEX_TYPE_UINT32);
+				vkCmdDrawIndexed(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0, 0);
+				return;
+			}
+			vkCmdDraw(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0);
+		});
 	}
 	void VulkanRenderCommandBuffer::DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset, Ref<GPUBuffer> indexBuffer)
 	{
@@ -482,17 +477,17 @@ namespace HazardRenderer::Vulkan
 		Renderer::Submit([instance, indexBuf, buffer, drawCount, stride, offset]() mutable {
 
 			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
-		if (!indexBuf)
-		{
-			vkCmdDrawIndirect(instance->m_ActiveCommandBuffer, vkBuffer, offset, drawCount, stride);
-			return;
-		}
+			if (!indexBuf)
+			{
+				vkCmdDrawIndirect(instance->m_ActiveCommandBuffer, vkBuffer, offset, drawCount, stride);
+				return;
+			}
 
-		VkBuffer vkIndexBuffer = indexBuf->GetVulkanBuffer();
+			VkBuffer vkIndexBuffer = indexBuf->GetVulkanBuffer();
 
-		vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, vkIndexBuffer, 0, VK_INDEX_TYPE_UINT32);
-		vkCmdDrawIndexedIndirect(instance->m_ActiveCommandBuffer, vkBuffer, offset, drawCount, stride);
-			});
+			vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, vkIndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			vkCmdDrawIndexedIndirect(instance->m_ActiveCommandBuffer, vkBuffer, offset, drawCount, stride);
+		});
 	}
 	void VulkanRenderCommandBuffer::DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset, uint32_t maxDraws, Ref<GPUBuffer> indexBuffer)
 	{
@@ -504,19 +499,19 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, buffer, countBuffer, indexBuf, stride, offset, maxDraws, drawCountOffset]() mutable {
 			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
-		VkBuffer count = countBuffer->GetVulkanBuffer();
+			VkBuffer count = countBuffer->GetVulkanBuffer();
 
-		if (!indexBuf)
-		{
-			vkCmdDrawIndirectCount(instance->m_ActiveCommandBuffer, vkBuffer, offset, count, drawCountOffset, maxDraws, stride);
-			return;
-		}
+			if (!indexBuf)
+			{
+				vkCmdDrawIndirectCount(instance->m_ActiveCommandBuffer, vkBuffer, offset, count, drawCountOffset, maxDraws, stride);
+				return;
+			}
 
-		VkBuffer vkIndexBuffer = indexBuf->GetVulkanBuffer();
+			VkBuffer vkIndexBuffer = indexBuf->GetVulkanBuffer();
 
-		vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, vkIndexBuffer, 0, VK_INDEX_TYPE_UINT32);
-		vkCmdDrawIndexedIndirectCount(instance->m_ActiveCommandBuffer, vkBuffer, offset, count, drawCountOffset, maxDraws, stride);
-			});
+			vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, vkIndexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			vkCmdDrawIndexedIndirectCount(instance->m_ActiveCommandBuffer, vkBuffer, offset, count, drawCountOffset, maxDraws, stride);
+		});
 	}
 	void VulkanRenderCommandBuffer::DispatchCompute(GroupSize globalGroupSize)
 	{
@@ -524,10 +519,10 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance, size = globalGroupSize]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DispatchCompute");
-		HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
-		vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
-			});
+			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
+		});
 	}
 	void VulkanRenderCommandBuffer::TraceRays(const TraceRaysInfo& traceRaysInfo)
 	{
@@ -535,16 +530,16 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance, info = traceRaysInfo]() {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::TraceRays");
-		HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
-		auto bindingTable = info.pBindingTable.As<VulkanShaderBindingTable>();
-		auto raygenTable = bindingTable->GetRaygenTableAddress();
-		auto missTable = bindingTable->GetMissTableAddress();
-		auto closestHitTable = bindingTable->GetClosestHitTableAddress();
-		auto callableTable = bindingTable->GetCallableTableAddress();
+			auto bindingTable = info.pBindingTable.As<VulkanShaderBindingTable>();
+			auto raygenTable = bindingTable->GetRaygenTableAddress();
+			auto missTable = bindingTable->GetMissTableAddress();
+			auto closestHitTable = bindingTable->GetClosestHitTableAddress();
+			auto callableTable = bindingTable->GetCallableTableAddress();
 
-		fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Extent.Width, info.Extent.Height, info.Extent.Depth);
-			});
+			fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Extent.Width, info.Extent.Height, info.Extent.Depth);
+		});
 	}
 	void VulkanRenderCommandBuffer::BeginPerformanceQuery_RT()
 	{

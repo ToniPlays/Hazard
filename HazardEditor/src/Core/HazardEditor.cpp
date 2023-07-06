@@ -17,6 +17,7 @@
 #include "Hazard/Rendering/Mesh/MeshFactory.h"
 
 #include "EditorAssetManager.h"
+#include "spdlog/fmt/fmt.h"
 
 #include "MessageFlags.h"
 
@@ -77,7 +78,7 @@ void HazardEditorApplication::PreInit()
 	renderContextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
 	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI) + " | " + GetBuildType();
 	renderContextInfo.Width = 1920;
-    renderContextInfo.Height = 1080;
+	renderContextInfo.Height = 1080;
 
 	RendererCreateInfo rendererInfo = {};
 
@@ -109,8 +110,8 @@ void HazardEditorApplication::Init()
 	EditorAssetManager::LoadEditorAssets();
 
 	Editor::EditorWorldManager::Init();
-    PushModule<GUIManager>();
-    
+	PushModule<GUIManager>();
+
 	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
 
@@ -122,7 +123,9 @@ void HazardEditorApplication::Init()
 
 		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 		console->AddMessage({ message.Description, message.StackTrace, messageFlags });
-		});
+
+		std::cout << fmt::format("RenderMessage: {}\n - {}", message.Description, message.StackTrace) << std::endl;
+	});
 
 	scriptEngine.SetDebugCallback([](ScriptMessage message) {
 		auto& manager = Application::GetModule<GUIManager>();
@@ -131,8 +134,8 @@ void HazardEditorApplication::Init()
 
 		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 		console->AddMessage({ message.Message, message.StackTrace, messageFlags });
-		});
-    
+	});
+
 	scriptEngine.ReloadAssemblies();
 
 	auto& world = ProjectManager::GetProject().GetProjectData().StartupWorld;

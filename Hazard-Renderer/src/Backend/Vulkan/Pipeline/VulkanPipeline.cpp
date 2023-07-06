@@ -18,7 +18,7 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 
 		auto device = VulkanContext::GetInstance()->GetLogicalDevice();
-		if(device->GetPhysicalDevice()->SupportsRaytracing())
+		if (device->GetPhysicalDevice()->SupportsRaytracing())
 			GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateRayTracingPipelinesKHR);
 
 		std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
@@ -27,7 +27,7 @@ namespace HazardRenderer::Vulkan
 
 		m_Shader = Shader::Create(code).As<VulkanShader>();
 
-		if(specs->pBufferLayout)
+		if (specs->pBufferLayout)
 			m_Layout = BufferLayout::Copy(*specs->pBufferLayout);
 
 		Invalidate();
@@ -41,7 +41,7 @@ namespace HazardRenderer::Vulkan
 			vkDestroyPipeline(device, pipeline, nullptr);
 			vkDestroyPipelineLayout(device, layout, nullptr);
 			vkDestroyPipelineCache(device, cache, nullptr);
-			});
+		});
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
@@ -63,20 +63,22 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanPipeline> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->Invalidate_RT();
-			});
+		});
 	}
 	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
 	{
 		auto bindingPoint = GetBindingPoint();
+		if (m_Specs.LineWidth > 1.0f)
+			vkCmdSetLineWidth(commandBuffer, m_Specs.LineWidth);
 		vkCmdBindPipeline(commandBuffer, bindingPoint, m_Pipeline);
 	}
 	VkPipelineBindPoint VulkanPipeline::GetBindingPoint() const
 	{
 		switch (m_Specs.Usage)
 		{
-		case PipelineUsage::GraphicsBit: return VK_PIPELINE_BIND_POINT_GRAPHICS;
-		case PipelineUsage::ComputeBit: return VK_PIPELINE_BIND_POINT_COMPUTE;
-		case PipelineUsage::Raygen: return VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR;
+			case PipelineUsage::GraphicsBit: return VK_PIPELINE_BIND_POINT_GRAPHICS;
+			case PipelineUsage::ComputeBit: return VK_PIPELINE_BIND_POINT_COMPUTE;
+			case PipelineUsage::Raygen: return VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR;
 		}
 		return VK_PIPELINE_BIND_POINT_MAX_ENUM;
 	}
@@ -85,9 +87,9 @@ namespace HazardRenderer::Vulkan
 	{
 		switch (m_Specs.Usage)
 		{
-		case PipelineUsage::GraphicsBit:	InvalidateGraphicsPipeline(); break;
-		case PipelineUsage::ComputeBit:		InvalidateComputePipeline(); break;
-		case PipelineUsage::Raygen:			InvalidateRaygenPipeline(); break;
+			case PipelineUsage::GraphicsBit:	InvalidateGraphicsPipeline(); break;
+			case PipelineUsage::ComputeBit:		InvalidateComputePipeline(); break;
+			case PipelineUsage::Raygen:			InvalidateRaygenPipeline(); break;
 		}
 	}
 
@@ -164,7 +166,7 @@ namespace HazardRenderer::Vulkan
 
 				const auto& spec = fb->GetSpecification().Attachments[i];
 
-				blendStates[i].blendEnable = spec.Blend ? VK_TRUE : VK_FALSE;
+				blendStates[i].blendEnable = spec.BlendMode != FramebufferBlendMode::None ? VK_TRUE : VK_FALSE;
 				blendStates[i].srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
 				blendStates[i].dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 				blendStates[i].colorBlendOp = VK_BLEND_OP_ADD;
@@ -184,6 +186,7 @@ namespace HazardRenderer::Vulkan
 		viewportState.scissorCount = 1;
 
 		std::vector<VkDynamicState> dynamicStates;
+		dynamicStates.reserve(3);
 		dynamicStates.push_back(VK_DYNAMIC_STATE_VIEWPORT);
 		dynamicStates.push_back(VK_DYNAMIC_STATE_SCISSOR);
 

@@ -15,7 +15,7 @@ namespace UI
 		frameBufferInfo.SwapChainTarget = false;
 		frameBufferInfo.AttachmentCount = 3;
 		frameBufferInfo.ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA, ImageFormat::RED32I, ImageFormat::Depth } };
+		frameBufferInfo.Attachments = { { ImageFormat::RGBA, { ImageFormat::RED32I, FramebufferBlendMode::None }, ImageFormat::Depth } };
 		frameBufferInfo.AttachmentCount = 3;
 		frameBufferInfo.Width = 1280;
 		frameBufferInfo.Height = 720;

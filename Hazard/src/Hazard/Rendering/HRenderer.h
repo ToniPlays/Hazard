@@ -27,7 +27,7 @@ namespace Hazard
 
 		//Mesh3D
 		static void SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent, int id = 0);
-		static void SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count, int id = 0);
+		static void SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> pipeline, size_t count, int id = 0);
 		static void SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, int id = 0);
 		static void SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count, int id = 0);
 

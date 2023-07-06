@@ -5,47 +5,21 @@
 
 namespace Hazard
 {
-    Material::Material()
-    {
-        SetPipeline(AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack"));
-    }
-    /*
-    void Material::SetPipeline(Ref<HazardRenderer::Pipeline> pipeline)
-    {
-        m_ParameterBuffer.Release();
-        m_Pipeline = pipeline;
-        
-        auto& data = pipeline->GetShader()->GetShaderData();
-        
-        //Specify u_MaterialConstants as the constant buffer for a material
-        for(auto& [set, ranges] : data.PushConstants)
-        {
-            for(auto& [binding, constant] : ranges)
-            {
-                if(constant.Name == "u_MaterialConstants")
-                    UpdateParameters(constant);
-            }
-        }
-        auto& resources = RenderEngine::GetResources();
-        
-        for(auto& [set, samplers] : data.ImageSamplers)
-        {
-            if(set == 0) continue;
-            for(auto& [binding, sampler] : samplers)
-            {
-                if (sampler.Dimension == 2)
-                    m_Textures[sampler.Name] = AssetManager::GetAsset<Texture2DAsset>(resources.WhiteTextureHandle);
-            }
-        }
-    }
-    */
-    void Material::UpdateParameters(const HazardRenderer::ShaderPushConstantRange& constant)
-    {
-        m_ParameterBuffer.Allocate(constant.Size);
-        m_ParameterBuffer.ZeroInitialize();
-        
-        m_Params.clear();
-        for(auto& member : constant.Members)
-            m_Params[member.Name] = { member.Type, member.Offset }; 
-    }
+	Material::Material()
+	{
+		SetPipeline(AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack"));
+	}
+	Material::Material(AssetHandle pipelineHandle) : m_PipelineHandle(pipelineHandle)
+	{
+		DescriptorSetLayout layout = {
+			{ "Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER }
+		};
+
+		DescriptorSetCreateInfo setInfo = {};
+		setInfo.Set = 0;
+		setInfo.pLayout = &layout;
+		m_DescriptorSet = DescriptorSet::Create(&setInfo);
+
+		m_DescriptorSet->Write(0, RenderEngine::GetResources().CameraUniformBuffer, true);
+	}
 }

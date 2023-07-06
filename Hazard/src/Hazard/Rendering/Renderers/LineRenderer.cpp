@@ -37,6 +37,7 @@ namespace Hazard
 	void LineRenderer::Flush()
 	{
 		HZR_PROFILE_FUNCTION();
+
 		if (!m_LineBatch->GetCount()) return;
 
 		BufferCopyRegion region = {};
@@ -46,9 +47,10 @@ namespace Hazard
 
 		m_VertexBuffer->SetData(region);
 
-		Ref<AssetPointer> pipeline = AssetManager::GetAsset<AssetPointer>(m_PipelineHandle);
-
-		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, pipeline->Value.As<Pipeline>(), m_LineBatch->GetCount());
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(m_Material->GetPipeline())->Value.As<Pipeline>();
+		pipeline->SetRenderPass(m_RenderPass);
+		
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Material, m_LineBatch->GetCount());
 	}
 	void LineRenderer::SubmitLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color)
 	{
@@ -88,10 +90,6 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
-		BufferLayout layout = { { "a_Position",		ShaderDataType::Float3 },
-								{ "a_Color",		ShaderDataType::Float4 }
-		};
-
 		BufferCreateInfo vertexBufferInfo = {};
 		vertexBufferInfo.Name = "LineRendererVertexBuffer";
 		vertexBufferInfo.Size = m_Data.MaxVertices * sizeof(LineVertex);
@@ -99,7 +97,9 @@ namespace Hazard
 
 		m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
 
-		m_PipelineHandle = AssetManager::GetHandleFromKey("LineShader.glsl.hpack");
+		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("LineShader");
+		m_Material = Ref<Material>::Create(pipelineHandle);
+
 		m_RenderPass = renderPass;
 	}
 }

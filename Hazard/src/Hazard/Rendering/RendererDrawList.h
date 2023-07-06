@@ -10,7 +10,7 @@
 
 namespace Hazard
 {
-	struct DrawListStat 
+	struct DrawListStat
 	{
 		uint64_t QuadCount;
 		uint64_t MeshCount;
@@ -19,80 +19,15 @@ namespace Hazard
 		uint64_t DrawCalls;
 	};
 
-    struct MeshInstance
-    {
-        InstanceTransform	 Transform;
-        int ID;
-    };
-
-	struct RawMesh
-	{
-        std::vector<MeshInstance> Instances;
-		Ref<HazardRenderer::GPUBuffer> VertexBuffer;
-		Ref<HazardRenderer::GPUBuffer> IndexBuffer;
-        
-		int Flags;
-		size_t IndexCount;
-	};
-
-	struct PipelineData 
-	{
-		size_t Count;
-	};
-
-	struct EnvironmentData
-	{
-		Ref<EnvironmentMap> Map;
-		float SkylightIntensity;
-		float EnvironmentLod;
-	};
-    struct LightSource
-    {
-        glm::vec3 Color;
-        float Intensity;
-    };
-
-	struct DirectionalLightSource : LightSource
-	{
-		glm::vec3 Direction;
-	};
-
-    struct PointLightSource : LightSource
-    {
-        float Radius;
-    };
-
-    struct SpotLightSource : LightSource
-    {
-        float Radius;
-        float ConeAngle;
-    };
-
-	struct RenderingCamera
-	{
-		std::string DebugName;
-		glm::mat4 ViewProjection = glm::mat4(1.0f);
-		glm::mat4 Projection = glm::mat4(1.0f);
-		glm::mat4 View = glm::mat4(1.0f);
-		glm::vec3 Position = glm::vec3(0.0f);
-		Ref<HazardRenderer::RenderPass> RenderPass;
-		GeometryInclude GeometryFlags = Geometry_All;
-	};
-
-    using MeshDrawList = std::unordered_map<Material*, std::unordered_map<uint64_t, RawMesh>>;
-
-    //Draw list for single world context
+	//Draw list for single world context
 	struct RendererDrawList
 	{
 		Ref<WorldRenderer> WorldRenderer;
-		MeshDrawList MeshList;
-		
-        EnvironmentData Environment;
-		std::vector<DirectionalLightSource> DirectionalLights;
-        std::vector<PointLightSource> PointLights;
-        std::vector<SpotLightSource> SpotLights;
-		std::unordered_map<HazardRenderer::Pipeline*, std::vector<PipelineData>> Pipelines;
-
 		DrawListStat Stats;
+
+		std::vector<HazardRenderer::GraphInstruction> GeometryPassInstructions;
+		std::vector<HazardRenderer::ResourceReference> Buffers;
+		std::vector<Ref<Sampler>> Samplers;
+		std::vector<Ref<Texture>> Textures;
 	};
 }

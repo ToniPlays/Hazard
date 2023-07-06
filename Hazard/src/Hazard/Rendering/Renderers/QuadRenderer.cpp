@@ -57,6 +57,13 @@ namespace Hazard
 		region.Data = m_QuadBatch->GetData();
 		region.Size = m_QuadBatch->GetDataSize();
 		region.Offset = 0;
+
+		m_VertexBuffer->SetData(region);
+
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(m_Material->GetPipeline())->Value.As<Pipeline>();
+		pipeline->SetRenderPass(m_RenderPass);
+
+		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount(), 0);
 	}
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture)
 	{
@@ -140,8 +147,6 @@ namespace Hazard
 		m_Data.QuadVertexPos[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 		m_Data.QuadVertexPos[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 
-		BufferLayout layout = QuadVertex::Layout();
-
 		if (!m_IndexBuffer)
 		{
 			uint32_t offset = 0;
@@ -161,8 +166,24 @@ namespace Hazard
 				offset += 4;
 			}
 
+			BufferCreateInfo iboInfo = {};
+			iboInfo.Name = "QuadIndexBuffer";
+			iboInfo.Data = indices;
+			iboInfo.Size = m_Data.MaxIndices * sizeof(uint32_t);
+			iboInfo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
+
+			m_IndexBuffer = GPUBuffer::Create(&iboInfo);
+
 			hdelete[] indices;
 		}
+
+		BufferCreateInfo vboInfo = {};
+		vboInfo.Name = "QuadVBO";
+		vboInfo.Data = nullptr;
+		vboInfo.Size = m_Data.MaxVertices * sizeof(QuadVertex);
+		vboInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
+
+		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 
 		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("QuadShader");
 		m_Material = Ref<Material>::Create(pipelineHandle);

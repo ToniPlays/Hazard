@@ -104,7 +104,7 @@ namespace HazardRenderer::Vulkan
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
 		vkDestroyImageView(device, m_ImageDescriptor.imageView, nullptr);
-		vkDestroySampler(device, m_ImageDescriptor.sampler, nullptr);
+		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
 
 		for (auto& [index, view] : m_PerMipImageView)
 		{
@@ -256,6 +256,7 @@ namespace HazardRenderer::Vulkan
 
 		if (m_ImageDescriptor.imageView)
 			vkDestroyImageView(device, m_ImageDescriptor.imageView, nullptr);
+		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
 
 		VkImageAspectFlags aspectMask = m_Info.Format >= ImageFormat::DEPTH32F ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 

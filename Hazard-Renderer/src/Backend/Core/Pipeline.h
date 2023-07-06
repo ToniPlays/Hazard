@@ -64,7 +64,6 @@ namespace HazardRenderer
 	class Pipeline : public RefCount 
 	{
 	public:
-
 		virtual ~Pipeline() = default;
 		virtual PipelineSpecification GetSpecifications() = 0;
 		virtual const PipelineSpecification GetSpecifications() const = 0;

@@ -46,16 +46,16 @@ namespace Hazard
 	void HRenderer::SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-        HZR_TIMED_FUNCTION();
+		HZR_TIMED_FUNCTION();
 
 		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
 		if (!mesh) return;
 		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), nullptr, id);
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Pipeline> pipeline, size_t count, int id)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> material, size_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-		SubmitMesh(transform, vertexBuffer, nullptr, pipeline, count, id);
+		SubmitMesh(transform, vertexBuffer, nullptr, material, count, id);
 	}
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, int id)
 	{
@@ -67,18 +67,49 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
 
-		//TODO: Fix this somehow?
+		if (count == 0) return;
 
-		MeshInstance instance = {};
-		instance.Transform.MRow0 = { transform[0][0], transform[1][0], transform[2][0], transform[3][0] };
-		instance.Transform.MRow1 = { transform[0][1], transform[1][1], transform[2][1], transform[3][1] };
-		instance.Transform.MRow2 = { transform[0][2], transform[1][2], transform[2][2], transform[3][2] };
-		instance.ID = id;
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(material->GetPipeline())->Value.As<Pipeline>();
 
-		auto& mesh = s_Engine->GetDrawList().MeshList[material.Raw()][(uint64_t)vertexBuffer.Raw()];
-		mesh.VertexBuffer = vertexBuffer;
-		mesh.IndexBuffer = indexBuffer;
-		mesh.Instances.push_back(instance);
+		auto& drawList = s_Engine->GetDrawList();
+		{
+			drawList.Buffers.push_back({ .VertexBuffer = vertexBuffer.Raw() });
+
+			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
+			instruction.Flags = INSTRUCTION_BIND_VERTEX_BUFFER;
+			instruction.DataSource = 1;
+			instruction.Source.VertexBufferIndex = drawList.Buffers.size() - 1;
+			instruction.Destination.BindingIndex = 0;
+		}
+		{
+			drawList.Buffers.push_back({ .Pipeline = pipeline.Raw() });
+
+			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
+			instruction.Flags = INSTRUCTION_BIND_PIPELINE;
+			instruction.DataSource = 1;
+			instruction.Source.PipelineIndex = drawList.Buffers.size() - 1;
+		}
+		{
+			drawList.Buffers.push_back({ .DescriptorSet = material->GetDescriptorSet().Raw() });
+
+			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
+			instruction.Flags = INSTRUCTION_BIND_DESCRIPTOR_SET;
+			instruction.DataSource = 1;
+			instruction.Source.DescriptorSetIndex = drawList.Buffers.size() - 1;
+			instruction.Destination.BindingIndex = 0;
+		}
+		{
+			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
+			instruction.Flags = INSTRUCTION_DRAW;
+			instruction.DataSource = 1;
+			instruction.Source.IndexBufferIndex = drawList.Buffers.size();
+			instruction.Destination.DrawCount = count;
+
+			if (indexBuffer)
+				drawList.Buffers.push_back({ .IndexBuffer = indexBuffer.Raw() });
+			else
+				instruction.Flags |= INSTRUCTION_NO_SOURCE;
+		}
 	}
 
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count)
@@ -88,7 +119,6 @@ namespace Hazard
 	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, size_t count)
 	{
 		HZR_PROFILE_FUNCTION();
-		s_Engine->GetDrawList().Pipelines[pipeline.Raw()].push_back({ count });
 	}
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{
@@ -96,22 +126,10 @@ namespace Hazard
 		if (skyLight.EnvironmentMap == nullptr) return;
 
 		Ref<EnvironmentMap> map = skyLight.EnvironmentMap;
-		EnvironmentData data = {};
-		data.SkylightIntensity = skyLight.Intensity;
-		data.EnvironmentLod = skyLight.LodLevel;
-		data.Map = map;
-
-		s_Engine->GetDrawList().Environment = data;
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{
 		HZR_PROFILE_FUNCTION();
-		const glm::vec3 color = { directionalLight.LightColor.r, directionalLight.LightColor.g, directionalLight.LightColor.b };
-		DirectionalLightSource source = {};
-		source.Direction = Math::GetForwardDirection(transform.GetOrientation());
-		source.Color = color;
-		source.Intensity = directionalLight.Intensity;
-		s_Engine->GetDrawList().DirectionalLights.push_back(source);
 	}
 	void HRenderer::SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight)
 	{

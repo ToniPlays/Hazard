@@ -1,6 +1,6 @@
 ﻿  Scanning sources for module dependencies...
-  std.compat.ixx
   std.ixx
+  std.compat.ixx
   Compiling...
   std.ixx
   std.compat.ixx

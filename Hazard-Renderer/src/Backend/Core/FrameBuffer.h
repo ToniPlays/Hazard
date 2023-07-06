@@ -21,11 +21,10 @@ namespace HazardRenderer
 	struct FrameBufferAttachment
 	{
 		ImageFormat Format = ImageFormat::None;
-		bool Blend = true;
 		FramebufferBlendMode BlendMode = FramebufferBlendMode::SrcAlphaMinusSrcAlpha;
 
 		FrameBufferAttachment() = default;
-		FrameBufferAttachment(ImageFormat format) : Format(format) {}
+		FrameBufferAttachment(ImageFormat format, FramebufferBlendMode blend = FramebufferBlendMode::SrcAlphaMinusSrcAlpha) : Format(format), BlendMode(blend) {}
 
 		bool IsDepth() 
 		{

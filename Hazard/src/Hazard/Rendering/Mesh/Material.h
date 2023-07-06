@@ -21,51 +21,32 @@ namespace Hazard
     public:
         
         Material();
-        Material(AssetHandle pipelineHandle)
-        {
-            SetPipeline(pipelineHandle);
-        }
+        Material(AssetHandle pipelineHandle);
         
         template<typename T>
         T Get(const std::string& key)
         {
-            uint32_t offset = m_Params[key].Offset;
-            return m_ParameterBuffer.Read<T>(offset);
+            return T();
         };
     
         void* GetValue(const std::string& key)
         {
-            auto& param = m_Params[key];
-            return m_ParameterBuffer.Read(ShaderDataTypeSize(param.Type), param.Offset);
+            return nullptr;
         };
         
         template<typename T>
         void Set(const std::string& key, T& value)
         {
-            uint32_t offset = m_Params[key].Offset;
-            return m_ParameterBuffer.Write(&value, sizeof(T), offset);
+
         }
         
-        void SetTexture(const std::string& name, AssetHandle handle)
-        {
-            m_Textures[name] = handle;
-        }
-        
-        const std::unordered_map<std::string, MaterialParam>& GetParameters() const { return m_Params; }
-        const std::unordered_map<std::string, AssetHandle>& GetTextures() const { return m_Textures; }
-        Buffer GetBuffer() const { return m_ParameterBuffer; }
         
         AssetHandle GetPipeline() const { return m_PipelineHandle; };
+        Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; };
         void SetPipeline(AssetHandle handle) { m_PipelineHandle = handle; };
         
     private:
-        
-        void UpdateParameters(const HazardRenderer::ShaderPushConstantRange& constant);
-        
-    private:
         AssetHandle m_PipelineHandle;
-        Buffer m_ParameterBuffer;
-        std::unordered_map<std::string, MaterialParam> m_Params;
-        std::unordered_map<std::string, AssetHandle> m_Textures;
+        Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;
     };
 }

@@ -89,7 +89,7 @@ layout(set = 1, binding = 1) uniform sampler2D u_NormalMap;
 #include "Utils/PostProcessing.glslh"
 
 layout(location = 0) out vec4 OutputColor;
-layout(location = 1) out int EntityID;
+layout(location = 1) out uint EntityID;
 
 const float gamma = 2.2;
 

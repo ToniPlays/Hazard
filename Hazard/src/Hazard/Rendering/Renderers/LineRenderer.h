@@ -6,6 +6,7 @@
 #include "Backend/Core/GPUBuffer.h"
 #include "Backend/Core/Pipeline.h"
 #include "Hazard/Rendering/Vertices.h"
+#include "Hazard/Rendering/Mesh/Material.h"
 
 namespace Hazard
 {
@@ -40,7 +41,7 @@ namespace Hazard
 		Batch<LineVertex>* m_LineBatch = nullptr;
 		LineRendererData m_Data;
 
-		AssetHandle m_PipelineHandle;
+		Ref<Material> m_Material;
 		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer;
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 	};

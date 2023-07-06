@@ -7,10 +7,6 @@
 #include "Renderers/QuadRenderer.h"
 #include "Renderers/LineRenderer.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
-
-#include "Rasterized/RasterizedRenderer.h"
-#include "Raytraced/RaytracedRenderer.h"
-
 #include "Hazard/Core/ApplicationCreateInfo.h"
 
 namespace Hazard 
@@ -60,13 +56,14 @@ namespace Hazard
 		RendererSettings& GetSettings() { return m_Settings; }
 
 	private:
+		void CreateRasterizedRenderGraph();
+	private:
 		std::vector<RendererDrawList> m_DrawList;
         
 		RenderContextManager* m_RenderContextManager;
+		Ref<RenderGraph> m_RasterizedRenderGraph;
 
 		inline static RenderResources* s_Resources = nullptr;
-		RasterizedRenderer* m_RasterizedRenderer;
-		RaytracedRenderer* m_RaytracedRenderer;
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;
