@@ -54,6 +54,12 @@ namespace HazardRenderer
 							commandBuffer->SetPipeline(pipelineRef.Pipeline);
 							continue;
 						}
+						if (instruction.Flags & INSTRUCTION_PUSH_CONSTANTS)
+						{
+							ResourceReference& dataRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.PushConstantIndex);
+							commandBuffer->PushConstants(*dataRef.PushConstantBuffer, instruction.Destination.Offset, 0);
+							continue;
+						}
 
 						if (instruction.Flags & INSTRUCTION_BIND_DESCRIPTOR_SET)
 						{

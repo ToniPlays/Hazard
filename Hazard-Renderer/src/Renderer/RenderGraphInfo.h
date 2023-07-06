@@ -21,9 +21,10 @@ namespace HazardRenderer
 		INSTRUCTION_BIND_UNIFORM_BUFFER =	BIT(2),
 		INSTRUCTION_BIND_PIPELINE =			BIT(3),
 		INSTRUCTION_BIND_DESCRIPTOR_SET =	BIT(4),
-		INSTRUCTION_DRAW =					BIT(5),
-		INSTRUCTION_COMPUTE =				BIT(6),
-		INSTRUCTION_NO_SOURCE =				BIT(7),
+		INSTRUCTION_PUSH_CONSTANTS =		BIT(5),
+		INSTRUCTION_DRAW =					BIT(6),
+		INSTRUCTION_COMPUTE =				BIT(7),
+		INSTRUCTION_NO_SOURCE =				BIT(8),
 	};
 
 	struct GraphInstruction
@@ -37,16 +38,19 @@ namespace HazardRenderer
 			uint32_t DescriptorSetIndex;
 			uint32_t SamplerIndex;
 			uint32_t ImageIndex;
+			uint32_t PushConstantIndex;
 			uint32_t BindingIndex;
 			uint32_t DrawCount;
+			uint32_t Offset;
 		};
 
-		uint64_t Flags = 0;
-		ResourceIndex Source = { .DrawCount = 0 };
-		ResourceIndex Destination = { .DrawCount = 0 };
+		uint32_t Flags = 0;
+		ResourceIndex Source = { .BindingIndex = 0 };
+		ResourceIndex Destination = { .BindingIndex = 0 };
 
 		uint32_t DataSource = 0;
 		uint32_t DataDestination = 0;
+		uint32_t DataSize = 0;
 	};
 
 
@@ -58,6 +62,7 @@ namespace HazardRenderer
 		Pipeline* Pipeline;
 		Image* Image;
 		Sampler* Sampler;
+		Buffer* PushConstantBuffer;
 		DescriptorSet* DescriptorSet;
 	};
 

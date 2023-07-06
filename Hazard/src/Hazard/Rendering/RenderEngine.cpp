@@ -90,7 +90,11 @@ namespace Hazard
 		meshResources.Name = "MeshStageInputResources";
 		meshResources.UsageFlags = INPUT_RESOURCE_RESOURCE_LIST;
 
-		std::vector<InputResource> inputResources = { meshInstructions, meshResources };
+		InputResource meshPushConstantBuffers = {};
+		meshPushConstantBuffers.Name = "MeshStageInputPushConstants";
+		meshPushConstantBuffers.UsageFlags = INPUT_RESOURCE_RESOURCE_LIST;
+
+		std::vector<InputResource> inputResources = { meshInstructions, meshResources, meshPushConstantBuffers };
 
 		BufferResource cameraBuffer = {};
 		cameraBuffer.Set = 0;
@@ -161,7 +165,8 @@ namespace Hazard
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 
 				m_RasterizedRenderGraph->SetInput("MeshInputInstructions", worldDrawList.GeometryPassInstructions.data(), worldDrawList.GeometryPassInstructions.size() * sizeof(GraphInstruction));
-				m_RasterizedRenderGraph->SetInput("MeshStageInputResources", worldDrawList.Buffers.data(), worldDrawList.Buffers.size() * sizeof(GraphInstruction));
+				m_RasterizedRenderGraph->SetInput("MeshStageInputResources", worldDrawList.Buffers.data(), worldDrawList.Buffers.size() * sizeof(ResourceReference));
+				m_RasterizedRenderGraph->SetInput("MeshStageInputPushConstants", worldDrawList.PushConstantBuffers.data(), worldDrawList.PushConstantBuffers.size() * sizeof(ResourceReference));
 				m_RasterizedRenderGraph->Execute(commandBuffer);
 
 				commandBuffer->EndRenderPass();

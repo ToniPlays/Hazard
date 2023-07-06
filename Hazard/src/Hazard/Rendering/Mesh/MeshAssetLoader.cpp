@@ -52,9 +52,16 @@ namespace Hazard
 		info.IndexCount = indices.size();
 		info.pIndices = indices.data();
 
+		if (info.IndexCount == 0 || info.VertexCount == 0)
+		{
+			buffer.Release();
+			throw JobException("Unable to create mesh");
+		}
+
 		Ref<Mesh> asset = Ref<Mesh>::Create(&info);
 		asset->IncRefCount();
 		job->GetStage()->SetResult(asset);
+
 
 		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
 

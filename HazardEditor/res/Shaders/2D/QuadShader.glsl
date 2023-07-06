@@ -8,6 +8,11 @@ layout(location = 0) out vec4 Color;
 layout(location = 1) out vec2 TextureCoords;
 layout(location = 2) out float TextureIndex;
 
+layout(push_constant) uniform Transform
+{
+    mat4 Transform;
+} p_Transform;
+
 void main() 
 {
 	Color = a_Color;

@@ -420,7 +420,7 @@ namespace HazardRenderer::Vulkan
 		Buffer dataBuffer = Buffer::Copy(buffer);
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline, dataBuffer, offset, flags]() mutable {
-			vkCmdPushConstants(instance->m_ActiveCommandBuffer, pipeline->GetPipelineLayout(), VK_SHADER_STAGE_ALL, offset, dataBuffer.Size, dataBuffer.Data);
+			vkCmdPushConstants(instance->m_ActiveCommandBuffer, pipeline->GetPipelineLayout(), pipeline->GetPushConstantFlags(), offset, dataBuffer.Size, dataBuffer.Data);
 			dataBuffer.Release();
 		});
 	}

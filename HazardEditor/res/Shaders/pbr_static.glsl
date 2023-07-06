@@ -19,16 +19,21 @@ struct VertexOuput
     mat3 WorldNormal;
 };
 
+layout(push_constant) uniform Transform
+{
+    mat4 Transform;
+} p_Transform;
+
 layout(location = 0) out VertexOuput Output;
 layout(location = 7) out int v_EntityID;
 
 void main()
 {
-	vec4 worldPosition = vec4(a_Position, 1.0);
+	vec4 worldPosition = p_Transform.Transform * vec4(a_Position, 1.0);
 	gl_Position = u_Camera.ViewProjection * worldPosition;
 
 	Output.Color = a_Color;
-    Output.Normal = a_Normal;
+    Output.Normal = mat3(p_Transform.Transform) * a_Normal;
     Output.WorldNormal = mat3(a_Tangent, a_Binormal, a_Normal);
     Output.WorldPosition = worldPosition.xyz;
     Output.TextureCoords = a_TextureCoords;

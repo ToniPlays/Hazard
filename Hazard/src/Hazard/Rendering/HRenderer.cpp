@@ -90,6 +90,18 @@ namespace Hazard
 			instruction.Source.PipelineIndex = drawList.Buffers.size() - 1;
 		}
 		{
+			drawList.PushConstantData.push_back(Buffer::Copy(glm::value_ptr(transform), sizeof(glm::mat4)));
+			uint32_t index = drawList.PushConstantData.size() - 1;
+
+			drawList.PushConstantBuffers.push_back(ResourceReference{ .PushConstantBuffer = &drawList.PushConstantData[index] });
+
+			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
+			instruction.Flags = INSTRUCTION_PUSH_CONSTANTS;
+			instruction.DataSource = 2;
+			instruction.Source.PushConstantIndex = drawList.PushConstantData.size() - 1;
+			instruction.DataSize = sizeof(glm::mat4);
+		}
+		{
 			drawList.Buffers.push_back({ .DescriptorSet = material->GetDescriptorSet().Raw() });
 
 			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();

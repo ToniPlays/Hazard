@@ -18,15 +18,30 @@ namespace HazardRenderer::Vulkan
 		VulkanPipeline(PipelineSpecification* specs);
 		~VulkanPipeline();
 
-		PipelineSpecification GetSpecifications() override { return m_Specs; }
-		const PipelineSpecification GetSpecifications() const override { return m_Specs; }
-		Ref<Shader> GetShader() override { return m_Shader; }
+		PipelineSpecification GetSpecifications() override
+		{
+			return m_Specs;
+		}
+		const PipelineSpecification GetSpecifications() const override
+		{
+			return m_Specs;
+		}
+		Ref<Shader> GetShader() override
+		{
+			return m_Shader;
+		}
 		void SetRenderPass(Ref<RenderPass> renderPass) override;
 
 		bool IsCompatibleWith(Ref<Shader> shader) const override;
-		bool IsValid() const { return m_Pipeline != VK_NULL_HANDLE; }
+		bool IsValid() const
+		{
+			return m_Pipeline != VK_NULL_HANDLE;
+		}
 
-		void SetLayout(const BufferLayout& layout) { m_Layout = layout; };
+		void SetLayout(const BufferLayout& layout)
+		{
+			m_Layout = layout;
+		};
 
 		void Invalidate() override;
 		void Invalidate_RT();
@@ -35,10 +50,23 @@ namespace HazardRenderer::Vulkan
 		void Bind(VkCommandBuffer commandBuffer);
 
 		VkPipelineBindPoint GetBindingPoint() const;
-		VkPipeline GetVulkanPipeline() { return m_Pipeline; }
-		VkPipelineLayout GetPipelineLayout() { return m_PipelineLayout; }
+		VkPipeline GetVulkanPipeline()
+		{
+			return m_Pipeline;
+		}
+		VkPipelineLayout GetPipelineLayout()
+		{
+			return m_PipelineLayout;
+		}
+		VkShaderStageFlags GetPushConstantFlags()
+		{
+			return m_PushConstantFlags;
+		}
 
-		const std::vector<VkRayTracingShaderGroupCreateInfoKHR>& GetShaderGroups() { return m_ShaderGroups; }
+		const std::vector<VkRayTracingShaderGroupCreateInfoKHR>& GetShaderGroups()
+		{
+			return m_ShaderGroups;
+		}
 
 	private:
 		void InvalidateGraphicsPipeline();
@@ -49,6 +77,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanShader> m_Shader;
 
 		BufferLayout m_Layout;
+		VkShaderStageFlags m_PushConstantFlags;
 
 		VkPipeline m_Pipeline = VK_NULL_HANDLE;
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;

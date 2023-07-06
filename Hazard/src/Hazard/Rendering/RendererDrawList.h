@@ -27,6 +27,8 @@ namespace Hazard
 
 		std::vector<HazardRenderer::GraphInstruction> GeometryPassInstructions;
 		std::vector<HazardRenderer::ResourceReference> Buffers;
+		std::vector<HazardRenderer::ResourceReference> PushConstantBuffers;
+		std::vector<Buffer> PushConstantData;
 		std::vector<Ref<Sampler>> Samplers;
 		std::vector<Ref<Texture>> Textures;
 	};

@@ -85,6 +85,8 @@ namespace HazardRenderer::Vulkan
 
 	void VulkanPipeline::Invalidate_RT()
 	{
+		m_PushConstantFlags = 0;
+
 		switch (m_Specs.Usage)
 		{
 			case PipelineUsage::GraphicsBit:	InvalidateGraphicsPipeline(); break;
@@ -115,6 +117,8 @@ namespace HazardRenderer::Vulkan
 				vkRange.stageFlags = range.Stages;
 				vkRange.offset = range.Offset;
 				vkRange.size = range.Size;
+
+				m_PushConstantFlags |= vkRange.stageFlags;
 			}
 		}
 		VkPipelineLayoutCreateInfo layoutInfo = {};
@@ -301,6 +305,8 @@ namespace HazardRenderer::Vulkan
 				vkRange.stageFlags = range.Stages;
 				vkRange.offset = range.Offset;
 				vkRange.size = range.Size;
+
+				m_PushConstantFlags |= vkRange.stageFlags;
 			}
 		}
 
