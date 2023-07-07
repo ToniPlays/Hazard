@@ -62,8 +62,8 @@ namespace Hazard
 			using namespace HazardRenderer;
 			return {
 				{ "a_Position",			ShaderDataType::Float3 },
-				{ "a_LocalPosition",	ShaderDataType::Float4 },
-				{ "a_Color",			ShaderDataType::Float2 },
+				{ "a_LocalPosition",	ShaderDataType::Float3 },
+				{ "a_Color",			ShaderDataType::Float4 },
 				{ "a_Thickness",		ShaderDataType::Float  },
 				{ "a_Fade",				ShaderDataType::Float  }
 			};

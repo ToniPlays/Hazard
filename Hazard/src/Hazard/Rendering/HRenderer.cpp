@@ -37,8 +37,7 @@ namespace Hazard
 		stat.QuadCount++;
 		stat.Vertices++;
 
-		//s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
-		s_Engine->GetCircleRenderer().SubmitCircle(transform, color, 0.25f, 0.1f);
+		s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
 	}
 	void HRenderer::SubmitCircle(const glm::mat4& transform, const glm::vec4& color, float thickness, float fade, int id)
 	{

@@ -70,7 +70,7 @@ namespace Hazard
 		{
 			CircleVertex vertex = {};
 			vertex.Position = transform * m_Data.CircleVertexPos[i];
-			vertex.LocalPosition = m_Data.CircleVertexPos[i];
+			vertex.LocalPosition = m_Data.CircleVertexPos[i] * 2.0f;
 			vertex.Color = color;
 			vertex.Thickness = thickness;
 			vertex.Fade = fade;

@@ -37,13 +37,15 @@ layout(location = 1) out uint EntityID;
 void main() 
 {
 
-	float dist = 1.0 - length(f_LocalPosition);
-	float circle = smoothstep(0.0, f_Fade, dist);
+	float distance = 1.0 - length(f_LocalPosition);
+	float circle = smoothstep(0.0, f_Fade, distance);
 
-	color = vec4(dist, dist, dist, 1.0);
-	circle *= smoothstep(f_Thickness + f_Fade, f_Thickness, dist);
+	color = vec4(distance, distance, distance, 1.0);
+	circle *= smoothstep(f_Thickness + f_Fade, f_Thickness, distance);
 
-	if(circle == 0.0) discard;
+	if(circle == 0.0)
+		discard;
+
 	color = f_Color;
 	color.a *= circle;
 }

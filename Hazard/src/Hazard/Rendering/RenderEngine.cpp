@@ -108,9 +108,20 @@ namespace Hazard
 		std::vector<InputResource> skyboxInputResources = { skyboxInstructions, meshResources };
 		std::vector<InputResource> meshInputResources = { meshInstructions, meshResources, meshPushConstantBuffers };
 
+
+		auto& skyboxPass = stages.emplace_back();
+		skyboxPass.DependencyCount = 0;
+		skyboxPass.pDependencies = nullptr;
+		skyboxPass.InputCount = 2;
+		skyboxPass.pInputs = skyboxInputResources.data();
+		skyboxPass.InputImageCount = 0;
+		skyboxPass.pInputImages = nullptr;
+		skyboxPass.OutputImageCount = 0;
+		skyboxPass.pOutputImages = nullptr;
+
 		auto& geometryPass = stages.emplace_back();
-		geometryPass.DependencyCount = 0;
-		geometryPass.pDependencies = nullptr;
+		geometryPass.DependencyCount = 1;
+		geometryPass.pDependencies = &skyboxPass;
 		geometryPass.InputCount = meshInputResources.size();
 		geometryPass.pInputs = meshInputResources.data();
 		geometryPass.BufferCount = 0;
@@ -119,16 +130,6 @@ namespace Hazard
 		geometryPass.pInputImages = nullptr;
 		geometryPass.OutputImageCount = 0;
 		geometryPass.pOutputImages = nullptr;
-
-		auto& skyboxPass = stages.emplace_back();
-		skyboxPass.DependencyCount = 1;
-		skyboxPass.pDependencies = &geometryPass;
-		skyboxPass.InputCount = 2;
-		skyboxPass.pInputs = skyboxInputResources.data();
-		skyboxPass.InputImageCount = 0;
-		skyboxPass.pInputImages = nullptr;
-		skyboxPass.OutputImageCount = 0;
-		skyboxPass.pOutputImages = nullptr;
 
 
 		RenderGraphCreateInfo graphInfo = {};

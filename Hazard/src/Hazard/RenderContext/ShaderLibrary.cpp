@@ -44,7 +44,7 @@ namespace Hazard
 			specs.DebugName = "CircleShader.glsl";
 			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
-			specs.CullMode = CullMode::None;
+			specs.CullMode = CullMode::BackFace;
 			specs.ShaderCodeCount = asset->ShaderCode.size();
 			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
