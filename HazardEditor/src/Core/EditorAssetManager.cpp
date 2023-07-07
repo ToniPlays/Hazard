@@ -95,7 +95,7 @@ void EditorAssetManager::ImportEngineAssets()
 
 	std::vector<Ref<Job>> jobs;
 
-	for (auto& file : File::GetAllInDirectory("res", true))
+	for (auto& file : Directory::GetAllInDirectory("res", true))
 	{
 		if (File::IsDirectory(file)) continue;
 
@@ -114,7 +114,7 @@ void EditorAssetManager::ImportEngineAssets()
 
 	promise.Wait();
 
-	auto files = File::GetAllInDirectory(cache.GetCachePath(), true);
+	auto files = Directory::GetAllInDirectory(cache.GetCachePath(), true);
 	for (auto& file : files)
 	{
 		auto packPath = File::GetName(file);

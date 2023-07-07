@@ -10,15 +10,26 @@
 
 #include "Hazard/Core/Application.h"
 
-namespace Hazard {
+namespace Hazard
+{
 
 	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler")
 	{
-		m_World = Ref<World>::Create(info->StartupFile);
 		AssetManager::RegisterLoader<WorldAssetLoader>(AssetType::World);
+
+		if (info->StartupFile.empty())
+			m_World = Ref<World>::Create();
+		else
+		{
+			AssetHandle handle = AssetManager::GetHandleFromKey(info->StartupFile.string());
+			m_World = AssetManager::GetAsset<World>(handle);
+		}
+
 		SetActive(true);
 	}
-	WorldHandler::~WorldHandler() {}
+	WorldHandler::~WorldHandler()
+	{
+	}
 
 	void WorldHandler::Init()
 	{
@@ -74,10 +85,12 @@ namespace Hazard {
 		HZR_PROFILE_FUNCTION();
 		auto view = m_World->GetEntitiesWith<ScriptComponent>();
 
-		for (auto& entity : view) {
+		for (auto& entity : view)
+		{
 			Entity e = { entity, m_World.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			if (sc.m_Handle) {
+			if (sc.m_Handle)
+			{
 				sc.m_Handle->SetLive(false);
 				sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
 			}
@@ -92,7 +105,7 @@ namespace Hazard {
 			m_World = AssetManager::GetAsset<World>(handle);
 			return m_World;
 		}
-		m_World = Ref<World>::Create("");
+		m_World = Ref<World>::Create();
 
 		Entity entity = m_World->CreateEntity("Camera");
 		m_World->CreateEntity("Entity 1");

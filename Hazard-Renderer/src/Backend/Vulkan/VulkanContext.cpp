@@ -5,7 +5,6 @@
 #include "Backend/Core/Window.h"
 #include "Core/VulkanAllocator.h"
 #include "VkUtils.h"
-
 #include "VulkanRenderCommandBuffer.h"
 #include "spdlog/fmt/fmt.h"
 
@@ -56,10 +55,8 @@ namespace HazardRenderer::Vulkan
 	{
 		uint32_t instanceVersion;
 		vkEnumerateInstanceVersion(&instanceVersion);
-
 		return instanceVersion >= minimumAPIVersion;
 	}
-
 
 	VulkanContext::VulkanContext(WindowProps* props)
 	{
@@ -91,7 +88,7 @@ namespace HazardRenderer::Vulkan
 		m_ClearColor = info->pWindows[0].Color;
 
 		if (!CheckDriverAPIVersion(VK_API_VERSION_1_2))
-			HZR_ASSERT(false, "API version not supported");
+			HZR_ASSERT(false, "Vulkan API version not supported");
 
 		std::vector<const char*> instanceExtensions =
 		{

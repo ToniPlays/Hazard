@@ -23,8 +23,6 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		return nullptr;
 
-		//auto& metadata = AssetManager::GetMetadata(asset->GetHandle());
-
 		auto pipeline = asset.As<AssetPointer>()->Value.As<Pipeline>();
 		PipelineSpecification specs = pipeline->GetSpecifications();
 

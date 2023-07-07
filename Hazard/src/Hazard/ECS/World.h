@@ -28,7 +28,7 @@ namespace Hazard
 		friend class WorldDeserializer;
 
 	public:
-		World(const std::filesystem::path& file);
+		World();
 		World(World& other) = delete;
 		~World();
 

@@ -10,6 +10,7 @@ namespace HazardRenderer
 
 	struct DescriptorSetCreateInfo
 	{
+		std::string DebugName;
 		uint32_t Set;
 		DescriptorSetLayout* pLayout;
 	};

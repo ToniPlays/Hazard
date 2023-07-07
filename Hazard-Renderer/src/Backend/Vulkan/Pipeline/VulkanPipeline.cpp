@@ -129,6 +129,7 @@ namespace HazardRenderer::Vulkan
 		layoutInfo.pPushConstantRanges = vulkanPushConstantRanges.data();
 
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &layoutInfo, nullptr, &m_PipelineLayout), "Failed to create pipeline layout");
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE_LAYOUT, fmt::format("VkPipelineLayout {}", m_Specs.DebugName), m_PipelineLayout);
 
 		VkGraphicsPipelineCreateInfo pipelineInfo = {};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -319,6 +320,7 @@ namespace HazardRenderer::Vulkan
 		pipelineLayout.pPushConstantRanges = vulkanPushConstantRanges.data();
 
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE_LAYOUT, fmt::format("VkPipelineLayout {}", m_Specs.DebugName), m_PipelineLayout);
 
 		VkPipelineShaderStageCreateInfo computeShaderInfo = m_Shader->GetPipelineShaderStageCreateInfos()[0];
 
@@ -346,6 +348,7 @@ namespace HazardRenderer::Vulkan
 		pipelineLayout.pSetLayouts = setLayouts.data();
 
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE_LAYOUT, fmt::format("VkPipelineLayout {}", m_Specs.DebugName), m_PipelineLayout);
 		auto stages = m_Shader->GetPipelineShaderStageCreateInfos();
 
 		//Raygen group

@@ -3,7 +3,7 @@
 
 #include "VulkanContext.h"
 
-namespace HazardRenderer::Vulkan::VkUtils 
+namespace HazardRenderer::Vulkan::VkUtils
 {
 	static PFN_vkGetBufferDeviceAddressKHR fpGetBufferDeviceAddressKHR;
 
@@ -61,20 +61,20 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		switch (format)
 		{
-		case ImageFormat::RED32I:			return VK_FORMAT_R32_UINT;
-		case ImageFormat::RED32F:			return VK_FORMAT_R32_SFLOAT;
-		case ImageFormat::RGB:				return VK_FORMAT_R8G8B8_SNORM;
-		case ImageFormat::RGB16F:			return VK_FORMAT_R16G16B16_SFLOAT;
-		case ImageFormat::RGB32F:			return VK_FORMAT_R32G32B32_SFLOAT;
-		case ImageFormat::RGBA:				return VK_FORMAT_R8G8B8A8_UNORM;
-		case ImageFormat::RGBA16F:			return VK_FORMAT_R16G16B16A16_SFLOAT;
-		case ImageFormat::RGBA32F:			return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case ImageFormat::RG16F:			return VK_FORMAT_R16G16_SFLOAT;
-		case ImageFormat::RG32F:			return VK_FORMAT_R32G32_SFLOAT;
-		case ImageFormat::SRGB:				return VK_FORMAT_R8G8B8A8_SRGB;
+			case ImageFormat::RED32I:			return VK_FORMAT_R32_UINT;
+			case ImageFormat::RED32F:			return VK_FORMAT_R32_SFLOAT;
+			case ImageFormat::RGB:				return VK_FORMAT_R8G8B8_SNORM;
+			case ImageFormat::RGB16F:			return VK_FORMAT_R16G16B16_SFLOAT;
+			case ImageFormat::RGB32F:			return VK_FORMAT_R32G32B32_SFLOAT;
+			case ImageFormat::RGBA:				return VK_FORMAT_R8G8B8A8_UNORM;
+			case ImageFormat::RGBA16F:			return VK_FORMAT_R16G16B16A16_SFLOAT;
+			case ImageFormat::RGBA32F:			return VK_FORMAT_R32G32B32A32_SFLOAT;
+			case ImageFormat::RG16F:			return VK_FORMAT_R16G16_SFLOAT;
+			case ImageFormat::RG32F:			return VK_FORMAT_R32G32_SFLOAT;
+			case ImageFormat::SRGB:				return VK_FORMAT_R8G8B8A8_SRGB;
 
-		case ImageFormat::DEPTH32F:			return VK_FORMAT_D32_SFLOAT;
-		case ImageFormat::DEPTH24STENCIL8:	return VulkanContext::GetLogicalDevice()->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetDepthFormat();
+			case ImageFormat::DEPTH32F:			return VK_FORMAT_D32_SFLOAT;
+			case ImageFormat::DEPTH24STENCIL8:	return VulkanContext::GetLogicalDevice()->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetDepthFormat();
 		}
 		HZR_ASSERT(false, "");
 		return VK_FORMAT_UNDEFINED;
@@ -83,21 +83,21 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		switch (format)
 		{
-		case ImageFormat::RED32I:
-			return true;
-		case ImageFormat::DEPTH32F:
-		case ImageFormat::RGBA32F:
-		case ImageFormat::RG16F:
-		case ImageFormat::RG32F:
-		case ImageFormat::RED32F:
-		case ImageFormat::RGB:
-		case ImageFormat::RGBA:
-		case ImageFormat::RGB32F:
-		case ImageFormat::RGB16F:
-		case ImageFormat::RGBA16F:
-		case ImageFormat::SRGB:
-		case ImageFormat::DEPTH24STENCIL8:
-			return false;
+			case ImageFormat::RED32I:
+				return true;
+			case ImageFormat::DEPTH32F:
+			case ImageFormat::RGBA32F:
+			case ImageFormat::RG16F:
+			case ImageFormat::RG32F:
+			case ImageFormat::RED32F:
+			case ImageFormat::RGB:
+			case ImageFormat::RGBA:
+			case ImageFormat::RGB32F:
+			case ImageFormat::RGB16F:
+			case ImageFormat::RGBA16F:
+			case ImageFormat::SRGB:
+			case ImageFormat::DEPTH24STENCIL8:
+				return false;
 		}
 		HZR_ASSERT(false, "IsIntegratedBase undefined");
 		return false;
@@ -106,9 +106,9 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		switch (type)
 		{
-		case DrawType::Fill:	return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-		case DrawType::Line:	return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-		case DrawType::Point:	return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+			case DrawType::Fill:	return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+			case DrawType::Line:	return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+			case DrawType::Point:	return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
 		}
 		return VK_PRIMITIVE_TOPOLOGY_MAX_ENUM;
 	}
@@ -116,9 +116,9 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		switch (type)
 		{
-		case DrawType::Fill:	return VK_POLYGON_MODE_FILL;
-		case DrawType::Line:	return VK_POLYGON_MODE_LINE;
-		case DrawType::Point:	return VK_POLYGON_MODE_POINT;
+			case DrawType::Fill:	return VK_POLYGON_MODE_FILL;
+			case DrawType::Line:	return VK_POLYGON_MODE_LINE;
+			case DrawType::Point:	return VK_POLYGON_MODE_POINT;
 		}
 		return VK_POLYGON_MODE_MAX_ENUM;
 	}
@@ -126,9 +126,9 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		switch (type)
 		{
-		case CullMode::None:		return VK_CULL_MODE_NONE;
-		case CullMode::FrontFace:	return VK_CULL_MODE_FRONT_BIT;
-		case CullMode::BackFace:	return VK_CULL_MODE_BACK_BIT;
+			case CullMode::None:		return VK_CULL_MODE_NONE;
+			case CullMode::FrontFace:	return VK_CULL_MODE_FRONT_BIT;
+			case CullMode::BackFace:	return VK_CULL_MODE_BACK_BIT;
 		}
 		return VK_CULL_MODE_FLAG_BITS_MAX_ENUM;
 	}
@@ -136,27 +136,27 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		switch (op)
 		{
-		case DepthOp::None:					return VK_COMPARE_OP_MAX_ENUM;
-		case DepthOp::Never:				return VK_COMPARE_OP_NEVER;
-		case DepthOp::NotEqual:				return VK_COMPARE_OP_NOT_EQUAL;
-		case DepthOp::Less:					return VK_COMPARE_OP_LESS;
-		case DepthOp::LessOrEqual:			return VK_COMPARE_OP_LESS_OR_EQUAL;
-        case DepthOp::Equal:                return VK_COMPARE_OP_EQUAL;
-		case DepthOp::Greater:				return VK_COMPARE_OP_GREATER;
-		case DepthOp::GreaterOrEqual:		return VK_COMPARE_OP_GREATER_OR_EQUAL;
-		case DepthOp::Always:				return VK_COMPARE_OP_ALWAYS;
+			case DepthOp::None:					return VK_COMPARE_OP_MAX_ENUM;
+			case DepthOp::Never:				return VK_COMPARE_OP_NEVER;
+			case DepthOp::NotEqual:				return VK_COMPARE_OP_NOT_EQUAL;
+			case DepthOp::Less:					return VK_COMPARE_OP_LESS;
+			case DepthOp::LessOrEqual:			return VK_COMPARE_OP_LESS_OR_EQUAL;
+			case DepthOp::Equal:                return VK_COMPARE_OP_EQUAL;
+			case DepthOp::Greater:				return VK_COMPARE_OP_GREATER;
+			case DepthOp::GreaterOrEqual:		return VK_COMPARE_OP_GREATER_OR_EQUAL;
+			case DepthOp::Always:				return VK_COMPARE_OP_ALWAYS;
 		}
 	}
 
 	void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
-		VkImage image,
-		VkAccessFlags srcAccessMask,
-		VkAccessFlags dstAccessMask,
-		VkImageLayout oldLayout,
-		VkImageLayout newLayout,
-		VkPipelineStageFlags srcStageMask,
-		VkPipelineStageFlags dstStageMask,
-		VkImageSubresourceRange subresourceRange)
+								  VkImage image,
+								  VkAccessFlags srcAccessMask,
+								  VkAccessFlags dstAccessMask,
+								  VkImageLayout oldLayout,
+								  VkImageLayout newLayout,
+								  VkPipelineStageFlags srcStageMask,
+								  VkPipelineStageFlags dstStageMask,
+								  VkImageSubresourceRange subresourceRange)
 	{
 		VkImageMemoryBarrier barrier = {};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -173,7 +173,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
 	void SetImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout, VkImageSubresourceRange subresourceRange,
-		VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
+						VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask)
 	{
 		VkImageMemoryBarrier barrier = {};
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -186,35 +186,33 @@ namespace HazardRenderer::Vulkan::VkUtils
 
 		switch (oldLayout)
 		{
-		case VK_IMAGE_LAYOUT_UNDEFINED:							barrier.srcAccessMask = 0; break;
-		case VK_IMAGE_LAYOUT_PREINITIALIZED:					barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT; break;
-		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT; break;
-		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:	barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT; break;
-		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:				barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT; break;
-		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:				barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT; break;
-		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT; break;
-		default: break;
+			case VK_IMAGE_LAYOUT_UNDEFINED:							barrier.srcAccessMask = 0; break;
+			case VK_IMAGE_LAYOUT_PREINITIALIZED:					barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT; break;
+			case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:			barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT; break;
+			case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:	barrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT; break;
+			case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:				barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT; break;
+			case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:				barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT; break;
+			case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:			barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT; break;
+			default: break;
 		}
 
 		switch (newLayout)
 		{
-		case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:					barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT; break;
-		case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:					barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT; break;
-		case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:				barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT; break;
-		case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:		barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT; break;
-		case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
-		{
-			if (barrier.srcAccessMask == 0)
+			case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:					barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT; break;
+			case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:					barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT; break;
+			case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:				barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT; break;
+			case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:		barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT; break;
+			case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
 			{
-				barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
+				if (barrier.srcAccessMask == 0)
+					barrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
 
+				barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 			}
-			barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-		}
 		}
 
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0,
-			0, nullptr, 0, nullptr, 1, &barrier);
+							 0, nullptr, 0, nullptr, 1, &barrier);
 	}
 	VkDeviceOrHostAddressConstKHR GetBufferAddress(VkBuffer buffer)
 	{
@@ -233,7 +231,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 	}
 	VkTransformMatrixKHR MatrixToKHR(const glm::mat4& matrix)
 	{
-		return VkTransformMatrixKHR 
+		return VkTransformMatrixKHR
 		{
 			matrix[0][0],matrix[1][0],matrix[2][0],matrix[3][0],
 			matrix[0][1],matrix[1][1],matrix[2][1],matrix[3][1],
@@ -271,11 +269,11 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		switch (type)
 		{
-		case ShaderDataType::Float:    return VK_FORMAT_R32_SFLOAT;
-		case ShaderDataType::Float2:   return VK_FORMAT_R32G32_SFLOAT;
-		case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
-		case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
-		case ShaderDataType::Int:	   return VK_FORMAT_R32_SINT;
+			case ShaderDataType::Float:    return VK_FORMAT_R32_SFLOAT;
+			case ShaderDataType::Float2:   return VK_FORMAT_R32G32_SFLOAT;
+			case ShaderDataType::Float3:   return VK_FORMAT_R32G32B32_SFLOAT;
+			case ShaderDataType::Float4:   return VK_FORMAT_R32G32B32A32_SFLOAT;
+			case ShaderDataType::Int:	   return VK_FORMAT_R32_SINT;
 		}
 		HZR_ASSERT(false, "Woop");
 		return VK_FORMAT_MAX_ENUM;

@@ -36,6 +36,23 @@ namespace Hazard
 			s_LoadedPipelines["LineShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
 		{
+			BufferLayout layout = CircleVertex::Layout();
+
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("CircleShader.glsl");
+
+			PipelineSpecification specs = {};
+			specs.DebugName = "CircleShader.glsl";
+			specs.DrawType = DrawType::Fill;
+			specs.Usage = PipelineUsage::GraphicsBit;
+			specs.CullMode = CullMode::None;
+			specs.ShaderCodeCount = asset->ShaderCode.size();
+			specs.pShaderCode = asset->ShaderCode.data();
+			specs.pBufferLayout = &layout;
+
+			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
+			s_LoadedPipelines["CircleShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
+		}
+		{
 			BufferLayout layout = QuadVertex::Layout();
 
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("QuadShader.glsl");

@@ -29,6 +29,7 @@ layout(location = 1) in vec2 TextureCoords;
 layout(location = 2) in flat float TextureIndex;
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out uint EntityID;
 
 void main() 
 {

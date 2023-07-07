@@ -60,15 +60,11 @@ namespace HazardRenderer
 							commandBuffer->PushConstants(*dataRef.PushConstantBuffer, instruction.Destination.Offset, 0);
 							continue;
 						}
-
 						if (instruction.Flags & INSTRUCTION_BIND_DESCRIPTOR_SET)
 						{
-							InputResource& bufferSource = stage.pInputs[instruction.DataSource];
-							Buffer& data = m_InputResources[instruction.DataSource].InputData;
-
 							//Descriptorset reference
-							ResourceReference& ref = data.Read<ResourceReference>(instruction.Source.DescriptorSetIndex * sizeof(ResourceReference));
-							commandBuffer->SetDescriptorSet(ref.DescriptorSet, instruction.Destination.DescriptorSetIndex);
+							ResourceReference& dataRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.DescriptorSetIndex);
+							commandBuffer->SetDescriptorSet(dataRef.DescriptorSet, instruction.Destination.DescriptorSetIndex);
 							continue;
 						}
 
@@ -151,6 +147,7 @@ namespace HazardRenderer
 				break;
 			}
 		}
+		uint32_t stageIndex = 0;
 		for (RenderGraphStage* stage : addedStages)
 		{
 			if (stage->InputCount > 0)
@@ -158,13 +155,16 @@ namespace HazardRenderer
 				InputResource* resources = stage->pInputs;
 				stage->pInputs = new InputResource[stage->InputCount];
 
+				uint32_t offset = m_InputResourceBindings.size();
+
 				for (uint64_t i = 0; i < stage->InputCount; i++)
 				{
 					InputResource* resource = &resources[i];
-					m_InputResourceBindings[resource->Name] = i;
-					stage->pInputs[i] = m_InputResources[i].Resource;
+					m_InputResourceBindings[resource->Name] = i + offset;
+					stage->pInputs[i] = m_InputResources[i + offset].Resource;
 				}
 			}
+			stageIndex++;
 			m_Stages.push_back(*stage);
 		}
 	}

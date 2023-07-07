@@ -42,7 +42,7 @@ namespace Hazard
 		m_Window->Show();
 
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
-		AssetManager::RegisterLoader<PipelineAssetLoader>(AssetType::Pipeline);
+		//AssetManager::RegisterLoader<PipelineAssetLoader>(AssetType::Pipeline);
 		AssetManager::RegisterLoader<ShaderAssetLoader>(AssetType::Shader);
 
 		ShaderLibrary::Init();

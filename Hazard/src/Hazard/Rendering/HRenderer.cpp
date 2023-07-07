@@ -37,7 +37,17 @@ namespace Hazard
 		stat.QuadCount++;
 		stat.Vertices++;
 
-		s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
+		//s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
+		s_Engine->GetCircleRenderer().SubmitCircle(transform, color, 0.25f, 0.1f);
+	}
+	void HRenderer::SubmitCircle(const glm::mat4& transform, const glm::vec4& color, float thickness, float fade, int id)
+	{
+		HZR_PROFILE_FUNCTION();
+		DrawListStat& stat = s_Engine->GetDrawList().Stats;
+		stat.QuadCount++;
+		stat.Vertices++;
+
+		s_Engine->GetCircleRenderer().SubmitCircle(transform, color, thickness, fade);
 	}
 	void HRenderer::SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, const Ref<Texture2DAsset>& texture)
 	{
@@ -135,9 +145,36 @@ namespace Hazard
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (skyLight.EnvironmentMap == nullptr) return;
+		if (skyLight.EnvironmentMapHandle == INVALID_ASSET_HANDLE) return;
 
-		Ref<EnvironmentMap> map = skyLight.EnvironmentMap;
+		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(skyLight.EnvironmentMapHandle);
+		AssetHandle skyboxHandle = s_Engine->GetResources().SkyboxMaterialHandle;
+		Ref<Material> skyboxMaterial = AssetManager::GetAsset<Material>(skyboxHandle);
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(skyboxMaterial->GetPipeline())->Value.As<Pipeline>();
+
+		auto& drawList = s_Engine->GetDrawList();
+		{
+			drawList.Buffers.push_back({ .Pipeline = pipeline.Raw()});
+
+			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
+			instruction.Flags = INSTRUCTION_BIND_PIPELINE;
+			instruction.DataSource = 1;
+			instruction.Source.PipelineIndex = drawList.Buffers.size() - 1;
+		}
+		{
+			drawList.Buffers.push_back({ .DescriptorSet = skyboxMaterial->GetDescriptorSet().Raw() });
+
+			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
+			instruction.Flags = INSTRUCTION_BIND_DESCRIPTOR_SET;
+			instruction.DataSource = 1;
+			instruction.Source.DescriptorSetIndex = drawList.Buffers.size() - 1;
+			instruction.Destination.BindingIndex = 0;
+		}
+		{
+			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
+			instruction.Flags = INSTRUCTION_DRAW | INSTRUCTION_NO_SOURCE;
+			instruction.Destination.DrawCount = 6;
+		}
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{

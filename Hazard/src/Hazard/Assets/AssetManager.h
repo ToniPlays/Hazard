@@ -90,14 +90,17 @@ namespace Hazard
 				Ref<Asset> asset = graph->GetResult<Ref<Asset>>();
 				if (asset)
 				{
+					metadata.LoadState = LoadState::Loaded;
 					asset->m_Type = metadata.Type;
 					asset->m_Handle = metadata.Handle;
 				}
+				else
+					metadata.LoadState = LoadState::None;
 
 				std::scoped_lock lock(s_Mutex);
 
 				s_LoadedAssets[metadata.Handle] = asset;
-				return s_LoadedAssets[metadata.Handle].As<T>();
+				return asset.As<T>();
 			}
 			return s_LoadedAssets[metadata.Handle].As<T>();
 		}

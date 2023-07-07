@@ -41,6 +41,7 @@ layout(location = 1) in vec3 farPoint;
 #include "Uniforms/GridUniform.glslh"
 
 layout(location = 0) out vec4 OutputColor;
+layout(location = 1) out uint EntityID;
 
 const float axisWidth = 1.25;
 const float ZNear = 0.03f;

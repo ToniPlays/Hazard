@@ -9,6 +9,7 @@ namespace HazardRenderer
 {
 	Ref<DescriptorSet> DescriptorSet::Create(DescriptorSetCreateInfo* createInfo)
 	{
+		HZR_ASSERT(!createInfo->DebugName.empty(), "DescriptorSet DebugName is empty");
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL

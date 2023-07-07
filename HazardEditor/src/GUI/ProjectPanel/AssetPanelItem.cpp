@@ -7,6 +7,7 @@
 #include "Core/EditorAssetManager.h"
 #include "Core/GUIManager.h"
 #include "AssetPanel.h"
+#include "Directory.h"
 
 #include "GUI/AssetTools/MaterialEditor.h"
 #include "GUI/AssetTools/AssetImporterPanel.h"
@@ -29,7 +30,7 @@ namespace UI
 			m_Flags |= AssetPanelItemFlags_Renaming;
 		}
 	}
-	void AssetPanelItem::OnRender(Ref<Texture2DAsset> thumbnailIcon, const float& thumbnailSize)
+	void AssetPanelItem::OnRender(Ref<Hazard::Texture2DAsset> thumbnailIcon, Ref<HazardRenderer::Sampler> sampler, const float& thumbnailSize)
 	{
 		HZR_PROFILE_FUNCTION();
 		const float edgeOffset = 4.0f;
@@ -77,7 +78,7 @@ namespace UI
 		ImUI::ShiftX(edgeOffset);
 
 
-		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), thumbnailIcon->GetSampler(),
+		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), sampler,
 			ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
 
 		if (IsFolder())
@@ -217,7 +218,7 @@ namespace UI
 			return;
 		
 		if (IsFolder())
-			File::RenameDirectory(m_SourcePath, newName);
+			Directory::Rename(m_SourcePath, newName);
 
 		Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
 	}

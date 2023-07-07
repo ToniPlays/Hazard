@@ -49,6 +49,27 @@ namespace Hazard
 			};
 		}
 	};
+	struct CircleVertex
+	{
+		glm::vec3 Position;
+		glm::vec3 LocalPosition;
+		glm::vec4 Color;
+		float Thickness;
+		float Fade;
+
+		static HazardRenderer::BufferLayout Layout()
+		{
+			using namespace HazardRenderer;
+			return {
+				{ "a_Position",			ShaderDataType::Float3 },
+				{ "a_LocalPosition",	ShaderDataType::Float4 },
+				{ "a_Color",			ShaderDataType::Float2 },
+				{ "a_Thickness",		ShaderDataType::Float  },
+				{ "a_Fade",				ShaderDataType::Float  }
+			};
+		}
+	};
+
 	struct LineVertex
 	{
 		glm::vec3 Position;

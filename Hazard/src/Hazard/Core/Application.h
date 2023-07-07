@@ -25,6 +25,10 @@ namespace Hazard
 		virtual void Update() {};
 		virtual void Close() {};
 		virtual bool OnEvent(Event& e) { return false; };
+		static uint64_t GetRenderedFrameCount()
+		{
+			return HazardLoop::GetCurrent().GetRenderedFrameCount();
+		}
 		void CreateApplicationStack(HazardCreateInfo* info);
 		JobSystem& GetJobSystem() { return m_JobSystem; }
         

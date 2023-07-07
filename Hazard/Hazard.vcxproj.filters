@@ -1647,6 +1647,8 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.h" />
+    <ClInclude Include="src\Hazard\Rendering\Renderers\CircleRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1808,5 +1810,7 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Renderers\CircleRenderer.cpp" />
   </ItemGroup>
 </Project>

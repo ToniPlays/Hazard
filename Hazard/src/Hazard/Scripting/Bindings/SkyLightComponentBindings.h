@@ -21,16 +21,12 @@ namespace Hazard
 	static uint64_t SkyLightComponent_GetEnvironmentMap_Native(uint64_t handle)
 	{
 		auto& slc = GET_ENTITY(handle).GetComponent<SkyLightComponent>();
-		const Ref<EnvironmentMap>& map = slc.EnvironmentMap;
-
-		if (!slc.EnvironmentMap) 
-			return 0;
-		return slc.EnvironmentMap->GetHandle();
+		//TODO: Fix this
+		return INVALID_ASSET_HANDLE;
 	}
 	static void SkyLightComponent_SetEnvironmentMap_Native(uint64_t handle, uint64_t assetHandle)
 	{
 		auto& slc = GET_ENTITY(handle).GetComponent<SkyLightComponent>();
-		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(assetHandle);
-		slc.EnvironmentMap = map;
+		slc.EnvironmentMapHandle = assetHandle;
 	}
 }

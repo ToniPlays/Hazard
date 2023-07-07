@@ -36,6 +36,7 @@ namespace Hazard
 	{
 		std::string DebugName;
 		GeometryInclude Geometry = Geometry_All;
+		Ref<World> TargetWorld = nullptr;
 
 	};
 

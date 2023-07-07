@@ -5,16 +5,24 @@
 #include "Editor/EditorScriptManager.h"
 #include "Core/GUIManager.h"
 #include "GUI/AllPanels.h"
+#include "Hazard/Rendering/RenderEngine.h"
 
 #include "Core/Defines.h"
 
 #include "imgui.h"
+#include <Directory.h>
 
 namespace UI
 {
 	AssetPanel::AssetPanel() : Panel("Asset panel")
 	{
 		SetRootFolder(ProjectManager::GetAssetFolder());
+
+		m_IconSampler = Hazard::RenderEngine::GetResources().DefaultImageSampler;
+	}
+	void AssetPanel::Update()
+	{
+
 	}
 	void AssetPanel::OnPanelRender()
 	{
@@ -162,12 +170,12 @@ namespace UI
 		for (auto& item : m_CurrentItems)
 		{
 			AssetMetadata metadata = item.GetMetadata();
-			Ref<Texture2DAsset> itemIcon = item.IsFolder() ? AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Folder")) : GetItemIcon(item.GetMetadata());
+			Ref<Texture2DAsset> itemIcon = m_Icons[metadata.Handle];
 
 			if (!itemIcon) continue;
 
 			item.BeginRender();
-			item.OnRender(itemIcon, thumbailSize);
+			item.OnRender(itemIcon, m_IconSampler, thumbailSize);
 			item.EndRender();
 		}
 
@@ -216,18 +224,14 @@ namespace UI
 				panel->Open();
 			});
 			ImUI::MenuItem("World", [&]() {
-				AssetManager::CreateNewAsset(AssetType::World, m_CurrentPath / "world.hpack");
+				AssetManager::CreateNewAsset(AssetType::World, File::FindAvailableName(m_CurrentPath, "world", "hpack"));
 				changed = true;
 			});
-			ImUI::MenuItem("Material", [&]() {
-
-				changed |= true;
-			});
+			ImUI::MenuItem("Material", nullptr);
 
 			ImUI::MenuHeader("Advanced assets");
 
-			ImUI::Submenu("Animation", [&]() {
-			});
+			ImUI::Submenu("Animation", nullptr);
 			ImUI::Submenu("Scripts", [&]() {
 				ImUI::MenuItem("Entity script", [&]() {
 					ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
@@ -235,24 +239,18 @@ namespace UI
 					panel->Open();
 				});
 			});
-			ImUI::Submenu("Editor", [&]() {
-			});
+			ImUI::Submenu("Editor", nullptr);
 			ImUI::Submenu("Materials and textures", [&]() {
-
-				ImUI::MenuItem("Material", [&]() {
-
-					changed |= true;
-				});
-
-				ImUI::MenuItem("Shader", [&]() {
+				ImUI::MenuItem("Material", nullptr);
+				ImUI::MenuItem("Shader", nullptr);
+				ImUI::MenuItem("Environment map", [&]() {
+					AssetManager::CreateNewAsset(AssetType::EnvironmentMap, File::FindAvailableName(m_CurrentPath, "EnvironmentMap", "hpack"));
+					changed = true;
 				});
 			});
-			ImUI::Submenu("Physics", [&]() {
-			});
-			ImUI::Submenu("Sounds", [&]() {
-			});
-			ImUI::Submenu("User interface", [&]() {
-			});
+			ImUI::Submenu("Physics", nullptr);
+			ImUI::Submenu("Sounds", nullptr);
+			ImUI::Submenu("User interface", nullptr);
 
 			ImUI::MenuHeader("Other");
 			ImUI::MenuItem(LBL_SHOW_IN_EXPLORER, [&]() {
@@ -262,8 +260,10 @@ namespace UI
 
 		if (!changed) return;
 
-		GenerateFolderStructure();
-		RefreshFolderItems();
+		Application::Get().SubmitMainThread([&]() {
+			GenerateFolderStructure();
+			RefreshFolderItems();
+		});
 	}
 
 	void AssetPanel::RefreshFolderItems()
@@ -272,7 +272,9 @@ namespace UI
 		std::vector<AssetPanelItem> files;
 
 		m_CurrentItems.clear();
-		for (auto& item : File::GetAllInDirectory(m_CurrentPath))
+		m_Icons.clear();
+
+		for (auto& item : Directory::GetAllInDirectory(m_CurrentPath))
 		{
 			if (File::GetFileExtension(item) == ".hpack")
 			{
@@ -292,12 +294,15 @@ namespace UI
 				directories.push_back(folder);
 			}
 		}
-
+		m_Icons[0] = AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Folder"));
 		for (auto& dir : directories)
 			m_CurrentItems.push_back(dir);
 
 		for (auto& f : files)
+		{
+			m_Icons[f.GetHandle()] = GetItemIcon(f.GetMetadata());
 			m_CurrentItems.push_back(f);
+		}
 
 		m_Paths.clear();
 
@@ -353,7 +358,9 @@ namespace UI
 			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
 			{
 				m_CurrentPath = folder.Path;
-				RefreshFolderItems();
+				Application::Get().SubmitMainThread([&]() {
+					RefreshFolderItems();
+				});
 			}
 			for (const auto& subfolder : folder.SubFolders)
 			{
@@ -377,6 +384,12 @@ namespace UI
 
 		switch (metadata.Type)
 		{
+			case AssetType::EnvironmentMap:
+			{
+				Ref<EnvironmentMap> map = AssetManager::GetAsset<Asset>(metadata.Handle);
+				handle = map->GetSourceImage()->GetHandle();
+				break;
+			}
 			case AssetType::Image:
 			{
 				if (metadata.LoadState == LoadState::Loading)
@@ -405,7 +418,7 @@ namespace UI
 	{
 		std::vector<FolderStructureData> result;
 
-		for (auto& folder : File::GetAllInDirectory(m_RootPath))
+		for (auto& folder : Directory::GetAllInDirectory(m_RootPath))
 		{
 			if (!File::IsDirectory(folder)) continue;
 
@@ -420,7 +433,7 @@ namespace UI
 	{
 		std::vector<FolderStructureData> result;
 
-		for (auto& subfolder : File::GetAllInDirectory(folder))
+		for (auto& subfolder : Directory::GetAllInDirectory(folder))
 		{
 			AssetHandle handle = AssetManager::GetHandleFromKey(subfolder.string());
 			if (handle == INVALID_ASSET_HANDLE) continue;
@@ -442,7 +455,9 @@ namespace UI
 			newPath = newPath.parent_path();
 
 		m_CurrentPath = newPath;
-		RefreshFolderItems();
+		Application::Get().SubmitMainThread([&]() {
+			RefreshFolderItems();
+		});
 	}
 	void AssetPanel::CreateFolder(const std::filesystem::path& path)
 	{
@@ -452,7 +467,7 @@ namespace UI
 		while (File::Exists(directoryPath))
 			directoryPath = path.string() + std::to_string(suffix);
 
-		File::CreateDir(directoryPath);
+		Directory::Create(directoryPath);
 
 		Refresh();
 	}

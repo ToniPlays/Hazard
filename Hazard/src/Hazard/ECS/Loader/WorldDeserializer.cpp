@@ -8,7 +8,7 @@ namespace Hazard
 {
 	Ref<World> WorldDeserializer::Deserialize()
 	{
-		Ref<World> world = Ref<World>::Create("");
+		Ref<World> world = Ref<World>::Create();
 
 		Buffer buffer = AssetManager::GetAssetData(m_Handle);
 		std::string source = std::string((char*)buffer.Data, buffer.Size);

@@ -20,16 +20,14 @@ namespace HazardRenderer
 	struct CubemapTextureCreateInfo
 	{
 		std::string DebugName;
-		std::string FilePath;
 		uint32_t Width;
 		uint32_t Height;
 		Buffer Data;
 		uint32_t Mips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
-		bool FlipOnLoad = false;
+
 		bool GenerateMips = true;
-		CubemapGen* pCubemapSrc = nullptr;
 	};
 
 	class Texture : public RefCount 
@@ -50,8 +48,6 @@ namespace HazardRenderer
 	class CubemapTexture : public Texture {
 	public:
 
-		virtual const std::string& GetPath() const = 0;
-		virtual Ref<Image2D> GetSourceImage() = 0;
 		virtual TextureType GetType() const override { return TextureType::CubemapTexture; }
 
 		static Ref<CubemapTexture> Create(CubemapTextureCreateInfo* createInfo);

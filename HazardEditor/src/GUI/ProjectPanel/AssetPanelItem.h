@@ -4,6 +4,7 @@
 #include "UtilityCore.h"
 #include "File.h"
 #include "Hazard/RenderContext/Texture2D.h"
+#include "HazardRendererCore.h"
 
 namespace UI 
 {
@@ -20,7 +21,7 @@ namespace UI
 		AssetPanelItem(Hazard::AssetHandle handle, const std::filesystem::path& sourcePath) : m_Handle(handle), m_SourcePath(sourcePath) { }
 
 		void BeginRender();
-		void OnRender(Ref<Hazard::Texture2DAsset> thumbnailIcon, const float& thumbnailSize);
+		void OnRender(Ref<Hazard::Texture2DAsset> thumbnailIcon, Ref<HazardRenderer::Sampler> sampler, const float& thumbnailSize);
 		void EndRender();
 
 		bool IsFolder() { return File::IsDirectory(m_SourcePath); }

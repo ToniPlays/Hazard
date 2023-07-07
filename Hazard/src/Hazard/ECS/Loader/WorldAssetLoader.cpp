@@ -88,7 +88,7 @@ namespace Hazard
 	}
 	Ref<JobGraph> WorldAssetLoader::Create(const std::filesystem::path& path)
 	{
-		Ref<World> world = Ref<World>::Create(path);
+		Ref<World> world = Ref<World>::Create();
 		world->m_Handle = AssetHandle();
 
 		Ref<Job> job = Ref<Job>::Create(SaveWorld, world, path);

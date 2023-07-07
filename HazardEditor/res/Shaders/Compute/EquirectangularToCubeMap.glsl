@@ -5,8 +5,8 @@
 #include "../Utils/Common.glslh"
 #include "../Utils/EnvironmentMapping.glslh"
 
-layout(binding = 0, rgba16f) restrict writeonly uniform imageCube o_CubeMap;
-layout(binding = 1) uniform sampler2D u_EquirectangularTexture;
+layout(set = 0, binding = 0, rgba16f) restrict writeonly uniform imageCube o_CubeMap;
+layout(set = 0, binding = 1) uniform sampler2D u_EquirectangularTexture;
 
 layout(local_size_x = 32, local_size_y = 32, local_size_y = 1) in;
 void main() 

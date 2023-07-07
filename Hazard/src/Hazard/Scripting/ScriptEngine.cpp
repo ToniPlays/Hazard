@@ -17,8 +17,7 @@ namespace Hazard
 	{
 		m_Info = *info;
 		RegisterScriptGlue<InternalCall>();
-		AssetManager::RegisterLoader<ScriptAssetLoader>(AssetType::Script, this);
-
+		//AssetManager::RegisterLoader<ScriptAssetLoader>(AssetType::Script, this);
 	}
 	void ScriptEngine::Init()
 	{

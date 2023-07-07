@@ -15,7 +15,6 @@ void main()
 	vec4 position = vec4(quadPos[gl_VertexIndex].xy, 1.0, 1.0);
 	gl_Position = position;
 
-
 	vec4 inversedPos = position;
 	v_Position = (mat4(mat3(inverse(u_Camera.View))) * inverse(u_Camera.Projection) * inversedPos).xyz;
 }
@@ -23,17 +22,13 @@ void main()
 #type Fragment
 #version 450
 
-#include "Uniforms/LightSources.glslh"
-
 layout(location = 0) in vec3 v_Position;
-
-layout(set = 1, binding = 1) uniform samplerCube u_CubeMap;
-
 layout(location = 0) out vec4 OutputColor;
+layout(location = 1) out uint EntityID;
 
 void main() 
 {
-	int levelTexels = textureQueryLevels(u_CubeMap);
-	vec3 color = textureLod(u_CubeMap, v_Position, (u_Lights.EnvironmentLod * levelTexels)).rgb;
-	OutputColor = vec4(color * u_Lights.SkyLightIntensity, 1.0);
+	vec4 color = vec4(0.5, 0.5, 0.9, 1.0);
+	OutputColor = vec4(color.rgb, 1.0);
+	EntityID = 0;
 }

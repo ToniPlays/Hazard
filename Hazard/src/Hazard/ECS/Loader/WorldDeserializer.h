@@ -100,9 +100,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 			YamlUtils::Deserialize(comp, "SkyboxLod", c.LodLevel, 0.0f);
-
-			AssetHandle handle;
-			YamlUtils::Deserialize<AssetHandle>(comp, "EnvironmentMap", handle, INVALID_ASSET_HANDLE);
+			YamlUtils::Deserialize<AssetHandle>(comp, "EnvironmentMap", c.EnvironmentMapHandle, INVALID_ASSET_HANDLE);
 		}
 
 		template<>

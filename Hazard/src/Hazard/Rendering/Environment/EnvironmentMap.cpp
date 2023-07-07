@@ -19,21 +19,25 @@ namespace Hazard
 
 		BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 	}
-    void EnvironmentMap::Update(uint32_t samples)
-    {
-        m_Samples = samples;
-        GenerateRadiance();
-        GenerateIrradiance(RadianceMap);
-        //map->GeneratePreFilter(map->IrradianceMap);
-    }
+	EnvironmentMap::~EnvironmentMap()
+	{
+		
+	}
+	void EnvironmentMap::Update(uint32_t samples, uint32_t resolution, Ref<Texture2DAsset> sourceImage)
+	{
+		m_Samples = samples;
+		m_SourceImage = sourceImage;
+		m_Resolution = resolution;
+		GenerateRadiance();
+	}
 
 	void EnvironmentMap::GenerateRadiance()
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 		Ref<Image2D> image = m_SourceImage->GetSourceImageAsset()->Value.As<Image2D>();
-		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit);
-		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", DeviceQueue::GraphicsBit);
+
+		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit, 1);
 
 		CubemapTextureCreateInfo radianceInfo = {};
 		radianceInfo.DebugName = "RadianceMap " + image->GetDebugName();
@@ -41,42 +45,37 @@ namespace Hazard
 		radianceInfo.Format = ImageFormat::RGBA;
 		radianceInfo.Width = m_Resolution;
 		radianceInfo.Height = m_Resolution;
-
+		  
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
 		AssetHandle computePipelineHandle = ShaderLibrary::GetPipelineAssetHandle("EquirectangularToCubemap");
 		Ref<Pipeline> computePipeline = AssetManager::GetAsset<AssetPointer>(computePipelineHandle)->Value.As<Pipeline>();
 
-        //Prepare shader
-        {
-            auto shader = computePipeline->GetShader();
-            //shader->Set("o_CubeMap", 0, radianceMap);
-            //shader->Set("u_EquirectangularTexture", 0, image);
-        }
+		DescriptorSetLayout layout = { { "o_CubeMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE },
+									   { "u_EquirectangularTexture", 1, DESCRIPTOR_TYPE_SAMPLER_2D } };
 
-		GroupSize size = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6};
+		DescriptorSetCreateInfo setInfo = {};
+		setInfo.DebugName = "EquirectangularComputeSet";
+		setInfo.Set = 0;
+		setInfo.pLayout = &layout;
 
-		ImageTransitionInfo shaderLayout = {};
-		shaderLayout.Cubemap = radianceMap;
-		shaderLayout.SourceLayout = ImageLayout_General;
-		shaderLayout.DestLayout = ImageLayout_ShaderReadOnly;
+		Ref<DescriptorSet> set = DescriptorSet::Create(&setInfo);
+		set->Write(0, radianceMap, nullptr, true);
+		set->Write(1, image, RenderEngine::GetResources().DefaultImageSampler, true);
 
-		GenMipmapsInfo mipmapsInfo = {};
-		mipmapsInfo.Cubemap = radianceMap;
+		GroupSize size = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6 };
 
-        //Command buffer recording
+		//Command buffer recording
 		computeBuffer->Begin();
 		computeBuffer->SetPipeline(computePipeline);
+		computeBuffer->SetDescriptorSet(set, 0);
 		computeBuffer->DispatchCompute(size);
 		computeBuffer->End();
 		computeBuffer->Submit();
 
-		graphicsBuffer->Begin();
-		//graphicsBuffer->GenerateMipmaps(mipmapsInfo);
-		graphicsBuffer->End();
-		graphicsBuffer->Submit();
-
 		RadianceMap = AssetPointer::Create(radianceMap, AssetType::EnvironmentMap);
 		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, RadianceMap);
+
+		std::cout << Application::GetRenderedFrameCount() << std::endl;
 	}
 	void EnvironmentMap::GenerateIrradiance(Ref<AssetPointer> radianceMap)
 	{
@@ -96,20 +95,16 @@ namespace Hazard
 		AssetHandle irradiancePipelineHandle = ShaderLibrary::GetPipelineAssetHandle("EnvironmentIrradiance");
 		Ref<Pipeline> irradiancePipeline = AssetManager::GetAsset<AssetPointer>(irradiancePipelineHandle)->Value.As<Pipeline>();
 
-        {
-            auto shader = irradiancePipeline->GetShader();
-            //shader->Set("o_IrradianceMap", 0, irradianceMap);
-            //shader->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
-            //shader->Set("u_Settings", Buffer(&m_Samples, sizeof(uint32_t)));
-        }
+		{
+			auto shader = irradiancePipeline->GetShader();
+			//shader->Set("o_IrradianceMap", 0, irradianceMap);
+			//shader->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
+			//shader->Set("u_Settings", Buffer(&m_Samples, sizeof(uint32_t)));
+		}
 
 		GroupSize size = { irradianceInfo.Width / 32, irradianceInfo.Height / 32, 6 };
 
-		GenMipmapsInfo mipmapInfo = {};
-		mipmapInfo.Cubemap = irradianceMap;
-
-		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit);
-		Ref<RenderCommandBuffer> graphicsBuffer = RenderCommandBuffer::Create("Transition", DeviceQueue::GraphicsBit);
+		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit, 1);
 
 		computeBuffer->Begin();
 		computeBuffer->SetPipeline(irradiancePipeline);
@@ -117,63 +112,11 @@ namespace Hazard
 		computeBuffer->End();
 		computeBuffer->Submit();
 
-		graphicsBuffer->Begin();
-		//graphicsBuffer->GenerateMipmaps(mipmapInfo);
-		graphicsBuffer->End();
-		graphicsBuffer->Submit();
-
 		IrradianceMap = AssetPointer::Create(irradianceMap, AssetType::EnvironmentMap);
 		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, IrradianceMap);
 	}
 	void EnvironmentMap::GeneratePreFilter(Ref<AssetPointer> radiance)
 	{
-		/*
 		HZR_PROFILE_FUNCTION();
-		using namespace HazardRenderer;
-
-		//Generate prefilter map
-		PipelineSpecification preFilterPipelineInfo = {};
-		preFilterPipelineInfo.DebugName = "EnvironmentMipFilter";
-		preFilterPipelineInfo.ShaderPath = "res/Shaders/Compute/EnvironmentMipFilter.glsl";
-		preFilterPipelineInfo.Usage = PipelineUsage::ComputeBit;
-
-		Ref<Pipeline> preFilterPipeline = Pipeline::Create(&preFilterPipelineInfo);
-		preFilterPipeline->GetShader()->Set("u_InputCube", 0, radiance->Value.As<CubemapTexture>());
-
-		CubemapGen preFilterSource = {};
-		preFilterSource.OutputImageName = "o_Texture";
-		preFilterSource.pCubemap = radiance->Value.As<CubemapTexture>();
-		preFilterSource.Pipeline = preFilterPipeline;
-
-		CubemapTextureCreateInfo prefilterMapInfo = {};
-		prefilterMapInfo.DebugName = "PrefilterMap";
-		prefilterMapInfo.Usage = ImageUsage::Texture;
-		prefilterMapInfo.pCubemapSrc = &preFilterSource;
-		prefilterMapInfo.Format = ImageFormat::RGBA;
-		prefilterMapInfo.GenerateMips = true;
-		Ref<CubemapTexture> preFilterMap = CubemapTexture::Create(&prefilterMapInfo);
-
-		PreFilterMap = AssetPointer::Create(preFilterMap, AssetType::EnvironmentMap);
-
-		AssetMetadata prefilterMetadata = {};
-		prefilterMetadata.Handle = PreFilterMap->GetHandle();
-		prefilterMetadata.Type = AssetType::EnvironmentMap;
-		AssetManager::AddRuntimeAsset(prefilterMetadata, PreFilterMap);
-		*/
-	}
-	Ref<EnvironmentMap> EnvironmentMap::Create(EnvironmentMapCreateInfo* info)
-	{
-		HZR_PROFILE_FUNCTION();
-		using namespace HazardRenderer;
-
-		Ref<EnvironmentMap> map = Ref<EnvironmentMap>::Create();
-		if (!info->SourceImage)
-            return map;
-
-        map->m_SourceImage = info->SourceImage;
-        map->m_Resolution = info->Resolution;
-        map->Update(info->Samples);
-        
-		return map;
 	}
 }

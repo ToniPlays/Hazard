@@ -22,6 +22,7 @@ namespace Hazard
 		static void SubmitSprite(TransformComponent& transform, const SpriteRendererComponent& spriteRenderer, int id = 0);
 		static void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, int id = 0);
 		static void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2DAsset> texture, int id = 0);
+		static void SubmitCircle(const glm::mat4& transform, const glm::vec4& color, float thickness, float fade, int id = 0);
 
 		static void SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, const Ref<Texture2DAsset>& texture);
 

@@ -1,6 +1,7 @@
 
 #include "HazardProject.h"
 #include "File.h"
+#include "Directory.h"
 #include "Hazard.h"
 #include "Core/EditorAssetManager.h"
 
@@ -27,7 +28,7 @@ void HazardProject::ProcessAssets()
 	std::filesystem::path libraryPath = m_Data.ProjectDirectory / "Library";
 	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
 
-	for (auto& item : File::GetAllInDirectory(assetPath, true))
+	for (auto& item : Directory::GetAllInDirectory(assetPath, true))
 		ProcessAsset(item);
 }
 

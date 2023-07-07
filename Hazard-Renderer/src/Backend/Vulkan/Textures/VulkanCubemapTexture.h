@@ -12,10 +12,9 @@ namespace HazardRenderer::Vulkan
 		friend class VulkanRenderCommandBuffer;
 
 	public:
-		VulkanCubemapTexture() = default;
+		VulkanCubemapTexture() = delete;
 		VulkanCubemapTexture(CubemapTextureCreateInfo* createInfo);
-
-		void Bind(uint32_t slot = 0) const;
+		~VulkanCubemapTexture();
 
 		TextureType GetType() const { return TextureType::CubemapTexture; };
 
@@ -24,9 +23,6 @@ namespace HazardRenderer::Vulkan
 		uint32_t GetHeight() const override { return m_Height; }
 		glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
 		uint32_t GetMipLevels() const override { return m_MipLevels; };
-		const std::string& GetPath() const override { return m_FilePath; };
-
-		Ref<Image2D> GetSourceImage() override { return m_SourceImage; }
 
 		//Vulkan specific
 		VkDescriptorImageInfo GetImageDescriptor() { return m_ImageDescriptor; }
@@ -34,15 +30,12 @@ namespace HazardRenderer::Vulkan
 
 		void GenerateMipmaps_RT(VkCommandBuffer commandBuffer, VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 		void SetImageData(const Buffer& buffer);
+
 	private:
-		void GenerateFromCubemap(CubemapGen& generationData);
-
 		void UploadImageData_RT();
-
 		void CreateImageView_RT();
-		void CreateSampler_RT();
-
 		void SetImageLayout(VkImageLayout layout) { m_ImageDescriptor.imageLayout = layout; };
+
 	private:
 		ImageFormat m_Format = ImageFormat::None;
 		ImageUsage m_Usage = ImageUsage::None;
@@ -52,10 +45,7 @@ namespace HazardRenderer::Vulkan
 
 		Buffer m_LocalBuffer;
 
-		std::string m_FilePath = "";
 		std::string m_DebugName = "";
-
-		Ref<Image2D> m_SourceImage = nullptr;
 
 		VkDescriptorImageInfo m_ImageDescriptor;
 		VkImage m_Image = VK_NULL_HANDLE;

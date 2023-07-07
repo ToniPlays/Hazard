@@ -17,6 +17,7 @@ namespace HazardRenderer::Vulkan
 	{
 		m_Set = createInfo->Set;
 		m_Layout = *createInfo->pLayout;
+		m_DebugName = createInfo->DebugName;
 		Invalidate();
 	}
 	VulkanDescriptorSet::~VulkanDescriptorSet()
@@ -29,7 +30,6 @@ namespace HazardRenderer::Vulkan
 	void VulkanDescriptorSet::Write(uint32_t binding, Ref<Image> image, Ref<Sampler> sampler, bool updateAll)
 	{
 		Ref<VulkanDescriptorSet> instance = this;
-		image->GetType();
 		Ref<VulkanSampler> vkSampler = sampler.As<VulkanSampler>();
 
 		Renderer::Submit([instance, image, vkSampler, binding, updateAll]() mutable {
@@ -103,7 +103,8 @@ namespace HazardRenderer::Vulkan
 	}
 	VkDescriptorSet VulkanDescriptorSet::GetVulkanDescriptorSet()
 	{
-		return m_VkDescriptorSet[VulkanContext::GetFrameIndex()];
+		uint32_t index = VulkanContext::GetFrameIndex();
+		return m_VkDescriptorSet[index];
 	}
 	void VulkanDescriptorSet::Invalidate()
 	{

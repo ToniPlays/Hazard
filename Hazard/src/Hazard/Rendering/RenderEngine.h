@@ -8,6 +8,7 @@
 #include "Renderers/LineRenderer.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
+#include "Renderers/CircleRenderer.h"
 
 namespace Hazard 
 {
@@ -47,6 +48,7 @@ namespace Hazard
 
 		QuadRenderer& GetQuadRenderer() { return m_QuadRenderer; }
 		LineRenderer& GetLineRenderer() { return m_LineRenderer; }
+		CircleRenderer& GetCircleRenderer() { return m_CircleRenderer; }
 
 		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
@@ -67,6 +69,7 @@ namespace Hazard
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;
+		CircleRenderer m_CircleRenderer;
 
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
 		Ref<HazardRenderer::RenderPass> m_RenderPass;

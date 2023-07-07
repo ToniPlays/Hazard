@@ -5,19 +5,14 @@
 
 namespace Hazard
 {
-    struct EnvironmentMapCreateInfo
-    {
-        uint32_t Resolution;
-        uint32_t Samples = 0;
-        Ref<Texture2DAsset> SourceImage;
-    };
-
 	class EnvironmentMap : public Asset 
 	{
+		friend class EnvironmentAssetLoader;
 	public:
 		EnvironmentMap();
-        
-        void Update(uint32_t samples);
+		~EnvironmentMap();
+
+        void Update(uint32_t samples, uint32_t resolution, Ref<Texture2DAsset> sourceImage);
         
 		void GenerateRadiance();
 		void GenerateIrradiance(Ref<AssetPointer> radianceMap);
@@ -29,8 +24,6 @@ namespace Hazard
 		Ref<AssetPointer> IrradianceMap = nullptr;
 		Ref<AssetPointer> PreFilterMap = nullptr;
 		Ref<Texture2DAsset> BRDFLut = nullptr;
-
-		static Ref<EnvironmentMap> Create(EnvironmentMapCreateInfo* info);
         
     private:
         Ref<Texture2DAsset> m_SourceImage;

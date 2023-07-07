@@ -10,7 +10,8 @@ namespace Hazard
 {
 	WorldRenderer::WorldRenderer(WorldRendererSpec* spec) : m_Spec(*spec)
 	{
-		m_TargetWorld = Ref<World>::Create("");
+		HZR_ASSERT(spec->TargetWorld, "World renderer requires target world");
+		m_TargetWorld = spec->TargetWorld;
 	}
 	void WorldRenderer::Submit()
 	{

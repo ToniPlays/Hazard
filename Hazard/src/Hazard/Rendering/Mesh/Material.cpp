@@ -16,6 +16,7 @@ namespace Hazard
 		};
 
 		DescriptorSetCreateInfo setInfo = {};
+		setInfo.DebugName = "MaterialDescriptorSet 0";
 		setInfo.Set = 0;
 		setInfo.pLayout = &layout;
 		m_DescriptorSet = DescriptorSet::Create(&setInfo);

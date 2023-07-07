@@ -26,6 +26,7 @@ namespace Hazard
 		DrawListStat Stats;
 
 		std::vector<HazardRenderer::GraphInstruction> GeometryPassInstructions;
+		std::vector<HazardRenderer::GraphInstruction> SkyboxInstructions;
 		std::vector<HazardRenderer::ResourceReference> Buffers;
 		std::vector<HazardRenderer::ResourceReference> PushConstantBuffers;
 		std::vector<Buffer> PushConstantData;

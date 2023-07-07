@@ -22,6 +22,10 @@ namespace Hazard
 		bool Quit(WindowCloseEvent& e);
 		void OnEvent(Event& e);
 		bool ShouldClose() { return m_ShouldClose; }
+		uint64_t GetRenderedFrameCount() const
+		{
+			return m_FrameCount;
+		}
 		void Run();
 
 		static void Process(Event& e);
@@ -32,6 +36,7 @@ namespace Hazard
 		Application* m_Application = nullptr;
 		Scope<ModuleHandler> m_ModuleHandler;
 
+		uint64_t m_FrameCount = 0;
 		bool m_ShouldClose = false;
 		static HazardLoop* s_Instance;
 	};

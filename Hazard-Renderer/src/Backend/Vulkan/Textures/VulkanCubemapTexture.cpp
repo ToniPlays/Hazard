@@ -16,11 +16,13 @@
 
 namespace HazardRenderer::Vulkan
 {
-	VulkanCubemapTexture::VulkanCubemapTexture(CubemapTextureCreateInfo* createInfo) : m_FilePath(createInfo->FilePath), m_Format(createInfo->Format)
+	VulkanCubemapTexture::VulkanCubemapTexture(CubemapTextureCreateInfo* createInfo) : m_Format(createInfo->Format)
 	{
 		HZR_PROFILE_FUNCTION();
+
 		HZR_ASSERT(createInfo->Usage != ImageUsage::None, "Cannot create cubemap with no usage");
 		HZR_ASSERT(!createInfo->DebugName.empty(), "");
+
 		m_DebugName = createInfo->DebugName;
 		m_Usage = createInfo->Usage;
 
@@ -44,9 +46,6 @@ namespace HazardRenderer::Vulkan
 			usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 			usage |= VK_IMAGE_USAGE_STORAGE_BIT;
 
-			VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-
-
 			VkImageCreateInfo imageCreateInfo = {};
 			imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 			imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -64,7 +63,9 @@ namespace HazardRenderer::Vulkan
 			instance->m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
 
 			instance->m_Allocation = allocator.AllocateImage(imageCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, instance->m_Image);
-			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VulkanCubemap {0}", instance->m_DebugName), instance->m_Image);
+			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VkCubemap {0}", instance->m_DebugName), instance->m_Image);
+
+			std::cout << instance->m_DebugName << std::endl;
 
 			VkCommandBuffer layoutCmd = VulkanContext::GetLogicalDevice()->GetCommandBuffer(true);
 
@@ -77,40 +78,21 @@ namespace HazardRenderer::Vulkan
 			VkUtils::SetImageLayout(layoutCmd, instance->m_Image, VK_IMAGE_LAYOUT_UNDEFINED, instance->m_ImageDescriptor.imageLayout, subRange);
 
 			VulkanContext::GetLogicalDevice()->FlushCommandBuffer(layoutCmd);
-
 			instance->CreateImageView_RT();
-			instance->CreateSampler_RT();
-
 			});
-
-		if (createInfo->pCubemapSrc)
-			GenerateFromCubemap(*createInfo->pCubemapSrc);
 
 		if (createInfo->Data)
 			SetImageData(createInfo->Data);
 	}
-	void VulkanCubemapTexture::Bind(uint32_t slot) const
+	VulkanCubemapTexture::~VulkanCubemapTexture()
 	{
 		HZR_PROFILE_FUNCTION();
-		Renderer::Submit([s = slot]() mutable {
-			HZR_PROFILE_FUNCTION("VulkanCubemapTexture::Bind(uint32_t) RT");
-			});
-	}
-	void VulkanCubemapTexture::GenerateFromCubemap(CubemapGen& generationData)
-	{
-		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(generationData.Pipeline, "No pipeline specified for cubemap generation");
-		auto commandBuffer = VulkanContext::GetInstance()->GetSwapchain()->GetSwapchainBuffer();
-
-		GroupSize size = { m_Width / 32, m_Height / 32, 6 };
-
-		commandBuffer->SetPipeline(generationData.Pipeline);
-		commandBuffer->DispatchCompute(size);
-
-		Ref<VulkanCubemapTexture> instance = this;
-		Renderer::Submit([instance]() mutable {
-			//instance->GenerateMipmaps_RT();
-			});
+		std::cout << "Destroy cubemap: " << m_DebugName << std::endl;
+		Renderer::SubmitResourceFree([image = m_Image, alloc = m_Allocation]() mutable {
+			
+			VulkanAllocator allocator("VulkanCubemapTexture");
+			allocator.DestroyImage(image, alloc);
+		});
 	}
 	void VulkanCubemapTexture::UploadImageData_RT()
 	{
@@ -194,42 +176,6 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkCreateImageView(device, &viewInfo, nullptr, &m_ImageDescriptor.imageView), "Failed to create VkImageView");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE_VIEW, fmt::format("VkImageView {0}", m_DebugName), m_ImageDescriptor.imageView);
-	}
-	void VulkanCubemapTexture::CreateSampler_RT()
-	{
-		HZR_PROFILE_FUNCTION();
-		const auto& device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
-
-		if (m_ImageDescriptor.sampler)
-			vkDestroySampler(device, m_ImageDescriptor.sampler, nullptr);
-
-		VkSamplerCreateInfo samplerCreateInfo = {};
-		samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-
-		if (VkUtils::IsIntegratedBase(m_Format))
-		{
-			samplerCreateInfo.magFilter = VK_FILTER_LINEAR;
-			samplerCreateInfo.minFilter = VK_FILTER_LINEAR;
-			samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-		}
-		else
-		{
-			samplerCreateInfo.magFilter = VK_FILTER_LINEAR;
-			samplerCreateInfo.minFilter = VK_FILTER_LINEAR;
-			samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-		}
-
-		samplerCreateInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
-		samplerCreateInfo.addressModeV = samplerCreateInfo.addressModeU;
-		samplerCreateInfo.addressModeW = samplerCreateInfo.addressModeU;
-		samplerCreateInfo.mipLodBias = 0.0f;
-		samplerCreateInfo.maxAnisotropy = 1.0f;
-		samplerCreateInfo.minLod = 0.0f;
-		samplerCreateInfo.maxLod = 100.0f;
-		samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-
-		VK_CHECK_RESULT(vkCreateSampler(device, &samplerCreateInfo, nullptr, &m_ImageDescriptor.sampler), "Failed to create VulkanCubemap sampler");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SAMPLER, fmt::format("VkImageSampler {0}", m_DebugName), m_ImageDescriptor.sampler);
 	}
 	void VulkanCubemapTexture::GenerateMipmaps_RT(VkCommandBuffer commandBuffer, VkImageLayout imageLayout)
 	{

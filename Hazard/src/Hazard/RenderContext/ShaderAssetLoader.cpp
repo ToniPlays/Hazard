@@ -18,7 +18,12 @@ namespace Hazard
 
 		Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
 		Buffer buffer = AssetManager::GetAssetData(handle);
+
+		if (buffer.Size == 0)
+			throw JobException(fmt::format("Failed to load Shader {0}", handle));
+
 		CachedBuffer readBuffer(buffer.Data, buffer.Size);
+
 
 		while (readBuffer.Available())
 		{
@@ -29,9 +34,8 @@ namespace Hazard
 			shaderAsset->ShaderCode.push_back(code);
 		}
 		
-		job->GetStage()->SetResult(shaderAsset.Raw());
 		shaderAsset->IncRefCount();
-		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
+		job->GetStage()->SetResult(shaderAsset);
 	}
 
 	Ref<JobGraph> ShaderAssetLoader::Load(AssetMetadata& metadata)

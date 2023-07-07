@@ -9,6 +9,11 @@ layout(location = 1) out vec3 f_LocalPosition;
 layout(location = 2) out float f_Thickness;
 layout(location = 3) out float f_Fade;
 
+layout(push_constant) uniform Transform
+{
+    mat4 Transform;
+} p_Transform;
+
 void main() 
 {
 	f_Color = a_Color;
@@ -27,6 +32,7 @@ layout(location = 2) in float f_Thickness;
 layout(location = 3) in float f_Fade;
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out uint EntityID;
 
 void main() 
 {

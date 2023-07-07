@@ -91,6 +91,7 @@ namespace Hazard {
 		m_ModuleHandler->PreRender();
 		m_ModuleHandler->Render();
 		m_ModuleHandler->PostRender();
+		m_FrameCount++;
 	}
 	void HazardLoop::OnEvent(Event& e)
 	{

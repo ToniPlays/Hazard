@@ -196,8 +196,7 @@ namespace HazardRenderer::Vulkan
 		for (auto& result : m_PipelineStatisticQueryResults)
 			result.clear();
 
-		if (m_OwnedBySwapchain) return;
-		if (!m_CommandPool) return;
+		if (m_OwnedBySwapchain || !m_CommandPool) return;
 
 		VkCommandPool commandPool = m_CommandPool;
 		vkDestroyCommandPool(device, commandPool, nullptr);
@@ -297,8 +296,7 @@ namespace HazardRenderer::Vulkan
 			VK_CHECK_RESULT(vkQueueSubmit(instance->m_SubmitQueue, 1, &submitInfo, s_ComputeFence), "");
 			VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX), "");
 
-			instance->GetQueryPoolResults_RT();
-
+			//instance->GetQueryPoolResults_RT();
 		});
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
@@ -427,7 +425,10 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::SetPipeline(Ref<Pipeline> pipeline)
 	{
 		HZR_PROFILE_FUNCTION();
+
+		HZR_ASSERT(pipeline, "Pipeline cannot be null");
 		m_CurrentPipeline = pipeline.As<VulkanPipeline>();
+
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {

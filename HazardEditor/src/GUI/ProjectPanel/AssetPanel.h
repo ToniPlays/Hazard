@@ -23,9 +23,7 @@ namespace UI
 	public:
 		AssetPanel();
 
-		void Update() override
-		{
-		};
+		void Update() override;
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 		bool OnWindowFocus(WindowFocusEvent& e);
@@ -81,6 +79,8 @@ namespace UI
 		std::vector<std::filesystem::path> m_Paths;
 
 		std::vector<Ref<Hazard::Texture2DAsset>> m_Textures;
+		std::unordered_map<AssetHandle, Ref<Hazard::Texture2DAsset>> m_Icons;
+		Ref<HazardRenderer::Sampler> m_IconSampler;
 
 		float m_Scale = 100.0f;
 		uint32_t m_Flags = 0;

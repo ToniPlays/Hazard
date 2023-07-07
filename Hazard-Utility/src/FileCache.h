@@ -1,14 +1,15 @@
 #pragma once
 
 #include <filesystem>
+#include <Directory.h>
 
 class FileCache
 {
 public:
 	FileCache(const std::filesystem::path& path) : m_Path(path)
 	{
-		if (!File::DirectoryExists(path))
-			File::CreateDir(path);
+		if (!Directory::Exists(path))
+			Directory::Create(path);
 	}
 
 	const std::filesystem::path& GetCachePath() const { return m_Path; }

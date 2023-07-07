@@ -790,9 +790,10 @@ namespace Hazard::ImUI
 		}
 		return false;
 	}
-	template<typename T>
-	static bool Submenu(const char* label, T callback)
+	static bool Submenu(const char* label, std::function<void()> callback)
 	{
+		if (!callback) return false;
+
 		if (ImGui::BeginMenu(label))
 		{
 			callback();
@@ -801,9 +802,10 @@ namespace Hazard::ImUI
 		}
 		return false;
 	}
-	template<typename T>
-	static void MenuItem(const char* label, T callback)
+	static void MenuItem(const char* label, const std::function<void()> callback)
 	{
+		if (!callback) return;
+
 		if (ImGui::MenuItem(label))
 			callback();
 	}

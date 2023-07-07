@@ -24,7 +24,7 @@ namespace Hazard
 		}
 	}
 
-	World::World(const std::filesystem::path& file)
+	World::World()
 	{
 		m_Registry = entt::registry();
 	}
@@ -130,7 +130,7 @@ namespace Hazard
 	Ref<World> World::Copy(Ref<World> sourceWorld)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<World> copied = Ref<World>::Create(std::to_string(sourceWorld->GetHandle()));
+		Ref<World> copied = Ref<World>::Create();
 		const auto& sourceEntities = sourceWorld->GetEntitiesWith<TagComponent>();
 		
 		copied->m_EntityUIDMap.reserve(sourceEntities.size());
