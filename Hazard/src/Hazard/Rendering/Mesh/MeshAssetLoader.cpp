@@ -14,6 +14,7 @@ namespace Hazard
 	{
 		Buffer buffer = AssetManager::GetAssetData(handle);
 		CachedBuffer data(buffer.Data, buffer.Size);
+
 		if (!data.GetData())
 		{
 			HZR_CORE_ERROR("Cannot find asset data for mesh {}", handle);
@@ -44,6 +45,8 @@ namespace Hazard
 		for (size_t i = 0; i < header.IndexCount; i++)
 			indices[i] = data.Read<uint32_t>();
 
+		buffer.Release();
+
 		MeshCreateInfo info = {};
 		info.DebugName = fmt::format("Mesh {}", handle);
 		info.BoundingBox = header.BoundingBox;
@@ -54,17 +57,12 @@ namespace Hazard
 
 		if (info.IndexCount == 0 || info.VertexCount == 0)
 		{
-			buffer.Release();
 			throw JobException("Unable to create mesh");
 		}
 
 		Ref<Mesh> asset = Ref<Mesh>::Create(&info);
 		asset->IncRefCount();
 		job->GetStage()->SetResult(asset);
-
-		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
-
-		buffer.Release();
 	}
 
 	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)

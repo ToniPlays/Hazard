@@ -23,12 +23,17 @@ void main()
 #version 450
 
 layout(location = 0) in vec3 v_Position;
+
+layout(set = 0, binding = 1) uniform samplerCube u_CubeMap;
+
 layout(location = 0) out vec4 OutputColor;
 layout(location = 1) out uint EntityID;
 
 void main() 
 {
-	vec4 color = vec4(0.5, 0.5, 0.9, 1.0);
-	OutputColor = vec4(color.rgb, 1.0);
+	int levelTexels = textureQueryLevels(u_CubeMap);
+	vec3 color = textureLod(u_CubeMap, v_Position, (0.0f * levelTexels)).rgb;
+	OutputColor = vec4(color * 1.0, 1.0);
+
 	EntityID = 0;
 }

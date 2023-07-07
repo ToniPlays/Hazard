@@ -28,7 +28,7 @@ namespace HazardRenderer::Vulkan
 		~VulkanShader();
 
 		void Reload() override;
-		const ShaderData& GetShaderData() { return m_ShaderData; };
+		const ShaderData& GetShaderData() const { return m_ShaderData; };
 		std::unordered_map<uint32_t, Buffer> GetShaderCode() const override { return m_ShaderCode; };
 		
 		//Vulkan specific

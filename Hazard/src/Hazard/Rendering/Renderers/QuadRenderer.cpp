@@ -12,7 +12,7 @@ namespace Hazard
 	void QuadRenderer::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		constexpr size_t quadCount = 50000;
+		constexpr size_t quadCount = 5000;
 		m_Data.MaxQuadCount = quadCount;
 		m_Data.MaxVertices = quadCount * 4;
 		m_Data.MaxIndices = quadCount * 6;
@@ -62,6 +62,10 @@ namespace Hazard
 
 		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(m_Material->GetPipeline())->Value.As<Pipeline>();
 		pipeline->SetRenderPass(m_RenderPass);
+	
+		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
+		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
+			set->Write(1, i, m_Data.TextureSlots[i], RenderEngine::GetResources().DefaultImageSampler);
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount(), 0);
 	}
@@ -187,6 +191,12 @@ namespace Hazard
 
 		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("QuadShader");
 		m_Material = Ref<Material>::Create(pipelineHandle);
+
+		Ref<Sampler> sampler = RenderEngine::GetResources().DefaultImageSampler;
+		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
+
+		for (uint32_t i = 0; i < m_Data.Samplers; i++)
+			set->Write(1, i, m_Data.TextureSlots[i], sampler, true);
 
 		m_RenderPass = renderPass;
 	}

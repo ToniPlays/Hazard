@@ -36,17 +36,17 @@ size_t StringUtil::OffsetOf(const std::string& source, const std::string& value,
 	return source.find(value, startOffset);
 }
 
-std::string StringUtil::BytesToString(const size_t& bytes)
+std::string StringUtil::BytesToString(const int64_t& bytes)
 {
-	constexpr uint64_t GB = 1024 * 1024 * 1024;
-	constexpr uint64_t MB = 1024 * 1024;
-	constexpr uint64_t KB = 1024;
-	constexpr uint64_t bufSize = 32;
+	constexpr int64_t GB = 1024 * 1024 * 1024;
+	constexpr int64_t MB = 1024 * 1024;
+	constexpr int64_t KB = 1024;
+	constexpr int64_t bufSize = 32;
 
 	char buffer[bufSize];
-	if (bytes > MB) snprintf(buffer, bufSize, "%.0f GB", (float)bytes / (float)GB);
-	else if (bytes > MB) snprintf(buffer, bufSize, "%.2f MB", (float)bytes / (float)MB);
-	else if (bytes > KB) snprintf(buffer, bufSize, "%.2f KB", (float)bytes / (float)KB);
+	if (abs(bytes) > GB) snprintf(buffer, bufSize, "%.2f GB", (float)bytes / (float)GB);
+	else if (abs(bytes) > MB) snprintf(buffer, bufSize, "%.2f MB", (float)bytes / (float)MB);
+	else if (abs(bytes) > KB) snprintf(buffer, bufSize, "%.2f KB", (float)bytes / (float)KB);
 	else snprintf(buffer, bufSize, "%.2f bytes", (float)bytes);
 	return std::string(buffer);
 }

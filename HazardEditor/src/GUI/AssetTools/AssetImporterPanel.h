@@ -35,6 +35,7 @@ namespace UI
 
         void Open(const std::filesystem::path& path);
         void OpenExisting(const std::filesystem::path& path, AssetHandle handle);
+        AssetHandle GetCurrentAssetHandle() { return m_AssetHandle; }
 
         void Update() override {};
         bool OnEvent(Event& e) override { return false; };
@@ -44,6 +45,7 @@ namespace UI
         void DrawBottomBar();
         void DrawImageImportSettings();
         void DrawMeshImportSettings();
+        void DrawEnvironmentMapImportSettings();
 
         void InitializeData();
 

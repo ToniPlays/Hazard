@@ -11,12 +11,11 @@ namespace Hazard
 	}
 	Material::Material(AssetHandle pipelineHandle) : m_PipelineHandle(pipelineHandle)
 	{
-		DescriptorSetLayout layout = {
-			{ "Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER }
-		};
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
+		DescriptorSetLayout layout = pipeline->GetDescriptorSetLayout(0);
 
 		DescriptorSetCreateInfo setInfo = {};
-		setInfo.DebugName = "MaterialDescriptorSet 0";
+		setInfo.DebugName = fmt::format("Material {}", pipeline->GetSpecifications().DebugName);
 		setInfo.Set = 0;
 		setInfo.pLayout = &layout;
 		m_DescriptorSet = DescriptorSet::Create(&setInfo);

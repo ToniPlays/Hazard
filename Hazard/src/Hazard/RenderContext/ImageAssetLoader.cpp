@@ -44,8 +44,6 @@ namespace Hazard
 		asset->IncRefCount();
 		job->GetStage()->SetResult(asset);
 
-		AssetManager::GetMetadata(handle).LoadState = LoadState::Loaded;
-
 		buffer.Release();
 	}
 

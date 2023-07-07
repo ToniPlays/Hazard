@@ -21,7 +21,7 @@ namespace Hazard
 	}
 	EnvironmentMap::~EnvironmentMap()
 	{
-		
+
 	}
 	void EnvironmentMap::Update(uint32_t samples, uint32_t resolution, Ref<Texture2DAsset> sourceImage)
 	{
@@ -45,7 +45,8 @@ namespace Hazard
 		radianceInfo.Format = ImageFormat::RGBA;
 		radianceInfo.Width = m_Resolution;
 		radianceInfo.Height = m_Resolution;
-		  
+		radianceInfo.GenerateMips = false;
+
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
 		AssetHandle computePipelineHandle = ShaderLibrary::GetPipelineAssetHandle("EquirectangularToCubemap");
 		Ref<Pipeline> computePipeline = AssetManager::GetAsset<AssetPointer>(computePipelineHandle)->Value.As<Pipeline>();
@@ -59,8 +60,8 @@ namespace Hazard
 		setInfo.pLayout = &layout;
 
 		Ref<DescriptorSet> set = DescriptorSet::Create(&setInfo);
-		set->Write(0, radianceMap, nullptr, true);
-		set->Write(1, image, RenderEngine::GetResources().DefaultImageSampler, true);
+		set->Write(0, 0, radianceMap, nullptr, true);
+		set->Write(1, 0, image, RenderEngine::GetResources().DefaultImageSampler, true);
 
 		GroupSize size = { radianceInfo.Width / 32, radianceInfo.Height / 32, 6 };
 
@@ -74,8 +75,6 @@ namespace Hazard
 
 		RadianceMap = AssetPointer::Create(radianceMap, AssetType::EnvironmentMap);
 		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, RadianceMap);
-
-		std::cout << Application::GetRenderedFrameCount() << std::endl;
 	}
 	void EnvironmentMap::GenerateIrradiance(Ref<AssetPointer> radianceMap)
 	{

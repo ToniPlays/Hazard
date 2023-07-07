@@ -150,9 +150,9 @@ CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
 	auto size = stream.tellg();
 	stream.seekg(0, std::ios::beg);
 
-	CachedBuffer result((uint32_t)size);
+	if (size == 0) return CachedBuffer();
 
-	if (size == 0) return result;
+	CachedBuffer result((uint32_t)size);
 
 	stream.read((char*)result.GetData(), size);
 	stream.close();

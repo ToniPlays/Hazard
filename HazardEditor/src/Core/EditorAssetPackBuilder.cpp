@@ -28,6 +28,7 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 
 	File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 	AssetManager::ImportAssetPack(pack, path);
+
 	auto projectPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>();
 	if (projectPanel)
 		projectPanel->RefreshFolderItems();
@@ -71,13 +72,13 @@ void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesyst
 void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesystem::path& file, MeshCreateInfo info, UI::MeshImportSettings settings)
 {
 	job->SetJobName(File::GetName(file));
+
 	MeshFactory factory;
 	factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
 	factory.SetScalar(settings.Scale);
 	factory.SetProgressHandler([&](float progress) {
 		job->Progress(progress * 0.9f);
 	});
-
 
 	MeshData meshData = factory.LoadMeshFromSource(file);
 

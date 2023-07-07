@@ -3,6 +3,10 @@
 
 #include "spdlog/fmt/fmt.h"
 
+Job::~Job()
+{
+}
+
 void Job::Execute()
 {
 	Timer timer;

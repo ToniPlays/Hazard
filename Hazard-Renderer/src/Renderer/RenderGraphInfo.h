@@ -51,6 +51,47 @@ namespace HazardRenderer
 		uint32_t DataSource = 0;
 		uint32_t DataDestination = 0;
 		uint32_t DataSize = 0;
+
+		void SetVertexBuffer(uint32_t dataSource, uint32_t bufferIndex, uint32_t bindingIndex)
+		{
+			Flags = INSTRUCTION_BIND_VERTEX_BUFFER;
+			DataSource = dataSource;
+			Source.VertexBufferIndex = bufferIndex;
+			Destination.BindingIndex = bindingIndex;
+		};
+		void SetPipeline(uint32_t dataSource, uint32_t pipelineIndex)
+		{
+			Flags = INSTRUCTION_BIND_PIPELINE;
+			DataSource = dataSource;
+			Source.PipelineIndex = pipelineIndex;
+		};
+		void SetDescriptor(uint32_t dataSource, uint32_t descriptorIndex, uint32_t bindingIndex)
+		{
+			Flags = INSTRUCTION_BIND_DESCRIPTOR_SET;
+			DataSource = dataSource;
+			Source.DescriptorSetIndex = descriptorIndex;
+			Destination.BindingIndex = bindingIndex;
+		}
+		void PushConstants(uint32_t dataSource, uint32_t pushConstantIndex, uint32_t size)
+		{
+
+			Flags = INSTRUCTION_PUSH_CONSTANTS;
+			DataSource = dataSource;
+			Source.PushConstantIndex = pushConstantIndex;
+			DataSize = size;
+		}
+		void Draw(uint32_t drawCount)
+		{
+			Flags = INSTRUCTION_DRAW | INSTRUCTION_NO_SOURCE;
+			Destination.DrawCount = drawCount;
+		};
+		void Draw(uint32_t drawCount, uint32_t bufferSource, uint32_t indexBufferIndex)
+		{
+			Flags = INSTRUCTION_DRAW;
+			DataSource = bufferSource;
+			Source.IndexBufferIndex = indexBufferIndex;
+			Destination.DrawCount = drawCount;
+		};
 	};
 
 

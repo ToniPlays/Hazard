@@ -4,6 +4,7 @@
 #include "RenderPass.h"
 #include "GPUBuffer.h"
 #include "Shader.h"
+#include "DescriptorSetLayout.h"
 #include <glad/glad.h>
 
 namespace HazardRenderer
@@ -72,6 +73,7 @@ namespace HazardRenderer
 		virtual void SetRenderPass(Ref<RenderPass> renderPass) = 0;
 		virtual bool IsCompatibleWith(Ref<Shader> shader) const = 0;
 		virtual void SetLayout(const BufferLayout& layout) = 0;
+		virtual DescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const = 0;
 
 		virtual void Invalidate() = 0;
 		virtual bool IsValid() const = 0;

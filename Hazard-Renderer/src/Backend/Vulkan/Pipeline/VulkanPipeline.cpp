@@ -95,6 +95,26 @@ namespace HazardRenderer::Vulkan
 		}
 	}
 
+	DescriptorSetLayout VulkanPipeline::GetDescriptorSetLayout(uint32_t set) const
+	{
+		auto& data = m_Shader->GetShaderData();
+		std::vector<DescriptorSetElement> elements;
+
+		if (data.UniformsDescriptions.size() > 0)
+		{
+			for (auto& [binding, buffer] : data.UniformsDescriptions.at(set))
+				elements.push_back({ buffer.Name, binding, DESCRIPTOR_TYPE_UNIFORM_BUFFER });
+		}
+
+		if (data.ImageSamplers.size() > 0)
+		{
+			for (auto& [binding, sampler] : data.ImageSamplers.at(set))
+				elements.push_back({ sampler.Name, binding, sampler.ArraySize, DESCRIPTOR_TYPE_SAMPLER_2D });
+		}
+
+		return { elements };
+	}
+
 	void VulkanPipeline::InvalidateGraphicsPipeline()
 	{
 		HZR_PROFILE_FUNCTION();

@@ -122,6 +122,7 @@ void EditorAssetManager::ImportEngineAssets()
 		CachedBuffer buffer = File::ReadBinaryFile(file);
 		AssetPack pack = AssetPack::Create(buffer);
 		AssetManager::ImportAssetPack(pack, file);
+		pack.Free();
 	}
 	HZR_INFO("Engine assets imported in {}ms", timer.ElapsedMillis());
 }

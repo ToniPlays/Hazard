@@ -155,10 +155,6 @@ void Input::ConnectGamepad(int device)
 		for (uint32_t i = Gamepad::ButtonFirst; i < Gamepad::ButtonLast; i++)
 			gamepad.Buttons[i] = 0;
 	}
-	else
-	{
-		HZR_ASSERT(false, "What is this gamepad {0}", gamepad.Name);
-	}
 }
 void Input::DisconnectGamepad(int device)
 {

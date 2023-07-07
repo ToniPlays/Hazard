@@ -2,9 +2,9 @@
 
 #include "Backend/Core/Core.h"
 
-namespace HazardRenderer 
+namespace HazardRenderer
 {
-	enum DescriptorType 
+	enum DescriptorType
 	{
 		DESCRIPTOR_TYPE_SAMPLER_2D,
 		DESCRIPTOR_TYPE_SAMPLER_CUBE,
@@ -18,12 +18,17 @@ namespace HazardRenderer
 	{
 		std::string Name;
 		uint32_t Binding;
+		uint32_t Length = 1;
 		DescriptorType Type;
 
 		DescriptorSetElement() = default;
 
 		DescriptorSetElement(const std::string& name, uint32_t binding, DescriptorType type)
 			: Name(name), Binding(binding), Type(type)
+		{
+		}
+		DescriptorSetElement(const std::string& name, uint32_t binding, uint32_t length, DescriptorType type)
+			: Name(name), Binding(binding), Length(length), Type(type)
 		{
 		}
 	};
@@ -34,6 +39,10 @@ namespace HazardRenderer
 		DescriptorSetLayout() {}
 
 		DescriptorSetLayout(std::initializer_list<DescriptorSetElement> elements)
+			: m_Elements(elements)
+		{
+		}
+		DescriptorSetLayout(std::vector<DescriptorSetElement> elements)
 			: m_Elements(elements)
 		{
 		}

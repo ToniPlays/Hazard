@@ -27,12 +27,12 @@ namespace HazardRenderer::Vulkan
 			vkDestroyDescriptorSetLayout(device, layout, nullptr);
 			});
 	}
-	void VulkanDescriptorSet::Write(uint32_t binding, Ref<Image> image, Ref<Sampler> sampler, bool updateAll)
+	void VulkanDescriptorSet::Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll)
 	{
 		Ref<VulkanDescriptorSet> instance = this;
 		Ref<VulkanSampler> vkSampler = sampler.As<VulkanSampler>();
 
-		Renderer::Submit([instance, image, vkSampler, binding, updateAll]() mutable {
+		Renderer::Submit([instance, image, vkSampler, binding, index, updateAll]() mutable {
 			auto device = VulkanContext::GetLogicalDevice();
 			VkDescriptorImageInfo imageDescriptor;
 
@@ -49,7 +49,7 @@ namespace HazardRenderer::Vulkan
 			write.dstBinding = binding;
 			write.descriptorCount = 1;
 			write.pImageInfo = &imageDescriptor;
-			write.dstArrayElement = 0;
+			write.dstArrayElement = index;
 			write.pBufferInfo = nullptr;
 
 			if (!updateAll)
@@ -124,7 +124,7 @@ namespace HazardRenderer::Vulkan
 			auto& binding = bindings.emplace_back();
 			binding.binding = element.Binding;
 			binding.descriptorType = VkUtils::GetDescriptorType(element.Type);
-			binding.descriptorCount = 1;
+			binding.descriptorCount = element.Length;
 			binding.stageFlags = VK_SHADER_STAGE_ALL;
 		}
 
@@ -134,6 +134,7 @@ namespace HazardRenderer::Vulkan
 		layoutInfo.pBindings = bindings.data();
 
 		VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device->GetVulkanDevice(), &layoutInfo, nullptr, &m_DescriptorSetLayout), "Failed to create descriptor set layout");
+		VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT, fmt::format("VkDescriptorSetLayout {0}", m_DebugName), m_DescriptorSetLayout);
 
 		VkDescriptorSetAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -143,7 +144,10 @@ namespace HazardRenderer::Vulkan
 		m_VkDescriptorSet.resize(VulkanContext::GetImagesInFlight());
 
 		for (uint32_t i = 0; i < VulkanContext::GetImagesInFlight(); i++)
+		{
 			m_VkDescriptorSet[i] = VulkanContext::GetInstance()->RT_AllocateDescriptorSet(allocInfo);
+			VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_DESCRIPTOR_SET, fmt::format("VkDescriptorSet {0}", m_DebugName), m_VkDescriptorSet[i]);
+		}
 	}
 }
 #endif

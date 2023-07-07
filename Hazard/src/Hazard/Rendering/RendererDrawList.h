@@ -8,6 +8,8 @@
 #include "Backend/Core/GPUBuffer.h"
 #include "Environment/EnvironmentMap.h"
 
+#include "AddressableVector.h"
+
 namespace Hazard
 {
 	struct DrawListStat
@@ -27,8 +29,11 @@ namespace Hazard
 
 		std::vector<HazardRenderer::GraphInstruction> GeometryPassInstructions;
 		std::vector<HazardRenderer::GraphInstruction> SkyboxInstructions;
-		std::vector<HazardRenderer::ResourceReference> Buffers;
+		//Resources
+		AddressableVector<void*, HazardRenderer::ResourceReference> Buffers;
+		AddressableVector<void*, HazardRenderer::ResourceReference> Pipelines;
 		std::vector<HazardRenderer::ResourceReference> PushConstantBuffers;
+
 		std::vector<Buffer> PushConstantData;
 		std::vector<Ref<Sampler>> Samplers;
 		std::vector<Ref<Texture>> Textures;

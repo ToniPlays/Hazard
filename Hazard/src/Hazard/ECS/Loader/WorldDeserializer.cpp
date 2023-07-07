@@ -12,7 +12,6 @@ namespace Hazard
 
 		Buffer buffer = AssetManager::GetAssetData(m_Handle);
 		std::string source = std::string((char*)buffer.Data, buffer.Size);
-
 		YAML::Node root = YAML::Load(source.c_str());
 
 		buffer.Release();

@@ -1,8 +1,8 @@
 #type Vertex
 #version 450
 
-#include "Uniforms/CameraUniform.glslh"
-#include "Inputs/InputCircle.glslh"
+#include "../Uniforms/CameraUniform.glslh"
+#include "../Inputs/InputCircle.glslh"
 
 layout(location = 0) out vec4 f_Color;
 layout(location = 1) out vec3 f_LocalPosition;

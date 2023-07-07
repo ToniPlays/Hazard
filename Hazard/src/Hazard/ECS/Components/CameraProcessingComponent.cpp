@@ -8,31 +8,26 @@ namespace Hazard {
 	void CameraComponent::SetProjection(Projection t)
 	{
 		m_Type = t;
-		RecalculateProjection(m_Width, m_Height);
 	}
 	void CameraComponent::SetFov(float fov)
 	{
 		m_Dirty |= m_Fov == fov;
 		m_Fov = fov;
-		RecalculateProjection(m_Width, m_Height);
 	}
 	void CameraComponent::SetSize(float size)
 	{
 		m_Dirty |= m_Size == size;
 		m_Size = size;
-		RecalculateProjection(m_Width, m_Height);
 	}
 	void CameraComponent::SetZNear(float plane)
 	{
 		m_Dirty |= m_ZNear == plane;
 		m_ZNear = plane;
-		RecalculateProjection(m_Width, m_Height);
 	}
 	void CameraComponent::SetZFar(float plane)
 	{
 		m_Dirty |= m_ZFar == plane;
 		m_ZFar = plane;
-		RecalculateProjection(m_Width, m_Height);
 	}
 	void CameraComponent::RecalculateProjection(float w, float h)
 	{

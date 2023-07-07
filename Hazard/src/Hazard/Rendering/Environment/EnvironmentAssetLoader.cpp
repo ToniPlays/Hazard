@@ -9,8 +9,8 @@ namespace Hazard
 	{
 		EnvironmentAssetHeader header = {};
 		header.ImageHandle = 0;
-		header.Samples = 2;
-		header.Resolution = 128;
+		header.Samples = 128;
+		header.Resolution = 4096;
 
 		const AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 		const AssetMetadata& packMetadata = AssetManager::GetMetadata(metadata.AssetPackHandle);
@@ -52,8 +52,6 @@ namespace Hazard
 
 		map->IncRefCount();
 		job->GetStage()->SetResult(map);
-
-		std::cout << Application::GetRenderedFrameCount() << std::endl;
 	}
 
 	Ref<JobGraph> EnvironmentAssetLoader::Load(AssetMetadata& metadata)

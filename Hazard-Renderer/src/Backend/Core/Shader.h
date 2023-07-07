@@ -202,7 +202,7 @@ namespace HazardRenderer
 		virtual ~Shader() = default;
 		virtual void Reload() = 0;
 
-		virtual const ShaderData& GetShaderData() = 0;
+		virtual const ShaderData& GetShaderData() const = 0;
 		virtual std::unordered_map<uint32_t, Buffer> GetShaderCode() const = 0;
 
 		static Ref<Shader> Create(const std::vector<ShaderStageCode>& shaderCode);

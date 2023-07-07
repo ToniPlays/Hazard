@@ -65,8 +65,6 @@ namespace HazardRenderer::Vulkan
 			instance->m_Allocation = allocator.AllocateImage(imageCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, instance->m_Image);
 			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VkCubemap {0}", instance->m_DebugName), instance->m_Image);
 
-			std::cout << instance->m_DebugName << std::endl;
-
 			VkCommandBuffer layoutCmd = VulkanContext::GetLogicalDevice()->GetCommandBuffer(true);
 
 			VkImageSubresourceRange subRange = {};
@@ -87,7 +85,6 @@ namespace HazardRenderer::Vulkan
 	VulkanCubemapTexture::~VulkanCubemapTexture()
 	{
 		HZR_PROFILE_FUNCTION();
-		std::cout << "Destroy cubemap: " << m_DebugName << std::endl;
 		Renderer::SubmitResourceFree([image = m_Image, alloc = m_Allocation]() mutable {
 			
 			VulkanAllocator allocator("VulkanCubemapTexture");

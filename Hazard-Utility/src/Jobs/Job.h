@@ -21,6 +21,7 @@ class Job : public RefCount
 
 public:
 	Job() = delete;
+	~Job();
 
 	template<typename Fn, typename... Args>
 	Job(Fn&& callback, Args&&... args)

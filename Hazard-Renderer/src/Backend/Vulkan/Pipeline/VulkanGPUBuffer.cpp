@@ -55,6 +55,8 @@ namespace HazardRenderer::Vulkan
 				device->FlushCommandBuffer(commandBuffer);
 				allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 
+				instance->m_LocalData.Release();
+
 			});
 		}
 		else

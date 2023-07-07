@@ -26,7 +26,7 @@ namespace HazardRenderer::Vulkan
 		VulkanDescriptorSet(DescriptorSetCreateInfo* createInfo);
 		~VulkanDescriptorSet();
 
-		void Write(uint32_t binding, Ref<Image> image, Ref<Sampler> sampler, bool updateAll = false) override;
+		void Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll = false) override;
 		void Write(uint32_t binding, Ref<GPUBuffer> buffer, bool updateAll = false) override;
 
 		VkDescriptorSet GetVulkanDescriptorSet();

@@ -35,20 +35,18 @@ namespace Hazard
 		pack.Elements = { element };
 
 		CachedBuffer packBuffer = AssetPack::ToBuffer(pack);
+		buffer.Release();
 
 		if (!File::WriteBinaryFile(filePath, packBuffer.GetData(), packBuffer.GetSize()))
 		{
-			buffer.Release();
 			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath.string()));
 		}
-
-		buffer.Release();
 	}
 
 	static void WorldPreprocessJob(Ref<Job> job, WorldDeserializer deserializer)
 	{
 		Ref<World> world = deserializer.Deserialize();
-		
+
 		//Process all entities and get required assets to be loaded
 		for (auto& entity : world->GetEntitiesWith<SpriteRendererComponent>())
 		{

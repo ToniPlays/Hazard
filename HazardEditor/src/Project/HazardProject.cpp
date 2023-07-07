@@ -41,6 +41,7 @@ void HazardProject::ProcessAsset(const std::filesystem::path& path)
 	CachedBuffer buffer = File::ReadBinaryFile(path);
 	AssetPack pack = AssetPack::Create(buffer);
 	AssetManager::ImportAssetPack(pack, path);
+	pack.Free();
 }
 
 void HazardProject::DeserializeGeneral(const YAML::Node& node)

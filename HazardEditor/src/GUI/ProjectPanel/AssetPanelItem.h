@@ -8,7 +8,8 @@
 
 namespace UI 
 {
-	enum AssetPanelItemFlags : uint32_t {
+	enum AssetPanelItemFlags : uint32_t 
+	{
 		AssetPanelItemFlags_StartRename = BIT(0),
 		AssetPanelItemFlags_Renaming = BIT(1),
 		AssetPanelItemFlags_EndRename = BIT(2)

@@ -16,6 +16,8 @@ namespace UI
 		for (auto& list : drawList)
 		{
 			Ref<WorldRenderer> renderer = list.WorldRenderer;
+			if (!renderer) continue;
+
 			if (!renderer->IsValid()) continue;
 
 			ImUI::Treenode("##worldCommandList", ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen, [&]() {

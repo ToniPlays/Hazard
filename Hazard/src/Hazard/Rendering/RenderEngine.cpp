@@ -94,8 +94,12 @@ namespace Hazard
 		meshInstructions.UsageFlags = INPUT_RESOURCE_INSTRUCTIONS;
 
 		InputResource meshResources = {};
-		meshResources.Name = "MeshStageInputResources";
+		meshResources.Name = "MeshInputBuffers";
 		meshResources.UsageFlags = INPUT_RESOURCE_RESOURCE_LIST;
+
+		InputResource pipelineResources = {};
+		pipelineResources.Name = "Pipelines";
+		pipelineResources.UsageFlags = INPUT_RESOURCE_RESOURCE_LIST;
 
 		InputResource meshPushConstantBuffers = {};
 		meshPushConstantBuffers.Name = "MeshStageInputPushConstants";
@@ -105,14 +109,14 @@ namespace Hazard
 		skyboxInstructions.Name = "SkyboxInstructions";
 		skyboxInstructions.UsageFlags = INPUT_RESOURCE_INSTRUCTIONS;
 
-		std::vector<InputResource> skyboxInputResources = { skyboxInstructions, meshResources };
-		std::vector<InputResource> meshInputResources = { meshInstructions, meshResources, meshPushConstantBuffers };
+		std::vector<InputResource> skyboxInputResources = { skyboxInstructions, meshResources, pipelineResources };
+		std::vector<InputResource> meshInputResources = { meshInstructions, meshResources, pipelineResources, meshPushConstantBuffers };
 
 
 		auto& skyboxPass = stages.emplace_back();
 		skyboxPass.DependencyCount = 0;
 		skyboxPass.pDependencies = nullptr;
-		skyboxPass.InputCount = 2;
+		skyboxPass.InputCount = skyboxInputResources.size();
 		skyboxPass.pInputs = skyboxInputResources.data();
 		skyboxPass.InputImageCount = 0;
 		skyboxPass.pInputImages = nullptr;
@@ -130,7 +134,6 @@ namespace Hazard
 		geometryPass.pInputImages = nullptr;
 		geometryPass.OutputImageCount = 0;
 		geometryPass.pOutputImages = nullptr;
-
 
 		RenderGraphCreateInfo graphInfo = {};
 		graphInfo.DebugName = "RasterizedRenderGraph";
@@ -175,13 +178,13 @@ namespace Hazard
 				Ref<Material> skyboxMaterial = AssetManager::GetAsset<Material>(s_Resources->SkyboxMaterialHandle);
 				Ref<Pipeline> skyboxPipeline = AssetManager::GetAsset<AssetPointer>(skyboxMaterial->GetPipeline())->Value.As<Pipeline>();
 
-
 				defaultPipeline->SetRenderPass(camera.RenderPass);
 				skyboxPipeline->SetRenderPass(camera.RenderPass);
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 
 				m_RasterizedRenderGraph->SetInput("MeshInputInstructions", worldDrawList.GeometryPassInstructions.data(), worldDrawList.GeometryPassInstructions.size() * sizeof(GraphInstruction));
-				m_RasterizedRenderGraph->SetInput("MeshStageInputResources", worldDrawList.Buffers.data(), worldDrawList.Buffers.size() * sizeof(ResourceReference));
+				m_RasterizedRenderGraph->SetInput("MeshInputBuffers", worldDrawList.Buffers.Data(), worldDrawList.Buffers.Size() * sizeof(ResourceReference));
+				m_RasterizedRenderGraph->SetInput("Pipelines", worldDrawList.Pipelines.Data(), worldDrawList.Pipelines.Size() * sizeof(ResourceReference));
 				m_RasterizedRenderGraph->SetInput("MeshStageInputPushConstants", worldDrawList.PushConstantBuffers.data(), worldDrawList.PushConstantBuffers.size() * sizeof(ResourceReference));
 
 				m_RasterizedRenderGraph->SetInput("SkyboxInstructions", worldDrawList.SkyboxInstructions.data(), worldDrawList.SkyboxInstructions.size() * sizeof(GraphInstruction));

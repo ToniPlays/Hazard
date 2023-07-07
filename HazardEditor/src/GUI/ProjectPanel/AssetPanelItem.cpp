@@ -45,8 +45,7 @@ namespace UI
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.0f, 4.0f });
 
-		auto drawShadow = [&](const ImVec2& topLeft, const ImVec2& bottomRight, bool directory)
-		{
+		auto drawShadow = [&](const ImVec2& topLeft, const ImVec2& bottomRight, bool directory) {
 			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 			auto* drawList = ImGui::GetWindowDrawList();
 			const ImRect itemRect = ImUI::RectOffset(topLeft, bottomRight, 1.0f, 1.0f);
@@ -79,7 +78,7 @@ namespace UI
 
 
 		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), sampler,
-			ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
+					ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
 
 		if (IsFolder())
 		{
@@ -87,9 +86,9 @@ namespace UI
 			{
 				ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
 					AssetMetadata data = AssetManager::GetMetadata(m_Handle);
-				//EditorAssetManager::MoveAssetToFolder(handle, data.Key);
-				Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
-					});
+					//EditorAssetManager::MoveAssetToFolder(handle, data.Key);
+					Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
+				});
 			}
 		}
 
@@ -147,17 +146,17 @@ namespace UI
 
 		ImUI::DragSource(GetMetadata().Type, &m_Handle, [&]() {
 			ImGui::Text("%s", name.c_str());
-		ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
-			});
+			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
+		});
 
 		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && !IsFolder() && Input::IsKeyDown(Key::LeftControl))
 			File::OpenInDefaultApp(GetMetadata().Key);
 
-		if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
+		if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() && m_Flags == 0)
 		{
 			OnItemClicked();
 		}
-		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered())
+		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && m_Flags == 0)
 		{
 			if (!IsFolder())
 			{
@@ -197,6 +196,7 @@ namespace UI
 			ImGui::SetKeyboardFocusHere();
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - edgeOffset * 4.0f);
 			ImUI::TextField(m_RenameValue);
+
 			if (ImGui::IsItemDeactivated())
 			{
 				m_Flags &= ~AssetPanelItemFlags_StartRename;
@@ -216,7 +216,7 @@ namespace UI
 	{
 		if (newName == GetName())
 			return;
-		
+
 		if (IsFolder())
 			Directory::Rename(m_SourcePath, newName);
 
@@ -226,13 +226,13 @@ namespace UI
 	{
 		switch (GetType())
 		{
-		case AssetType::Material:
-		{
-			auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<MaterialEditor>();
+			case AssetType::Material:
+			{
+				auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<MaterialEditor>();
 
-			panel->SetSelectedMaterial(AssetManager::GetAsset<Material>(m_Handle));
-		}
-		default: break;
+				panel->SetSelectedMaterial(AssetManager::GetAsset<Material>(m_Handle));
+			}
+			default: break;
 		}
 	}
 }

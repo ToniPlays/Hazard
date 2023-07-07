@@ -82,54 +82,52 @@ namespace Hazard
 
 		auto& drawList = s_Engine->GetDrawList();
 		{
-			drawList.Buffers.push_back({ .VertexBuffer = vertexBuffer.Raw() });
-
 			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			instruction.Flags = INSTRUCTION_BIND_VERTEX_BUFFER;
-			instruction.DataSource = 1;
-			instruction.Source.VertexBufferIndex = drawList.Buffers.size() - 1;
-			instruction.Destination.BindingIndex = 0;
+			uint64_t index;
+			if (drawList.Buffers.Contains(vertexBuffer.Raw()))
+				index = drawList.Buffers.GetIndex(vertexBuffer.Raw());
+			else index = drawList.Buffers.Push(vertexBuffer.Raw(), { .VertexBuffer = vertexBuffer.Raw() });
+
+			instruction.SetVertexBuffer(1, index, 0);
 		}
 		{
-			drawList.Buffers.push_back({ .Pipeline = pipeline.Raw() });
-
 			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			instruction.Flags = INSTRUCTION_BIND_PIPELINE;
-			instruction.DataSource = 1;
-			instruction.Source.PipelineIndex = drawList.Buffers.size() - 1;
+			uint64_t index;
+			if (drawList.Pipelines.Contains(pipeline.Raw()))
+				index = drawList.Pipelines.GetIndex(pipeline.Raw());
+			else index = drawList.Pipelines.Push(pipeline.Raw(), { .Pipeline = pipeline.Raw() });
+			instruction.SetPipeline(2, index);
 		}
 		{
-			drawList.PushConstantData.push_back(Buffer::Copy(glm::value_ptr(transform), sizeof(glm::mat4)));
+			drawList.PushConstantData.push_back(Buffer((void*)&transform, sizeof(glm::mat4)));
 			uint32_t index = drawList.PushConstantData.size() - 1;
-
 			drawList.PushConstantBuffers.push_back(ResourceReference{ .PushConstantBuffer = &drawList.PushConstantData[index] });
 
 			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			instruction.Flags = INSTRUCTION_PUSH_CONSTANTS;
-			instruction.DataSource = 2;
-			instruction.Source.PushConstantIndex = drawList.PushConstantData.size() - 1;
-			instruction.DataSize = sizeof(glm::mat4);
+			instruction.PushConstants(3, drawList.PushConstantData.size() - 1, sizeof(glm::mat4));
 		}
 		{
-			drawList.Buffers.push_back({ .DescriptorSet = material->GetDescriptorSet().Raw() });
-
+			
 			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			instruction.Flags = INSTRUCTION_BIND_DESCRIPTOR_SET;
-			instruction.DataSource = 1;
-			instruction.Source.DescriptorSetIndex = drawList.Buffers.size() - 1;
-			instruction.Destination.BindingIndex = 0;
+			instruction.SetDescriptor(1, drawList.Buffers.Push(material->GetDescriptorSet().Raw(), { .DescriptorSet = material->GetDescriptorSet().Raw() }), 0);
 		}
 		{
-			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			instruction.Flags = INSTRUCTION_DRAW;
-			instruction.DataSource = 1;
-			instruction.Source.IndexBufferIndex = drawList.Buffers.size();
-			instruction.Destination.DrawCount = count;
-
 			if (indexBuffer)
-				drawList.Buffers.push_back({ .IndexBuffer = indexBuffer.Raw() });
+			{
+				GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
+
+				uint64_t index;
+				if (drawList.Buffers.Contains(indexBuffer.Raw()))
+					index = drawList.Buffers.GetIndex(indexBuffer.Raw());
+				else index = drawList.Buffers.Push(indexBuffer.Raw(), { .IndexBuffer = indexBuffer.Raw() });
+
+				instruction.Draw(count, 1, index);
+			}
 			else
-				instruction.Flags |= INSTRUCTION_NO_SOURCE;
+			{
+				GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
+				instruction.Draw(count);
+			}
 		}
 	}
 
@@ -149,30 +147,25 @@ namespace Hazard
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(skyLight.EnvironmentMapHandle);
 		AssetHandle skyboxHandle = s_Engine->GetResources().SkyboxMaterialHandle;
 		Ref<Material> skyboxMaterial = AssetManager::GetAsset<Material>(skyboxHandle);
+		skyboxMaterial->GetDescriptorSet()->Write(1, 0, map->RadianceMap->Value.As<Image2D>(), s_Engine->GetResources().DefaultImageSampler);
 		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(skyboxMaterial->GetPipeline())->Value.As<Pipeline>();
 
 		auto& drawList = s_Engine->GetDrawList();
 		{
-			drawList.Buffers.push_back({ .Pipeline = pipeline.Raw()});
-
 			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
-			instruction.Flags = INSTRUCTION_BIND_PIPELINE;
-			instruction.DataSource = 1;
-			instruction.Source.PipelineIndex = drawList.Buffers.size() - 1;
+			instruction.SetPipeline(2, drawList.Pipelines.Push(pipeline.Raw(), { .Pipeline = pipeline.Raw() }));
 		}
 		{
-			drawList.Buffers.push_back({ .DescriptorSet = skyboxMaterial->GetDescriptorSet().Raw() });
-
 			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
 			instruction.Flags = INSTRUCTION_BIND_DESCRIPTOR_SET;
 			instruction.DataSource = 1;
-			instruction.Source.DescriptorSetIndex = drawList.Buffers.size() - 1;
+			instruction.Source.DescriptorSetIndex = drawList.Buffers.Push(skyboxMaterial->GetDescriptorSet().Raw()
+			, { .DescriptorSet = skyboxMaterial->GetDescriptorSet().Raw() });
 			instruction.Destination.BindingIndex = 0;
 		}
 		{
 			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
-			instruction.Flags = INSTRUCTION_DRAW | INSTRUCTION_NO_SOURCE;
-			instruction.Destination.DrawCount = 6;
+			instruction.Draw(6);
 		}
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)

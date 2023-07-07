@@ -36,6 +36,8 @@ namespace Hazard
 		
 		shaderAsset->IncRefCount();
 		job->GetStage()->SetResult(shaderAsset);
+
+		buffer.Release();
 	}
 
 	Ref<JobGraph> ShaderAssetLoader::Load(AssetMetadata& metadata)

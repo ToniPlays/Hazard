@@ -75,8 +75,6 @@ namespace HazardScript
 		{
 			std::string name = mono_field_get_name(field);
 			m_Fields[name] = ScriptCache::CacheOrGetFieldMetadata(field);
-			//if (m_Fields[name]->GetType().NativeType == NativeType::None)
-				//std::cout << name << std::endl;
 		}
 #endif
 	}
