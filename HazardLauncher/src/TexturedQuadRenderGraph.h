@@ -100,30 +100,20 @@ namespace TexturedQuadRenderGraph
 		descriptorInfo.pLayout = &descriptorLayout;
 
 		Ref<DescriptorSet> descriptorSet = DescriptorSet::Create(&descriptorInfo);
-		descriptorSet->Write(0, image, sampler, true);
+		descriptorSet->Write(0, 0, image, sampler, true);
 
 		auto swapchain = window->GetSwapchain();
 		auto frameBuffer = swapchain->GetRenderTarget();
 
 		InputResource drawCalls = {};
 		drawCalls.Name = "DrawCallData";
-		drawCalls.UsageFlags = INPUT_RESOURCE_DRAW_CALL_LIST_SINGLE;
-
-		ImageDependency outputImage = {};
-		outputImage.Name = "Output";
-		outputImage.Binding = 0;
-		outputImage.pTargetImage = frameBuffer->GetImage(0);
-		outputImage.pImageSampler = sampler;
+		drawCalls.UsageFlags = INPUT_RESOURCE_INSTRUCTIONS;
 
 		RenderGraphStage meshStage = {};
 		meshStage.DependencyCount = 0;
 		meshStage.pDependencies = nullptr;
 		meshStage.InputCount = 1;
 		meshStage.pInputs = &drawCalls;
-		meshStage.InputImageCount = 0;
-		meshStage.pInputImages = nullptr;
-		meshStage.OutputImageCount = frameBuffer->GetColorAttachmentCount();
-		meshStage.pOutputImages = &outputImage;
 
 		RenderGraphCreateInfo graphInfo = {};
 		graphInfo.DebugName = "RenderGraph";
@@ -131,16 +121,6 @@ namespace TexturedQuadRenderGraph
 		graphInfo.pStages = &meshStage;
 
 		Ref<RenderGraph> graph = RenderGraph::Create(&graphInfo);
-
-		InstanceDrawCall list = {};
-		list.VertexBuffer = vertexBuffer;
-		list.IndexBuffer = indexBuffer;
-		list.Pipeline = pipeline;
-		list.DescriptorSet = descriptorSet;
-		list.VertexOffset = 0;
-		list.IndexOffset = 0;
-		list.DrawCount = indexBuffer->GetSize() / sizeof(uint32_t);
-		list.InstanceCount = 1;
 
 		while (running)
 		{
@@ -150,7 +130,7 @@ namespace TexturedQuadRenderGraph
 
 			window->BeginFrame();
 			commandBuffer->BeginRenderPass(swapchain->GetRenderPass());
-			graph->SetInput("DrawCallData", &list, sizeof(InstanceDrawCall));
+			//graph->SetInput("DrawCallData", &list, sizeof(InstanceDrawCall));
 			graph->Execute(commandBuffer);
 			commandBuffer->EndRenderPass();
 

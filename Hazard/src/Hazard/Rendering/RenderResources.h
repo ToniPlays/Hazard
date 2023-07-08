@@ -27,7 +27,7 @@ namespace Hazard
 		glm::vec4 Unused2;
 	};
 
-	struct DirectionalLight 
+	struct DirectionalLight
 	{
 		//W component not used
 		glm::vec4 Direction;
@@ -43,33 +43,30 @@ namespace Hazard
 		float EnvironmentLod;
 		DirectionalLight Lights[8];
 	};
-	struct UtilityUniformData 
+	struct UtilityUniformData
 	{
 		glm::vec3 CameraPos;
 		float someRandomStuff;
 		uint32_t Flags = 0;
 	};
 
-    struct InstanceTransform
-    {
-        glm::vec4 MRow0;
-        glm::vec4 MRow1;
-        glm::vec4 MRow2;
-    };
+	struct InstanceTransform
+	{
+		glm::vec4 MRow0;
+		glm::vec4 MRow1;
+		glm::vec4 MRow2;
+	};
 
 	using namespace HazardRenderer;
 	struct RenderResources
 	{
+		Ref<HazardRenderer::DescriptorSet> WorldDescriptor;
 		Ref<HazardRenderer::GPUBuffer> CameraUniformBuffer;
-		Ref<HazardRenderer::GPUBuffer> UtilityUniformBuffer;
-		Ref<HazardRenderer::GPUBuffer> LightUniformBuffer;
-        
-        Ref<HazardRenderer::GPUBuffer> TransformBuffer;
 
 		AssetHandle SkyboxMaterialHandle;
 		AssetHandle PBRMaterialHandle;
 
-        AssetHandle WhiteTextureHandle;
+		AssetHandle WhiteTextureHandle;
 		AssetHandle BRDFLut;
 
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
@@ -78,58 +75,68 @@ namespace Hazard
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
-			{
-				BufferCreateInfo cameraUBO = {};
-				cameraUBO.Name = "Camera";
-				cameraUBO.Size = sizeof(CameraData);
-				cameraUBO.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
+			Ref<Material> skyboxMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("Skybox"));
+			SkyboxMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, skyboxMaterial);
 
-				CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
-				Ref<Material> skyboxMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("Skybox"));
-				SkyboxMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, skyboxMaterial);
+			DescriptorSetLayout layout = { { "Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER } };
 
-                auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
-                Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
-                
-				WhiteTextureHandle = AssetManager::CreateMemoryOnly(AssetType::Image, asset);
-				BRDFLut = AssetManager::GetHandleFromKey("BRDF_LUT.tga");
+			DescriptorSetCreateInfo setInfo = {};
+			setInfo.DebugName = "WorldDescriptor";
+			setInfo.Set = 0;
+			setInfo.pLayout = &layout;
 
-				Ref<Material> defaultMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("PBR_Static"));
-				PBRMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, defaultMaterial);
+			WorldDescriptor = DescriptorSet::Create(&setInfo);
 
-				CubemapTextureCreateInfo blackCubemap = {};
-				blackCubemap.DebugName = "BlackCubemap";
-				blackCubemap.Usage = ImageUsage::Texture;
-				blackCubemap.Width = 1;
-				blackCubemap.Height = 1;
-				blackCubemap.Format = ImageFormat::RGBA;
-				blackCubemap.GenerateMips = false;
+			BufferCreateInfo cameraUBO = {};
+			cameraUBO.Name = "Camera";
+			cameraUBO.Size = sizeof(CameraData);
+			cameraUBO.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
 
-				BlackCubemap = CubemapTexture::Create(&blackCubemap);
+			CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
+			WorldDescriptor->Write(0, CameraUniformBuffer, true);
+			
 
-                Buffer data;
-                data.Allocate(6 * sizeof(uint32_t));
-                data.Initialize(0xFF);
+			auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
+			Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
 
-				CubemapTextureCreateInfo whiteCubemap = {};
-				whiteCubemap.DebugName = "WhiteCubemap";
-				whiteCubemap.Usage = ImageUsage::Texture;
-				whiteCubemap.Width = 1;
-				whiteCubemap.Height = 1;
-				whiteCubemap.Data = data;
-				whiteCubemap.Format = ImageFormat::RGBA;
+			WhiteTextureHandle = AssetManager::CreateMemoryOnly(AssetType::Image, asset);
+			BRDFLut = AssetManager::GetHandleFromKey("BRDF_LUT.tga");
 
-				WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
-				data.Release();
+			Ref<Material> defaultMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("PBR_Static"));
+			PBRMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, defaultMaterial);
 
-				SamplerCreateInfo samplerInfo = {};
-				samplerInfo.DebugName = "DefaultImageSampler";
-				samplerInfo.MinFilter = FilterMode::Linear;
-				samplerInfo.MagFilter = FilterMode::Linear;
-				samplerInfo.Wrapping = ImageWrap::Repeat;
+			CubemapTextureCreateInfo blackCubemap = {};
+			blackCubemap.DebugName = "BlackCubemap";
+			blackCubemap.Usage = ImageUsage::Texture;
+			blackCubemap.Width = 1;
+			blackCubemap.Height = 1;
+			blackCubemap.Format = ImageFormat::RGBA;
+			blackCubemap.GenerateMips = false;
 
-				DefaultImageSampler = Sampler::Create(&samplerInfo);
-			}
+			BlackCubemap = CubemapTexture::Create(&blackCubemap);
+
+			Buffer data;
+			data.Allocate(6 * sizeof(uint32_t));
+			data.Initialize(0xFF);
+
+			CubemapTextureCreateInfo whiteCubemap = {};
+			whiteCubemap.DebugName = "WhiteCubemap";
+			whiteCubemap.Usage = ImageUsage::Texture;
+			whiteCubemap.Width = 1;
+			whiteCubemap.Height = 1;
+			whiteCubemap.Data = data;
+			whiteCubemap.Format = ImageFormat::RGBA;
+
+			WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
+			data.Release();
+
+			SamplerCreateInfo samplerInfo = {};
+			samplerInfo.DebugName = "DefaultImageSampler";
+			samplerInfo.MinFilter = FilterMode::Linear;
+			samplerInfo.MagFilter = FilterMode::Linear;
+			samplerInfo.Wrapping = ImageWrap::Repeat;
+
+			DefaultImageSampler = Sampler::Create(&samplerInfo);
 		}
 	};
 }

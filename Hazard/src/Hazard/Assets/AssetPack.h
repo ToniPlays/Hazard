@@ -14,8 +14,8 @@ namespace Hazard
 	{
 		uint64_t Handle;
 		uint64_t AssetDataSize = 0;
+		uint64_t AssetDataOffset = 0;
 		uint32_t Type;
-		uint32_t AssetDataOffset = 0;
 		//Store addressable name here
 	};
 	struct AssetPackElement
@@ -30,7 +30,7 @@ namespace Hazard
 	struct AssetPack
 	{
 		AssetHandle Handle;
-		uint32_t ElementCount = 0;
+		uint64_t ElementCount = 0;
 		std::vector<AssetPackElement> Elements;
 
 		void Free()
@@ -62,7 +62,7 @@ namespace Hazard
 				element.AddressableName = buffer.Read<std::string>();
 			}
 			
-			for (uint32_t i = 0; i < header.ElementCount; i++)
+			for (uint64_t i = 0; i < header.ElementCount; i++)
 			{
 				AssetPackElement& element = pack.Elements[i];
 				element.AssetPackHandle = pack.Handle;
@@ -84,7 +84,7 @@ namespace Hazard
 
 			CachedBuffer buffer(sizeof(AssetPackHeader) + sizeof(AssetPackElementHeader) * pack.ElementCount + dataSize);
 
-			uint32_t dataOffset = 0;
+			uint64_t dataOffset = 0;
 			buffer.Write(header);
 
 			//Write headers

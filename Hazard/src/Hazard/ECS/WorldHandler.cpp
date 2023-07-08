@@ -22,13 +22,15 @@ namespace Hazard
 		else
 		{
 			AssetHandle handle = AssetManager::GetHandleFromKey(info->StartupFile.string());
-			m_World = AssetManager::GetAsset<World>(handle);
+			if (handle != INVALID_ASSET_HANDLE)
+				m_World = AssetManager::GetAsset<World>(handle);
+			else m_World = Ref<World>::Create();
 		}
-
 		SetActive(true);
 	}
 	WorldHandler::~WorldHandler()
 	{
+
 	}
 
 	void WorldHandler::Init()

@@ -92,8 +92,8 @@ namespace IndirectSceneTest
 			Ref<Pipeline> computePipeline = Pipeline::Create(&computeSpec);
 			Ref<DescriptorSet> set = DescriptorSet::Create(&setInfo);
 
-			set->Write(0, radianceMap, nullptr, true);
-			set->Write(1, environmentMapImage, sampler, true);
+			set->Write(0, 0, radianceMap, nullptr, true);
+			set->Write(1, 0, environmentMapImage, sampler, true);
 
 			computeBuffer->Begin();
 			computeBuffer->SetPipeline(computePipeline);

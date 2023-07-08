@@ -9,6 +9,7 @@
 
 
 #include "imgui.h"
+#include <Directory.h>
 
 using namespace Hazard;
 using namespace HazardRenderer;
@@ -160,7 +161,7 @@ void GUIManager::Render()
 	if (ImGui::BeginPopupModal("Install location"))
 	{
 		if (ImGui::Button("Set installation folder")) {
-			std::filesystem::path hazardDir = File::OpenFolderDialog();
+			std::filesystem::path hazardDir = Directory::OpenFolderDialog();
 			if (!hazardDir.empty())
 				if (File::SetEnvironmentVar("HAZARD_DIR", hazardDir.string())) {
 					m_EnvVarExists = true;
@@ -238,7 +239,7 @@ void GUIManager::DrawBottomBar()
 		ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 		ImGui::SameLine(0, 5.0f);
 		if (ImGui::Button("Browse", { 100, 24 })) {
-			std::filesystem::path newPath = File::OpenFolderDialog();
+			std::filesystem::path newPath = Directory::OpenFolderDialog();
 			if (!newPath.empty()) 
 				m_CurrentProjectPath = newPath;
 		}

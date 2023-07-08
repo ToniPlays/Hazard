@@ -51,6 +51,8 @@ namespace HazardRenderer::Vulkan
 				break;
 		}
 
+		m_DeviceQueue = queue;
+
 
 		VK_CHECK_RESULT(vkCreateCommandPool(device->GetVulkanDevice(), &cmdPoolInfo, nullptr, &m_CommandPool), "Failed to create Command Pool");
 
@@ -127,13 +129,15 @@ namespace HazardRenderer::Vulkan
 
 		m_PipelineStatisticQueryResults.resize(framesInFlight);
 	}
-	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(const std::string& name, bool swapchain) : m_DebugName(std::move(name)), m_OwnedBySwapchain(swapchain)
+	VulkanRenderCommandBuffer::VulkanRenderCommandBuffer(const std::string& name, bool swapchain) : m_DebugName(name), m_OwnedBySwapchain(swapchain)
 	{
 		HZR_PROFILE_FUNCTION();
 		auto device = VulkanContext::GetLogicalDevice();
 
 		if (device->GetPhysicalDevice()->SupportsRaytracing())
 			GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CmdTraceRaysKHR);
+
+		m_DeviceQueue = DeviceQueue::GraphicsBit;
 
 		uint32_t framesInFlight = VulkanContext::GetImagesInFlight();
 
@@ -405,9 +409,9 @@ namespace HazardRenderer::Vulkan
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Ref<VulkanDescriptorSet> vkSet = descriptorSet.As<VulkanDescriptorSet>();
-		VkPipelineBindPoint bindingPoint = m_CurrentPipeline->GetBindingPoint();
+		VkPipelineBindPoint bindingPoint = m_DeviceQueue == DeviceQueue::GraphicsBit ? VK_PIPELINE_BIND_POINT_GRAPHICS : VK_PIPELINE_BIND_POINT_COMPUTE;
 
-		Renderer::Submit([instance, pipeline = m_CurrentPipeline, bindingPoint, vkSet, setIndex = set]() mutable {
+		Renderer::Submit([instance, pipeline = m_CurrentPipeline, set, bindingPoint, vkSet, setIndex = set]() mutable {
 			const VkDescriptorSet set = vkSet->GetVulkanDescriptorSet();
 			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindingPoint, pipeline->GetPipelineLayout(), setIndex, 1, &set, 0, nullptr);
 		});

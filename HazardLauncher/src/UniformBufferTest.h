@@ -107,7 +107,7 @@ namespace UniformBufferTest
 			Ref<DescriptorSet> descriptorSet = DescriptorSet::Create(&descriptorSetSpec);
 
 			descriptorSet->Write(0, camera, true);
-			descriptorSet->Write(1, image, sampler, true);
+			descriptorSet->Write(1, 0, image, sampler, true);
 
 			while (running)
 			{

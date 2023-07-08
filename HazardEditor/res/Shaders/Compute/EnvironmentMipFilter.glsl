@@ -7,8 +7,8 @@
 const uint Samples = 1024;
 const int MipLevels = 1;
 
-layout(binding = 0, rgba16f) restrict writeonly uniform imageCube o_Texture[MipLevels];
-layout(binding = 1) uniform samplerCube u_InputCube;
+layout(set = 0, binding = 0, rgba16f) restrict writeonly uniform imageCube o_Texture[MipLevels];
+layout(set = 0, binding = 1) uniform samplerCube u_InputCube;
 
 #define PARAM_LEVEL 0
 #define PARAM_ROUGHNESS 0.5

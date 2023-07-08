@@ -36,9 +36,9 @@ namespace HazardRenderer::Vulkan
 		void Bind(VkCommandBuffer commandBuffer);
 
 		VkPipelineBindPoint GetBindingPoint() const;
-		VkPipeline GetVulkanPipeline() { return m_Pipeline; }
-		VkPipelineLayout GetPipelineLayout() { return m_PipelineLayout; }
-		VkShaderStageFlags GetPushConstantFlags() { return m_PushConstantFlags; }
+		VkPipeline GetVulkanPipeline() const { return m_Pipeline; }
+		VkPipelineLayout GetPipelineLayout() const { return m_PipelineLayout; }
+		VkShaderStageFlags GetPushConstantFlags() const { return m_PushConstantFlags; }
 
 		const std::vector<VkRayTracingShaderGroupCreateInfoKHR>& GetShaderGroups() { return m_ShaderGroups; }
 

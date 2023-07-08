@@ -1,8 +1,4 @@
-#ifdef VULKAN_API
-layout(std140, set = 2, binding = 1) uniform Grid 
-#else
-layout(std140, binding = 4) uniform Grid 
-#endif
+layout(std140, set = 2, binding = 0) uniform Grid 
 {
 	uniform float Scale;
 	uniform float Zoom;

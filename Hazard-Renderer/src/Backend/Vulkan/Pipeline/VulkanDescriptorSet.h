@@ -4,6 +4,7 @@
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "Backend/Core/DescriptorSet.h"
+#include "Backend/Vulkan/Pipeline/VulkanPipeline.h"
 
 #include "vulkan/vulkan.h"
 #include <unordered_map>
@@ -38,8 +39,9 @@ namespace HazardRenderer::Vulkan
 	private:
 		std::string m_DebugName;
 		uint32_t m_Set;
-		DescriptorSetLayout m_Layout;
 		std::vector<VkDescriptorSet> m_VkDescriptorSet;
+
+		DescriptorSetLayout m_Layout;
 		VkDescriptorSetLayout m_DescriptorSetLayout;
 	};
 }

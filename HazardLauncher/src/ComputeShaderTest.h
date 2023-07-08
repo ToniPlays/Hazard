@@ -119,7 +119,7 @@ namespace ComputeShaderTest {
 				computeBuffer->Submit();
 			}
 
-			descriptorSet->Write(0, outputImage, sampler, true);
+			descriptorSet->Write(0, 0, outputImage, sampler, true);
 
 			while (running)
 			{

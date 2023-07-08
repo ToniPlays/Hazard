@@ -387,6 +387,7 @@ namespace UI
 			case AssetType::EnvironmentMap:
 			{
 				Ref<EnvironmentMap> map = AssetManager::GetAsset<Asset>(metadata.Handle);
+				if (map == nullptr) break;
 				handle = map->GetSourceImage()->GetHandle();
 				break;
 			}

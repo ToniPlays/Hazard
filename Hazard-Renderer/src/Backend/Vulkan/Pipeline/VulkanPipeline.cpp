@@ -100,13 +100,13 @@ namespace HazardRenderer::Vulkan
 		auto& data = m_Shader->GetShaderData();
 		std::vector<DescriptorSetElement> elements;
 
-		if (data.UniformsDescriptions.size() > 0)
+		if (data.UniformsDescriptions.contains(set))
 		{
 			for (auto& [binding, buffer] : data.UniformsDescriptions.at(set))
 				elements.push_back({ buffer.Name, binding, DESCRIPTOR_TYPE_UNIFORM_BUFFER });
 		}
 
-		if (data.ImageSamplers.size() > 0)
+		if (data.ImageSamplers.contains(set))
 		{
 			for (auto& [binding, sampler] : data.ImageSamplers.at(set))
 				elements.push_back({ sampler.Name, binding, sampler.ArraySize, DESCRIPTOR_TYPE_SAMPLER_2D });

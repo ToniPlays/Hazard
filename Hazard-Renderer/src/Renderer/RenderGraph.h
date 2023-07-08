@@ -22,10 +22,7 @@ namespace HazardRenderer
 		void SetInput(const std::string& input, void* data, uint64_t count);
 		void Execute(Ref<RenderCommandBuffer> commandBuffer);
 
-		float GetExecutionTime()
-		{
-			return m_ExecutionTime;
-		}
+		float GetExecutionTime() { return m_ExecutionTime; }
 
 		static Ref<RenderGraph> Create(RenderGraphCreateInfo* createInfo);
 
@@ -38,8 +35,8 @@ namespace HazardRenderer
 		std::string m_DebugName;
 		std::vector<RenderGraphStage> m_Stages;
 		std::vector<InputResourceData> m_InputResources;
+		std::vector<StageDescriptor> m_StageDescriptors;
 		std::unordered_map<std::string, uint32_t> m_InputResourceBindings;
-		std::unordered_map<std::string, ImageDependency> m_ImageDependencies;
 
 		std::atomic<float> m_ExecutionTime = 0.0f;
 	};

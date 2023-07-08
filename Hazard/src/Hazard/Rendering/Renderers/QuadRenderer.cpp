@@ -65,7 +65,7 @@ namespace Hazard
 	
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
-			set->Write(1, i, m_Data.TextureSlots[i], RenderEngine::GetResources().DefaultImageSampler);
+			set->Write(0, i, m_Data.TextureSlots[i], RenderEngine::GetResources().DefaultImageSampler);
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount(), 0);
 	}
@@ -196,7 +196,7 @@ namespace Hazard
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
 
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)
-			set->Write(1, i, m_Data.TextureSlots[i], sampler, true);
+			set->Write(0, i, m_Data.TextureSlots[i], sampler, true);
 
 		m_RenderPass = renderPass;
 	}

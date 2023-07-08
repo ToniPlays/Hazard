@@ -85,6 +85,7 @@ namespace HazardRenderer::Vulkan
 		uint32_t m_TimestampQueryCount = 0;
 		uint32_t m_PipelineQueryCount = 0;
 		uint32_t m_TimestampNextAvailQuery = 2;
+		DeviceQueue m_DeviceQueue;
 
 		bool m_OwnedBySwapchain = false;
 

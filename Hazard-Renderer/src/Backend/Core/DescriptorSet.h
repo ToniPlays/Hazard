@@ -4,6 +4,7 @@
 #include "Image2D.h"
 #include "Sampler.h"
 #include "GPUBuffer.h"
+#include "Pipeline.h"
 
 namespace HazardRenderer
 {

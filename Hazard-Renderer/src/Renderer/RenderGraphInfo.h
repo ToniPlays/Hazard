@@ -113,34 +113,21 @@ namespace HazardRenderer
 		std::string Name;
 		uint32_t UsageFlags;
 	};
-
-	struct BufferResource
+	struct StageDescriptor
 	{
+		std::string DebugName;
 		uint32_t Set = 0;
-		uint32_t Binding = 0;
-		Ref<GPUBuffer> Buffer;
-	};
-
-	struct ImageDependency
-	{
-		std::string Name;
-		uint64_t Binding = 0;
-		Ref<Image2D> pTargetImage = nullptr;
-		Ref<Sampler> pImageSampler = nullptr;
+		Ref<DescriptorSet> DescriptorSet;
 	};
 
 	struct RenderGraphStage
 	{
-		uint64_t DependencyCount = 0;
+		uint32_t DependencyCount = 0;
 		RenderGraphStage* pDependencies = nullptr;
-		uint64_t InputCount = 0;
+		uint32_t InputCount = 0;
 		InputResource* pInputs = nullptr;
-		uint64_t BufferCount = 0;
-		BufferResource* pBuffers = nullptr;
-		uint64_t InputImageCount = 0;
-		ImageDependency* pInputImages = nullptr;
-		uint64_t OutputImageCount = 0;
-		ImageDependency* pOutputImages = nullptr;
+		uint32_t DescriptorCount = 0;
+		StageDescriptor* pStageDescriptors = nullptr;
 	};
 
 	struct RenderGraphCreateInfo

@@ -1,6 +1,8 @@
 #include "HazardLauncherManager.h"
 #include "Hazard.h"
 
+#include "Directory.h"
+
 HazardLauncherManager::HazardLauncherManager()
 {
 	m_LoadedProjects = std::vector<HazardProject>();
@@ -77,7 +79,7 @@ void HazardLauncherManager::SaveConfigToFile(const std::filesystem::path& path)
 
 bool HazardLauncherManager::CreateProject(const HazardProject& project)
 {
-	File::CreateDir(project.Path);
+	Directory::Create(project.Path);
 	File::Copy("res/TemplateProject", project.Path, CopyOptions::Recursive);
 	{
 		std::ifstream stream(project.Path / "premake5.lua");
@@ -118,11 +120,11 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 	}
 
 	{
-		File::CreateDir(project.Path / "Assets" / "Scripts");
-		File::CreateDir(project.Path / "Assets" / "Materials");
-		File::CreateDir(project.Path / "Assets" / "Sprites");
-		File::CreateDir(project.Path / "Assets" / "Models");
-		File::CreateDir(project.Path / "Assets" / "Worlds");
+		Directory::Create(project.Path / "Assets" / "Scripts");
+		Directory::Create(project.Path / "Assets" / "Materials");
+		Directory::Create(project.Path / "Assets" / "Sprites");
+		Directory::Create(project.Path / "Assets" / "Models");
+		Directory::Create(project.Path / "Assets" / "Worlds");
 	}
 
 	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";

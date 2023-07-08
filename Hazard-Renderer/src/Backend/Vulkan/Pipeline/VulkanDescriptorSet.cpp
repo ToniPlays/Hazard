@@ -25,7 +25,7 @@ namespace HazardRenderer::Vulkan
 		Renderer::SubmitResourceFree([layout = m_DescriptorSetLayout]() mutable {
 			const auto& device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 			vkDestroyDescriptorSetLayout(device, layout, nullptr);
-			});
+		});
 	}
 	void VulkanDescriptorSet::Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll)
 	{
@@ -40,7 +40,7 @@ namespace HazardRenderer::Vulkan
 				imageDescriptor = image.As<VulkanImage2D>()->GetImageDescriptor();
 			else imageDescriptor = image.As<VulkanCubemapTexture>()->GetImageDescriptor();
 
-			if(vkSampler)
+			if (vkSampler)
 				imageDescriptor.sampler = vkSampler->GetVulkanSampler();
 
 			VkWriteDescriptorSet write = {};
@@ -60,11 +60,11 @@ namespace HazardRenderer::Vulkan
 			else
 			{
 				std::vector<VkWriteDescriptorSet> writes(instance->m_VkDescriptorSet.size(), write);
-				for(uint32_t i = 0; i < writes.size(); i++)
+				for (uint32_t i = 0; i < writes.size(); i++)
 					writes[i].dstSet = instance->m_VkDescriptorSet[i];
 				vkUpdateDescriptorSets(device->GetVulkanDevice(), writes.size(), writes.data(), 0, nullptr);
 			}
-			});
+		});
 	}
 	void VulkanDescriptorSet::Write(uint32_t binding, Ref<GPUBuffer> buffer, bool updateAll)
 	{
@@ -99,7 +99,7 @@ namespace HazardRenderer::Vulkan
 					writes[i].dstSet = instance->m_VkDescriptorSet[i];
 				vkUpdateDescriptorSets(device->GetVulkanDevice(), writes.size(), writes.data(), 0, nullptr);
 			}
-			});
+		});
 	}
 	VkDescriptorSet VulkanDescriptorSet::GetVulkanDescriptorSet()
 	{
@@ -111,7 +111,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanDescriptorSet> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->Invalidate_RT();
-			});
+		});
 	}
 	void VulkanDescriptorSet::Invalidate_RT()
 	{

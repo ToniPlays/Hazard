@@ -107,9 +107,12 @@ namespace Hazard
 			instruction.PushConstants(3, drawList.PushConstantData.size() - 1, sizeof(glm::mat4));
 		}
 		{
-			
-			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			instruction.SetDescriptor(1, drawList.Buffers.Push(material->GetDescriptorSet().Raw(), { .DescriptorSet = material->GetDescriptorSet().Raw() }), 0);
+			if (material->GetDescriptorSet())
+			{
+				DescriptorSet* set = material->GetDescriptorSet().Raw();
+				GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
+				instruction.SetDescriptor(1, drawList.Buffers.Push(set, { .DescriptorSet = set }), 1);
+			}
 		}
 		{
 			if (indexBuffer)
@@ -145,9 +148,11 @@ namespace Hazard
 		if (skyLight.EnvironmentMapHandle == INVALID_ASSET_HANDLE) return;
 
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(skyLight.EnvironmentMapHandle);
+		if (map == nullptr) return;
+
 		AssetHandle skyboxHandle = s_Engine->GetResources().SkyboxMaterialHandle;
 		Ref<Material> skyboxMaterial = AssetManager::GetAsset<Material>(skyboxHandle);
-		skyboxMaterial->GetDescriptorSet()->Write(1, 0, map->RadianceMap->Value.As<Image2D>(), s_Engine->GetResources().DefaultImageSampler);
+		skyboxMaterial->GetDescriptorSet()->Write(0, 0, map->RadianceMap->Value.As<Image2D>(), s_Engine->GetResources().DefaultImageSampler);
 		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(skyboxMaterial->GetPipeline())->Value.As<Pipeline>();
 
 		auto& drawList = s_Engine->GetDrawList();
@@ -156,12 +161,9 @@ namespace Hazard
 			instruction.SetPipeline(2, drawList.Pipelines.Push(pipeline.Raw(), { .Pipeline = pipeline.Raw() }));
 		}
 		{
+			DescriptorSet* set = skyboxMaterial->GetDescriptorSet().Raw();
 			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
-			instruction.Flags = INSTRUCTION_BIND_DESCRIPTOR_SET;
-			instruction.DataSource = 1;
-			instruction.Source.DescriptorSetIndex = drawList.Buffers.Push(skyboxMaterial->GetDescriptorSet().Raw()
-			, { .DescriptorSet = skyboxMaterial->GetDescriptorSet().Raw() });
-			instruction.Destination.BindingIndex = 0;
+			instruction.SetDescriptor(1, drawList.Buffers.Push(set, { .DescriptorSet = set }), 1);
 		}
 		{
 			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();

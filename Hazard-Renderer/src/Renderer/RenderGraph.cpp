@@ -52,6 +52,13 @@ namespace HazardRenderer
 						{
 							ResourceReference& pipelineRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.PipelineIndex);
 							commandBuffer->SetPipeline(pipelineRef.Pipeline);
+
+							for (uint32_t i = 0; i < stage.DescriptorCount; i++)
+							{
+								StageDescriptor& descriptor = stage.pStageDescriptors[i];
+								commandBuffer->SetDescriptorSet(descriptor.DescriptorSet, descriptor.Set);
+							}
+
 							continue;
 						}
 						if (instruction.Flags & INSTRUCTION_PUSH_CONSTANTS)
@@ -103,6 +110,12 @@ namespace HazardRenderer
 				InputResource& resource = stage.pInputs[j];
 				m_InputResources.push_back({ resource, Buffer() });
 			}
+			for (uint64_t j = 0; j < stage.DescriptorCount; j++)
+			{
+				StageDescriptor& descriptor = stage.pStageDescriptors[j];
+				m_StageDescriptors.push_back(descriptor);
+			}
+			/*
 			for (uint64_t j = 0; j < stage.InputImageCount; j++)
 			{
 				ImageDependency& image = stage.pInputImages[j];
@@ -113,6 +126,7 @@ namespace HazardRenderer
 				ImageDependency& image = stage.pOutputImages[j];
 				m_ImageDependencies[image.Name] = image;
 			}
+			*/
 		}
 
 		CreateGraphTimeline(createInfo);
@@ -162,6 +176,22 @@ namespace HazardRenderer
 					InputResource* resource = &resources[i];
 					m_InputResourceBindings[resource->Name] = i + offset;
 					stage->pInputs[i] = m_InputResources[i + offset].Resource;
+				}
+			}
+			if (stage->DescriptorCount > 0)
+			{
+				StageDescriptor* descriptors = stage->pStageDescriptors;
+				stage->pStageDescriptors = new StageDescriptor[stage->DescriptorCount];
+
+				uint32_t offset = m_StageDescriptors.size();
+
+				for (uint64_t i = 0; i < stage->DescriptorCount; i++)
+				{
+					StageDescriptor& src = descriptors[i];
+					StageDescriptor& dst = stage->pStageDescriptors[i];
+					dst.DebugName = src.DebugName;
+					dst.Set = src.Set;
+					dst.DescriptorSet = src.DescriptorSet;
 				}
 			}
 			stageIndex++;

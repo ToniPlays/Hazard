@@ -4,8 +4,8 @@
 #include "../Utils/Common.glslh"
 #include "../Utils/EnvironmentMapping.glslh"
 
-layout(binding = 0, rgba16f) restrict writeonly uniform imageCube o_IrradianceMap;
-layout(binding = 1) uniform samplerCube u_RadianceMap;
+layout(set = 0, binding = 0, rgba16f) restrict writeonly uniform imageCube o_IrradianceMap;
+layout(set = 0, binding = 1) uniform samplerCube u_RadianceMap;
 
 
 layout(push_constant) uniform Settings

@@ -112,28 +112,27 @@ namespace Hazard
 		std::vector<InputResource> skyboxInputResources = { skyboxInstructions, meshResources, pipelineResources };
 		std::vector<InputResource> meshInputResources = { meshInstructions, meshResources, pipelineResources, meshPushConstantBuffers };
 
+		StageDescriptor globalMeshDescriptor = {};
+		globalMeshDescriptor.DebugName = "MeshStageSet 0";
+		globalMeshDescriptor.Set = 0;
+		globalMeshDescriptor.DescriptorSet = s_Resources->WorldDescriptor;
+
 
 		auto& skyboxPass = stages.emplace_back();
 		skyboxPass.DependencyCount = 0;
 		skyboxPass.pDependencies = nullptr;
 		skyboxPass.InputCount = skyboxInputResources.size();
 		skyboxPass.pInputs = skyboxInputResources.data();
-		skyboxPass.InputImageCount = 0;
-		skyboxPass.pInputImages = nullptr;
-		skyboxPass.OutputImageCount = 0;
-		skyboxPass.pOutputImages = nullptr;
+		skyboxPass.DescriptorCount = 1;
+		skyboxPass.pStageDescriptors = &globalMeshDescriptor;
 
 		auto& geometryPass = stages.emplace_back();
 		geometryPass.DependencyCount = 1;
 		geometryPass.pDependencies = &skyboxPass;
 		geometryPass.InputCount = meshInputResources.size();
 		geometryPass.pInputs = meshInputResources.data();
-		geometryPass.BufferCount = 0;
-		geometryPass.pBuffers = nullptr;
-		geometryPass.InputImageCount = 0;
-		geometryPass.pInputImages = nullptr;
-		geometryPass.OutputImageCount = 0;
-		geometryPass.pOutputImages = nullptr;
+		geometryPass.DescriptorCount = 1;
+		geometryPass.pStageDescriptors = &globalMeshDescriptor;
 
 		RenderGraphCreateInfo graphInfo = {};
 		graphInfo.DebugName = "RasterizedRenderGraph";

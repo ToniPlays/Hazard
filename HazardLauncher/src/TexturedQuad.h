@@ -97,7 +97,7 @@ namespace TexturedQuad {
 		descriptorInfo.pLayout = &descriptorLayout;
 		
 		Ref<DescriptorSet> descriptorSet = DescriptorSet::Create(&descriptorInfo);
-		descriptorSet->Write(0, image, sampler, true);
+		descriptorSet->Write(0, 0, image, sampler, true);
 
 		while (running)
 		{

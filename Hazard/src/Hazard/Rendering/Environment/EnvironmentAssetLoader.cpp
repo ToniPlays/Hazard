@@ -1,3 +1,4 @@
+#include <hzrpch.h>
 #include "EnvironmentAssetLoader.h"
 
 #include "Hazard/Assets/AssetManager.h"
@@ -40,7 +41,7 @@ namespace Hazard
 	{
 		Buffer assetData = AssetManager::GetAssetData(handle);
 		EnvironmentAssetHeader header = assetData.Read<EnvironmentAssetHeader>();
-		header.ImageHandle = 14984250266102569660;
+		header.ImageHandle = 13937746866108958146;
 		assetData.Release();
 
 		Ref<Texture2DAsset> sourceTexture = AssetManager::GetAsset<Texture2DAsset>(header.ImageHandle);
