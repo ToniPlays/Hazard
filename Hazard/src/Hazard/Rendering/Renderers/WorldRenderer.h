@@ -11,6 +11,7 @@ namespace Hazard
 	{
 		glm::mat4 Projection;
 		glm::mat4 View;
+		glm::vec3 Position;
 		float ZNear;
 		float ZFar;
 		uint32_t Width;

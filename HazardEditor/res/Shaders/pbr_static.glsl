@@ -19,22 +19,25 @@ struct VertexOuput
     mat3 WorldNormal;
 };
 
-layout(push_constant) uniform Transform
+layout(push_constant) uniform MaterialConstants
 {
     mat4 Transform;
-} p_Transform;
+} p_MaterialConstants;
 
 layout(location = 0) out VertexOuput Output;
 layout(location = 7) out int v_EntityID;
 
 void main()
 {
-	vec4 worldPosition = p_Transform.Transform * vec4(a_Position, 1.0);
+	mat4 transform = p_MaterialConstants.Transform;
+    
+
+	vec4 worldPosition = transform * vec4(a_Position, 1.0);
 	gl_Position = u_Camera.ViewProjection * worldPosition;
 
 	Output.Color = a_Color;
-    Output.Normal = mat3(p_Transform.Transform) * a_Normal;
-    Output.WorldNormal = mat3(a_Tangent, a_Binormal, a_Normal);
+    Output.Normal = mat3(transform) * a_Normal;
+    Output.WorldNormal = mat3(transform) * mat3(a_Tangent, a_Binormal, a_Normal);
     Output.WorldPosition = worldPosition.xyz;
     Output.TextureCoords = a_TextureCoords;
     
@@ -56,15 +59,56 @@ struct VertexOuput
 layout(location = 0) in VertexOuput Input;
 layout(location = 7) in flat int v_EntityID;
 
-#include "Utils/Common.glslh"
+struct PBRParameters
+{
+	vec3 Albedo;
+	float Roughness;
+	float Metalness;
+
+	vec3 Normal;
+	vec3 View;
+	float NdotV;
+	int Flags;
+} m_Params;
+
+#include "Uniforms/CameraUniform.glslh"
+
+layout(set = 0, binding = 1) uniform samplerCube u_RadianceMap;
+layout(set = 0, binding = 2) uniform samplerCube u_IrradianceMap;
+layout(set = 0, binding = 3) uniform sampler2D u_BRDFLut;
 
 layout(location = 0) out vec4 OutputColor;
 layout(location = 1) out uint EntityID;
+
+#include "Utils/Common.glslh"
+#include "Utils/Lighting.glslh"
+#include "Utils/PostProcessing.glslh"
 
 const float gamma = 2.2;
 
 void main() 
 {
-    OutputColor = Input.Color;
+    m_Params.Albedo = Input.Color.rgb;
+    m_Params.Metalness = 1.0;
+    m_Params.Roughness = max(0.1, 0.05);
+    m_Params.Normal = normalize(Input.Normal);
+
+    m_Params.View = normalize(u_Camera.Position.xyz - Input.WorldPosition);
+    m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
+
+    vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
+    vec3 F0 = mix(vec3(0.04), m_Params.Albedo, m_Params.Metalness);
+
+    //Light calculations
+    vec3 Lo = vec3(0.0);
+       
+    //Calculate final color
+    vec3 ibl = IBL(F0, Lr);
+
+    vec3 color = Input.Color.rgb;
+    color = ACESTonemap(ibl + Lo);
+    color = GammaCorrect(color, gamma);
+
+    OutputColor = vec4(color, 1.0);
     EntityID = v_EntityID;
 }

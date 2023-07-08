@@ -50,7 +50,7 @@ namespace Hazard
 		static uint32_t GetColorChannel(const aiMesh* mesh);
 
 		void ProcessNode(aiNode* node, const aiScene* scene, MeshData& data);
-		void ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshData& data);
+		void ProcessMesh(aiNode* node, aiMesh* mesh, MeshData& data);
 		void TraverseNode(aiNode* node, MeshData& data, const glm::mat4 parentTransform = glm::mat4(1.0f), uint32_t level = 0);
 
 	private:

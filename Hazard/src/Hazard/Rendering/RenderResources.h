@@ -23,7 +23,7 @@ namespace Hazard
 		glm::vec2 NDCToViewAdd;
 		glm::vec2 DepthUnpack;
 		glm::vec2 CameraTanHalfFOV;
-		glm::vec4 Unused;
+		glm::vec4 Position;
 		glm::vec4 Unused2;
 	};
 
@@ -67,8 +67,9 @@ namespace Hazard
 		AssetHandle PBRMaterialHandle;
 
 		AssetHandle WhiteTextureHandle;
-		AssetHandle BRDFLut;
+		AssetHandle BRDFLutHandle;
 
+		Ref<Texture2DAsset> BRDFLut;
 		Ref<HazardRenderer::CubemapTexture> BlackCubemap;
 		Ref<HazardRenderer::CubemapTexture> WhiteCubemap;
 		Ref<HazardRenderer::Sampler> DefaultImageSampler;
@@ -78,7 +79,10 @@ namespace Hazard
 			Ref<Material> skyboxMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("Skybox"));
 			SkyboxMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, skyboxMaterial);
 
-			DescriptorSetLayout layout = { { "Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER } };
+			DescriptorSetLayout layout = { { "Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
+										   { "Camu_RadianceMapera", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										   { "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										   { "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
 
 			DescriptorSetCreateInfo setInfo = {};
 			setInfo.DebugName = "WorldDescriptor";
@@ -94,13 +98,14 @@ namespace Hazard
 
 			CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
 			WorldDescriptor->Write(0, CameraUniformBuffer, true);
-			
+
 
 			auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
 			Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
 
 			WhiteTextureHandle = AssetManager::CreateMemoryOnly(AssetType::Image, asset);
-			BRDFLut = AssetManager::GetHandleFromKey("BRDF_LUT.tga");
+			BRDFLutHandle = AssetManager::GetHandleFromKey("BRDF_LUT.tga");
+			BRDFLut = AssetManager::GetAsset<Texture2DAsset>(BRDFLutHandle);
 
 			Ref<Material> defaultMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("PBR_Static"));
 			PBRMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, defaultMaterial);
@@ -126,10 +131,11 @@ namespace Hazard
 			whiteCubemap.Height = 1;
 			whiteCubemap.Data = data;
 			whiteCubemap.Format = ImageFormat::RGBA;
+			whiteCubemap.GenerateMips = false;
 
 			WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
 			data.Release();
-
+			
 			SamplerCreateInfo samplerInfo = {};
 			samplerInfo.DebugName = "DefaultImageSampler";
 			samplerInfo.MinFilter = FilterMode::Linear;
@@ -137,6 +143,10 @@ namespace Hazard
 			samplerInfo.Wrapping = ImageWrap::Repeat;
 
 			DefaultImageSampler = Sampler::Create(&samplerInfo);
+
+			WorldDescriptor->Write(1, 0, WhiteCubemap, DefaultImageSampler, true);
+			WorldDescriptor->Write(2, 0, WhiteCubemap, DefaultImageSampler, true);
+			WorldDescriptor->Write(3, 0, BRDFLut->GetSourceImageAsset()->Value.As<Image2D>(), DefaultImageSampler, true);
 		}
 	};
 }

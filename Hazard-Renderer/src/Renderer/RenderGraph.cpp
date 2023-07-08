@@ -96,7 +96,7 @@ namespace HazardRenderer
 
 	Ref<RenderGraph> RenderGraph::Create(RenderGraphCreateInfo* createInfo)
 	{
-		return new RenderGraph(createInfo);
+		return hnew RenderGraph(createInfo);
 	}
 
 	RenderGraph::RenderGraph(RenderGraphCreateInfo* createInfo) : m_DebugName(createInfo->DebugName)
@@ -167,7 +167,7 @@ namespace HazardRenderer
 			if (stage->InputCount > 0)
 			{
 				InputResource* resources = stage->pInputs;
-				stage->pInputs = new InputResource[stage->InputCount];
+				stage->pInputs = hnew InputResource[stage->InputCount];
 
 				uint32_t offset = m_InputResourceBindings.size();
 
@@ -181,7 +181,7 @@ namespace HazardRenderer
 			if (stage->DescriptorCount > 0)
 			{
 				StageDescriptor* descriptors = stage->pStageDescriptors;
-				stage->pStageDescriptors = new StageDescriptor[stage->DescriptorCount];
+				stage->pStageDescriptors = hnew StageDescriptor[stage->DescriptorCount];
 
 				uint32_t offset = m_StageDescriptors.size();
 

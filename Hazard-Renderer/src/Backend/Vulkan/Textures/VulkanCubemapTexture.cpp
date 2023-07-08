@@ -140,6 +140,14 @@ namespace HazardRenderer::Vulkan
 			VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
 			VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, range);
 
+		VkImageSubresourceRange subRange = {};
+		subRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		subRange.baseMipLevel = 0;
+		subRange.levelCount = m_MipLevels;
+		subRange.layerCount = 6;
+
+		VkUtils::SetImageLayout(commandBuffer, m_Image, VK_IMAGE_LAYOUT_UNDEFINED, m_ImageDescriptor.imageLayout, subRange);
+
 		device->FlushCommandBuffer(commandBuffer);
 		allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 	}

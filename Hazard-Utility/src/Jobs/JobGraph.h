@@ -21,6 +21,8 @@ public:
 
 	void CombineStages(Ref<JobGraph> graph, uint32_t offset = 0)
 	{
+		if (graph == nullptr) return;
+
 		auto& stages = graph->GetStages();
 		for (uint32_t i = 0; i < stages.size(); i++)
 		{

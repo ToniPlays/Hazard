@@ -1,17 +1,9 @@
 
-// Used in PBR shader
-struct PBRParameters
+struct DirectionalLight 
 {
-	vec3 Albedo;
-	float Roughness;
-	float Metalness;
-
-	vec3 Normal;
-	vec3 View;
-	float NdotV;
-	int Flags;
-} m_Params;
-
+	vec4 Direction;
+	vec4 Color;
+};
 
 //PBR calculations
 float DistributionGGX(vec3 N, vec3 H, float roughness)

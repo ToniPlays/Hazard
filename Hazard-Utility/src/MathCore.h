@@ -69,6 +69,13 @@ namespace Math
 		else if (value < min) return value + max;
 		else return value;
 	}
+
+	template<typename T>
+	inline static T GetBaseLog(T value)
+	{
+		return (T)std::floor(std::log2(value));
+	}
+
 	template<typename T>
 	static T ToDec(const std::string& value) {
 		return std::strtoul(value.c_str(), 0, 16);

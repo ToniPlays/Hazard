@@ -160,14 +160,26 @@ namespace UI
 	{
 		ImUI::ShiftY(4);
 
+		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(m_AssetHandle);
+
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, 200);
 
-		static uint64_t samples = 128;
-		static uint32_t resolution = 6;
-		static uint32_t selectedImage = INVALID_ASSET_HANDLE;
-		static AssetHandle sourceImageHandle = INVALID_ASSET_HANDLE;
+		auto& sourceImages = m_SelectableAssets["RadianceMap"];
+
+		static uint64_t samples = map->GetSpec().Samples;
+		static uint32_t resolution = Math::GetBaseLog(map->GetSpec().Resolution) - 6;
+		uint32_t selectedImage = 0;
+		static AssetHandle sourceImageHandle = map->GetSourceImageHandle();
+		
+		for (uint32_t i = 0; i < sourceImages.size(); i++)
+		{
+			if (sourceImages[i].Handle != sourceImageHandle) continue;
+			selectedImage = i + 1;
+			break;
+		}
+
 
 		ImGui::Text("Samples");
 		ImGui::NextColumn();
@@ -199,6 +211,7 @@ namespace UI
 			Application::Get().SubmitMainThread([&]() {
 				Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(m_AssetHandle);
 				map->Update(samples, (1 << 6 + resolution), sourceImageHandle);
+				AssetManager::SaveAsset(map);
 			});
 
 			m_Open = false;

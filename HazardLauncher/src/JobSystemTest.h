@@ -67,7 +67,7 @@ namespace JobSystemTest
 #endif
 		JobSystem jobSystem;
 
-		Ref<Job> loadingJob = new Job(WorldLoad, 250);
+		Ref<Job> loadingJob = hnew Job(WorldLoad, 250);
 
 		loadingJob->SetJobName("World loading");
 

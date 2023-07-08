@@ -31,6 +31,10 @@ layout(location = 1) in vec3 f_LocalPosition;
 layout(location = 2) in float f_Thickness;
 layout(location = 3) in float f_Fade;
 
+layout(set = 0, binding = 1) uniform samplerCube u_RadianceMap;
+layout(set = 0, binding = 2) uniform samplerCube u_IrradianceMap;
+layout(set = 0, binding = 3) uniform sampler2D u_BRDFLut;
+
 layout(location = 0) out vec4 color;
 layout(location = 1) out uint EntityID;
 

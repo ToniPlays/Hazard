@@ -93,14 +93,23 @@ namespace Hazard
 		for (uint32_t i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* aiMesh = scene->mMeshes[node->mMeshes[i]];
-			ProcessMesh(aiMesh, scene, data);
+			ProcessMesh(node, aiMesh, data);
 		}
 		for (uint32_t i = 0; i < node->mNumChildren; i++)
 			ProcessNode(node->mChildren[i], scene, data);
 	}
 
-	void MeshFactory::ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshData& data)
+	void MeshFactory::ProcessMesh(aiNode* node, aiMesh* mesh, MeshData& data)
 	{
+		glm::mat4 transform = AssimpMat4ToGlmMat4(node->mTransformation);
+		aiNode* parent = node->mParent;
+
+		while (parent)
+		{
+			transform *= AssimpMat4ToGlmMat4(parent->mTransformation);
+			parent = parent->mParent;
+		}
+
 		SubMesh& subMesh = data.SubMeshes.emplace_back();
 
 		subMesh.BaseVertex = data.VertexIndex;
@@ -137,7 +146,7 @@ namespace Hazard
 			vertex.Position.x = mesh->mVertices[i].x;
 			vertex.Position.y = mesh->mVertices[i].y;
 			vertex.Position.z = mesh->mVertices[i].z;
-			vertex.Position = m_ScaleMatrix * glm::vec4(vertex.Position, 1.0);
+			vertex.Position = m_ScaleMatrix * transform * glm::vec4(vertex.Position, 1.0);
 
 			data.BoundingBox.Encapsulate(vertex.Position);
 

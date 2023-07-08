@@ -379,7 +379,6 @@ namespace UI
 
 	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const AssetMetadata& metadata)
 	{
-		HZR_ASSERT(metadata.Type != AssetType::Undefined, "Asset cannot be undefined");
 		AssetHandle handle = EditorAssetManager::GetIconHandle("Default");
 
 		switch (metadata.Type)

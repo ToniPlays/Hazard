@@ -25,7 +25,8 @@ namespace UI
 			DrawProgressCard(graph->GetName().c_str(), graph->GetProgress());
 
 		ImGui::Separator();
-		for (auto& job : system.GetRunningJobs())
+		auto jobs = system.GetRunningJobs();
+		for (auto& job : jobs)
 			DrawProgressCard(job->GetName().c_str(), job->GetProgress());
 
 		ImGui::Separator();

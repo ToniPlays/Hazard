@@ -117,7 +117,6 @@ namespace Hazard
 		globalMeshDescriptor.Set = 0;
 		globalMeshDescriptor.DescriptorSet = s_Resources->WorldDescriptor;
 
-
 		auto& skyboxPass = stages.emplace_back();
 		skyboxPass.DependencyCount = 0;
 		skyboxPass.pDependencies = nullptr;
@@ -163,6 +162,7 @@ namespace Hazard
 				data.Projection = camera.Projection;
 				data.View = camera.View;
 				data.ViewProjection = camera.Projection * camera.View;
+				data.Position = glm::vec4(camera.Position, 1.0);
 
 				BufferCopyRegion region = {};
 				region.Data = &data;

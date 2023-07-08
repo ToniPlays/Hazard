@@ -2,6 +2,7 @@
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "VulkanContext.h"
+#include <MathCore.h>
 
 namespace HazardRenderer::Vulkan::VkUtils
 {
@@ -263,7 +264,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 	}
 	uint32_t GetMipLevelCount(uint32_t width, uint32_t height)
 	{
-		return (uint32_t)std::floor(std::log2(glm::min(width, height))) + 1;
+		return Math::GetBaseLog<uint32_t>(glm::min(width, height)) + 1;
 	}
 	VkFormat ShaderDataTypeToVulkanType(const ShaderDataType& type)
 	{

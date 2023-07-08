@@ -45,6 +45,7 @@ namespace UI
 		WorldCameraData cameraData = {};
 		cameraData.Projection = m_EditorCamera.GetProjection();
 		cameraData.View = m_EditorCamera.GetView();
+		cameraData.Position = m_EditorCamera.GetPosition();
 		cameraData.OutputFrameBuffer = m_FrameBuffer;
 		cameraData.RenderPass = m_RenderPass;
 		cameraData.Width = m_Width;
