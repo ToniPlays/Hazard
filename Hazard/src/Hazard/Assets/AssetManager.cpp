@@ -59,6 +59,7 @@ namespace Hazard
 	AssetHandle AssetManager::ImportAsset(const AssetPackElement& element)
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_CORE_ASSERT(!element.AddressableName.empty(), "Addressable name is empty");
 		HZR_CORE_WARN("Importing asset: {0} ({1})", element.AddressableName, element.Handle);
 
 		if ((AssetType)element.Type == AssetType::Undefined)
@@ -163,5 +164,52 @@ namespace Hazard
 
 		graph->Execute();
 		return true;
+	}
+	std::vector<AssetMetadata> AssetManager::GetAllAssetMetadata(AssetType type)
+	{
+		std::vector<AssetMetadata> result;
+		for (auto& [path, metadata] : s_Registry)
+			if (metadata.Type == type)
+				result.push_back(metadata);
+
+		return result;
+	}
+	AssetHandle AssetManager::CreateMemoryOnly(AssetType type, Ref<Asset> asset)
+	{
+		asset->m_Flags |= (uint32_t)AssetFlags::MemoryOnly;
+		asset->m_Handle = AssetHandle();
+
+		AssetMetadata metadata = {};
+		metadata.Handle = asset->m_Handle;
+		metadata.Type = type;
+		metadata.MemoryOnly = true;
+		metadata.LoadState = LoadState::Loaded;
+		metadata.Key = std::to_string(asset->GetHandle());
+
+		s_Registry[metadata.Key] = metadata;
+		s_LoadedAssets[metadata.Handle] = asset;
+
+		return metadata.Handle;
+	}
+	AssetHandle AssetManager::CreateNewAsset(AssetType type, const std::filesystem::path& path)
+	{
+		Ref<JobGraph> graph = s_AssetLoader.Create(type, path);
+		if (!graph)
+			return INVALID_ASSET_HANDLE;
+
+		graph->Execute();
+
+		if (!File::Exists(path))
+			return INVALID_ASSET_HANDLE;
+
+		CachedBuffer buffer = File::ReadBinaryFile(path);
+		AssetPack pack = AssetPack::Create(buffer);
+		AssetManager::ImportAssetPack(pack, path);
+
+		//TODO: This is bad
+		AssetHandle handle = pack.Elements[0].Handle;
+		pack.Free();
+
+		return handle;
 	}
 }

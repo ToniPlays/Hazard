@@ -31,16 +31,14 @@ namespace Hazard
 		static void Init();
 		static void Shutdown();
 
-		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry()
-		{
-			return s_Registry.GetRegistry();
-		}
+		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry() { return s_Registry.GetRegistry(); }
 
 		template<typename T, typename... Args>
 		static void RegisterLoader(AssetType type, Args... args)
 		{
 			s_AssetLoader.m_Loaders[type] = CreateScope<T>(std::forward<Args>(args)...);
 		}
+
 		static AssetHandle ImportAssetPack(const AssetPack& pack, const std::filesystem::path& path);
 		static AssetHandle ImportAsset(const AssetPackElement& element);
 		static AssetHandle GetHandleFromKey(const std::string& key);
@@ -52,8 +50,8 @@ namespace Hazard
 		static bool IsLoaded(const AssetHandle& handle);
 
 		static AssetMetadata& GetMetadata(AssetHandle handle);
-
 		static bool SaveAsset(Ref<Asset> asset);
+		static std::vector<AssetMetadata> GetAllAssetMetadata(AssetType type);
 
 		template<typename T>
 		static Ref<T> GetAsset(const std::string& key)
@@ -142,43 +140,8 @@ namespace Hazard
 			return JobPromise<Ref<T>>(s_LoadedAssets[handle]);
 		}
 
-		static AssetHandle CreateMemoryOnly(AssetType type, Ref<Asset> asset)
-		{
-			AssetMetadata metadata = {};
-			metadata.Handle = AssetHandle();
-			metadata.Type = type;
-			metadata.MemoryOnly = true;
-			metadata.LoadState = LoadState::Loaded;
-
-			asset->m_Flags |= (uint32_t)AssetFlags::MemoryOnly;
-			asset->m_Handle = metadata.Handle;
-
-			s_Registry[std::to_string(asset->GetHandle())] = metadata;
-
-			s_LoadedAssets[metadata.Handle] = asset;
-			return metadata.Handle;
-		}
-		static AssetHandle CreateNewAsset(AssetType type, const std::filesystem::path& path)
-		{
-			Ref<JobGraph> graph = s_AssetLoader.Create(type, path);
-			if (!graph) 
-				return INVALID_ASSET_HANDLE;
-
-			graph->Execute();
-
-			if (!File::Exists(path)) 
-				return INVALID_ASSET_HANDLE;
-			
-			CachedBuffer buffer = File::ReadBinaryFile(path);
-			AssetPack pack = AssetPack::Create(buffer);
-			AssetManager::ImportAssetPack(pack, path);
-
-			//TODO: This is bad
-			AssetHandle handle = pack.Elements[0].Handle;
-			pack.Free();
-
-			return handle;
-		}
+		static AssetHandle CreateMemoryOnly(AssetType type, Ref<Asset> asset);
+		static AssetHandle CreateNewAsset(AssetType type, const std::filesystem::path& path);
 
 	private:
 		static void AddLoadedAssetJop(Ref<Job> job, AssetHandle handle)

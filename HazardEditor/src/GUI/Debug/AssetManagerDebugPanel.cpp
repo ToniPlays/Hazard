@@ -8,7 +8,7 @@ namespace UI
 	void AssetManagerDebugPanel::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
-		
+
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		ImUI::TextFieldWithHint(m_SearchValue, "Search...");
 
@@ -19,10 +19,10 @@ namespace UI
 			float rowHeight = 24.0f;
 
 			auto& registry = AssetManager::GetMetadataRegistry();
-
 			for (auto& [key, metadata] : registry)
 			{
-				if (!StringUtil::Contains(metadata.Key, m_SearchValue)) continue;
+				if (metadata.Type == AssetType::Undefined) continue;
+				if (!StringUtil::Contains(metadata.Key, m_SearchValue) && !StringUtil::Contains(std::to_string(metadata.Handle), m_SearchValue)) continue;
 
 				ImUI::TableRowClickable((const char*)key.c_str(), rowHeight);
 
@@ -43,9 +43,9 @@ namespace UI
 					ImGui::TableNextColumn();
 					ImUI::ShiftX(4.0f);
 					ImGui::Text("%s", std::to_string(meta.Handle).c_str());
-					});
+				});
 			}
-			});
+		});
 
 	}
 	ImColor AssetManagerDebugPanel::GetLoadStateColor(const LoadState& state)
@@ -53,9 +53,9 @@ namespace UI
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		switch (state)
 		{
-		case LoadState::None: return style.Colors.AxisX;
-		case LoadState::Loading: return style.Colors.Warning;
-		case LoadState::Loaded: return style.Colors.AxisY;
+			case LoadState::None: return style.Colors.AxisX;
+			case LoadState::Loading: return style.Colors.Warning;
+			case LoadState::Loaded: return style.Colors.AxisY;
 		}
 		return style.Colors.AxisY;
 	}

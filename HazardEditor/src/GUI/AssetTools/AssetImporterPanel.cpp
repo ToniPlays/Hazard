@@ -88,7 +88,7 @@ namespace UI
 			ImGui::Text("Texture wrap mode");
 			ImGui::NextColumn();
 
-			const char* wrapMode[] = { "Repeat", "Repeat mirrored", "Clamp to border", "Clamp to edge" };
+			std::string wrapMode[] = { "Repeat", "Repeat mirrored", "Clamp to border", "Clamp to edge" };
 			uint32_t selected = (uint32_t)info.Wrapping;
 
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -98,8 +98,7 @@ namespace UI
 			}
 		}
 		ImGui::NextColumn();
-		const char* filter[] = { "Linear", "Nearest", "Linear mip", "Nearest mip" };
-
+		std::string filter[] = { "Linear", "Nearest", "Linear mip", "Nearest mip" };
 		{
 			ImGui::Text("Texture min filter");
 			ImGui::NextColumn();
@@ -167,6 +166,8 @@ namespace UI
 
 		static uint64_t samples = 128;
 		static uint32_t resolution = 6;
+		static uint32_t selectedImage = INVALID_ASSET_HANDLE;
+		static AssetHandle sourceImageHandle = INVALID_ASSET_HANDLE;
 
 		ImGui::Text("Samples");
 		ImGui::NextColumn();
@@ -176,20 +177,28 @@ namespace UI
 		});
 
 		ImGui::NextColumn();
-		const char* options[] = { "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" };
+		std::string options[] = { "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" };
 		ImUI::Combo("Resolution", "##res", options, 8, resolution);
 
+		std::vector<std::string> displayNames;
+		displayNames.reserve(m_SelectableAssets["RadianceMap"].size() + 1);
+		displayNames.push_back("None");
+
+		for (auto& metadata : m_SelectableAssets["RadianceMap"])
+			displayNames.push_back(metadata.Key.c_str());
+
+		if (ImUI::Combo("Source image", "##src", displayNames.data(), displayNames.size(), selectedImage))
+		{
+			if (selectedImage == 0) sourceImageHandle = INVALID_ASSET_HANDLE;
+			else sourceImageHandle = m_SelectableAssets["RadianceMap"][selectedImage - 1].Handle;
+		}
 		ImGui::Columns();
 
 		if (m_Import)
 		{
-			Application::Get().SubmitMainThread([]() {
-
-				AssetHandle handle = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>()->GetCurrentAssetHandle();
-
-				Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
-				Ref<Texture2DAsset> image = AssetManager::GetAsset<Texture2DAsset>(map->GetSourceImage()->GetHandle());
-				map->Update(samples, (1 << 6 + resolution), image);
+			Application::Get().SubmitMainThread([&]() {
+				Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(m_AssetHandle);
+				map->Update(samples, (1 << 6 + resolution), sourceImageHandle);
 			});
 
 			m_Open = false;
@@ -199,6 +208,8 @@ namespace UI
 	void AssetImporterPanel::InitializeData()
 	{
 		m_ImportDataBuffer.Release();
+		m_SelectableAssets.clear();
+
 		switch (m_AssetType)
 		{
 			case AssetType::Image:
@@ -217,6 +228,11 @@ namespace UI
 
 				m_ImportDataBuffer.Allocate(sizeof(MeshImportSettings));
 				m_ImportDataBuffer.Write(&settings, sizeof(MeshImportSettings));
+				break;
+			}
+			case AssetType::EnvironmentMap:
+			{
+				m_SelectableAssets["RadianceMap"] = AssetManager::GetAllAssetMetadata(AssetType::Image);
 				break;
 			}
 		}

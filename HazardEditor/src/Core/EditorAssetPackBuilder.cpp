@@ -24,14 +24,9 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 	AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
 	CachedBuffer buffer = AssetPack::ToBuffer(pack);
 
-	//Save asset pack and generate meta file
-
 	File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 	AssetManager::ImportAssetPack(pack, path);
 
-	auto projectPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>();
-	if (projectPanel)
-		projectPanel->RefreshFolderItems();
 	pack.Free();
 }
 

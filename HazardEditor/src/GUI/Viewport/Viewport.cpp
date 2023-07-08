@@ -354,7 +354,7 @@ namespace UI
 		ImGui::Text("%zu", Application::Get().GetJobSystem().GetJobCount());
 		ImGui::NextColumn();*/
 
-		const char* shading[] = { "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" };
+		std::string shading[] = { "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" };
 
 		auto& renderEngine = Application::GetModule<RenderEngine>();
 		uint32_t flags = renderEngine.GetFlags();

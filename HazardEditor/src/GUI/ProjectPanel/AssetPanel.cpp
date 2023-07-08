@@ -388,7 +388,11 @@ namespace UI
 			{
 				Ref<EnvironmentMap> map = AssetManager::GetAsset<Asset>(metadata.Handle);
 				if (map == nullptr) break;
-				handle = map->GetSourceImage()->GetHandle();
+				if (map->GetSourceImageHandle() != INVALID_ASSET_HANDLE)
+				{
+					AssetMetadata& imageMetadata = AssetManager::GetMetadata(map->GetSourceImageHandle());
+					handle = imageMetadata.Handle != INVALID_ASSET_HANDLE ? map->GetSourceImageHandle() : handle;
+				}
 				break;
 			}
 			case AssetType::Image:

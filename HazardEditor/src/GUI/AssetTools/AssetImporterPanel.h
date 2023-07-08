@@ -125,6 +125,7 @@ namespace UI
 
         Buffer m_ImportDataBuffer;
         AssetHandle m_AssetHandle;
+        std::unordered_map<std::string, std::vector<Hazard::AssetMetadata>> m_SelectableAssets;
 
         bool m_Import = false;
         bool m_IsImportingNew = false;

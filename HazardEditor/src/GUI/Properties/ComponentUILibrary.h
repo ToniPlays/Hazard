@@ -277,7 +277,7 @@ namespace UI
 				flags |= (c.GetSize() != size) ? BIT(4) : 0;
 			}
 
-			const char* projectionTypes[] = { "Perspective", "Orthographic" };
+			std::string projectionTypes[] = { "Perspective", "Orthographic" };
 			//Projection type here
 			if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected, flags & BIT(0)))
 			{

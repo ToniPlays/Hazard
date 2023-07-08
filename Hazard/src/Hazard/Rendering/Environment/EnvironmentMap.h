@@ -5,6 +5,12 @@
 
 namespace Hazard
 {
+	struct EnvironmentMapSpec
+	{
+		uint32_t Samples;
+		uint32_t Resolution;
+	};
+
 	class EnvironmentMap : public Asset 
 	{
 		friend class EnvironmentAssetLoader;
@@ -12,22 +18,22 @@ namespace Hazard
 		EnvironmentMap();
 		~EnvironmentMap();
 
-        void Update(uint32_t samples, uint32_t resolution, Ref<Texture2DAsset> sourceImage);
+        void Update(uint32_t samples, uint32_t resolution, AssetHandle sourceImage);
         
+		AssetHandle GetSourceImageHandle() const { return m_SourceImageHandle; }
+		EnvironmentMapSpec GetSpec() const { return m_Spec; }
+
 		void GenerateRadiance();
 		void GenerateIrradiance(Ref<AssetPointer> radianceMap);
 		void GeneratePreFilter(Ref<AssetPointer> radianceMap);
         
-        Ref<Texture2DAsset> GetSourceImage() const { return m_SourceImage; }
-
 		Ref<AssetPointer> RadianceMap = nullptr;
 		Ref<AssetPointer> IrradianceMap = nullptr;
 		Ref<AssetPointer> PreFilterMap = nullptr;
 		Ref<Texture2DAsset> BRDFLut = nullptr;
         
     private:
-        Ref<Texture2DAsset> m_SourceImage;
-        uint32_t m_Resolution;
-        uint32_t m_Samples;
+		AssetHandle m_SourceImageHandle;
+		EnvironmentMapSpec m_Spec;
 	};
 }

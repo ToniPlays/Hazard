@@ -6,7 +6,7 @@
 namespace Hazard::Utils
 {
 
-	AssetType StringToAssetType(const std::string& type) 
+	AssetType StringToAssetType(const std::string& type)
 	{
 		if (type == "None")					return AssetType::Undefined;
 		if (type == "AudioClip")			return AssetType::AudioClip;
@@ -18,30 +18,33 @@ namespace Hazard::Utils
 		if (type == "Script")				return AssetType::Script;
 		if (type == "Pipeline")				return AssetType::Pipeline;
 		if (type == "Shader")				return AssetType::Shader;
-        if (type == "Material")             return AssetType::Material;
+		if (type == "Material")             return AssetType::Material;
+		if (type == "Buffer")				return AssetType::Buffer;
+
 
 		return AssetType::Undefined;
 	}
-	const char* AssetTypeToString(AssetType type) 
+	const char* AssetTypeToString(AssetType type)
 	{
 		switch (type)
 		{
-		case AssetType::Undefined:			return "Undefined";
-		case AssetType::AudioClip:			return "AudioClip";
-		case AssetType::World:				return "World";
-		case AssetType::Image:				return "Image";
-		case AssetType::Mesh:				return "Mesh";
-		case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
-		case AssetType::EnvironmentMap:		return "EnvironmentMap";
-		case AssetType::Script:				return "Script";
-		case AssetType::Pipeline:			return "Pipeline";
-		case AssetType::Shader:				return "Shader";
-        case AssetType::Material:           return "Material";
-		default:							return "Unknown";
+			case AssetType::Undefined:			return "Undefined";
+			case AssetType::AudioClip:			return "AudioClip";
+			case AssetType::World:				return "World";
+			case AssetType::Image:				return "Image";
+			case AssetType::Mesh:				return "Mesh";
+			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
+			case AssetType::EnvironmentMap:		return "EnvironmentMap";
+			case AssetType::Script:				return "Script";
+			case AssetType::Pipeline:			return "Pipeline";
+			case AssetType::Shader:				return "Shader";
+			case AssetType::Material:           return "Material";
+			case AssetType::Buffer:			return "Buffer";
+			default:						return "Unknown";
 		}
 		return "";
 	}
-	AssetType AssetTypeFromExtension(const std::string& ext) 
+	AssetType AssetTypeFromExtension(const std::string& ext)
 	{
 		if (ext == ".jpeg")		return AssetType::Image;
 		if (ext == ".jpg")		return AssetType::Image;
@@ -57,7 +60,7 @@ namespace Hazard::Utils
 		if (ext == ".gltf")		return AssetType::Mesh;
 		if (ext == ".cs")		return AssetType::Script;
 		if (ext == ".glsl")		return AssetType::Shader;
-        if (ext == ".hmat")     return AssetType::Material;
+		if (ext == ".hmat")     return AssetType::Material;
 
 		return AssetType::Undefined;
 	}

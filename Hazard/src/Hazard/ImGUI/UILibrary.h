@@ -343,20 +343,20 @@ namespace Hazard::ImUI
 		return modified;
 	}
 
-	static bool Combo(const char* id, const char** options, uint32_t count, uint32_t& selected, bool isMixed = false)
+	static bool Combo(const char* id, const std::string* options, uint32_t count, uint32_t& selected, bool isMixed = false)
 	{
 		ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 		uint32_t currentSelection = selected;
 		bool modified = false;
 
 		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
-		if (ImGui::BeginCombo(id, options[selected]))
+		if (ImGui::BeginCombo(id, options[selected].c_str()))
 		{
 			for (uint32_t i = 0; i < count; i++)
 			{
 				bool isSelected = i == selected;
 
-				if (ImGui::Selectable(options[i], i == currentSelection))
+				if (ImGui::Selectable(options[i].c_str(), i == currentSelection))
 				{
 					currentSelection = i;
 					modified = true;
@@ -372,7 +372,7 @@ namespace Hazard::ImUI
 		ImGui::PopItemFlag();
 		return modified;
 	}
-	static bool Combo(const char* name, const char* id, const char** options, uint32_t count, uint32_t& selected, bool isMixed = false)
+	static bool Combo(const char* name, const char* id, const std::string* options, uint32_t count, uint32_t& selected, bool isMixed = false)
 	{
 		ShiftY(4.0f);
 		ImGui::Text("%s", name);

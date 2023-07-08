@@ -23,28 +23,33 @@ namespace Hazard
 	{
 
 	}
-	void EnvironmentMap::Update(uint32_t samples, uint32_t resolution, Ref<Texture2DAsset> sourceImage)
+	void EnvironmentMap::Update(uint32_t samples, uint32_t resolution, AssetHandle sourceImage)
 	{
-		m_Samples = samples;
-		m_SourceImage = sourceImage;
-		m_Resolution = resolution;
-		GenerateRadiance();
+		m_SourceImageHandle = sourceImage;
+		m_Spec.Samples = samples;
+		m_Spec.Resolution = resolution;
+
+		if (sourceImage != INVALID_ASSET_HANDLE)
+			GenerateRadiance();
 	}
 
 	void EnvironmentMap::GenerateRadiance()
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
-		Ref<Image2D> image = m_SourceImage->GetSourceImageAsset()->Value.As<Image2D>();
+		Ref<Texture2DAsset> sourceImage = AssetManager::GetAsset<Texture2DAsset>(m_SourceImageHandle);
+		if (!sourceImage) return;
 
 		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit, 1);
+
+		Ref<Image2D> image = sourceImage->GetSourceImageAsset()->Value.As<Image2D>();
 
 		CubemapTextureCreateInfo radianceInfo = {};
 		radianceInfo.DebugName = "RadianceMap " + image->GetDebugName();
 		radianceInfo.Usage = ImageUsage::Texture;
 		radianceInfo.Format = ImageFormat::RGBA;
-		radianceInfo.Width = m_Resolution;
-		radianceInfo.Height = m_Resolution;
+		radianceInfo.Width = m_Spec.Resolution;
+		radianceInfo.Height = m_Spec.Resolution;
 		radianceInfo.GenerateMips = false;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);

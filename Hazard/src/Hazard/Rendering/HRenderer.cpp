@@ -148,7 +148,8 @@ namespace Hazard
 		if (skyLight.EnvironmentMapHandle == INVALID_ASSET_HANDLE) return;
 
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(skyLight.EnvironmentMapHandle);
-		if (map == nullptr) return;
+		if (!map) return;
+		if (!map->RadianceMap) return;
 
 		AssetHandle skyboxHandle = s_Engine->GetResources().SkyboxMaterialHandle;
 		Ref<Material> skyboxMaterial = AssetManager::GetAsset<Material>(skyboxHandle);

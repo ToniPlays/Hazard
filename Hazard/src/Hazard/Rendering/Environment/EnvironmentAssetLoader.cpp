@@ -6,12 +6,12 @@
 
 namespace Hazard
 {
-	static void CreateEnvironmentAssetJob(Ref<Job> job, Ref<EnvironmentMap> asset, const std::filesystem::path& path)
+	static void SaveEnvironmentMapJob(Ref<Job> job, Ref<EnvironmentMap> asset, const std::filesystem::path& path)
 	{
 		EnvironmentAssetHeader header = {};
-		header.ImageHandle = 0;
-		header.Samples = 128;
-		header.Resolution = 4096;
+		header.ImageHandle = asset->GetSourceImageHandle();
+		header.Samples = asset->GetSpec().Samples;
+		header.Resolution = asset->GetSpec().Resolution;
 
 		const AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 		const AssetMetadata& packMetadata = AssetManager::GetMetadata(metadata.AssetPackHandle);
@@ -41,15 +41,10 @@ namespace Hazard
 	{
 		Buffer assetData = AssetManager::GetAssetData(handle);
 		EnvironmentAssetHeader header = assetData.Read<EnvironmentAssetHeader>();
-		header.ImageHandle = 13937746866108958146;
 		assetData.Release();
 
-		Ref<Texture2DAsset> sourceTexture = AssetManager::GetAsset<Texture2DAsset>(header.ImageHandle);
-		if (!sourceTexture)
-			throw JobException(fmt::format("Loading environment map failed: Cannot find source image"));
-
 		Ref<EnvironmentMap> map = Ref<EnvironmentMap>::Create();
-		map->Update(header.Samples, header.Resolution, sourceTexture);
+		map->Update(header.Samples, header.Resolution, header.ImageHandle);
 
 		map->IncRefCount();
 		job->GetStage()->SetResult(map);
@@ -66,15 +61,19 @@ namespace Hazard
 	}
 	Ref<JobGraph> EnvironmentAssetLoader::Save(Ref<Asset>& asset)
 	{
-		return Ref<JobGraph>();
+		const AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
+
+		Ref<Job> saveJob = Ref<Job>::Create(SaveEnvironmentMapJob, asset, metadata.Key);
+		Ref<JobGraph> graph = Ref<JobGraph>::Create("EnvironmentAsset Create", 1);
+		graph->GetStage(0)->QueueJobs({ saveJob });
+
+		return graph;
 	}
 	Ref<JobGraph> EnvironmentAssetLoader::Create(const std::filesystem::path& path)
 	{
 		Ref<EnvironmentMap> environmentMap = Ref<EnvironmentMap>::Create();
 		environmentMap->m_Handle = AssetHandle();
-
-		Ref<Job> createJob = Ref<Job>::Create(CreateEnvironmentAssetJob, environmentMap, path);
-
+		Ref<Job> createJob = Ref<Job>::Create(SaveEnvironmentMapJob, environmentMap, path);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("EnvironmentAsset Create", 1);
 		graph->GetStage(0)->QueueJobs({ createJob });
 
