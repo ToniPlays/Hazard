@@ -20,16 +20,13 @@ project "Hazard-Script"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.Mono}",
 		"%{IncludeDir.Hazard_Utility}",
-		"%{IncludeDir.Optick}"
+		"%{IncludeDir.Optick}",
+		"%{IncludeDir.Coral}"
 	}
 
 	links 
 	{
-		"Hazard-Utility"
+		"%{LibraryDir.CoralNetHost}",
+		"Hazard-Utility",
+		"Coral.Native"
 	}
-
-	filter "system:windows"
-		defines 
-		{
-			"HZR_INCLUDE_MONO"
-		}

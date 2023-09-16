@@ -10,6 +10,7 @@
 
 namespace Hazard
 {
+	/*
 	static void Debug_Log_Native(MonoObject* obj)
 	{
 		std::string message = Mono::MonoObjectToString(obj);
@@ -40,4 +41,5 @@ namespace Hazard
 		std::string message = Mono::MonoObjectToChar(obj);
 		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Trace, message, STACK_TRACE() });
 	}
+	*/
 }

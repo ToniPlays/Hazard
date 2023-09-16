@@ -51,7 +51,7 @@ namespace UI
 	}
 	bool TransformationGizmo::OnEvent(Event& e)
 	{
-		return m_IsUsing;
+		return m_IsUsing; 
 	}
 	float* TransformationGizmo::GetSnapValues()
 	{

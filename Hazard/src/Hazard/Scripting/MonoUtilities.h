@@ -10,7 +10,7 @@ namespace Hazard::Utils
 
 namespace HazardScript
 {
-#ifdef HZR_INCLUDE_MONO
+	/*
 	using namespace Hazard;
 	template<>
 	glm::vec2 FieldValueStorage::GetStoredValue();
@@ -47,5 +47,5 @@ namespace HazardScript
 	ObjectReference FieldValueStorage::GetLiveValue(MonoObject* target);
 	template<>
 	void FieldValueStorage::SetLiveValue(MonoObject* target, ObjectReference value);
-#endif
+	*/
 }

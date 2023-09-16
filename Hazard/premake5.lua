@@ -53,7 +53,8 @@ project "Hazard"
 		"%{IncludeDir.Hazard_Renderer}",
 		"%{IncludeDir.Hazard_Script}",
 		"%{IncludeDir.Hazard_UI}",
-		"%{IncludeDir.PortableFileDialogs}"
+		"%{IncludeDir.PortableFileDialogs}",
+		"%{IncludeDir.Coral}"
 	}
 
 	links {

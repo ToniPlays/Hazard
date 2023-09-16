@@ -26,8 +26,7 @@ namespace Hazard
 		HazardScriptCreateInfo createInfo = {};
 		createInfo.CoreAssemblyPath = m_Info.CoreAssemblyPath;
 		createInfo.AppAssemblyPath = m_Info.AppAssemblyPath;
-		createInfo.AssemblyPath = m_Info.AssemblyPath;
-		createInfo.ConfigPath = m_Info.ConfigPath;
+		createInfo.CoralDirectory = m_Info.CoralDirectory;
 		createInfo.LoadAssebmlies = true;
 
 		createInfo.DebugCallback = [&](ScriptMessage message)

@@ -18,7 +18,7 @@ namespace Hazard::Utils {
 
 namespace HazardScript
 {
-#ifdef HZR_INCLUDE_MONO
+#ifdef HZR_INCLUDE_MONO2
 	//glm::vec2 -----------------------------------
 	using namespace Hazard;
 	template<>

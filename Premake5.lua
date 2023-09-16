@@ -1,9 +1,9 @@
 include "Dependencies.lua"
 
 workspace "Hazard"
-	architecture "x86_64"
+
 	startproject "HazardEditor"
-      	cppdialect "C++20"
+    cppdialect "C++20"
 
 	configurations
 	{
@@ -51,9 +51,10 @@ workspace "Hazard"
             ["DEAD_CODE_STRIPPING"] = "YES",
             ["CLANG_CXX_LANGUAGE_STANDARD"] = "c++20",
         }
-    filter ""
- 
- 
+
+    filter "language:C++ or language:C"
+        architecture "x86_64"
+        
     filter "configurations:Debug"
         defines "HZR_DEBUG"
         runtime "Debug"
@@ -88,6 +89,10 @@ group "Dependencies"
 
 	include "Hazard/vendor/yaml-cpp"
 	include "Hazard/vendor/imgui"
+
+    include "Hazard/vendor/Coral/Coral.Managed"
+    include "Hazard/vendor/Coral/Coral.Native"
+
 group ""
 
 include "Hazard-Utility"

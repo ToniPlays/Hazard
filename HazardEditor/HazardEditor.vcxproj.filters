@@ -46,6 +46,9 @@
     <Filter Include="src\GUI\Viewport">
       <UniqueIdentifier>{10CDE8B5-FCC5-0708-25F8-EC8C1150E713}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Localization">
+      <UniqueIdentifier>{25758DDC-116E-AC2E-3AA0-91B326F88B3A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -195,6 +198,9 @@
     <ClInclude Include="src\GUI\Viewport\Viewport.h">
       <Filter>src\GUI\Viewport</Filter>
     </ClInclude>
+    <ClInclude Include="src\Localization\Localization.h">
+      <Filter>src\Localization</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\EditorGuiPlatform.h">
       <Filter>src\Platform</Filter>
     </ClInclude>
@@ -216,7 +222,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\Localization\Localization.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">

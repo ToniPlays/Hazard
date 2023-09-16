@@ -6,7 +6,6 @@
 #include "Hazard/ECS/WorldHandler.h"
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/ECS/Entity.h"
-#include "Mono/Core/Mono.h"
 
 #define RegisterComponent(Type, Image)	{																												\
 		MonoType* monoType = Mono::MonoTypeFromReflectionName("Hazard." #Type, Image);																	\
@@ -22,12 +21,13 @@ namespace Hazard
 {
 	WorldHandler* handler;
 
-	std::unordered_map<MonoType*, std::function<bool(uint64_t)>> hasComponentFuncs;
-	std::unordered_map<MonoType*, std::function<ComponentBase&(uint64_t)>> getComponentFuncs;
-	std::unordered_map<MonoType*, std::function<void(uint64_t)>> createComponentFuncs;
+	//std::unordered_map<MonoType*, std::function<bool(uint64_t)>> hasComponentFuncs;
+	//std::unordered_map<MonoType*, std::function<ComponentBase&(uint64_t)>> getComponentFuncs;
+	//std::unordered_map<MonoType*, std::function<void(uint64_t)>> createComponentFuncs;
 
 	using namespace HazardScript;
 
+	/*
 	static uint64_t Entity_InstantiateOrigin_Native(MonoObject* name)
 	{
 		std::string entityName = Mono::MonoObjectToString(name);
@@ -56,6 +56,7 @@ namespace Hazard
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
 		createComponentFuncs[compType](id);
 	}
+	*/
 	static void Entity_Destroy_Native(uint64_t id)
 	{
 		Entity e = GET_ENTITY(id);
@@ -84,6 +85,7 @@ namespace Hazard
 	{
 		GET_ENTITY(id).SetVisible(visible);
 	}
+	/*
 	static bool Component_IsActive_Native(uint64_t id, MonoType* type)
 	{
 		MonoType* compType = mono_reflection_type_get_type((MonoReflectionType*)type);
@@ -96,4 +98,5 @@ namespace Hazard
 
 		base.Active = active;
 	}
+	*/
 }

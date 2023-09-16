@@ -13,7 +13,7 @@ namespace Hazard
 		static void Init()
         {
 			using namespace HazardScript;
-#ifdef HZR_INCLUDE_MONO
+#ifdef HZR_INCLUDE_MONO2
 			AttributeBuilder::Clear();
 			AttributeBuilder::AddAttribute("Author", [&](MonoObject* obj) {
 				AuthorAttribute* attrib = hnew AuthorAttribute();

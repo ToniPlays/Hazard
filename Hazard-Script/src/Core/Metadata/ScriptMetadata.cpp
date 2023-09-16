@@ -30,17 +30,18 @@ namespace HazardScript
 	{
 		for (Ref<ScriptAssembly> assembly : HazardScriptEngine::GetAssemblies())
 		{
-			MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
-			MonoMethod* method = mono_method_desc_search_in_image(desc, assembly->GetImage());
+			//MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
+			//MonoMethod* method = mono_method_desc_search_in_image(desc, assembly->GetImage());
 
-			if (!method) continue;
+			//if (!method) continue;
 
-			m_Methods[name] = Ref<MethodMetadata>::Create(method);
+			//m_Methods[name] = Ref<MethodMetadata>::Create(method);
 			return true;
 		}
 
 		return false;
 	}
+	/*
 	bool ScriptMetadata::TryInvoke(const std::string& name, MonoObject* target, void** params)
 	{
 		if (m_Methods.find(name) == m_Methods.end())
@@ -53,6 +54,7 @@ namespace HazardScript
 	{
 		m_Methods[name]->Invoke(target, params);
 	}
+	*/
 
 	ScriptObject* ScriptMetadata::CreateObject()
 	{
@@ -63,7 +65,7 @@ namespace HazardScript
 	void ScriptMetadata::LoadFields()
 	{
 		m_Fields.clear();
-		MonoClassField* field = nullptr;
+		/*MonoClassField* field = nullptr;
 		void* ptr = 0;
 
 		while ((field = mono_class_get_fields(m_Class->Class, &ptr)))
@@ -71,9 +73,11 @@ namespace HazardScript
 			std::string name = mono_field_get_name(field);
 			m_Fields[name] = ScriptCache::CacheOrGetFieldMetadata(field);
 		}
+		*/
 	}
 	void ScriptMetadata::LoadMethods()
 	{
+		/*
 		MonoMethod* method = nullptr;
 		void* ptr = nullptr;
 		MonoClass* klass = m_Class->Class;
@@ -83,11 +87,12 @@ namespace HazardScript
 			auto m = Ref<MethodMetadata>::Create(method);
 			m_Methods[m->GetName()] = m;
 		}
+		*/
 	}
 	void ScriptMetadata::LoadAttributes()
 	{
 		m_Attributes.clear();
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_class(m_Class->Class);
+		/*MonoCustomAttrInfo* info = mono_custom_attrs_from_class(m_Class->Class);
 
 		if (info == nullptr) return;
 
@@ -104,6 +109,7 @@ namespace HazardScript
 			if (attrib)
 				m_Attributes.push_back(attrib);
 		}
+		*/
 	}
 }
 

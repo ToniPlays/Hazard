@@ -44,11 +44,14 @@ IncludeDir["Hazard_Renderer"] = "%{wks.location}/Hazard-Renderer/src"
 IncludeDir["Hazard_Script"] = "%{wks.location}/Hazard-Script/src"
 IncludeDir["Hazard_UI"] = "%{wks.location}/Hazard-UI/src"
 
+IncludeDir["Coral"] = "%{wks.location}/Hazard/vendor/Coral/Coral.Native/Include"
+
 LibraryDir = {}
 
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
 LibraryDir["VulkanSDK_Debug"] = "%{VULKAN_SDK}/Lib"
 LibraryDir["VulkanSDK_DebugDLL"] = "%{VULKAN_SDK}/Bin"
+LibraryDir["CoralNetHost"] = "%{wks.location}/Hazard/vendor/Coral/NetCore/7.0.7/nethost.lib"
 
 Library = {}
 
@@ -68,7 +71,6 @@ Library = {}
     Library["SPIRV_Cross_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-core.lib"
     Library["SPIRV_Cross_GLSL_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-glsl.lib"
 
-    Library["Mono_Debug_Lib"] = "%{wks.location}/Hazard/vendor/mono/lib/Debug/mono-2.0-sgen.lib"
     Library["Assimp_Lib"] = "%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"
 
 end
@@ -95,7 +97,6 @@ if os.host() == "macosx" then
     Library["SPIRV_Cross_GLSL_Release"] = CELLAR .. "spirv-cross/2021-01-15/lib/spirv-cross-glsl"
     Library["SPIRV_Tools_Release"] = "SPIRV-Tools"
 
-    Library["Mono_Debug_Lib"] = CELLAR .. "mono/6.12.0.122/lib/mono-2.0"
     Library["Assimp_Lib"] =  CELLAR .. "assimp/5.2.5/lib/libassimp.dylib"
     
 end

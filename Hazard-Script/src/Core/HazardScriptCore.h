@@ -21,8 +21,7 @@ namespace HazardScript
 		std::filesystem::path CoreAssemblyPath;
 		std::filesystem::path AppAssemblyPath;
 
-		std::filesystem::path AssemblyPath;
-		std::filesystem::path ConfigPath;
+		std::filesystem::path CoralDirectory;
 
 		ScriptDebugCallback DebugCallback;
 		BindingCallback BindingCallback;

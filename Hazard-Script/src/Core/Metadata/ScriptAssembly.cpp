@@ -2,53 +2,59 @@
 #include "ScriptAssembly.h"
 #include "File.h"
 
-#include "Mono/Core/Mono.h"
 #include "Core/ScriptCache.h"
 
-namespace HazardScript 
+namespace HazardScript
 {
 	ScriptAssembly::~ScriptAssembly()
 	{
 		Release();
 	}
-	bool ScriptAssembly::LoadFromSource(bool registerScripts, bool withRefecenced)
+	bool ScriptAssembly::LoadAssembly(Coral::HostInstance& host)
 	{
 		Release();
-		if (m_Path.empty()) return false;
-#ifdef HZR_INCLUDE_MONO
-		CachedBuffer data = File::ReadBinaryFile(m_Path);
-		
-		if (!data.Available()) return false;
 
-		MonoImageOpenStatus status;
-		MonoImage* image = Mono::OpenImage((char*)data.GetData(), data.GetSize(), status);
-		HZR_ASSERT(image, "Image fail");
-		m_Assembly = Mono::AssemblyFromImage(image, m_Path, status);
-		mono_image_close(image);
+		std::string path = File::GetFileAbsolutePath(m_Path).lexically_normal().string();
+		m_Assembly = host.LoadAssembly(path);
 
-		if (withRefecenced) 
-			LoadReferencedAssemblies();
+		if (m_Assembly.GetLoadStatus() != Coral::AssemblyLoadStatus::Success)
+			return false;
 
-		if(registerScripts)
-			LoadScripts();
-#endif
+		/*	CachedBuffer data = File::ReadBinaryFile(m_Path);
+
+			if (!data.Available()) return false;
+
+			MonoImageOpenStatus status;
+			MonoImage* image = Mono::OpenImage((char*)data.GetData(), data.GetSize(), status);
+			HZR_ASSERT(image, "Image fail");
+			m_Assembly = Mono::AssemblyFromImage(image, m_Path, status);
+			mono_image_close(image);
+
+			if (withRefecenced)
+				LoadReferencedAssemblies();
+
+			if(registerScripts)
+				LoadScripts();
+		*/
 		return true;
 	}
-#ifdef HZR_INCLUDE_MONO
-	MonoImage* ScriptAssembly::GetImage() const
+	bool ScriptAssembly::Unload(Coral::HostInstance& host)
 	{
-		return mono_assembly_get_image(m_Assembly);
+		if (m_Assembly.GetLoadStatus() != Coral::AssemblyLoadStatus::Success) 
+			return false;
+
+		host.UnloadAssemblyLoadContext(m_Assembly);
+		return true;
 	}
-#endif
 	void ScriptAssembly::LoadReferencedAssemblies()
 	{
-#ifdef HZR_INCLUDE_MONO
+		/*
 		const MonoTableInfo* t = mono_image_get_table_info(GetImage(), MONO_TABLE_ASSEMBLYREF);
 		int rows = mono_table_info_get_rows(t);
-		
+
 		m_ReferencedAssemblies.clear();
 		m_ReferencedAssemblies.reserve(rows);
-		for (int i = 0; i < rows; i++) 
+		for (int i = 0; i < rows; i++)
 		{
 			uint32_t cols[MONO_ASSEMBLYREF_SIZE];
 			mono_metadata_decode_row(t, i, cols, MONO_ASSEMBLYREF_SIZE);
@@ -56,21 +62,19 @@ namespace HazardScript
 			auto& data = m_ReferencedAssemblies.emplace_back();
 			data.Name = mono_metadata_string_heap(GetImage(), cols[MONO_ASSEMBLYREF_NAME]);
 		}
-#endif
+		*/
 	}
 	void ScriptAssembly::LoadScripts()
 	{
 		m_Scripts.clear();
-        
-#ifdef HZR_INCLUDE_MONO
-
+		/*
 		const MonoTableInfo* tableInfo = mono_image_get_table_info(GetImage(), MONO_TABLE_TYPEDEF);
 		uint32_t rows = mono_table_info_get_rows(tableInfo);
 
 		std::vector<ManagedClass*> monoClasses;
 		monoClasses.reserve(rows);
 
-		for (uint32_t i = 0; i < rows; i++) 
+		for (uint32_t i = 0; i < rows; i++)
 		{
 			MonoClass* monoClass = nullptr;
 			uint32_t cols[MONO_TYPEDEF_SIZE];
@@ -88,13 +92,13 @@ namespace HazardScript
 			monoClasses.push_back(managedClass);
 		}
 
-		for (ManagedClass* klass : monoClasses) 
+		for (ManagedClass* klass : monoClasses)
 		{
 			Ref<ScriptMetadata> script = ScriptCache::CacheOrGetScriptMetadata(klass);
 			script->UpdateMetadata();
 			m_Scripts[script->GetName()] = script;
 		}
-#endif
+		*/
 	}
 	void ScriptAssembly::Release()
 	{

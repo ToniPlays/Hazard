@@ -17,10 +17,9 @@ namespace Hazard
 	public:
 		virtual void Register(ScriptEngine* engine)
 		{
-#ifdef HZR_INCLUDE_VULKAN
 			HZR_PROFILE_FUNCTION();
 			handler = &Application::GetModule<WorldHandler>();
-			MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly->GetImage();
+			/*MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly->GetImage();
 
 			RegisterComponent(TagComponent, image);
 			RegisterComponent(TransformComponent, image);
@@ -41,28 +40,29 @@ namespace Hazard
 			RegisterComponent(RigidbodyComponent, image);
 			RegisterComponent(BoxColliderComponent, image);
 			RegisterComponent(SphereColliderComponent, image);
+			*/
 
 			//Entity -------------------------------------------
 			BIND_ICALL(Entity_IsVisible_Native);
 			BIND_ICALL(Entity_SetVisible_Native);
 			BIND_ICALL(Entity_IsUpdated_Native);
 			BIND_ICALL(Entity_SetUpdate_Native);
-			BIND_ICALL(Entity_InstantiateOrigin_Native);
-			BIND_ICALL(Entity_InstantiateOrigin_Native);
-			BIND_ICALL(Entity_InstantiateOrigin_Native);
-			BIND_ICALL(Entity_InstantiateOrigin_Native);
-			BIND_ICALL(Entity_InstantiateAt_Native);
-			BIND_ICALL(Entity_HasComponent_Native);
-			BIND_ICALL(Entity_CreateComponent_Native);
+			//BIND_ICALL(Entity_InstantiateOrigin_Native);
+			//BIND_ICALL(Entity_InstantiateOrigin_Native);
+			//BIND_ICALL(Entity_InstantiateOrigin_Native);
+			//BIND_ICALL(Entity_InstantiateOrigin_Native);
+			//BIND_ICALL(Entity_InstantiateAt_Native);
+			//BIND_ICALL(Entity_HasComponent_Native);
+			//BIND_ICALL(Entity_CreateComponent_Native);
 			BIND_ICALL(Entity_Destroy_Native);
 
 			//Component ----------------------------------------
-			BIND_ICALL(Component_IsActive_Native);
-			BIND_ICALL(Component_SetActive_Native);
+			//BIND_ICALL(Component_IsActive_Native);
+			//BIND_ICALL(Component_SetActive_Native);
 
 			//Tag component ------------------------------------
-			BIND_ICALL(TagComponent_GetName_Native);
-			BIND_ICALL(TagComponent_SetName_Native);
+			//BIND_ICALL(TagComponent_GetName_Native);
+			//BIND_ICALL(TagComponent_SetName_Native);
 
 			//Transform component ------------------------------
 			BIND_ICALL(TransformComponent_GetPosition_Native);
@@ -99,20 +99,20 @@ namespace Hazard
 			BIND_ICALL(SkyLightComponent_SetEnvironmentMap_Native);
 
 			//Asset	--------------------------------------------
-			BIND_ICALL(Asset_GetName_Native);
+			//BIND_ICALL(Asset_GetName_Native);
 
 			//WorldManager--------------------------------------
 			BIND_ICALL(WorldManager_LoadWorld_Native);
-			BIND_ICALL(WorldManager_LoadWorldFromString_Native);
+			//BIND_ICALL(WorldManager_LoadWorldFromString_Native);
 
 
 			//Debug --------------------------------------------
-			BIND_ICALL(Debug_Log_Native);
-			BIND_ICALL(Debug_Info_Native);
-			BIND_ICALL(Debug_Warn_Native);
-			BIND_ICALL(Debug_Error_Native);
-			BIND_ICALL(Debug_Critical_Native);
-			BIND_ICALL(Debug_Trace_Native);
+			//BIND_ICALL(Debug_Log_Native);
+			//BIND_ICALL(Debug_Info_Native);
+			//BIND_ICALL(Debug_Warn_Native);
+			//BIND_ICALL(Debug_Error_Native);
+			//BIND_ICALL(Debug_Critical_Native);
+			//BIND_ICALL(Debug_Trace_Native);
 
 
 			//Math ---------------------------------------------
@@ -145,7 +145,6 @@ namespace Hazard
 			BIND_ICALL(EnvironmentMap_GenerateRadiance_Native);
 			BIND_ICALL(EnvironmentMap_GenerateIrradiance_Native);
 			BIND_ICALL(EnvironmentMap_GeneratePrefilter_Native);
-#endif
 		}
 		virtual void OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) {};
 	};

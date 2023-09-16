@@ -52,8 +52,7 @@ namespace Hazard {
 
 		std::string AppAssemblyPath;
 		std::string CoreAssemblyPath;
-		std::string AssemblyPath;
-		std::string ConfigPath;
+		std::string CoralDirectory;
 
 		ScriptMessageCallback MessageCallback;
 	};

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "Mono/Core/Mono.h"
 #include "Metadata/ManagedType.h"
 #include "Ref.h"
 

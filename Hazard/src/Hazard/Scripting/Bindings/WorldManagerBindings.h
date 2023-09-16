@@ -21,8 +21,10 @@ namespace Hazard
 		handler.OnBegin();
 		return true;
 	}
+	/*
 	static bool WorldManager_LoadWorldFromString_Native(MonoObject* tag)
 	{
 		return false;
 	}
+	*/
 }

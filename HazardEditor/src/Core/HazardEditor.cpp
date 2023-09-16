@@ -89,10 +89,9 @@ void HazardEditorApplication::PreInit()
 	std::filesystem::path appAssemblyPath = project.GetProjectData().ProjectDirectory / "Library" / "Scripts" / "Binaries" / dllFile;
 
 	ScriptEngineCreateInfo scriptEngine = {};
-	scriptEngine.CoreAssemblyPath = "C:/dev/Hazard/HazardScripting/bin/Debug/HazardScripting.dll";
+	scriptEngine.CoreAssemblyPath = "../HazardScripting/bin/Debug/net7.0/HazardScripting.dll";
 	scriptEngine.AppAssemblyPath = appAssemblyPath.string();
-	scriptEngine.AssemblyPath = "C:/Program Files/Mono/lib";
-	scriptEngine.ConfigPath = "C:/Program Files/Mono/etc/";
+	scriptEngine.CoralDirectory = "../Hazard/vendor/Coral/Coral.Managed/Build/Debug-windows";
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;

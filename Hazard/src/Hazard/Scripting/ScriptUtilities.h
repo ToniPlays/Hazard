@@ -7,9 +7,7 @@ namespace Hazard
 {
 	struct ObjectReference 
 	{
-#ifdef HZR_INCLUDE_MONO
-		MonoObject* MonoObject = nullptr;
-#endif
+		//MonoObject* MonoObject = nullptr;
 		uint32_t MonoObjectHandle = 0;
 		UID ObjectUID = 0;
 	};

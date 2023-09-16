@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mono/Core/Mono.h"
+#include "UtilityCore.h"
 
 namespace HazardScript 
 {
@@ -30,9 +30,7 @@ namespace HazardScript
 
 	struct ManagedClass 
 	{
-#ifdef HZR_INCLUDE_MONO
-		MonoClass* Class;
-#endif
+		//MonoClass* Class;
 		std::string FullName;
 		uint32_t ID = 0;
 		uint32_t Size;
@@ -40,11 +38,7 @@ namespace HazardScript
 
 	struct ManagedType 
 	{
-#ifdef HZR_INCLUDE_MONO
-		MonoType* RawMonoType = nullptr;
-#else
-        void* RawMonoType = nullptr;
-#endif
+		//MonoType* RawMonoType = nullptr;
 		NativeType NativeType;
 		ManagedClass* TypeClass = nullptr;
 
@@ -65,23 +59,18 @@ namespace HazardScript
 		bool IsFixedSize() const;
 		ManagedType GetElementType() const;
 
-		bool IsValid() const { return TypeEncoding != 0 && RawMonoType != nullptr && NativeType != NativeType::None; }
+		//bool IsValid() const { return TypeEncoding != 0 && RawMonoType != nullptr && NativeType != NativeType::None; }
 
-#ifdef HZR_INCLUDE_MONO
-		static ManagedType FromClass(MonoClass* klass);
-		static ManagedType FromType(MonoType* type);
-#endif
+		//static ManagedType FromClass(MonoClass* klass);
+		//static ManagedType FromType(MonoType* type);
 	};
 
 
 	struct ManagedMethod 
 	{
         ManagedType ReturnType;
-#ifdef HZR_INCLUDE_MONO
-		MonoMethod* Method = nullptr;
-        static ManagedMethod FromMethod(MonoMethod* method);
-#endif
-	
+		//MonoMethod* Method = nullptr;
+        //static ManagedMethod FromMethod(MonoMethod* method);
 	};
 }
 

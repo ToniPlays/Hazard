@@ -9,6 +9,7 @@ namespace Hazard
 {
 	using namespace HazardScript;
 
+	/*
 	static MonoString* Asset_GetName_Native(uint64_t id)
 	{
 		const AssetMetadata& metadata = AssetManager::GetMetadata(id);
@@ -16,4 +17,5 @@ namespace Hazard
 		return Mono::StringToMonoString("");
 		//return Mono::StringToMonoString(File::GetName(metadata.Path));
 	}
+	*/
 }

@@ -2,7 +2,6 @@
 #ifdef HZR_INCLUDE_MONO
 
 #include "UtilityCore.h"
-#include "Mono/Core/Mono.h"
 #include "Hash.h"
 
 #include "Metadata/ScriptMetadata.h"
@@ -17,6 +16,7 @@ namespace HazardScript
 		s_Cache = hnew ScriptCacheData();
 		CacheCoreLibClasses();
 	}
+	/*
 	ManagedClass* ScriptCache::CacheClass(const std::string& className, MonoClass* klass)
 	{
 		MonoType* classType = mono_class_get_type(klass);
@@ -32,6 +32,8 @@ namespace HazardScript
 		s_Cache->Classes[managedClass.ID] = managedClass;
 		return &s_Cache->Classes[managedClass.ID];
 	}
+		*/
+	/*
 	ManagedClass* ScriptCache::GetClass(MonoClass* monoClass)
 	{
 		if (monoClass == nullptr) return nullptr;
@@ -60,6 +62,7 @@ namespace HazardScript
 		s_Cache->ScriptFields[hash] = metadata;
 		return s_Cache->ScriptFields[hash];
 	}
+	*/
 	ManagedClass* ScriptCache::GetManagedClassByName(const std::string& name)
 	{
 		uint32_t classID = Hash::GenerateFNVHash(name);
@@ -68,8 +71,10 @@ namespace HazardScript
 
 		return &s_Cache->Classes[classID];
 	}
+	
 	void ScriptCache::CacheCoreLibClasses()
 	{
+		/*
 		CACHE_CORELIB_CLASS("Object");
 		CACHE_CORELIB_CLASS("ValueType");
 		CACHE_CORELIB_CLASS("Boolean");
@@ -91,6 +96,7 @@ namespace HazardScript
 		CACHE_CORELIB_CLASS("Void");
 
 		CacheClass("System.Diagnostics.StackTrace", mono_class_from_name(mono_get_corlib(), "System.Diagnostics", "StackTrace"));
+		*/
 	}
 }
 #endif

@@ -3,18 +3,14 @@
 
 #include "HazardScriptCore.h"
 #include "Metadata/ScriptAssembly.h"
+#include "Coral/HostInstance.hpp"
 
 namespace HazardScript 
 {
 
-	struct MonoData
+	struct CoralData
     {
-#ifdef HZR_INCLUDE_MONO
-		MonoDomain* Domain;
-#endif
-
-		std::filesystem::path MonoAssemblyDir;
-		std::filesystem::path MonoConfigDir;
+		std::filesystem::path CoralDirectory;
 		
 		Ref<ScriptAssembly> CoreAssembly;
 		Ref<ScriptAssembly> AppAssembly;
@@ -33,29 +29,28 @@ namespace HazardScript
 		void RegisterInternalCall(const std::string& signature, void* function);
 		void RunGarbageCollector();
 
-		Ref<ScriptAssembly> GetAppAssembly() { return m_MonoData.AppAssembly; }
+		Ref<ScriptAssembly> GetAppAssembly() { return m_CoralData.AppAssembly; }
 	
 	public:
 		static HazardScriptEngine* Create(HazardScriptCreateInfo* info);
 		static void SendDebugMessage(ScriptMessage message);
 		static std::vector<Ref<ScriptAssembly>> GetAssemblies();
-        
-#ifdef HZR_INCLUDE_MONO
-		static void CheckError(MonoObject* exception, MonoObject* result, MonoMethod* method);
-#endif
-		static MonoData& GetMonoData() { return s_Instance->m_MonoData; }
+		static CoralData& GetCoralData() { return s_Instance->m_CoralData; }
 
 	private:
 		HazardScriptEngine(HazardScriptCreateInfo* info);
 
-		void InitializeMono();
+		void InitializeCoralHost();
 		void LoadCoreAssebly();
 		void LoadRuntimeAssembly();
 		void ReloadAppScripts();
 
 	private:
+
+		Coral::HostInstance m_HostInstance;
+
 		ScriptDebugCallback m_DebugCallback;
-		MonoData m_MonoData;
+		CoralData m_CoralData;
 
 		inline static HazardScriptEngine* s_Instance;
 

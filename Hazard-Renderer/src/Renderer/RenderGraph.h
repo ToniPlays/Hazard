@@ -29,7 +29,7 @@ namespace HazardRenderer
 	private:
 		RenderGraph(RenderGraphCreateInfo* createInfo);
 		void CreateGraphTimeline(RenderGraphCreateInfo* createInfo);
-		ResourceReference& GetResourceReference(const RenderGraphStage& stage, uint32_t inputIndex, uint64_t resourceIndex);
+		ResourceReference GetResourceReference(const RenderGraphStage& stage, uint32_t inputIndex, uint64_t resourceIndex);
 
 	private:
 		std::string m_DebugName;

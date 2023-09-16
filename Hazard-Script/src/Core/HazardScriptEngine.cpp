@@ -1,9 +1,10 @@
 
 #include "HazardScriptEngine.h"
 
-#include "Mono/Core/Mono.h"
 #include "ScriptCache.h"
 #include <thread>
+
+#include "Coral/StringHelper.hpp"
 
 namespace HazardScript
 {
@@ -22,16 +23,15 @@ namespace HazardScript
 	{
 		s_Instance = this;
 
-		m_MonoData.CoreAssembly = Ref<ScriptAssembly>::Create();
-		m_MonoData.AppAssembly = Ref<ScriptAssembly>::Create();
+		m_CoralData.CoreAssembly = Ref<ScriptAssembly>::Create();
+		m_CoralData.AppAssembly = Ref<ScriptAssembly>::Create();
 
-		m_MonoData.CoreAssembly->SetSourcePath(info->CoreAssemblyPath);
-		m_MonoData.AppAssembly->SetSourcePath(info->AppAssemblyPath);
+		m_CoralData.CoreAssembly->SetSourcePath(info->CoreAssemblyPath);
+		m_CoralData.AppAssembly->SetSourcePath(info->AppAssemblyPath);
 
-		m_MonoData.MonoAssemblyDir = info->AssemblyPath;
-		m_MonoData.MonoConfigDir = info->ConfigPath;
-		m_MonoData.BindingCallback = info->BindingCallback;
-		m_MonoData.LoadAssembliesOnInit = info->LoadAssebmlies;
+		m_CoralData.CoralDirectory = info->CoralDirectory;
+		m_CoralData.BindingCallback = info->BindingCallback;
+		m_CoralData.LoadAssembliesOnInit = info->LoadAssebmlies;
 
 		HZR_ASSERT(info->DebugCallback, "Debug callback is required");
 		HZR_ASSERT(info->BindingCallback, "Binding callback is required");
@@ -39,107 +39,80 @@ namespace HazardScript
 		m_DebugCallback = info->DebugCallback;
 		SendDebugMessage({ Severity::Info, "Debug enabled" });
 
-		InitializeMono();
+		InitializeCoralHost();
 	}
 	void HazardScriptEngine::Reload()
 	{
 		HZR_PROFILE_FUNCTION();
+		
+		m_CoralData.CoreAssembly->Unload(m_HostInstance);
+		m_CoralData.AppAssembly->Unload(m_HostInstance);
+
 		LoadCoreAssebly();
 		LoadRuntimeAssembly();
 		ReloadAppScripts();
 	}
 	void HazardScriptEngine::RegisterInternalCall(const std::string& signature, void* function)
 	{
-#ifdef HZR_INCLUDE_MONO
-		Mono::Register(signature, function);
-#endif
+		//Mono::Register(signature, function);
 	}
 	void HazardScriptEngine::RunGarbageCollector() 
 	{
-#ifdef HZR_INCLUDE_MONO
 		HZR_PROFILE_FUNCTION();
+		/*
 		mono_gc_collect(mono_gc_max_generation());
 		using namespace std::chrono_literals;
 
 		while (mono_gc_pending_finalizers()) 
 			std::this_thread::sleep_for(500ns);
-#endif
+			*/
 	}
 	std::vector<Ref<ScriptAssembly>> HazardScriptEngine::GetAssemblies()
 	{
 		std::vector<Ref<ScriptAssembly>> assemblies;
-		assemblies.push_back(s_Instance->m_MonoData.CoreAssembly);
-		assemblies.push_back(s_Instance->m_MonoData.AppAssembly);
+		assemblies.push_back(s_Instance->m_CoralData.CoreAssembly);
+		assemblies.push_back(s_Instance->m_CoralData.AppAssembly);
 		return assemblies;
 	}
-#ifdef HZR_INCLUDE_MONO
-	void HazardScriptEngine::CheckError(MonoObject* exception, MonoObject* result, MonoMethod* method)
+	void HazardScriptEngine::InitializeCoralHost()
 	{
+		Coral::HostSettings settings = {};
+		settings.CoralDirectory = m_CoralData.CoralDirectory.lexically_normal().string();
+		settings.ErrorCallback = [](const CharType* message) {
+			std::cout << Coral::StringHelper::ConvertWideToUtf8(message) << std::endl;
+		};
+		
+		HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
+		m_HostInstance.SetExceptionCallback([](const CharType* message) {
+			std::cout << Coral::StringHelper::ConvertWideToUtf8(message) << std::endl;
+		});
 
-		MonoClass* exceptionClass = mono_object_get_class(exception);
-		MonoType* type = mono_class_get_type(exceptionClass);
-		std::string typeName = mono_type_get_name(type);
+		//ScriptCache::Init();
 
-		if (strcmp(typeName.c_str(), "System.MissingMethodException") == 0)
-		{
-			std::string methodName = mono_method_get_reflection_name(method);
-			std::string stackTrace = "Encountered missing method when executing " + methodName;
-			HazardScriptEngine::SendDebugMessage({ Severity::Error, "Missing method exception on " + methodName, stackTrace });
-			return;
-		}
-
-		MonoObject* traceObject = mono_object_new(Mono::GetDomain(), ScriptCache::GetManagedClassByName("System.Diagnostics.StackTrace")->Class);
-		MonoObject* traceExcept = nullptr;
-		MonoString* stackTraceString = mono_object_to_string(traceObject, &traceExcept);
-
-		std::string message = Mono::GetStringProperty("Message", exceptionClass, exception);
-		std::string stackTrace = Mono::GetStringProperty("StackTrace", exceptionClass, exception);
-
-		HazardScriptEngine::SendDebugMessage({ Severity::Error, typeName + ": " + message, message + "\n\n" + stackTrace });
-	}
-#endif
-	void HazardScriptEngine::InitializeMono()
-	{
-#ifdef HZR_INCLUDE_MONO
-		Mono::SetDirs(m_MonoData.MonoAssemblyDir, m_MonoData.MonoConfigDir);
-
-		Mono::Init("HazardScriptCore");
-		ScriptCache::Init();
-
-		if (m_MonoData.LoadAssembliesOnInit)
+		if (m_CoralData.LoadAssembliesOnInit)
 			Reload();
-#endif
 	}
 	void HazardScriptEngine::LoadCoreAssebly()
 	{
-#ifdef HZR_INCLUDE_MONO
-		MonoDomain* domain = nullptr;
-		bool cleanup = false;
-
-		if (!Mono::Init("HazardScriptCore")) {
-			SendDebugMessage({ Severity::Critical, "Failed to initialize Mono" });
-			return;
-		}
-
-		if (!m_MonoData.CoreAssembly->LoadFromSource(true))
+		if (!m_CoralData.CoreAssembly->LoadAssembly(m_HostInstance))
 		{
 			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
 			return;
 		}
-#endif
 	}
 	void HazardScriptEngine::LoadRuntimeAssembly()
 	{
-		if (!m_MonoData.AppAssembly->LoadFromSource(true, true)) {
+		if (!m_CoralData.AppAssembly->LoadAssembly(m_HostInstance)) {
 			SendDebugMessage({ Severity::Critical, "App assembly loading failed" });
 			return;
 		}
-		m_MonoData.BindingCallback();
+
+		m_CoralData.BindingCallback();
 	}
 	void HazardScriptEngine::ReloadAppScripts()
 	{
 		HZR_PROFILE_FUNCTION();
-		for (auto& [name, script] : m_MonoData.AppAssembly->GetScripts()) 
+		for (auto& [name, script] : m_CoralData.AppAssembly->GetScripts())
 		{
 			for (auto& [handle, object] : script->GetAllInstances()) 
 			{

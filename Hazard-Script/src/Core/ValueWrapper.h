@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "Mono/Core/Mono.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>

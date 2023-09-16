@@ -26,13 +26,13 @@ namespace HazardRenderer
 
 					while (offset < data.Size)
 					{
-						GraphInstruction& instruction = data.Read<GraphInstruction>(offset);
+						GraphInstruction instruction = data.Read<GraphInstruction>(offset);
 						offset += sizeof(GraphInstruction);
 
 						if (instruction.Flags & INSTRUCTION_BIND_VERTEX_BUFFER)
 						{
 							//Vertex buffer reference
-							ResourceReference& ref = GetResourceReference(stage, instruction.DataSource, instruction.Source.VertexBufferIndex);
+							ResourceReference ref = GetResourceReference(stage, instruction.DataSource, instruction.Source.VertexBufferIndex);
 							commandBuffer->SetVertexBuffer(ref.VertexBuffer, instruction.Destination.BindingIndex);
 							continue;
 						}
@@ -41,16 +41,16 @@ namespace HazardRenderer
 						{
 							//TODO: This is a mess
 							//Uniform buffer reference
-							ResourceReference& bufferRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.UniformBufferIndex);
+							ResourceReference bufferRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.UniformBufferIndex);
 							//Descriptorset reference
-							ResourceReference& setRef = GetResourceReference(stage, instruction.DataDestination, instruction.Destination.DescriptorSetIndex);
+							ResourceReference setRef = GetResourceReference(stage, instruction.DataDestination, instruction.Destination.DescriptorSetIndex);
 							setRef.DescriptorSet->Write(instruction.Destination.BindingIndex, bufferRef.UniformBuffer);
 							continue;
 						}
 
 						if (instruction.Flags & INSTRUCTION_BIND_PIPELINE)
 						{
-							ResourceReference& pipelineRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.PipelineIndex);
+							ResourceReference pipelineRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.PipelineIndex);
 							commandBuffer->SetPipeline(pipelineRef.Pipeline);
 
 							for (uint32_t i = 0; i < stage.DescriptorCount; i++)
@@ -63,14 +63,14 @@ namespace HazardRenderer
 						}
 						if (instruction.Flags & INSTRUCTION_PUSH_CONSTANTS)
 						{
-							ResourceReference& dataRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.PushConstantIndex);
+							ResourceReference dataRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.PushConstantIndex);
 							commandBuffer->PushConstants(*dataRef.PushConstantBuffer, instruction.Destination.Offset, 0);
 							continue;
 						}
 						if (instruction.Flags & INSTRUCTION_BIND_DESCRIPTOR_SET)
 						{
 							//Descriptorset reference
-							ResourceReference& dataRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.DescriptorSetIndex);
+							ResourceReference dataRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.DescriptorSetIndex);
 							commandBuffer->SetDescriptorSet(dataRef.DescriptorSet, instruction.Destination.DescriptorSetIndex);
 							continue;
 						}
@@ -83,7 +83,7 @@ namespace HazardRenderer
 								continue;
 							}
 
-							ResourceReference& indexBufferRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.IndexBufferIndex);
+							ResourceReference indexBufferRef = GetResourceReference(stage, instruction.DataSource, instruction.Source.IndexBufferIndex);
 							commandBuffer->Draw(instruction.Destination.DrawCount, indexBufferRef.IndexBuffer);
 							continue;
 						}
@@ -198,7 +198,7 @@ namespace HazardRenderer
 			m_Stages.push_back(*stage);
 		}
 	}
-	ResourceReference& RenderGraph::GetResourceReference(const RenderGraphStage& stage, uint32_t inputIndex, uint64_t resourceIndex)
+	ResourceReference RenderGraph::GetResourceReference(const RenderGraphStage& stage, uint32_t inputIndex, uint64_t resourceIndex)
 	{
 		//Get input resource data
 		InputResource& bufferSource = stage.pInputs[inputIndex];

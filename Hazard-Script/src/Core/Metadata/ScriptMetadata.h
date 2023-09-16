@@ -2,7 +2,6 @@
 
 #include "MethodMetadata.h"
 #include "FieldMetadata.h"
-#include "Mono/Core/Mono.h"
 #include <unordered_map>
 
 namespace HazardScript
@@ -41,10 +40,8 @@ namespace HazardScript
 		MethodMetadata& GetMethod(const std::string& name) {
 			return *m_Methods[name];
 		}
-#ifdef HZR_INCLUDE_MONO
-		bool TryInvoke(const std::string& name, MonoObject* target, void** params);
-		void Invoke(const std::string& name, MonoObject* target, void** params);
-#endif
+		//bool TryInvoke(const std::string& name, MonoObject* target, void** params);
+		//void Invoke(const std::string& name, MonoObject* target, void** params);
 
 		void RegisterInstance(uint32_t handle, ScriptObject* object)
 		{

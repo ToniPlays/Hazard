@@ -7,7 +7,6 @@
 #include "Metadata/ManagedType.h"
 #include "FieldValueStorageBase.h"
 #include "MathCore.h"
-#include "Mono/Core/MonoUtilities.h"
 #include "Core/Metadata/FieldMetadata.h"
 
 namespace HazardScript
@@ -40,9 +39,9 @@ namespace HazardScript
 		FieldValueStorage(size_t index, FieldMetadata* field);
 
 		bool HasValue() { return m_Storage.HasValue(); }
-		bool Valid() { return m_Field != nullptr; }
+		//bool Valid() { return m_Field != nullptr; }
 
-#ifdef HZR_INCLUDE_MONO
+		/*
 		template<typename T>
 		T GetValue(MonoObject* target)
 		{
@@ -53,20 +52,17 @@ namespace HazardScript
 		{
 			m_IsLiveValue ? SetLiveValue<T>(target, value) : SetStoredValue<T>(value);
 		}
-#endif
 
 		template<typename T>
 		T GetStoredValue() 
 		{
 			STATIC_ASSERT(false, T);
 		}
-#ifdef HZR_INCLUDE_MONO
 		template<typename T>
 		T GetLiveValue(MonoObject* target)
 		{
 			STATIC_ASSERT(false, T);
-		}
-#endif
+		}*/
 		template<typename T>
 		T GetStoredValueOrDefault()
 		{
@@ -79,38 +75,38 @@ namespace HazardScript
 		{
 			STATIC_ASSERT(false, T);
 		}
-#ifdef HZR_INCLUDE_MONO
 		//Target is MonoClassField*, for array types it returns MonoArray*
+		/*
 		template<typename T>
 		void SetLiveValue(MonoObject* target, T value)
 		{
 			STATIC_ASSERT(false, T);
-		}
+		}*/
 
-		DEFAULT_TYPE(bool);
-		DEFAULT_TYPE(float);
-		DEFAULT_TYPE(double);
-		DEFAULT_TYPE(int8_t);
-		DEFAULT_TYPE(int16_t);
-		DEFAULT_TYPE(int32_t);
-		DEFAULT_TYPE(int64_t);
-		DEFAULT_TYPE(uint8_t);
-		DEFAULT_TYPE(uint16_t);
-		DEFAULT_TYPE(uint32_t);
-		DEFAULT_TYPE(uint64_t);
-#endif
+		//DEFAULT_TYPE(bool);
+		//DEFAULT_TYPE(float);
+		//DEFAULT_TYPE(double);
+		//DEFAULT_TYPE(int8_t);
+		//DEFAULT_TYPE(int16_t);
+		//DEFAULT_TYPE(int32_t);
+		//DEFAULT_TYPE(int64_t);
+		//DEFAULT_TYPE(uint8_t);
+		//DEFAULT_TYPE(uint16_t);
+		//DEFAULT_TYPE(uint32_t);
+		//DEFAULT_TYPE(uint64_t);
 
+		/*
 		template<>
 		std::string GetStoredValue()
 		{
 			return m_Storage.Get<std::string>();
-		}
+		}*/
 		template<>
 		void SetStoredValue(std::string value)
 		{
 			m_Storage.Set<std::string>(value);
 		}
-#ifdef HZR_INCLUDE_MONO
+		/*
 		template<>
 		std::string GetLiveValue(MonoObject* target) {
 			if (m_Field->GetType().IsArray())
@@ -127,12 +123,11 @@ namespace HazardScript
 			}
 			MonoFieldUtils::template SetFieldValue<std::string>(target, m_Field->GetMonoField(), value);
 		}
-
 		Buffer GetValueOrDefault(MonoObject* object) override 
 		{
 			return { m_Storage.GetRawData(), m_Storage.GetDataSize() };
 		}
-#endif
+		*/
 
 	private:
 		FieldMetadata* m_Field = nullptr;
@@ -147,9 +142,9 @@ namespace HazardScript
 	public:
 		ArrayFieldValueStorage(FieldMetadata* field) : m_Field(field) {}
 
-#ifdef HZR_INCLUDE_MONO
-		uintptr_t GetLength(MonoObject* target) { return IsLive() ? GetLiveLength(target) : m_ArrayStorage.size(); }
+		//uintptr_t GetLength(MonoObject* target) { return IsLive() ? GetLiveLength(target) : m_ArrayStorage.size(); }
 
+		/*
 		uintptr_t GetLiveLength(MonoObject* target)
 		{
 			MonoArray* arr = (MonoArray*)target;
@@ -197,7 +192,6 @@ namespace HazardScript
 			}
 		}
 
-
 		bool HasValue(MonoObject* target, size_t index)
 		{
 			if (index >= GetLength(target)) return false;
@@ -217,6 +211,8 @@ namespace HazardScript
 				return m_ArrayStorage[index]->GetValue<T>(target);
 		}
 
+		*/
+		/*
 		template<typename T>
 		T GetValueOrDefault(MonoObject* target, size_t index)
 		{
@@ -226,15 +222,15 @@ namespace HazardScript
 			}
 			if (!HasValue(target, index)) return T();
 			return GetValue<T>(target, index);
-		}
-#endif
+		}*/
 
 		template<typename T>
 		void SetStoredValue(size_t index, T value)
 		{
 			m_ArrayStorage[index]->SetStoredValue<T>(value);
 		}
-#ifdef HZR_INCLUDE_MONO
+		
+		/*
 		template<typename T>
 		void SetLiveValue(MonoObject* target, size_t index, T value)
 		{
@@ -244,8 +240,7 @@ namespace HazardScript
 		Buffer GetValueOrDefault(MonoObject* object) override
 		{
 			return Buffer();
-		}
-#endif
+		}*/
 
 	private:
 		FieldMetadata* m_Field;

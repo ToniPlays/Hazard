@@ -6,7 +6,6 @@
 #include "HazardRenderer.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
 #include "Hazard/Assets/AssetManager.h"
-#include "Mono/Core/Mono.h"
 
 namespace Hazard
 {
@@ -17,14 +16,14 @@ namespace Hazard
 	{
 		int Usage;
 		uint32_t Size;
-		MonoArray* Data;
+		//MonoArray* Data;
 	};
 
 	struct ManagedIndexBufferInfo
 	{
 		int Usage;
 		uint32_t Size;
-		MonoArray* Data;
+		//MonoArray* Data;
 	};
 	struct ManagedMeshInfo
 	{
@@ -35,13 +34,14 @@ namespace Hazard
 	static uint64_t VertexBuffer_Create_Native(ManagedVertexBufferInfo* info)
 	{
 		void* data = nullptr;
-
+		/*
 		if (info->Data) 
 		{
 			data = hnew uint8_t[info->Size];
 			void* dataPtr = MonoArrayUtils::GetArrayValuePtr(info->Data);
 			memcpy(data, dataPtr, info->Size);
 		}
+		*/
 
 		BufferLayout layout = Vertex3D::Layout();
 		Ref<GPUBuffer> buffer = GPUBuffer::Create(nullptr);
@@ -66,12 +66,14 @@ namespace Hazard
 	static uint64_t IndexBuffer_Create_Native(ManagedIndexBufferInfo* info)
 	{
 		uint32_t* data = nullptr;
+		/*
 		if (info->Data) 
 		{
 			data = hnew uint32_t[info->Size * sizeof(uint32_t)];
 			uint32_t* dataPtr = (uint32_t*)MonoArrayUtils::GetArrayValuePtr(info->Data);
 			memcpy(data, dataPtr, info->Size * sizeof(uint32_t));
 		}
+		*/
 
 		Ref<GPUBuffer> buffer = GPUBuffer::Create(nullptr);
 

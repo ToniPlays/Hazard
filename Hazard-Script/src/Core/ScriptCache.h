@@ -2,7 +2,6 @@
 
 #ifdef HZR_INCLUDE_MONO
 
-#include "Mono/Core/Mono.h"
 #include "Metadata/ManagedType.h"
 #include "Metadata/FieldMetadata.h"
 #include "Metadata/ScriptMetadata.h"
@@ -23,11 +22,11 @@ namespace HazardScript
 	public:
 		static void Init();
 
-		static ManagedClass* CacheClass(const std::string& className, MonoClass* klass);
-		static ManagedClass* GetClass(MonoClass* monoClass);
+		//static ManagedClass* CacheClass(const std::string& className, MonoClass* klass);
+		//static ManagedClass* GetClass(MonoClass* monoClass);
 
 		static Ref<ScriptMetadata> CacheOrGetScriptMetadata(ManagedClass* klass);
-		static Ref<FieldMetadata> CacheOrGetFieldMetadata(MonoClassField* field);
+		//static Ref<FieldMetadata> CacheOrGetFieldMetadata(MonoClassField* field);
 		static ManagedClass* GetManagedClassByName(const std::string& name);
 
 		static ScriptCacheData* GetCache() { return s_Cache; }

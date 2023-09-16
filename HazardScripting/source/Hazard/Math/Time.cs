@@ -6,19 +6,19 @@ namespace Hazard
 {
     public class Time
     {
-        public static double Delta
+        public static float Delta
         {
             get => InternalCalls.Time_GetDelta_Native();
         }
-        public static double UnscaledDelta
+        public static float UnscaledDelta
         {
             get => InternalCalls.Time_GetUnscaledDelta_Native();
         }
-        public static double SinceStart
+        public static float SinceStart
         {
             get => InternalCalls.Time_GetSinceStart_Native();
         }
-        public static double DeltaScale
+        public static float DeltaScale
         {
             get => InternalCalls.Time_GetDeltaScale_Native();
         }

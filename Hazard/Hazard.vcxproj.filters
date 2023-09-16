@@ -49,12 +49,6 @@
     <Filter Include="src\Hazard\Rendering\Mesh">
       <UniqueIdentifier>{7FBE364C-EB80-6AD6-3431-F962A03243B4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Rendering\Rasterized">
-      <UniqueIdentifier>{8FE5D2D7-FBC8-E117-04CC-0F54702EA868}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Hazard\Rendering\Raytraced">
-      <UniqueIdentifier>{31A8E441-1DCE-AEA8-0614-3474F2D8D374}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Hazard\Rendering\Renderers">
       <UniqueIdentifier>{7CF3F67D-6819-C1E4-515F-46B03D24E6B0}</UniqueIdentifier>
     </Filter>
@@ -258,6 +252,9 @@
     <ClInclude Include="src\Hazard\RenderContext\TextureFactory.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.h">
+      <Filter>src\Hazard\Rendering\Environment</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentMap.h">
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClInclude>
@@ -290,6 +287,9 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RendererDrawList.h">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Renderers\CircleRenderer.h">
+      <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Renderers\LineRenderer.h">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
@@ -1647,8 +1647,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.h" />
-    <ClInclude Include="src\Hazard\Rendering\Renderers\CircleRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1747,6 +1745,9 @@
     <ClCompile Include="src\Hazard\RenderContext\TextureFactory.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.cpp">
+      <Filter>src\Hazard\Rendering\Environment</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentMap.cpp">
       <Filter>src\Hazard\Rendering\Environment</Filter>
     </ClCompile>
@@ -1770,6 +1771,9 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Renderers\CircleRenderer.cpp">
+      <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Renderers\LineRenderer.cpp">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
@@ -1810,7 +1814,5 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Environment\EnvironmentAssetLoader.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Renderers\CircleRenderer.cpp" />
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
 
 namespace HazardScript
 {
-#ifdef HZR_INCLUDE_MONO
+	/*
 	FieldMetadata::FieldMetadata(MonoClassField* field)
 	{
 		m_Field = field;
@@ -14,28 +14,27 @@ namespace HazardScript
 
 		LoadAttributes();
 	}
-#endif
+	*/
 	uint32_t FieldMetadata::GetElementCount(uint32_t handle)
 	{
-#ifdef HZR_INCLUDE_MONO
+		/*
 		if (!m_Type.IsArray()) return 1;
 		MonoObject* target = mono_gchandle_get_target(handle);
 		return m_InstanceData[handle].As<ArrayFieldValueStorage>()->GetLength(mono_field_get_value_object(Mono::GetDomain(), GetMonoField(), target));
-#else
-        return 0;
-#endif
+		*/
+		return 0;
 	}
 	void FieldMetadata::SetArraySize(uint32_t handle, uint32_t elements)
 	{
-#ifdef HZR_INCLUDE_MONO
+		/*
 		HZR_ASSERT(m_Type.IsArray(), "Attempted to set array size of non array type");
 		MonoObject* target = mono_gchandle_get_target(handle);
 		m_InstanceData[handle].As<ArrayFieldValueStorage>()->Resize(target, elements);
-#endif
+		*/
 	}
 	void FieldMetadata::LoadAttributes()
 	{
-#ifdef HZR_INCLUDE_MONO
+		/*
 		MonoClass* monoClass = mono_field_get_parent(m_Field);
 		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, m_Field);
 		if (info == nullptr) return;
@@ -53,11 +52,10 @@ namespace HazardScript
 			if (attrib)
 				m_Attributes.push_back(attrib);
 		}
-#endif
+		*/
 	}
 	void FieldMetadata::RegisterInstance(uint32_t handle)
 	{
-#ifdef HZR_INCLUDE_MONO
 		if (m_InstanceData.find(handle) != m_InstanceData.end()) 
 			return;
 
@@ -65,7 +63,6 @@ namespace HazardScript
 			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(this);
 		else
 			m_InstanceData[handle] = Ref<FieldValueStorage>::Create(0, this);
-#endif
 	}
 	void FieldMetadata::RemoveInstance(uint32_t handle)
 	{

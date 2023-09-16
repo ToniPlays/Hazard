@@ -15,7 +15,8 @@ project "HazardEditor"
 		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.cpp"
 	}
 
-	defines {
+	defines 
+	{
 		"IMGUI_IMPL_OPENGL_LOADER_GLAD"
 	}
 
@@ -44,6 +45,7 @@ project "HazardEditor"
 		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.VMA}",
 		"%{IncludeDir.Optick}",
+		"%{IncludeDir.Coral}",
 		"src"
 	}
 
@@ -53,7 +55,8 @@ project "HazardEditor"
 		"Hazard",
 		"Hazard-Script",
 		"Box2D",
-		"yaml-cpp"
+		"yaml-cpp",
+		"%{LibraryDir.CoralNetHost}",
 	}
 
 	postbuildcommands {
@@ -71,7 +74,6 @@ project "HazardEditor"
 			"%{Library.VulkanUtils}",
 			"Hazard-Script",
 			"Optick",
-			"%{Library.Mono_Debug_Lib}",
 			"%{Library.Assimp_Lib}",
 		}
 		includedirs {
@@ -83,7 +85,6 @@ project "HazardEditor"
 		{
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
 			"{COPY} %{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll %{cfg.targetdir}",
-			"{COPY} %{wks.location}/scripts/res/mono-2.0-sgen.dll %{cfg.targetdir}"
 		}
 
 	filter "system:macosx"
