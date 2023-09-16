@@ -24,8 +24,9 @@ namespace Hazard
 		}
 	}
 
-	World::World()
+	World::World(const std::string& debugName)
 	{
+		m_DebugName = debugName;
 		m_Registry = entt::registry();
 	}
 
@@ -71,6 +72,8 @@ namespace Hazard
 		entt::registry& sourceRegistry = other.GetWorld().GetWorldRegistry();
 
 		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
+		entity.GetTag().Uid = UID();
+
 		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
@@ -86,8 +89,6 @@ namespace Hazard
 		CopyComponentIfExists<Rigidbody2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<BoxCollider2DComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 
-        entity.GetTag().Uid = UID();
-        
 		return entity;
 	}
 
@@ -130,7 +131,7 @@ namespace Hazard
 	Ref<World> World::Copy(Ref<World> sourceWorld)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<World> copied = Ref<World>::Create();
+		Ref<World> copied = Ref<World>::Create(sourceWorld->m_DebugName + " (copy)");
 		const auto& sourceEntities = sourceWorld->GetEntitiesWith<TagComponent>();
 		
 		copied->m_EntityUIDMap.reserve(sourceEntities.size());
@@ -142,7 +143,7 @@ namespace Hazard
 			const TagComponent& tc = sourceEntity.GetComponent<TagComponent>();
 
 			Entity destEntity = copied->CreateEntity(sourceEntity);
-			copied->m_EntityUIDMap[tc.Uid] = destEntity;
+			copied->m_EntityUIDMap[destEntity.GetUID()] = destEntity;
 		}
 
 		return copied;

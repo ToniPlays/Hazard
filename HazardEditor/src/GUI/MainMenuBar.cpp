@@ -11,7 +11,8 @@ namespace UI
 	{
 		Init();
 	}
-	void MainMenuBar::Init() {
+	void MainMenuBar::Init()
+	{
 
 		AddMenuItem("File/New", nullptr);
 		AddMenuItem("File/New/Project");
@@ -20,7 +21,7 @@ namespace UI
 		AddMenuItem("File/Save", [&]() {
 			Ref<World> world = Application::GetModule<WorldHandler>().GetCurrentWorld();
 			AssetManager::SaveAsset(world);
-			});
+		});
 		AddMenuItem("File/Save as", nullptr);
 		AddMenuItem("File/Project settings", nullptr);
 		AddMenuItem("File/Quit", Hazard::Application::Quit);
@@ -32,18 +33,18 @@ namespace UI
 		AddMenuItem("Edit/Paste", nullptr);
 		AddMenuItem("Edit/Reload assemblies", []() {
 			((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
-			});
+		});
 
 		AddMenuItem("Assets/Import", nullptr);
 		AddMenuItem("Assets/Export", nullptr);
 
 		AddMenuItem("Tools/Project settings", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<ProjectSettingsPanel>(true);
-			});
+		});
 
 		AddMenuItem("Tools/Task list", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<ProjectTodoPanel>(true);
-			});
+		});
 
 		AddMenuItem("Tools/World", nullptr);
 		AddMenuItem("Tools/Audio", nullptr);
@@ -54,36 +55,36 @@ namespace UI
 
 		AddMenuItem("Window/General/Hierarchy", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Hierarchy>(true);
-			});
+		});
 		AddMenuItem("Window/General/Properties", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Properties>(true);
-			});
+		});
 		AddMenuItem("Window/General/Asset panel", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<AssetPanel>(true);
-			});
+		});
 
 		AddMenuItem("Window/Rendering/Viewport", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Viewport>(true);
-			});
+		});
 		AddMenuItem("Window/Rendering/Game viewport", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<GameViewport>(true);
-			});
+		});
 
 		AddMenuItem("Window/Debug/Console", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Console>(true);
-			});
+		});
 		AddMenuItem("Window/Debug/Asset managed debugger", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<AssetManagerDebugPanel>(true);
-			});
+		});
 		AddMenuItem("Window/Debug/Render command list", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<RenderCommandListPanel>(true);
-			});
+		});
 		AddMenuItem("Window/Debug/World debugger", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<RendererDebugPanel>(true);
-			});
+		});
 		AddMenuItem("Window/Debug/Performance debugger", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<PerformanceDebugPanel>(true);
-			});
+		});
 
 		AddMenuItem("Help/About");
 		AddMenuItem("Help/About/Something", nullptr);
@@ -97,21 +98,25 @@ namespace UI
 	{
 		if (!Input::IsKeyDown(Key::LeftControl)) return false;
 
-		switch (e.GetKeyCode()) {
-		case Key::S:
+		switch (e.GetKeyCode())
 		{
-			using namespace Editor;
-			if (EditorModeManager::GetCurrentMode() == EditorMode::Edit)
-            {
-				auto& handler = Application::GetModule<WorldHandler>();
-                Hazard::AssetManager::SaveAsset(handler.GetCurrentWorld());
+			case Key::S:
+			{
+				using namespace Editor;
+				if (EditorModeManager::GetCurrentMode() == EditorMode::Edit)
+				{
+					auto& handler = Application::GetModule<WorldHandler>();
+					Hazard::AssetManager::SaveAsset(handler.GetCurrentWorld());
+				}
+				return true;
 			}
-			return true;
-		}
-		case Key::P:
-			using namespace Editor;
-			EditorModeManager::GetCurrentMode() == EditorMode::Edit ? EditorModeManager::BeginPlayMode() : EditorModeManager::EndPlayMode();
-			return true;
+			case Key::P:
+				using namespace Editor;
+				if (EditorModeManager::GetCurrentMode() == EditorMode::Edit)
+					EditorModeManager::BeginPlayMode();
+				else
+					EditorModeManager::EndPlayMode();
+				return true;
 		}
 		return false;
 	}

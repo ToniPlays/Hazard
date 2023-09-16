@@ -83,8 +83,6 @@ namespace Editor
 			std::string_view message = StringUtil::Between(source, "(CoreCompile target) ->", "Time Elapsed");
 			result.push_back({ "Build report", message.data(), MessageFlags_Debug | MessageFlags_Clearable });
 		}
-
-
 		return result;
 	}
 }

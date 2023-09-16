@@ -68,8 +68,8 @@ namespace HazardRenderer
 				//pFunc->~FuncT();
 			};
 
-			s_IsExecuting.wait(true);
 			//std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
+			s_IsExecuting.wait(true);
 			HZR_ASSERT(!s_IsExecuting, "Cannot submit while rendering");
 			auto storageBuffer = s_CommandQueue.ResourceCreateCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));

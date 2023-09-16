@@ -16,23 +16,6 @@ enum class MethodImpl
 	OnLateUpdate
 };
 
-struct ScriptCreateInfo 
-{
-	std::filesystem::path Path;
-	std::string ClassName;
-	std::string Derives;
-	std::unordered_map<MethodImpl, std::string> Methods;
-
-	void SetDefaults() 
-	{
-		Path = "";
-		ClassName = "";
-		Derives = "Entity";
-		Methods.clear();
-	}
-};
-
-
 class EditorAssetManager
 {
 public:

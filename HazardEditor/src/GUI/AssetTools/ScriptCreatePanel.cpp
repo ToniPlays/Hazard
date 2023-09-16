@@ -6,6 +6,7 @@
 #include "GUI/ProjectPanel/AssetPanel.h"
 #include "Core/HazardEditor.h"
 #include "Localization/Localization.h"
+#include <Hazard/Scripting/HScript.h>
 
 using namespace Hazard;
 
@@ -22,7 +23,8 @@ namespace UI
 	}
 	bool ScriptCreatePanel::OnKeyPressed(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == Key::Escape) {
+		if (e.GetKeyCode() == Key::Escape)
+		{
 			Close();
 			return true;
 		}
@@ -41,13 +43,13 @@ namespace UI
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			ImUI::TextFieldWithHint(m_CreateInfo.ClassName, "Class name");
 			ImGui::NextColumn();
-			});
+		});
 		ImUI::Group("Derive", [&]() {
 			ImGui::Text("Derives from");
 			ImGui::NextColumn();
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 			ImUI::TextFieldWithHint(m_CreateInfo.Derives, "Derives from");
-			});
+		});
 
 		ImUI::ShiftY(16.0f);
 		ImGui::NextColumn();
@@ -71,21 +73,12 @@ namespace UI
 		ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 
 		ImGui::BeginDisabled(m_CreateInfo.ClassName.empty());
-		if (ImGui::Button("Create", { 100, 24 })) {
+		if (ImGui::Button("Create", { 100, 24 }))
+		{
 			m_CreateInfo.Path = path;
-			/*
-			if (EditorAssetManager::CreateScriptAsset(m_CreateInfo))
-			{
-				m_CreateInfo.SetDefaults();
-				auto& manager = Application::GetModule<Editor::EditorScriptManager>();
-				manager.RecompileAndLoad();
-
-				auto* assetPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>();
-				assetPanel->RefreshFolderItems();
-				((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
-				Close();
-			}
-			*/
+			Application::Get().SubmitMainThread([=]() {
+				CreateFiles();
+			});
 		}
 		ImGui::EndDisabled();
 	}
@@ -97,7 +90,7 @@ namespace UI
 
 		static bool onCreate = false;
 
-		if (ImGui::Checkbox("OnCreate", &onCreate)) 
+		if (ImGui::Checkbox("OnCreate", &onCreate))
 		{
 			if (onCreate)
 				m_CreateInfo.Methods[MethodImpl::OnCreate] = "\tpublic void OnCreate()\n\t{\n\t\n\t}";
@@ -109,7 +102,8 @@ namespace UI
 		ImGui::NextColumn();
 
 		static bool onUpdate = false;
-		if (ImGui::Checkbox("OnUpdate(float deltaTime)", &onUpdate)) {
+		if (ImGui::Checkbox("OnUpdate(float deltaTime)", &onUpdate))
+		{
 			if (onUpdate)
 				m_CreateInfo.Methods[MethodImpl::OnUpdate] = "\tpublic void OnUpdate(float deltaTime)\n\t{\n\t\n\t}";
 			else m_CreateInfo.Methods.erase(MethodImpl::OnUpdate);
@@ -120,7 +114,8 @@ namespace UI
 		ImGui::NextColumn();
 
 		static bool onLateUpdate = false;
-		if (ImGui::Checkbox("OnLateUpdate()", &onLateUpdate)) {
+		if (ImGui::Checkbox("OnLateUpdate()", &onLateUpdate))
+		{
 			if (onLateUpdate)
 				m_CreateInfo.Methods[MethodImpl::OnLateUpdate] = "\tpublic void OnLateUpdate(float timeStep)\n\t{\n\t\n\t}";
 			else m_CreateInfo.Methods.erase(MethodImpl::OnLateUpdate);
@@ -130,10 +125,40 @@ namespace UI
 		ImGui::NextColumn();
 
 		static bool onDestroy = false;
-		if (ImGui::Checkbox("OnDestroy()", &onDestroy)) {
+		if (ImGui::Checkbox("OnDestroy()", &onDestroy))
+		{
 			if (onDestroy)
 				m_CreateInfo.Methods[MethodImpl::OnDestroy] = "\tpublic void OnDestroy()\n\t{\n\t\n\t}";
-			else m_CreateInfo.Methods.erase(MethodImpl::OnDestroy);
+			else
+				m_CreateInfo.Methods.erase(MethodImpl::OnDestroy);
+		}
+	}
+	void ScriptCreatePanel::CreateFiles()
+	{
+		AssetHandle handle = AssetManager::CreateNewAsset(AssetType::Script, m_CreateInfo.Path.string() + ".hpack");
+
+		if (handle != INVALID_ASSET_HANDLE)
+		{
+			std::string methodList = "";
+
+			for (auto& [key, method] : m_CreateInfo.Methods)
+				methodList += method + "\n";
+
+			std::string source = File::ReadFile("res/ScriptTemplate/TemplateScript.cs");
+			source = StringUtil::Replace(source, "%ScriptName%", m_CreateInfo.ClassName);
+			source = StringUtil::Replace(source, "%DerivesFrom%", " : " + m_CreateInfo.Derives);
+			source = StringUtil::Replace(source, "%MethodList%", methodList);
+
+			Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
+			File::WriteFile(script->GetSourceFile(), source);
+
+			auto& manager = Application::GetModule<Editor::EditorScriptManager>();
+			manager.RecompileAndLoad();
+
+			auto* assetPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>();
+			assetPanel->RefreshFolderItems();
+			((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
+			Close();
 		}
 	}
 }

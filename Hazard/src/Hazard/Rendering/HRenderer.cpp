@@ -95,7 +95,8 @@ namespace Hazard
 			uint64_t index;
 			if (drawList.Pipelines.Contains(pipeline.Raw()))
 				index = drawList.Pipelines.GetIndex(pipeline.Raw());
-			else index = drawList.Pipelines.Push(pipeline.Raw(), { .Pipeline = pipeline.Raw() });
+			else 
+				index = drawList.Pipelines.Push(pipeline.Raw(), { .Pipeline = pipeline.Raw() });
 			instruction.SetPipeline(2, index);
 		}
 		{
@@ -153,6 +154,7 @@ namespace Hazard
 
 		AssetHandle skyboxHandle = s_Engine->GetResources().SkyboxMaterialHandle;
 		Ref<Material> skyboxMaterial = AssetManager::GetAsset<Material>(skyboxHandle);
+
 		skyboxMaterial->GetDescriptorSet()->Write(0, 0, map->RadianceMap->Value.As<Image2D>(), s_Engine->GetResources().DefaultImageSampler);
 		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(skyboxMaterial->GetPipeline())->Value.As<Pipeline>();
 
@@ -160,6 +162,18 @@ namespace Hazard
 		{
 			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
 			instruction.SetPipeline(2, drawList.Pipelines.Push(pipeline.Raw(), { .Pipeline = pipeline.Raw() }));
+		}
+		{
+			/*
+			float values[] = { 0.25f, 1.0f };
+
+			drawList.PushConstantData.push_back(Buffer((void*)values, sizeof(float) * 2));
+			uint32_t index = drawList.PushConstantData.size() - 1;
+			drawList.PushConstantBuffers.push_back(ResourceReference{ .PushConstantBuffer = &drawList.PushConstantData[index] });
+
+			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
+			instruction.PushConstants(3, drawList.PushConstantData.size() - 1, sizeof(float) * 2);
+			*/
 		}
 		{
 			DescriptorSet* set = skyboxMaterial->GetDescriptorSet().Raw();

@@ -37,7 +37,7 @@ namespace UI
 			{
 
 			}
-			if (!m_SelectionContext.HasComponent<ScriptComponent>()) 
+			if (!m_SelectionContext.HasComponent<ScriptComponent>())
 			{
 				ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle assetID) {
 					Ref<HScript> script = AssetManager::GetAsset<HScript>(assetID);
@@ -72,6 +72,8 @@ namespace UI
 	bool Properties::OnSelectionContextChange(Events::SelectionContextChange& e)
 	{
 		m_SelectionContext = e.GetEntitites();
+		if (m_SelectionContext.size() > 0)
+			HZR_INFO("Selected entity with UID {}", m_SelectionContext[0].GetUID());
 		return false;
 	}
 	void Properties::DrawContextMenu(std::vector<Entity>& e)
@@ -80,22 +82,22 @@ namespace UI
 			ImUI::Submenu("General", [&]() {
 				DrawAddComponentMenuIfNotExists<ScriptComponent>("Script", e);
 				DrawAddComponentMenuIfNotExists<CameraComponent>("Camera", e);
-				});
+			});
 			ImUI::Submenu("3D", [&]() {
 				DrawAddComponentMenuIfNotExists<MeshComponent>("Mesh component", e);
-				});
+			});
 			ImUI::Submenu("2D", [&]() {
 				DrawAddComponentMenuIfNotExists<SpriteRendererComponent>("Sprite renderer", e);
 
 				DrawAddComponentMenuIfNotExists<Rigidbody2DComponent>("Rigidbody 2D", e);
 				DrawAddComponentMenuIfNotExists<BoxCollider2DComponent>("Box collider 2D", e);
 				DrawAddComponentMenuIfNotExists<CircleCollider2DComponent>("Circle collider 2D", e);
-				});
+			});
 			ImUI::Submenu("Lighting", [&]() {
 				DrawAddComponentMenuIfNotExists<SkyLightComponent>("Skylight", e);
 				DrawAddComponentMenuIfNotExists<DirectionalLightComponent>("Directional light", e);
 				DrawAddComponentMenuIfNotExists<PointLightComponent>("Point light", e);
-				});
 			});
+		});
 	}
 }

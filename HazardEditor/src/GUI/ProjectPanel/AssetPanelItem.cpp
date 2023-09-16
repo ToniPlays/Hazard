@@ -160,9 +160,16 @@ namespace UI
 		{
 			if (!IsFolder())
 			{
-				//Open import settings
-				auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
-				panel->OpenExisting(m_SourcePath, m_Handle);
+				if (GetType() == AssetType::Script)
+				{
+					HZR_INFO("Open script in editor");
+				}
+				else
+				{
+					//Open import settings
+					auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
+					panel->OpenExisting(m_SourcePath, m_Handle);
+				}
 			}
 		}
 

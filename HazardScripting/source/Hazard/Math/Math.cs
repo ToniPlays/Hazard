@@ -14,5 +14,9 @@ namespace Hazard
         public static float Min(float first, float second) { return first > second ? second : first; }
         public static float Max(float first, float second) { return first < second ? second : first; }
         public static float Radians(float degrees) { return InternalCalls.Math_Radians_Native(degrees); }
+
+        public static float Sin(float value) { return (float)System.Math.Sin(value); }
+        public static float Cos(float value) { return (float)System.Math.Cos(value); }
+        public static float Tan(float value) { return (float)System.Math.Tan(value); }
     }
 }

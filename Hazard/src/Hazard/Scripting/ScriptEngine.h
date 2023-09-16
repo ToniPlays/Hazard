@@ -14,7 +14,7 @@ namespace Hazard
 		ScriptEngine(ScriptEngineCreateInfo* info);
 		~ScriptEngine() = default;
 		
-		void Init() override;
+		void PreInit() override;
 		void Update() override;
 
 		bool HasModule(const std::string& moduleName);

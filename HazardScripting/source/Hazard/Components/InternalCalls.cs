@@ -9,51 +9,65 @@ namespace Hazard
     {
         #region CameraComponent
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern int CameraComponent_GetProjection_Native(ulong id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void CameraComponent_SetProjection_Native(ulong id, int projection);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void CameraComponent_GetClipping_Native(ulong id, out Vector2 clipping);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void CameraComponent_SetClipping_Native(ulong id, float near, float far);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float CameraComponent_GetFOV_Native(ulong id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void CameraComponent_SetFOV_Native(ulong id, float fov);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float CameraComponent_GetOrthoSize_Native(ulong id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void CameraComponent_SetOrthoSize_Native(ulong id, float size);
 
         #endregion
         #region MeshComponent
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong MeshComponent_GetMesh_Native(ulong id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void MeshComponent_SetMesh_Native(ulong id, ulong meshID);
 
         #endregion
         #region SpriteRenderer
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SpriteRendererComponent_GetColor_Native(ulong id, out Color color);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SpriteRendererComponent_SetColor_Native(ulong id, ref Color color);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong SpriteRendererComponent_GetSprite_Native(ulong id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SpriteRendererComponent_SetSprite_Native(ulong id, ulong handle);
 
@@ -70,25 +84,38 @@ namespace Hazard
         //Transform component
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void TransformComponent_GetPosition_Native(ulong id, out Vector3 position);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void TransformComponent_SetPosition_Native(ulong id, ref Vector3 position);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void TransformComponent_GetRotation_Native(ulong id, out Vector3 rotation);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void TransformComponent_SetRotation_Native(ulong id, ref Vector3 rotation);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void TransformComponent_GetScale_Native(ulong id, out Vector3 scale);
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void TransformComponent_SetScale_Native(ulong id, ref Vector3 scale);
 
         #endregion
         #region SkyLightComponent
+
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern float SkyLightComponent_GetIntensity_Native(ulong id);
+
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SkyLightComponent_SetIntensity_Native(ulong id, float value);
+
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong SkyLightComponent_GetEnvironmentMap_Native(ulong id);
+
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void SkyLightComponent_SetEnvironmentMap_Native(ulong id, ulong value);
         #endregion

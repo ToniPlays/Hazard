@@ -38,9 +38,7 @@ namespace Hazard
 		buffer.Release();
 
 		if (!File::WriteBinaryFile(filePath, packBuffer.GetData(), packBuffer.GetSize()))
-		{
 			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath.string()));
-		}
 	}
 
 	static void WorldPreprocessJob(Ref<Job> job, WorldDeserializer deserializer)
@@ -86,8 +84,9 @@ namespace Hazard
 	}
 	Ref<JobGraph> WorldAssetLoader::Create(const std::filesystem::path& path)
 	{
-		Ref<World> world = Ref<World>::Create();
-		world->m_Handle = AssetHandle();
+		AssetHandle handle = AssetHandle();
+		Ref<World> world = Ref<World>::Create(std::to_string(handle));
+		world->m_Handle = handle;
 
 		Ref<Job> job = Ref<Job>::Create(SaveWorld, world, path);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World save", 1);

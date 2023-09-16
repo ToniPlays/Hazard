@@ -10,54 +10,67 @@ namespace Hazard
     internal partial class InternalCalls
     {
         #region Entity
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_IsUpdated_Native(ulong id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Entity_SetUpdate_Native(ulong id, bool active);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_IsVisible_Native(ulong id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Entity_SetVisible_Native(ulong id, bool active);
 
-
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_HasComponent_Native(ulong id, Type type);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_CreateComponent_Native(ulong id, Type type);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Entity_InstantiateOrigin_Native(string id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong Entity_InstantiateAt_Native(string id, Vector3 position, Vector3 rotation, Vector3 scale);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Entity_Destroy_Native(ulong id);
         #endregion
         #region BaseComponent
 
-
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool Component_IsActive_Native(ulong id, Type type);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Component_SetActive_Native(ulong id, bool active, Type type);
         #endregion
         #region World
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong[] World_GetEntitiesWith_Native(ulong id, Type type);
         #endregion
         #region WorldManager
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool WorldManager_LoadWorld_Native(ulong id);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern bool WorldManager_LoadWorldFromString_Native(string name);
 
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern ulong WorldManager_GetCurrentWorld_Native();
         #endregion

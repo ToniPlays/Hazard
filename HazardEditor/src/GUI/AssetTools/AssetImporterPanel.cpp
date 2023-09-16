@@ -77,7 +77,7 @@ namespace UI
 	void AssetImporterPanel::DrawImageImportSettings()
 	{
 		using namespace HazardRenderer;
-		ImageImportSettings& info = m_ImportDataBuffer.Read<ImageImportSettings>();
+		ImageImportSettings info = m_ImportDataBuffer.Read<ImageImportSettings>();
 
 		ImUI::ShiftY(4);
 
@@ -135,7 +135,7 @@ namespace UI
 	}
 	void AssetImporterPanel::DrawMeshImportSettings()
 	{
-		MeshImportSettings& info = m_ImportDataBuffer.Read<MeshImportSettings>();
+		MeshImportSettings info = m_ImportDataBuffer.Read<MeshImportSettings>();
 
 		ImUI::ShiftY(4);
 

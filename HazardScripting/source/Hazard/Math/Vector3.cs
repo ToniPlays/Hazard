@@ -50,6 +50,10 @@ namespace Hazard
 
             return Math.Sqrt(dx * dx + dy * dy + dz * dz);
         }
+        public static Vector3 Unit(float scale)
+        {
+            return new Vector3(scale, scale, scale);
+        }
 
         #endregion
         #region Arithmetic operators

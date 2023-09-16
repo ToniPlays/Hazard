@@ -110,9 +110,8 @@ namespace UI
 			ImGui::Separator();
 			ImUI::ShiftY(2.0f);
 
-			glm::vec3 newRotation = rotation;
 
-			result = ImUI::InputFloat3("Rotation", newRotation, 0.0f, flags >> 3);
+			result = ImUI::InputFloat3("Rotation", rotation, 0.0f, flags >> 3);
 			if (result != 0)
 			{
 				for (auto& entity : entities)
@@ -120,9 +119,9 @@ namespace UI
 					auto& tc = entity.GetComponent<TransformComponent>();
 					glm::vec3 rot = tc.GetRotationEuler();
 
-					rot.x = (result & BIT(0)) ? glm::radians(newRotation.x) : rot.x;
-					rot.y = (result & BIT(1)) ? glm::radians(newRotation.y) : rot.y;
-					rot.z = (result & BIT(2)) ? glm::radians(newRotation.z) : rot.z;
+					rot.x = (result & BIT(0)) ? glm::radians(rotation.x) : rot.x;
+					rot.y = (result & BIT(1)) ? glm::radians(rotation.y) : rot.y;
+					rot.z = (result & BIT(2)) ? glm::radians(rotation.z) : rot.z;
 
 					tc.SetRotation(rot);
 				}
@@ -369,34 +368,37 @@ namespace UI
 			std::string oldModule = "";
 			std::string field = "";
 
-			//auto& scriptEngine = Application::GetModule<ScriptEngine>();
-			bool changed = ImUI::TextFieldWithHint(field, "Script class");
+			ScriptComponent& c = entities[0].GetComponent<ScriptComponent>();
+			ScriptEngine& scriptEngine = Application::Get().GetModule<ScriptEngine>();
+
+			bool changed = ImUI::TextFieldWithHint(c.ModuleName, "Script class");
 
 			ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
-				//Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
+				Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
 
-				/*if (script) {
-					//c.ModuleName = script->GetModuleName();
+				if (script) {
+					c.ModuleName = script->GetModuleName();
 					changed = true;
-				}*/
+				}
 			});
 
 
 			if (changed)
 			{
-				/*
 				if (scriptEngine.HasModule(oldModule) && c.m_Handle)
-				{
 					c.m_Handle = nullptr;
-				}
+
 				if (scriptEngine.HasModule(c.ModuleName))
 				{
 					ScriptMetadata& script = scriptEngine.GetScript(c.ModuleName);
 					c.m_Handle = script.CreateObject();
+					script.ValidateOrLoadMethod("Hazard.Entity:.ctor(ulong)");
+
+					UID uid = entities[0].GetUID();
+					void* params[] = { &uid };
+					c.m_Handle->Invoke("Hazard.Entity:.ctor(ulong)", params);
 				}
-				*/
 			}
-			/*
 			if (c.m_Handle)
 			{
 				ScriptMetadata& script = c.m_Handle->GetScript();
@@ -404,7 +406,7 @@ namespace UI
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 
-				auto& world = Application::GetModule<WorldHandler>().GetCurrentWorld();
+				auto world = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
 
 				for (auto& [name, field] : script.GetFields())
 				{
@@ -420,7 +422,7 @@ namespace UI
 				}
 				ImGui::Columns();
 			}
-			*/
+
 		}, [&]() {
 			ImUI::MenuItem("Reset", [&]() {
 			});

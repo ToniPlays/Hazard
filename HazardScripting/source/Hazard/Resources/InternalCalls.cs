@@ -9,6 +9,7 @@ namespace Hazard
 {
     internal partial class InternalCalls
     {
+        [Todo("Binding", Status.Awaiting)]
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern string Asset_GetName_Native(ulong handle);
     }

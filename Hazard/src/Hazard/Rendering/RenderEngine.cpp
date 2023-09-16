@@ -109,7 +109,7 @@ namespace Hazard
 		skyboxInstructions.Name = "SkyboxInstructions";
 		skyboxInstructions.UsageFlags = INPUT_RESOURCE_INSTRUCTIONS;
 
-		std::vector<InputResource> skyboxInputResources = { skyboxInstructions, meshResources, pipelineResources };
+		std::vector<InputResource> skyboxInputResources = { skyboxInstructions, meshResources, pipelineResources, meshPushConstantBuffers };
 		std::vector<InputResource> meshInputResources = { meshInstructions, meshResources, pipelineResources, meshPushConstantBuffers };
 
 		StageDescriptor globalMeshDescriptor = {};

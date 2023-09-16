@@ -28,7 +28,7 @@ namespace Hazard
 		friend class WorldDeserializer;
 
 	public:
-		World();
+		World(const std::string& debugName);
 		World(World& other) = delete;
 		~World();
 
@@ -62,6 +62,7 @@ namespace Hazard
 		void OnComponentRemoved(Entity& entity, T& component);
 
 	private:
+		std::string m_DebugName;
 		entt::registry m_Registry;
 		std::unordered_map<UID, Entity> m_EntityUIDMap;
 	};

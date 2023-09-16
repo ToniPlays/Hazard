@@ -28,7 +28,6 @@ namespace HazardScript
 
 	bool ScriptMetadata::ValidateOrLoadMethod(const std::string& name)
 	{
-#ifdef HZR_INCLUDE_MONO
 		for (Ref<ScriptAssembly> assembly : HazardScriptEngine::GetAssemblies())
 		{
 			MonoMethodDesc* desc = mono_method_desc_new(name.c_str(), NULL);
@@ -40,10 +39,8 @@ namespace HazardScript
 			return true;
 		}
 
-#endif
 		return false;
 	}
-#ifdef HZR_INCLUDE_MONO
 	bool ScriptMetadata::TryInvoke(const std::string& name, MonoObject* target, void** params)
 	{
 		if (m_Methods.find(name) == m_Methods.end())
@@ -57,7 +54,6 @@ namespace HazardScript
 		m_Methods[name]->Invoke(target, params);
 	}
 
-#endif
 	ScriptObject* ScriptMetadata::CreateObject()
 	{
 		ScriptObject* object = hnew ScriptObject(this);
@@ -66,7 +62,6 @@ namespace HazardScript
 	}
 	void ScriptMetadata::LoadFields()
 	{
-#ifdef HZR_INCLUDE_MONO
 		m_Fields.clear();
 		MonoClassField* field = nullptr;
 		void* ptr = 0;
@@ -76,25 +71,22 @@ namespace HazardScript
 			std::string name = mono_field_get_name(field);
 			m_Fields[name] = ScriptCache::CacheOrGetFieldMetadata(field);
 		}
-#endif
 	}
 	void ScriptMetadata::LoadMethods()
 	{
-#ifdef HZR_INCLUDE_MONO
 		MonoMethod* method = nullptr;
 		void* ptr = nullptr;
-
+		MonoClass* klass = m_Class->Class;
+		
 		while ((method = mono_class_get_methods(m_Class->Class, &ptr)))
 		{
 			auto m = Ref<MethodMetadata>::Create(method);
 			m_Methods[m->GetName()] = m;
 		}
-#endif
 	}
 	void ScriptMetadata::LoadAttributes()
 	{
 		m_Attributes.clear();
-#ifdef HZR_INCLUDE_MONO
 		MonoCustomAttrInfo* info = mono_custom_attrs_from_class(m_Class->Class);
 
 		if (info == nullptr) return;
@@ -112,7 +104,6 @@ namespace HazardScript
 			if (attrib)
 				m_Attributes.push_back(attrib);
 		}
-#endif
 	}
 }
 
