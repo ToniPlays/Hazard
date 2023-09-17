@@ -12,17 +12,20 @@ class GraphStage : public RefCount
 	friend class Job;
 
 public:
-	GraphStage(uint32_t index, float weight) : m_StageIndex(index), m_Weight(weight) {}
+	GraphStage(uint32_t index, float weight, const std::string& name = "") : m_StageIndex(index), m_Weight(weight), m_Name(name) {}
 	~GraphStage();
 
 	float GetWeight() const { return m_Weight; }
 	void SetWeight(float weight) { m_Weight = weight; }
 	const std::vector<Ref<Job>>& GetJobs() { return m_Jobs; }
 	float GetProgress();
+
+	const std::string& GetName() { return m_Name; }
+
 	uint32_t GetStageIndex() const { return m_StageIndex; }
     Ref<GraphStage> GetGraphStage(uint32_t index);
 
-	void QueueJobs(const std::vector<Ref<Job>>& jobs);
+	void QueueJobs(const std::vector<Ref<Job>>& jobs, const std::string& name = "");
 
 	Ref<JobGraph> GetGraph()
 	{
@@ -56,6 +59,7 @@ private:
 	std::vector<Ref<Job>> m_Jobs;
 	Ref<JobGraph> m_JobGraph;
 
+	std::string m_Name;
 	std::mutex m_JobMutex;
 	std::atomic_uint64_t m_JobCount;
 

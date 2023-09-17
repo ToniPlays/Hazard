@@ -45,8 +45,6 @@ namespace Editor
 
 		auto& manager = Application::GetModule<GUIManager>();
 
-		//entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
-
 		Events::SelectionContextChange e({});
 		manager.OnEvent(e);
 	}

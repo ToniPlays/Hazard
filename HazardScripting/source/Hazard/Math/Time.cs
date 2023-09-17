@@ -8,43 +8,20 @@ namespace Hazard
     {
         public static float Delta
         {
-            get
-            {
-                unsafe
-                {
-                    return InternalCalls.Time_GetDelta_Native();
-                }
-            }
+            get { unsafe { return InternalCalls.Time_GetDelta_Native(); } }
         }
         public static float UnscaledDelta
         {
-            get
-            {
-                unsafe
-                {
-                    return InternalCalls.Time_GetUnscaledDelta_Native();
-                }
-            }
+            get { unsafe { return InternalCalls.Time_GetUnscaledDelta_Native(); } }
         }
         public static float SinceStart
         {
-            get
-            {
-                unsafe
-                {
-                    return InternalCalls.Time_GetSinceStart_Native();
-                }
-            }
+            get { unsafe { return InternalCalls.Time_GetSinceStart_Native(); } }
         }
         public static float DeltaScale
         {
-            get
-            {
-                unsafe
-                {
-                    return InternalCalls.Time_GetUnscaledDelta_Native();
-                }
-            }
+            get { unsafe { return InternalCalls.Time_GetDeltaScale_Native(); } }
+            set { unsafe { InternalCalls.Time_SetDeltaScale_Native(value); } }
         }
     }
 }

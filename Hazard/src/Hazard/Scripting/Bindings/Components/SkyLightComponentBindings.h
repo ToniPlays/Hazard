@@ -2,9 +2,9 @@
 
 #include "HazardScript.h"
 #include "Hazard/Core/Application.h"
-#include "../ScriptEngine.h"
+#include "../../ScriptEngine.h"
 #include "Hazard/ECS/WorldHandler.h"
-#include "EntityBindings.h"
+#include "../ECS/EntityBindings.h"
 
 namespace Hazard
 {

@@ -7,8 +7,24 @@
 #include "Core/MessageFlags.h"
 #include "Core/GUIManager.h"
 
+#include "Core/HazardEditor.h"
+
 namespace Editor
 {
+	static void GenerateProjectFilesJob(Ref<Job> job, EditorScriptManager* manager)
+	{
+		manager->GenerateProjectFiles();
+	}
+	static void CompileSourcesJob(Ref<Job> job, EditorScriptManager* manager)
+	{
+		manager->CompileSource();
+	}
+	static void ReloadAssembliesJob(Ref<Job> job, EditorScriptManager* manager)
+	{
+		std::this_thread::sleep_for(500ms);
+		manager->ReloadAssembly();
+	}
+
 	void EditorScriptManager::GenerateProjectFiles()
 	{
 		auto& project = ProjectManager::GetProject().GetProjectData();
@@ -35,20 +51,28 @@ namespace Editor
 		for (auto& message : messages)
 			console->AddMessage(message);
 	}
-	void EditorScriptManager::ReloadAssebmly()
+	void EditorScriptManager::ReloadAssembly()
 	{
 		Hazard::Application::GetModule<Hazard::ScriptEngine>().ReloadAssemblies();
 	}
 	void EditorScriptManager::RecompileAndLoad()
 	{
 		auto console = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::Console>();
+
 		if (console->ClearOnBuild()) {
 			console->Clear(true);
 		}
 
-		GenerateProjectFiles();
-		CompileSource();
-		ReloadAssebmly();
+		Ref<Job> generateProject = Ref<Job>::Create(GenerateProjectFilesJob, this);
+		Ref<Job> compileSource = Ref<Job>::Create(CompileSourcesJob, this);
+		Ref<Job> reloadAssembly = Ref<Job>::Create(ReloadAssembliesJob, this);
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create("Script compilation", 3);
+		graph->GetStage(0)->QueueJobs({ generateProject }, "Generate C# project");
+		graph->GetStage(1)->QueueJobs({ compileSource }, "Compile C#");
+		graph->GetStage(2)->QueueJobs({ reloadAssembly }, "Reload");
+
+		Application::Get().GetJobSystem().QueueGraph<bool>(graph);
 	}
 	bool EditorScriptManager::OnEvent(Event& e)
 	{

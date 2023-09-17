@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Hazard
 {
-    internal partial class InternalCalls
+    internal static unsafe partial class InternalCalls
     {
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Asset_GetName_Native(ulong handle);
+        internal static delegate*<ulong, string> Asset_GetName_Native;
     }
 }

@@ -2,7 +2,7 @@
 
 #include "HazardScript.h"
 #include "Hazard/Core/Application.h"
-#include "../ScriptEngine.h"
+#include "../../ScriptEngine.h"
 #include "Hazard/ECS/WorldHandler.h"
 
 namespace Hazard
@@ -21,10 +21,8 @@ namespace Hazard
 		handler.OnBegin();
 		return true;
 	}
-	/*
-	static bool WorldManager_LoadWorldFromString_Native(MonoObject* tag)
+	static bool WorldManager_LoadWorldFromString_Native(const CharType* tag)
 	{
 		return false;
 	}
-	*/
 }

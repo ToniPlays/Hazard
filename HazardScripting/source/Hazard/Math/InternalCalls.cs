@@ -27,16 +27,11 @@ namespace Hazard
 
         #region Time
 
-        [Todo("Binding", Status.Awaiting)]
         internal static unsafe delegate*<float> Time_GetDelta_Native;
-
-        [Todo("Binding", Status.Awaiting)]
         internal static unsafe delegate*<float> Time_GetUnscaledDelta_Native;
-
         internal static unsafe delegate*<float> Time_GetSinceStart_Native;
-
-        [Todo("Binding", Status.Awaiting)]
         internal static unsafe delegate*<float> Time_GetDeltaScale_Native;
+        internal static unsafe delegate*<float, void> Time_SetDeltaScale_Native;
         #endregion
     }
 }

@@ -57,7 +57,7 @@ namespace Hazard
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (!e.ReceivesUpdate() || !sc.Active || !sc.m_Handle) continue;
 
-			sc.m_Handle->TryInvoke("OnUpdate", (float)delta);
+			sc.m_Handle->TryInvoke("OnUpdate", delta);
 		}
 	}
 

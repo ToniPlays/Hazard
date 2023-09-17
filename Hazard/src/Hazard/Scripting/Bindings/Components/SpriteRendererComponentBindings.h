@@ -2,8 +2,8 @@
 
 #include "HazardScript.h"
 #include "Hazard/Core/Application.h"
-#include "../ScriptEngine.h"
-#include "EntityBindings.h"
+#include "../../ScriptEngine.h"
+#include "../ECS/EntityBindings.h"
 #include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard

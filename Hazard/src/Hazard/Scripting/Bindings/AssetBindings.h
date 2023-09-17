@@ -9,13 +9,12 @@ namespace Hazard
 {
 	using namespace HazardScript;
 
-	/*
-	static MonoString* Asset_GetName_Native(uint64_t id)
+	static Coral::CSString Asset_GetName_Native(uint64_t id)
 	{
 		const AssetMetadata& metadata = AssetManager::GetMetadata(id);
-		if (metadata.Handle == INVALID_ASSET_HANDLE) return Mono::StringToMonoString("");
-		return Mono::StringToMonoString("");
-		//return Mono::StringToMonoString(File::GetName(metadata.Path));
+		if (metadata.Handle == INVALID_ASSET_HANDLE)
+			return Coral::CSString::FromUTF8("");
+
+		return Coral::CSString::FromUTF8("");
 	}
-	*/
 }

@@ -327,13 +327,13 @@
     <ClInclude Include="src\Hazard\Scripting\Bindings\BufferBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\CameraComponentBindings.h">
+    <ClInclude Include="src\Hazard\Scripting\Bindings\Components\CameraComponentBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\DebugBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\EntityBindings.h">
+    <ClInclude Include="src\Hazard\Scripting\Bindings\ECS\EntityBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\Bindings\EnvironmentMapBindings.h">
@@ -342,22 +342,22 @@
     <ClInclude Include="src\Hazard\Scripting\Bindings\MathBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\MeshComponentBindings.h">
+    <ClInclude Include="src\Hazard\Scripting\Bindings\Components\MeshComponentBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\SkyLightComponentBindings.h">
+    <ClInclude Include="src\Hazard\Scripting\Bindings\Components\SkyLightComponentBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\SpriteRendererComponentBindings.h">
+    <ClInclude Include="src\Hazard\Scripting\Bindings\Components\SpriteRendererComponentBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\TagComponentBindings.h">
+    <ClInclude Include="src\Hazard\Scripting\Bindings\Components\TagComponentBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\TransformComponentBindings.h">
+    <ClInclude Include="src\Hazard\Scripting\Bindings\Components\TransformComponentBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\Bindings\WorldManagerBindings.h">
+    <ClInclude Include="src\Hazard\Scripting\Bindings\ECS\WorldManagerBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\HScript.h">
@@ -1647,6 +1647,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\Bindings\Application\DisplayBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

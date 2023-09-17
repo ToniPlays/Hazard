@@ -1,8 +1,1 @@
-﻿  Scanning sources for module dependencies...
-  std.ixx
-  std.compat.ixx
-  Compiling...
-  std.ixx
-  std.compat.ixx
-  glad.c
-  Glad.vcxproj -> C:\dev\Hazard\Hazard\vendor\Glad\bin\Release-windows-x86_64\Glad\Glad.lib
+﻿  Glad.vcxproj -> C:\dev\Hazard\Hazard\vendor\Glad\bin\Release-windows-x86_64\Glad\Glad.lib

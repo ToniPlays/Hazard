@@ -42,4 +42,8 @@ namespace Hazard
 	{
 		return Time::s_TimeScale;
 	}
+	static void Time_SetDeltaScale_Native(float value)
+	{
+		Time::s_TimeScale = value;
+	}
 }

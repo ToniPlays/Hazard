@@ -89,11 +89,12 @@ namespace Hazard
 
 	void ScriptEngine::SendDebugMessage(const ScriptMessage& message)
 	{
+		HZR_CORE_INFO(message.Message);
 		m_Engine->SendDebugMessage(message);
 	}
 	void ScriptEngine::ReloadAssemblies()
 	{
-		//m_Engine->Reload();
+		m_Engine->Reload();
 	}
 	void ScriptEngine::SetDebugCallback(ScriptMessageCallback callback)
 	{

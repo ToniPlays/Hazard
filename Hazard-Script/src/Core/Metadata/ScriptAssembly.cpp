@@ -10,10 +10,7 @@ namespace HazardScript
 		m_Host = host;
 		m_Assembly = context.LoadAssembly(path);
 
-		if (m_Assembly.GetLoadStatus() != Coral::AssemblyLoadStatus::Success)
-			return false;
-
-		return true;
+		return m_Assembly.GetLoadStatus() == Coral::AssemblyLoadStatus::Success;
 	}
 	
 	void ScriptAssembly::AddInternalCall(std::string_view className, std::string_view functionName, void* funcPtr)

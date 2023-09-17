@@ -393,7 +393,6 @@ namespace UI
 					ScriptMetadata script = scriptEngine.GetScript(c.ModuleName);
 					uint64_t uid = entities[0].GetUID();
 					c.m_Handle = script.CreateObject(uid);
-					__debugbreak();
 				}
 			}
 			if (c.m_Handle)

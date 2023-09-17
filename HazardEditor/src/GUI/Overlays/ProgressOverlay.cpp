@@ -22,19 +22,22 @@ namespace UI
 	{
 		JobSystem& system = Hazard::Application::Get().GetJobSystem();
 		for (auto& graph : system.GetQueuedGraphs())
-			DrawProgressCard(graph->GetName().c_str(), graph->GetProgress());
+			DrawProgressCard(graph->GetName().c_str(), graph->GetCurrentStage()->GetName(), graph->GetProgress());
 
 		ImGui::Separator();
 		auto jobs = system.GetRunningJobs();
 		for (auto& job : jobs)
-			DrawProgressCard(job->GetName().c_str(), job->GetProgress());
+		{
+			if (job->GetJobGraph()) continue;
+			DrawProgressCard(job->GetName().c_str(), ",", job->GetProgress());
+		}
 
 		ImGui::Separator();
 
 		for (auto& job : system.GetQueuedJobs())
-			DrawProgressCard(job->GetName().c_str(), job->GetProgress());
+			DrawProgressCard(job->GetName().c_str(), "", job->GetProgress());
 	}
-	void ProgressOverlay::DrawProgressCard(const char* title, float progress)
+	void ProgressOverlay::DrawProgressCard(const std::string& graphName, const std::string& currentJob, float progress)
 	{
 		std::string progressText = fmt::format("{0}/{1}", (uint32_t)(progress * 100.0f), 100);
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
@@ -42,11 +45,14 @@ namespace UI
 		float width = ImGui::CalcTextSize(progressText.c_str()).x;
 		float panelWidth = ImGui::GetContentRegionAvail().x;
 
-		ImGui::Text("%s", title);
+		ImGui::Text("%s", graphName.c_str());
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(panelWidth - width);
 		ImGui::Text("%s", progressText.c_str());
 		ImGui::PopFont();
+
+		if (!currentJob.empty())
+			ImGui::Text("%s", currentJob.c_str());
 
 		ImGui::ProgressBar(progress, { panelWidth, 24 });
 	}

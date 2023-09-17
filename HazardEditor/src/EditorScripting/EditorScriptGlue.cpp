@@ -1,16 +1,20 @@
 #include "EditorScriptGlue.h"
-#include "GUI/MainMenuBar.h"
-#include "Core/GUIManager.h"
 #include "HazardScript.h"
 #include "Hazard/Scripting/Attributes/AllAttributes.h"
+#include "Bindings/ApplicationBindings.h"
+#include "Bindings/DisplayBindings.h"
 
-namespace Editor 
+namespace Editor::Bindings
 {
-	using namespace Hazard;
+	using namespace HazardScript;
 
-	void EditorScriptGlue::Register(ScriptEngine* engine)
+	void EditorScriptGlue::Register(Ref<ScriptAssembly> assembly)
 	{
-		
+		//Overwrite Display bindings
+		BIND_ICALL(Application_Quit_Native, assembly);
+		BIND_ICALL(Display_Width_Native, assembly);
+		BIND_ICALL(Display_Height_Native, assembly);
+
 	}
 	void EditorScriptGlue::OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) 
 	{

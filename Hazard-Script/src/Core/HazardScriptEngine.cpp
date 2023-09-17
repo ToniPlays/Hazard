@@ -49,19 +49,18 @@ namespace HazardScript
 	void HazardScriptEngine::Reload()
 	{
 		HZR_PROFILE_FUNCTION();
-
+		std::scoped_lock lock(m_ReloadMutex);
 		Coral::GC::Collect();
 
 		m_HostInstance.UnloadAssemblyLoadContext(m_LoadContext);
 		m_LoadContext = m_HostInstance.CreateAssemblyLoadContext("Context");
 
-		LoadAssembly(m_CoralData.CoreAssembly);
-		LoadAssembly(m_CoralData.AppAssembly);
+		HZR_ASSERT(LoadAssembly(m_CoralData.CoreAssembly), "Failed to load assembly");
+		HZR_ASSERT(LoadAssembly(m_CoralData.AppAssembly), "Failed to load assembly");
 
 		m_Assemblies.clear();
 		m_Assemblies.push_back(m_CoralData.CoreAssembly);
 		m_Assemblies.push_back(m_CoralData.AppAssembly);
-		ReloadAppScripts();
 	}
 	void HazardScriptEngine::RunGarbageCollector()
 	{
@@ -87,26 +86,16 @@ namespace HazardScript
 		settings.ErrorCallback = [&](std::string_view message) {
 			std::string msg = std::string(message);
 			std::string exception = msg.substr(0, msg.find_first_of("\n"));
-			std::string trace = msg.substr(exception.length() + 1);
+			std::string trace = exception.length() + 1 < message.length() ? msg.substr(exception.length() + 1) : "";
 			m_DebugCallback({ Severity::Error, exception, trace });
 		};
 		settings.ExceptionCallback = ([&](std::string_view message) {
 			std::string msg = std::string(message);
 			std::string exception = msg.substr(0, msg.find_first_of("\n"));
-			std::string trace = msg.substr(exception.length() + 1);
+			std::string trace = exception.length() + 1 < message.length() ? msg.substr(exception.length() + 1) : "";
 			m_DebugCallback({ Severity::Error, exception, trace });
 		});
 
 		HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
-	}
-	void HazardScriptEngine::ReloadAppScripts()
-	{
-		HZR_PROFILE_FUNCTION();
-		/*
-		for (auto& [name, script] : m_CoralData.AppAssembly->GetScripts())
-		{
-			//for (auto& [handle, object] : script->GetAllInstances())
-				//script->RegisterInstance(handle, object);
-		}*/
 	}
 }

@@ -7,62 +7,58 @@
 
 #include "AllBindings.h"
 
-#define BIND_ICALL(x) assembly->AddInternalCall("Hazard.InternalCalls", #x, &x)
-
 using namespace HazardScript;
 
 namespace Hazard
 {
-	class InternalCalls : public IScriptGlue {
+	class InternalCalls : public IScriptGlue
+	{
 	public:
 		virtual void Register(Ref<ScriptAssembly> assembly)
 		{
 			HZR_PROFILE_FUNCTION();
 
-			/*MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly->GetImage();
+			RegisterComponent(TagComponent, assembly);
+			RegisterComponent(TransformComponent, assembly);
+			RegisterComponent(ScriptComponent, assembly);
+			RegisterComponent(MeshComponent, assembly);
+			RegisterComponent(SpriteRendererComponent, assembly);
 
-			RegisterComponent(TagComponent, image);
-			RegisterComponent(TransformComponent, image);
-			RegisterComponent(ScriptComponent, image);
-			RegisterComponent(MeshComponent, image);
-			RegisterComponent(SpriteRendererComponent, image);
+			RegisterComponent(CameraComponent, assembly);
 
-			RegisterComponent(CameraComponent, image);
+			RegisterComponent(SkyLightComponent, assembly);
+			RegisterComponent(DirectionalLightComponent, assembly);
+			RegisterComponent(PointLightComponent, assembly);
 
-			RegisterComponent(SkyLightComponent, image);
-			RegisterComponent(DirectionalLightComponent, image);
-			RegisterComponent(PointLightComponent, image);
+			RegisterComponent(Rigidbody2DComponent, assembly);
+			RegisterComponent(BoxCollider2DComponent, assembly);
+			RegisterComponent(CircleCollider2DComponent, assembly);
 
-			RegisterComponent(Rigidbody2DComponent, image);
-			RegisterComponent(BoxCollider2DComponent, image);
-			RegisterComponent(CircleCollider2DComponent, image);
-
-			RegisterComponent(RigidbodyComponent, image);
-			RegisterComponent(BoxColliderComponent, image);
-			RegisterComponent(SphereColliderComponent, image);
-			*/
+			RegisterComponent(RigidbodyComponent, assembly);
+			RegisterComponent(BoxColliderComponent, assembly);
+			RegisterComponent(SphereColliderComponent, assembly);
 
 			//Entity -------------------------------------------
 			BIND_ICALL(Entity_IsVisible_Native);
 			BIND_ICALL(Entity_SetVisible_Native);
 			BIND_ICALL(Entity_IsUpdated_Native);
 			BIND_ICALL(Entity_SetUpdate_Native);
-			//BIND_ICALL(Entity_InstantiateOrigin_Native);
-			//BIND_ICALL(Entity_InstantiateOrigin_Native);
-			//BIND_ICALL(Entity_InstantiateOrigin_Native);
-			//BIND_ICALL(Entity_InstantiateOrigin_Native);
-			//BIND_ICALL(Entity_InstantiateAt_Native);
-			//BIND_ICALL(Entity_HasComponent_Native);
-			//BIND_ICALL(Entity_CreateComponent_Native);
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
+			BIND_ICALL(Entity_InstantiateOrigin_Native);
+			BIND_ICALL(Entity_InstantiateAt_Native);
+			BIND_ICALL(Entity_HasComponent_Native);
+			BIND_ICALL(Entity_CreateComponent_Native);
 			BIND_ICALL(Entity_Destroy_Native);
 
 			//Component ----------------------------------------
-			//BIND_ICALL(Component_IsActive_Native);
-			//BIND_ICALL(Component_SetActive_Native);
+			BIND_ICALL(Component_IsActive_Native);
+			BIND_ICALL(Component_SetActive_Native);
 
 			//Tag component ------------------------------------
-			//BIND_ICALL(TagComponent_GetName_Native);
-			//BIND_ICALL(TagComponent_SetName_Native);
+			BIND_ICALL(TagComponent_GetName_Native);
+			BIND_ICALL(TagComponent_SetName_Native);
 
 			//Transform component ------------------------------
 			BIND_ICALL(TransformComponent_GetPosition_Native);
@@ -99,11 +95,11 @@ namespace Hazard
 			BIND_ICALL(SkyLightComponent_SetEnvironmentMap_Native);
 
 			//Asset	--------------------------------------------
-			//BIND_ICALL(Asset_GetName_Native);
+			BIND_ICALL(Asset_GetName_Native);
 
 			//WorldManager--------------------------------------
 			BIND_ICALL(WorldManager_LoadWorld_Native);
-			//BIND_ICALL(WorldManager_LoadWorldFromString_Native);
+			BIND_ICALL(WorldManager_LoadWorldFromString_Native);
 
 
 			//Debug --------------------------------------------
@@ -114,6 +110,11 @@ namespace Hazard
 			BIND_ICALL(Debug_Critical_Native);
 			BIND_ICALL(Debug_Trace_Native);
 
+			//Window -------------------------------------------
+			BIND_ICALL(Display_IsFullscreen_Native);
+			BIND_ICALL(Display_SetFullscreen_Native);
+			BIND_ICALL(Display_IsVsync_Native);
+			BIND_ICALL(Display_SetVsync_Native);
 
 			//Math ---------------------------------------------
 			BIND_ICALL(Math_RandomRange_Native);
@@ -126,6 +127,7 @@ namespace Hazard
 			BIND_ICALL(Time_GetUnscaledDelta_Native);
 			BIND_ICALL(Time_GetSinceStart_Native);
 			BIND_ICALL(Time_GetDeltaScale_Native);
+			BIND_ICALL(Time_SetDeltaScale_Native);
 
 			//Rendering
 			BIND_ICALL(VertexBuffer_Create_Native);
@@ -145,6 +147,7 @@ namespace Hazard
 			BIND_ICALL(EnvironmentMap_GenerateRadiance_Native);
 			BIND_ICALL(EnvironmentMap_GenerateIrradiance_Native);
 			BIND_ICALL(EnvironmentMap_GeneratePrefilter_Native);
+
 		}
 		virtual void OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) {};
 	};

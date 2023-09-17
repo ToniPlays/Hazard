@@ -15,6 +15,9 @@ namespace UI
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 
+		uint32_t GetWidth() const { return m_Width; }
+		uint32_t GetHeight() const { return m_Height; }
+
 	private:
 		uint32_t m_Width = 1280, m_Height = 720;
 		bool m_HasCamera = false;

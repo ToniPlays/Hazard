@@ -15,8 +15,11 @@ Ref<GraphStage> GraphStage::GetGraphStage(uint32_t index)
 	return m_JobGraph->GetStage(index);
 }
 
-void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs)
+void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs, const std::string& name)
 {
+	if (!name.empty())
+		m_Name = name;
+
 	std::lock_guard lock(m_JobMutex);
 	m_Jobs.insert(m_Jobs.begin(), jobs.begin(), jobs.end());
 

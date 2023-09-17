@@ -48,7 +48,6 @@ namespace HazardScript
 		HazardScriptEngine(HazardScriptCreateInfo* info);
 
 		void InitializeCoralHost();
-		void ReloadAppScripts();
 
 	private:
 		Coral::HostInstance m_HostInstance;
@@ -57,6 +56,8 @@ namespace HazardScript
 		ScriptDebugCallback m_DebugCallback;
 		CoralData m_CoralData;
 		std::vector<Ref<ScriptAssembly>> m_Assemblies;
+
+		std::mutex m_ReloadMutex;
 
 		inline static HazardScriptEngine* s_Instance;
 

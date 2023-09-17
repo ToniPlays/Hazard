@@ -40,7 +40,7 @@ namespace Hazard
 		Entity GetEntityFromUID(const UID& id);
 
 		Entity TryGetEntityFromUUID(const UID& id);
-		void DestroyEntity(const Entity& entity);
+		void DestroyEntity(Entity& entity);
 
 		entt::registry& GetWorldRegistry() { return m_Registry; }
 

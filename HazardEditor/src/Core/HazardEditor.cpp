@@ -91,7 +91,7 @@ void HazardEditorApplication::PreInit()
 	ScriptEngineCreateInfo scriptEngine = {};
 	scriptEngine.CoreAssemblyPath = "../HazardScripting/bin/Debug/net7.0/HazardScripting.dll";
 	scriptEngine.AppAssemblyPath = appAssemblyPath.string();
-	scriptEngine.CoralDirectory = "../Hazard/vendor/Coral/Coral.Managed/Build/Debug-windows";
+	scriptEngine.CoralDirectory = "../Hazard/vendor/Coral/Coral.Managed/Build/Debug-windows";	
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
@@ -103,7 +103,10 @@ void HazardEditorApplication::PreInit()
 	EditorAssetManager::Init();
 
 	CreateApplicationStack(&createInfo);
-	//GetModule<ScriptEngine>().RegisterScriptGlueFor<Editor::EditorScriptGlue>();
+
+	auto& engine = GetModule<Hazard::ScriptEngine>();
+	Ref<ScriptAssembly> assembly = engine.GetLoadedAssembly("HazardScripting");
+	engine.RegisterScriptGlueFor<Editor::Bindings::EditorScriptGlue>(assembly);
 }
 void HazardEditorApplication::Init()
 {

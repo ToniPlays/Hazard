@@ -222,6 +222,8 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorScripting\Bindings\ApplicationBindings.h" />
+    <ClInclude Include="src\EditorScripting\Bindings\DisplayBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">

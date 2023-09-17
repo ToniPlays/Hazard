@@ -6,14 +6,14 @@
 #include "Hazard/ECS/Entity.h"
 #include "IScriptGlue.h"
 
-namespace Hazard 
+namespace Hazard
 {
-	class ScriptEngine : public Module 
+	class ScriptEngine : public Module
 	{
 	public:
 		ScriptEngine(ScriptEngineCreateInfo* info);
 		~ScriptEngine() = default;
-		
+
 		void PreInit() override;
 		void Update() override;
 
@@ -30,7 +30,13 @@ namespace Hazard
 			m_ScriptGlue[assembly.Raw()].push_back((IScriptGlue*)glue);
 		}
 
-		std::vector<std::string> GetLoadedAssemblyNames() { return std::vector<std::string>(); };
+		Ref<HazardScript::ScriptAssembly> GetLoadedAssembly(const std::string& name)
+		{
+			for (auto& assembly : GetAssemblies())
+				if (assembly->GetName() == name)
+					return assembly;
+			return nullptr;
+		};
 
 		void ReloadAssemblies();
 		void SetDebugCallback(ScriptMessageCallback callback);

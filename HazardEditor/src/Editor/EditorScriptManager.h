@@ -10,7 +10,7 @@ namespace Editor {
 
 		void GenerateProjectFiles();
 		void CompileSource();
-		void ReloadAssebmly();
+		void ReloadAssembly();
 
 		void RecompileAndLoad();
 
@@ -22,6 +22,7 @@ namespace Editor {
 
 	private:
 		std::vector<UI::ConsoleMessage> ParseBuildResult(const std::string& source);
+
 	private:
 		bool m_ReloadOnFocus = false;
 	};

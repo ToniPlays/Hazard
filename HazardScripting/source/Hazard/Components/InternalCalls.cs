@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Coral.Managed.Interop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -60,30 +61,19 @@ namespace Hazard
         #endregion
         #region TagComponent
         //Tag component
-        [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, string> TagComponent_GetName_Native;
+        internal static delegate*<ulong, UnmanagedString> TagComponent_GetName_Native;
 
-        [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, string, void> TagComponent_SetName_Native;
+        internal static delegate*<ulong, UnmanagedString, void> TagComponent_SetName_Native;
         #endregion
         #region TransformComponent
         //Transform component
-        [Todo("Binding", Status.Awaiting)]
         internal static delegate*<ulong, Vector3> TransformComponent_GetPosition_Native;
-
-        [Todo("Binding", Status.Awaiting)]
         internal static delegate*<ulong, Vector3, void> TransformComponent_SetPosition_Native;
 
-        [Todo("Binding", Status.Awaiting)]
         internal static delegate*<ulong, Vector3> TransformComponent_GetRotation_Native;
-
-        [Todo("Binding", Status.Awaiting)]
         internal static delegate*<ulong, Vector3, void> TransformComponent_SetRotation_Native;
 
-        [Todo("Binding", Status.Awaiting)]
         internal static delegate*<ulong, Vector3> TransformComponent_GetScale_Native;
-
-        [Todo("Binding", Status.Awaiting)]
         internal static delegate*<ulong, Vector3, void> TransformComponent_SetScale_Native;
 
         #endregion

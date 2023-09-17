@@ -13,9 +13,14 @@ public:
 	JobGraph(const std::string& name, uint32_t stageCount);
 
 	const std::string& GetName() const { return m_Name; }
+	uint32_t GetCurrentStageIndex() const { return m_CurrentStage; }
+	Ref<GraphStage> GetCurrentStage() const { return m_Stages[m_CurrentStage]; }
 	size_t GetStageCount() const { return m_Stages.size(); }
 	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
 	const std::vector<Ref<GraphStage>>& GetStages() const { return m_Stages; }
+
+
+
 	Ref<GraphStage> GetNextStage();
 	Ref<GraphStage> AddStage();
 

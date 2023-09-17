@@ -72,7 +72,7 @@ namespace Hazard
 		entt::registry& sourceRegistry = other.GetWorld().GetWorldRegistry();
 
 		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
-		entity.GetTag().Uid = UID();
+		entity.GetTag().Uid = other.GetUID();
 
 		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
@@ -109,8 +109,9 @@ namespace Hazard
 		return m_EntityUIDMap[id];
 	}
 
-	void World::DestroyEntity(const Entity& entity)
+	void World::DestroyEntity(Entity& entity)
 	{
+		//TODO: Call some functions before destroy
 		m_Registry.destroy(entity);
 	}
 	std::tuple<CameraComponent*, TransformComponent*> World::GetWorldCamera() {

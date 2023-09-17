@@ -16,7 +16,7 @@ namespace HazardScript
 	{
 	public:
 		ScriptAssembly() = default;
-		~ScriptAssembly() { __debugbreak(); };
+		~ScriptAssembly() {};
 
 		bool LoadAssembly(Coral::HostInstance& host, Coral::AssemblyLoadContext& context);
 		
@@ -24,6 +24,9 @@ namespace HazardScript
 		void UploadInternalCalls();
 
 		std::string GetName() const { return File::GetNameNoExt(m_Path); }
+		std::string_view GetQualifiedName() const { return m_Assembly.GetName(); }
+
+		Coral::TypeId GetTypeByName(std::string_view typeName) const { return m_Assembly.GetTypeId(typeName); }
 
 		void SetSourcePath(const std::filesystem::path& path) { m_Path = path; }
 		std::filesystem::path GetSourcePath() const { return m_Path; }

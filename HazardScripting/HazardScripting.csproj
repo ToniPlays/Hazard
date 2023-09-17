@@ -50,6 +50,7 @@
     <Compile Include="source\Hazard\Application\Application.cs" />
     <Compile Include="source\Hazard\Application\Display.cs" />
     <Compile Include="source\Hazard\Application\InternalCalls.cs" />
+    <Compile Include="source\Hazard\Application\Resolution.cs" />
     <Compile Include="source\Hazard\Attributes\ClassAttributes.cs" />
     <Compile Include="source\Hazard\Attributes\FieldAttributes.cs" />
     <Compile Include="source\Hazard\Attributes\MethodAttributes.cs" />

@@ -2,6 +2,8 @@
 #pragma once
 #include "Core/Metadata/ScriptAssembly.h"
 
+#define BIND_ICALL(x) assembly->AddInternalCall("Hazard.InternalCalls", #x, &x)
+
 namespace Hazard
 {
 	class IScriptGlue {
