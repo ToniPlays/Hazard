@@ -10,21 +10,33 @@ namespace Hazard.Rendering
     public class IndexBuffer : Buffer
     {
         protected IndexBuffer() { }
-        ~IndexBuffer() 
+        ~IndexBuffer()
         {
-            InternalCalls.IndexBuffer_Destroy_Native(ID);
+            unsafe
+            {
+                InternalCalls.IndexBuffer_Destroy_Native(ID);
+            }
         }
         public void SetData(uint[] data) { }
-        public uint GetSize() { return InternalCalls.IndexBuffer_GetSize_Native(ID); }
+        public uint GetSize()
+        {
+            unsafe
+            {
+                return InternalCalls.IndexBuffer_GetSize_Native(ID);
+            }
+        }
         public static IndexBuffer Create(IndexBufferCreateInfo info)
         {
-            ulong resourceID = InternalCalls.IndexBuffer_Create_Native(ref info);
-            IndexBuffer buffer = new IndexBuffer()
+            unsafe
             {
-                ID = resourceID
-            };
+                ulong resourceID = InternalCalls.IndexBuffer_Create_Native(info);
+                IndexBuffer buffer = new IndexBuffer()
+                {
+                    ID = resourceID
+                };
 
-            return buffer;
+                return buffer;
+            }
         }
     }
 }

@@ -12,11 +12,37 @@ namespace Hazard
     {
         public MeshComponent() : base(0) { }
         internal MeshComponent(ulong ID) : base(ID) { }
-        public void SetMesh(Mesh mesh)
+        public Mesh Mesh
         {
-            InternalCalls.MeshComponent_SetMesh_Native(ParentEntity.ID, mesh.ID);
+            get
+            {
+                unsafe
+                {
+                    ulong id = InternalCalls.MeshComponent_GetMesh_Native(ParentEntity.ID);
+                    return new Mesh(id);
+                }
+            }
+            set
+            {
+                unsafe
+                {
+                    InternalCalls.MeshComponent_SetMesh_Native(ParentEntity.ID, value.ID);
+                }
+            }
         }
-        public bool IsActive() { return InternalCalls.Component_IsActive_Native(ParentEntity.ID, typeof(MeshComponent)); }
-        public void SetActive(bool active) { InternalCalls.Component_SetActive_Native(ParentEntity.ID, active, typeof(MeshComponent)); }
+        public bool IsActive()
+        {
+            unsafe
+            {
+                return InternalCalls.Component_IsActive_Native(ParentEntity.ID, typeof(MeshComponent));
+            }
+        }
+        public void SetActive(bool active)
+        {
+            unsafe
+            {
+                InternalCalls.Component_SetActive_Native(ParentEntity.ID, active, typeof(MeshComponent));
+            }
+        }
     }
 }

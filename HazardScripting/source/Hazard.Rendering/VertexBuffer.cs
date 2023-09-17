@@ -11,24 +11,36 @@ namespace Hazard.Rendering
     {
         protected VertexBuffer() { }
 
-        ~VertexBuffer() 
+        ~VertexBuffer()
         {
-            InternalCalls.VertexBuffer_Destroy_Native(ID);
+            unsafe
+            {
+                InternalCalls.VertexBuffer_Destroy_Native(ID);
+            }
         }
 
-        public void SetData(byte[] data) { }
-        public ulong GetSize() { return InternalCalls.VertexBuffer_GetSize_Native(ID); }
-
-        public static VertexBuffer Create(VertexBufferCreateInfo info) 
+        public unsafe void SetData(IntPtr* data) { }
+        public ulong GetSize()
         {
-            info.Size *= Vertex3D.Size();
-            ulong resourceID = InternalCalls.VertexBuffer_Create_Native(ref info);
-
-            VertexBuffer buffer = new VertexBuffer
+            unsafe
             {
-                ID = resourceID
-            };
-            return buffer;
+                return InternalCalls.VertexBuffer_GetSize_Native(ID);
+            }
+        }
+
+        public static VertexBuffer Create(VertexBufferCreateInfo info)
+        {
+            unsafe
+            {
+                info.Size *= Vertex3D.Size();
+                ulong resourceID = InternalCalls.VertexBuffer_Create_Native(info);
+
+                VertexBuffer buffer = new VertexBuffer
+                {
+                    ID = resourceID
+                };
+                return buffer;
+            }
         }
     }
 }

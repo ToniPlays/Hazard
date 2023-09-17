@@ -9,31 +9,24 @@ namespace Hazard
     {
         //Application class
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Application_Quit_Native();
+        internal static unsafe delegate*<void> Application_Quit_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Display_Width_Native();
+        internal static unsafe delegate*<float> Display_Width_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Display_Height_Native();
+        internal static unsafe delegate*<float> Display_Height_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Display_IsFullscreen_Native();
+        internal static unsafe delegate*<bool> Display_IsFullscreen_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Display_SetFullscreen_Native(bool value);
+        internal static unsafe delegate*<bool, void> Display_SetFullscreen_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern bool Display_IsVsync_Native();
+        internal static unsafe delegate*<bool> Display_IsVsync_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Display_SetVsync_Native(bool value);
+        internal static unsafe delegate*<bool, void> Display_SetVsync_Native;
     }
 }

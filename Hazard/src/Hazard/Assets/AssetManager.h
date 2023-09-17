@@ -34,7 +34,7 @@ namespace Hazard
 		static std::unordered_map<std::filesystem::path, AssetMetadata>& GetMetadataRegistry() { return s_Registry.GetRegistry(); }
 
 		template<typename T, typename... Args>
-		static void RegisterLoader(AssetType type, Args... args)
+		static void RegisterLoader(AssetType type, Args&&... args)
 		{
 			s_AssetLoader.m_Loaders[type] = CreateScope<T>(std::forward<Args>(args)...);
 		}

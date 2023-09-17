@@ -35,7 +35,7 @@ namespace Hazard
 
 	void WorldHandler::Init()
 	{
-		
+
 	}
 
 	void WorldHandler::Close()
@@ -49,9 +49,7 @@ namespace Hazard
 		if (!(m_Flags & WorldFlags_UpdateScript)) return;
 
 		auto view = m_World->GetEntitiesWith<ScriptComponent>();
-
 		float delta = (float)Time::s_DeltaTime;
-		void* params[] = { &delta };
 
 		for (auto& entity : view)
 		{
@@ -59,7 +57,7 @@ namespace Hazard
 			auto& sc = e.GetComponent<ScriptComponent>();
 			if (!e.ReceivesUpdate() || !sc.Active || !sc.m_Handle) continue;
 
-			sc.m_Handle->TryInvoke("OnUpdate(single)", params);
+			sc.m_Handle->TryInvoke("OnUpdate", (float)delta);
 		}
 	}
 
@@ -72,15 +70,10 @@ namespace Hazard
 		{
 			Entity e = { entity, m_World.Raw() };
 			auto& sc = e.GetComponent<ScriptComponent>();
-			if (sc.m_Handle)
-			{
-				UID uid = e.GetUID();
-				void* params[] = { &uid };
-				sc.m_Handle->Invoke("Hazard.Entity:.ctor(ulong)", params);
+			if (!sc.m_Handle) continue;
 
-				sc.m_Handle->SetLive(true);
-				sc.m_Handle->TryInvoke("OnCreate()", nullptr);
-			}
+			sc.m_Handle->SetLive(true);
+			sc.m_Handle->TryInvoke("OnCreate");
 		}
 	}
 
@@ -96,7 +89,7 @@ namespace Hazard
 			if (sc.m_Handle)
 			{
 				sc.m_Handle->SetLive(false);
-				sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
+				sc.m_Handle->TryInvoke("OnDestroy");
 			}
 		}
 	}

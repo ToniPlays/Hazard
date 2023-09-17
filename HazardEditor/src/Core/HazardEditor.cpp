@@ -103,7 +103,7 @@ void HazardEditorApplication::PreInit()
 	EditorAssetManager::Init();
 
 	CreateApplicationStack(&createInfo);
-	GetModule<ScriptEngine>().RegisterScriptGlue<Editor::EditorScriptGlue>();
+	//GetModule<ScriptEngine>().RegisterScriptGlueFor<Editor::EditorScriptGlue>();
 }
 void HazardEditorApplication::Init()
 {

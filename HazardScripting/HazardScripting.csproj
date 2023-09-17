@@ -110,4 +110,7 @@
     <Compile Include="source\Hazard.Rendering\VertexBuffer.cs" />
     <Compile Include="source\Hazard.Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hazard\vendor\Coral\Coral.Managed\Coral.Managed.csproj" />
+  </ItemGroup>
 </Project>

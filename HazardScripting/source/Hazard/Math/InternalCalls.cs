@@ -12,38 +12,31 @@ namespace Hazard
         #region Math
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_RandomRange_Native(float min, float max);
+        internal static unsafe delegate*<float, float, float> Math_RandomRange_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Pow_Native(float value, float pow);
+        internal static unsafe delegate*<float, float, float> Math_Pow_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Sqrt_Native(float value);
+        internal static unsafe delegate*<float, float> Math_Sqrt_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Math_Radians_Native(float degrees);
+        internal static unsafe delegate*<float, float> Math_Radians_Native;
 
         #endregion
 
         #region Time
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Time_GetDelta_Native();
+        [Todo("Binding", Status.Awaiting)]
+        internal static unsafe delegate*<float> Time_GetDelta_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Time_GetUnscaledDelta_Native();
+        internal static unsafe delegate*<float> Time_GetUnscaledDelta_Native;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Time_GetSinceStart_Native();
+        internal static unsafe delegate*<float> Time_GetSinceStart_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float Time_GetDeltaScale_Native();
+        internal static unsafe delegate*<float> Time_GetDeltaScale_Native;
         #endregion
     }
 }

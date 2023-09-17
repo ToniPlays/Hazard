@@ -12,16 +12,19 @@ namespace Hazard
         internal World(ulong id) : base(id) { }
         public string GetPath() { return ""; }
         //TODO: Binding
-        public Entity[] GetEntitiesWith<T>() where T : Component, new() 
+        public Entity[] GetEntitiesWith<T>() where T : Component, new()
         {
-            ulong[] entityIDs = InternalCalls.World_GetEntitiesWith_Native(ID, typeof(T));
-            Entity[] entities = new Entity[entityIDs.Length];
-
-            for (int i = 0; i < entityIDs.Length; i++)
+            unsafe
             {
-                entities[i] = new Entity(entityIDs[i]);
+                ulong[] entityIDs = InternalCalls.World_GetEntitiesWith_Native(ID, typeof(T));
+                Entity[] entities = new Entity[entityIDs.Length];
+
+                for (int i = 0; i < entityIDs.Length; i++)
+                {
+                    entities[i] = new Entity(entityIDs[i]);
+                }
+                return entities;
             }
-            return entities;
         }
     }
 }

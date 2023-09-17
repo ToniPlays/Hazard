@@ -8,11 +8,23 @@ namespace Hazard
     public class TagComponent : Component
     {
         public TagComponent() : base(0) { }
-        internal TagComponent(ulong ID) : base(ID) {}
+        internal TagComponent(ulong ID) : base(ID) { }
         public string Name
         {
-            get => InternalCalls.TagComponent_GetName_Native(ParentEntity.ID);
-            set => InternalCalls.TagComponent_SetName_Native(ParentEntity.ID, value);
+            get
+            {
+                unsafe
+                {
+                    return InternalCalls.TagComponent_GetName_Native(ParentEntity.ID);
+                }
+            }
+            set
+            {
+                unsafe
+                {
+                    InternalCalls.TagComponent_SetName_Native(ParentEntity.ID, value);
+                }
+            }
         }
     }
 }

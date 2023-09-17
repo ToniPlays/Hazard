@@ -3,6 +3,7 @@
 #include "HazardScript.h"
 #include "Hazard/Core/Application.h"
 #include "../ScriptEngine.h"
+#include "Coral/CSString.hpp"
 
 #define STRINGIFY_LINE(x) #x
 #define LINE(x) STRINGIFY_LINE(x)
@@ -10,36 +11,34 @@
 
 namespace Hazard
 {
-	/*
-	static void Debug_Log_Native(MonoObject* obj)
+	static void Debug_Log_Native(const CharType* message)
 	{
-		std::string message = Mono::MonoObjectToString(obj);
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Debug, message, STACK_TRACE() });
+		std::string msg = Coral::StringHelper::ConvertWideToUtf8(message);
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Debug, msg, STACK_TRACE() });
 	}
-	static void Debug_Info_Native(MonoObject* obj)
+	static void Debug_Info_Native(const CharType* message)
 	{
-		std::string message = Mono::MonoObjectToString(obj);
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Info, message, STACK_TRACE() });
+		std::string msg = Coral::StringHelper::ConvertWideToUtf8(message);
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Info, msg, STACK_TRACE() });
 	}
-	static void Debug_Warn_Native(MonoObject* obj)
+	static void Debug_Warn_Native(const CharType* message)
 	{
-		std::string message = Mono::MonoObjectToString(obj);
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Warning, message, STACK_TRACE() });
+		std::string msg = Coral::StringHelper::ConvertWideToUtf8(message);
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Warning, msg, STACK_TRACE() });
 	}
-	static void Debug_Error_Native(MonoObject* obj)
+	static void Debug_Error_Native(const CharType* message)
 	{
-		std::string message = Mono::MonoObjectToString(obj);
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Error, message, STACK_TRACE() });
+		std::string msg = Coral::StringHelper::ConvertWideToUtf8(message);
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Error, msg, STACK_TRACE() });
 	}
-	static void Debug_Critical_Native(MonoObject* obj)
+	static void Debug_Critical_Native(const CharType* message)
 	{
-		std::string message = Mono::MonoObjectToChar(obj);
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Critical, message, STACK_TRACE() });
+		std::string msg = Coral::StringHelper::ConvertWideToUtf8(message);
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Critical, msg, STACK_TRACE() });
 	}
-	static void Debug_Trace_Native(MonoObject* obj)
+	static void Debug_Trace_Native(const CharType* message)
 	{
-		std::string message = Mono::MonoObjectToChar(obj);
-		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Trace, message, STACK_TRACE() });
+		std::string msg = Coral::StringHelper::ConvertWideToUtf8(message);
+		Application::GetModule<ScriptEngine>().SendDebugMessage({ Severity::Trace, msg, STACK_TRACE() });
 	}
-	*/
 }

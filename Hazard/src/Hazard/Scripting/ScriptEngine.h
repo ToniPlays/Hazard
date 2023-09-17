@@ -17,31 +17,33 @@ namespace Hazard
 		void PreInit() override;
 		void Update() override;
 
-		bool HasModule(const std::string& moduleName);
-		HazardScript::ScriptMetadata& GetScript(const std::string& moduleName);
+		bool FindModule(const std::string& moduleName);
+
+		HazardScript::ScriptMetadata GetScript(const std::string& moduleName);
 		void SendDebugMessage(const HazardScript::ScriptMessage& message);
 
-		void RegisterInternalCall(const std::string& signature, void* method) 
-		{
-			m_Engine->RegisterInternalCall(signature, method);
-		}
 		template<typename T>
-		void RegisterScriptGlue() 
+		void RegisterScriptGlueFor(Ref<HazardScript::ScriptAssembly> assembly)
 		{
 			static_assert(std::is_base_of<IScriptGlue, T>::value, "Cannot use this type");
 			T* glue = hnew T();
-			m_ScriptGlue.push_back((IScriptGlue*)glue);
+			m_ScriptGlue[assembly.Raw()].push_back((IScriptGlue*)glue);
 		}
+
+		std::vector<std::string> GetLoadedAssemblyNames() { return std::vector<std::string>(); };
 
 		void ReloadAssemblies();
 		void SetDebugCallback(ScriptMessageCallback callback);
 		void InitializeComponent(Entity& entity, ScriptComponent& component);
 
+		const std::vector<Ref<HazardScript::ScriptAssembly>>& GetAssemblies();
+
 	private:
 		ScriptEngineCreateInfo m_Info;
 		HazardScript::HazardScriptEngine* m_Engine;
 		std::vector<HazardScript::ScriptMessage> m_QueuedMessages;
-		std::vector<IScriptGlue*> m_ScriptGlue;
+
+		std::unordered_map<HazardScript::ScriptAssembly*, std::vector<IScriptGlue*>> m_ScriptGlue;
 		ScriptMessageCallback m_MessageCallback;
 	};
 }

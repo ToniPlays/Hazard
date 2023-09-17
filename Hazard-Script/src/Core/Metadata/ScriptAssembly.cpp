@@ -2,106 +2,27 @@
 #include "ScriptAssembly.h"
 #include "File.h"
 
-#include "Core/ScriptCache.h"
-
 namespace HazardScript
 {
-	ScriptAssembly::~ScriptAssembly()
+	bool ScriptAssembly::LoadAssembly(Coral::HostInstance& host, Coral::AssemblyLoadContext& context)
 	{
-		Release();
-	}
-	bool ScriptAssembly::LoadAssembly(Coral::HostInstance& host)
-	{
-		Release();
-
 		std::string path = File::GetFileAbsolutePath(m_Path).lexically_normal().string();
-		m_Assembly = host.LoadAssembly(path);
+		m_Host = host;
+		m_Assembly = context.LoadAssembly(path);
 
 		if (m_Assembly.GetLoadStatus() != Coral::AssemblyLoadStatus::Success)
 			return false;
 
-		/*	CachedBuffer data = File::ReadBinaryFile(m_Path);
-
-			if (!data.Available()) return false;
-
-			MonoImageOpenStatus status;
-			MonoImage* image = Mono::OpenImage((char*)data.GetData(), data.GetSize(), status);
-			HZR_ASSERT(image, "Image fail");
-			m_Assembly = Mono::AssemblyFromImage(image, m_Path, status);
-			mono_image_close(image);
-
-			if (withRefecenced)
-				LoadReferencedAssemblies();
-
-			if(registerScripts)
-				LoadScripts();
-		*/
 		return true;
 	}
-	bool ScriptAssembly::Unload(Coral::HostInstance& host)
+	
+	void ScriptAssembly::AddInternalCall(std::string_view className, std::string_view functionName, void* funcPtr)
 	{
-		if (m_Assembly.GetLoadStatus() != Coral::AssemblyLoadStatus::Success) 
-			return false;
-
-		host.UnloadAssemblyLoadContext(m_Assembly);
-		return true;
+		m_Assembly.AddInternalCall(className, functionName, funcPtr);
 	}
-	void ScriptAssembly::LoadReferencedAssemblies()
+
+	void ScriptAssembly::UploadInternalCalls()
 	{
-		/*
-		const MonoTableInfo* t = mono_image_get_table_info(GetImage(), MONO_TABLE_ASSEMBLYREF);
-		int rows = mono_table_info_get_rows(t);
-
-		m_ReferencedAssemblies.clear();
-		m_ReferencedAssemblies.reserve(rows);
-		for (int i = 0; i < rows; i++)
-		{
-			uint32_t cols[MONO_ASSEMBLYREF_SIZE];
-			mono_metadata_decode_row(t, i, cols, MONO_ASSEMBLYREF_SIZE);
-
-			auto& data = m_ReferencedAssemblies.emplace_back();
-			data.Name = mono_metadata_string_heap(GetImage(), cols[MONO_ASSEMBLYREF_NAME]);
-		}
-		*/
-	}
-	void ScriptAssembly::LoadScripts()
-	{
-		m_Scripts.clear();
-		/*
-		const MonoTableInfo* tableInfo = mono_image_get_table_info(GetImage(), MONO_TABLE_TYPEDEF);
-		uint32_t rows = mono_table_info_get_rows(tableInfo);
-
-		std::vector<ManagedClass*> monoClasses;
-		monoClasses.reserve(rows);
-
-		for (uint32_t i = 0; i < rows; i++)
-		{
-			MonoClass* monoClass = nullptr;
-			uint32_t cols[MONO_TYPEDEF_SIZE];
-			mono_metadata_decode_row(tableInfo, i, cols, MONO_TYPEDEF_SIZE);
-			const char* name = mono_metadata_string_heap(GetImage(), cols[MONO_TYPEDEF_NAME]);
-			const char* nameSpace = mono_metadata_string_heap(GetImage(), cols[MONO_TYPEDEF_NAMESPACE]);
-			if (strcmp(name, "<Module>") == 0) continue;
-
-			std::string fullName = nameSpace;
-			if (!fullName.empty()) fullName += ".";
-			fullName += name;
-
-			monoClass = Mono::GetMonoClass(GetImage(), nameSpace, name);
-			ManagedClass* managedClass = ScriptCache::CacheClass(fullName, monoClass);
-			monoClasses.push_back(managedClass);
-		}
-
-		for (ManagedClass* klass : monoClasses)
-		{
-			Ref<ScriptMetadata> script = ScriptCache::CacheOrGetScriptMetadata(klass);
-			script->UpdateMetadata();
-			m_Scripts[script->GetName()] = script;
-		}
-		*/
-	}
-	void ScriptAssembly::Release()
-	{
-
+		m_Assembly.UploadInternalCalls();
 	}
 }

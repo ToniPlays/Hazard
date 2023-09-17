@@ -1,10 +1,11 @@
 
 #include "HazardScriptEngine.h"
 
-#include "ScriptCache.h"
 #include <thread>
+#include "Utility/StringUtil.h"
 
 #include "Coral/StringHelper.hpp"
+#include <Coral/GC.hpp>
 
 namespace HazardScript
 {
@@ -40,84 +41,72 @@ namespace HazardScript
 		SendDebugMessage({ Severity::Info, "Debug enabled" });
 
 		InitializeCoralHost();
+
+		m_Assemblies.clear();
+		m_Assemblies.push_back(m_CoralData.CoreAssembly);
+		m_Assemblies.push_back(m_CoralData.AppAssembly);
 	}
 	void HazardScriptEngine::Reload()
 	{
 		HZR_PROFILE_FUNCTION();
-		
-		m_CoralData.CoreAssembly->Unload(m_HostInstance);
-		m_CoralData.AppAssembly->Unload(m_HostInstance);
 
-		LoadCoreAssebly();
-		LoadRuntimeAssembly();
+		Coral::GC::Collect();
+
+		m_HostInstance.UnloadAssemblyLoadContext(m_LoadContext);
+		m_LoadContext = m_HostInstance.CreateAssemblyLoadContext("Context");
+
+		LoadAssembly(m_CoralData.CoreAssembly);
+		LoadAssembly(m_CoralData.AppAssembly);
+
+		m_Assemblies.clear();
+		m_Assemblies.push_back(m_CoralData.CoreAssembly);
+		m_Assemblies.push_back(m_CoralData.AppAssembly);
 		ReloadAppScripts();
 	}
-	void HazardScriptEngine::RegisterInternalCall(const std::string& signature, void* function)
-	{
-		//Mono::Register(signature, function);
-	}
-	void HazardScriptEngine::RunGarbageCollector() 
+	void HazardScriptEngine::RunGarbageCollector()
 	{
 		HZR_PROFILE_FUNCTION();
-		/*
-		mono_gc_collect(mono_gc_max_generation());
-		using namespace std::chrono_literals;
-
-		while (mono_gc_pending_finalizers()) 
-			std::this_thread::sleep_for(500ns);
-			*/
 	}
-	std::vector<Ref<ScriptAssembly>> HazardScriptEngine::GetAssemblies()
+	bool HazardScriptEngine::LoadAssembly(Ref<ScriptAssembly> assembly)
 	{
-		std::vector<Ref<ScriptAssembly>> assemblies;
-		assemblies.push_back(s_Instance->m_CoralData.CoreAssembly);
-		assemblies.push_back(s_Instance->m_CoralData.AppAssembly);
-		return assemblies;
+		bool succeeded = assembly->LoadAssembly(m_HostInstance, m_LoadContext);
+
+		if (succeeded)
+			m_CoralData.BindingCallback(assembly);
+
+		return succeeded;
+	}
+	const std::vector<Ref<ScriptAssembly>>& HazardScriptEngine::GetAssemblies()
+	{
+		return m_Assemblies;
 	}
 	void HazardScriptEngine::InitializeCoralHost()
 	{
 		Coral::HostSettings settings = {};
 		settings.CoralDirectory = m_CoralData.CoralDirectory.lexically_normal().string();
-		settings.ErrorCallback = [](const CharType* message) {
-			std::cout << Coral::StringHelper::ConvertWideToUtf8(message) << std::endl;
+		settings.ErrorCallback = [&](std::string_view message) {
+			std::string msg = std::string(message);
+			std::string exception = msg.substr(0, msg.find_first_of("\n"));
+			std::string trace = msg.substr(exception.length() + 1);
+			m_DebugCallback({ Severity::Error, exception, trace });
 		};
-		
-		HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
-		m_HostInstance.SetExceptionCallback([](const CharType* message) {
-			std::cout << Coral::StringHelper::ConvertWideToUtf8(message) << std::endl;
+		settings.ExceptionCallback = ([&](std::string_view message) {
+			std::string msg = std::string(message);
+			std::string exception = msg.substr(0, msg.find_first_of("\n"));
+			std::string trace = msg.substr(exception.length() + 1);
+			m_DebugCallback({ Severity::Error, exception, trace });
 		});
 
-		//ScriptCache::Init();
-
-		if (m_CoralData.LoadAssembliesOnInit)
-			Reload();
-	}
-	void HazardScriptEngine::LoadCoreAssebly()
-	{
-		if (!m_CoralData.CoreAssembly->LoadAssembly(m_HostInstance))
-		{
-			SendDebugMessage({ Severity::Critical, "Core assembly loading failed" });
-			return;
-		}
-	}
-	void HazardScriptEngine::LoadRuntimeAssembly()
-	{
-		if (!m_CoralData.AppAssembly->LoadAssembly(m_HostInstance)) {
-			SendDebugMessage({ Severity::Critical, "App assembly loading failed" });
-			return;
-		}
-
-		m_CoralData.BindingCallback();
+		HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
 	}
 	void HazardScriptEngine::ReloadAppScripts()
 	{
 		HZR_PROFILE_FUNCTION();
+		/*
 		for (auto& [name, script] : m_CoralData.AppAssembly->GetScripts())
 		{
-			for (auto& [handle, object] : script->GetAllInstances()) 
-			{
-				script->RegisterInstance(handle, object);
-			}
-		}
+			//for (auto& [handle, object] : script->GetAllInstances())
+				//script->RegisterInstance(handle, object);
+		}*/
 	}
 }

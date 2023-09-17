@@ -366,13 +366,13 @@
     <ClInclude Include="src\Hazard\Scripting\IScriptGlue.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Scripting\InternalCalls.h">
+      <Filter>src\Hazard\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\MonoUtilities.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptAssetLoader.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptBindings.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">

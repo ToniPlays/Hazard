@@ -3,9 +3,12 @@
 #include "UtilityCore.h"
 #include "Core/Attribute.h"
 
-#include "ManagedType.h"
 #include "Core/FieldValueStorageBase.h"
 #include "Core/ValueWrapper.h"
+
+#include "Coral/ManagedField.hpp"
+#include "Coral/ManagedObject.hpp"
+#include "Coral/StringHelper.hpp"
 
 #include <unordered_map>
 
@@ -17,9 +20,8 @@ namespace HazardScript
 		FieldMetadata() = default;
 		//FieldMetadata(MonoClassField* field);
 
-		std::string GetName() const { return m_Name; }
-		const uint32_t& GetFlags() const { return m_Flags; }
-		const ManagedType& GetType() const { return m_Type; }
+		std::string GetName() const { return Coral::StringHelper::ConvertWideToUtf8(m_Field.Name); }
+		Coral::TypeVisibility GetTypeVisibility() const { return m_Field.visibility; }
 
 		template<typename T>
 		bool Has() const 
@@ -43,13 +45,8 @@ namespace HazardScript
 			return Ref<T>();
 		}
 
-		void RegisterInstance(uint32_t handle);
-		void RemoveInstance(uint32_t handle);
-
-		void SetLive(uint32_t handle, bool live);
-
 		template<typename T>
-		T GetValue(uint32_t handle, uint32_t index = 0)
+		T GetValue(const Coral::ManagedObject& handle, uint32_t index = 0)
 		{
 			//MonoObject* obj = mono_gchandle_get_target(handle);
 			Buffer value;// = m_InstanceData[handle]->GetValueOrDefault(obj);
@@ -57,7 +54,7 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		void SetValue(uint32_t handle, T value, uint32_t index = 0)
+		void SetValue(const Coral::ManagedObject& handle, T value, uint32_t index = 0)
 		{
 			/*
 			HZR_ASSERT(m_InstanceData.find(handle) != m_InstanceData.end(), "Handle not found");
@@ -67,19 +64,16 @@ namespace HazardScript
 			*/
 		}
 
-		uint32_t GetElementCount(uint32_t handle);
+		uint32_t GetElementCount(const Coral::ManagedObject& handle);
 
-		void SetArraySize(uint32_t handle, uint32_t elements);
-		//MonoClassField* GetMonoField() { return m_Field; }
+		void SetArraySize(const Coral::ManagedObject& handle, uint32_t elements);
 
 	private:
 		void LoadAttributes();
 
 	private:
-		//MonoClassField* m_Field;
-		std::string m_Name;
-		ManagedType m_Type;
-		uint32_t m_Flags = MonoFlags_Public;
+		Coral::ManagedField m_Field;
+
 		std::vector<Ref<Attribute>> m_Attributes;
 		std::unordered_map<uint32_t, Ref<FieldValueStorageBase>> m_InstanceData;
 	};

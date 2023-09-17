@@ -1,54 +1,60 @@
 #pragma once
 
-#include "Core/Metadata/ScriptMetadata.h"
 #include "Ref.h"
+#include "Coral/ManagedObject.hpp"
 
 namespace HazardScript 
 {
+	class ScriptMetadata;
+
 	class ScriptObject : public RefCount
 	{
 		friend class ScriptMetadata;
-
 	public:
-		ScriptObject() = delete;
+		ScriptObject() = default;
 		~ScriptObject();
 		
-		void TryInvoke(const std::string& name, void** params = nullptr) 
+		template<typename TRet, typename... Args>
+		TRet TryInvoke(const std::string& name, Args&&... params) 
 		{
-			//m_Script->TryInvoke(name, GetHandleTarget(), params);
+			return m_Handle.InvokeMethod<TRet>(name, std::forward<Args>(params)...);
 		}
-		void Invoke(const std::string& name, void** params = nullptr) 
+		template<typename... Args>
+		void TryInvoke(const std::string& name, Args&&... params)
 		{
-			//m_Script->Invoke(name, GetHandleTarget(), params);
+			m_Handle.InvokeMethod(name, std::forward<Args>(params)...);
+		}
+
+		template<typename TRet, typename... Args>
+		TRet Invoke(const std::string& name, Args&&... params) 
+		{
+			return m_Handle.InvokeMethod<TRet>(name, std::forward<Args>(params)...);
+		}
+		template<typename... Args>
+		void Invoke(const std::string& name, Args&&... params)
+		{
+			m_Handle.InvokeMethod(name, std::forward<Args>(params)...);
 		}
 		
 		template<typename T>
 		T GetFieldValue(const std::string& name, uint32_t index = 0)
 		{
-			return m_Script->GetFieldValue<T>(m_Handle, name, index);
+			return m_Handle.GetFieldValue<T>(name);
 		}
 		template<typename T>
 		void SetFieldValue(const std::string& name, T value, uint32_t index = 0) 
 		{
-			m_Script->SetFieldValue(m_Handle, name, value, index);
+			m_Handle.SetFieldValue(name, value);
 		}
 		
-		void SetArraySize(const std::string& name, uint32_t elements) {
-			m_Script->SetArraySize(m_Handle, name, elements);
+		void SetArraySize(const std::string& name, uint32_t elements) 
+		{
+			//m_Script->SetArraySize(m_Handle, name, elements);
 		}
-
-		uint32_t GetFieldValueCount(const std::string& name) { return m_Script->GetField(name).GetElementCount(m_Handle); }
-		ScriptMetadata& GetScript() { return *m_Script; }
-		bool IsValid() { return m_Script; }
-		void SetLive(bool live) { m_Script->SetLive(m_Handle, live); }
+		void SetLive(bool live) { m_IsLive = live; }
 
 	private:
-		ScriptObject(ScriptMetadata* script);
-		//MonoObject* GetHandleTarget() { return mono_gchandle_get_target(m_Handle); }
-		uint32_t GetHandle() { return m_Handle; }
-
-	private:
-		uint32_t m_Handle = 0;
-		ScriptMetadata* m_Script;
+		Coral::ManagedObject m_Handle;
+		bool m_IsLive = false;
 	};
 }

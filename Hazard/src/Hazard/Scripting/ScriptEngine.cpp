@@ -1,7 +1,7 @@
 
 #include <hzrpch.h>
 #include "ScriptEngine.h"
-#include "ScriptBindings.h"
+#include "InternalCalls.h"
 #include "ScriptAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Attributes/AttributeConstructor.h"
@@ -11,76 +11,95 @@
 
 using namespace HazardScript;
 
-namespace Hazard 
+namespace Hazard
 {
 	ScriptEngine::ScriptEngine(ScriptEngineCreateInfo* info) : Module("ScriptEngine")
 	{
 		m_Info = *info;
-		RegisterScriptGlue<InternalCall>();
 	}
 	void ScriptEngine::PreInit()
 	{
 		AssetManager::RegisterLoader<ScriptAssetLoader>(AssetType::Script, this);
 
 		HZR_PROFILE_FUNCTION();
+
 		HazardScriptCreateInfo createInfo = {};
 		createInfo.CoreAssemblyPath = m_Info.CoreAssemblyPath;
 		createInfo.AppAssemblyPath = m_Info.AppAssemblyPath;
 		createInfo.CoralDirectory = m_Info.CoralDirectory;
-		createInfo.LoadAssebmlies = true;
 
-		createInfo.DebugCallback = [&](ScriptMessage message)
-		{
-			if (!m_MessageCallback) {
+		createInfo.DebugCallback = [&](ScriptMessage message) {
+			if (!m_MessageCallback)
+			{
 				m_QueuedMessages.push_back(message);
 				return;
 			}
 
-			for (auto m : m_QueuedMessages) {
+			for (auto m : m_QueuedMessages)
+			{
 				m_MessageCallback(m);
 			}
 			m_QueuedMessages.clear();
 			m_MessageCallback(message);
 		};
-		createInfo.BindingCallback = [&]() {
-			for (auto& cb : m_ScriptGlue) {
-				for (Ref<ScriptAssembly> assembly : m_Engine->GetAssemblies())
-					cb->OnAssemblyLoaded(assembly);
-			}
-			for (auto& cb : m_ScriptGlue) {
-				cb->Register(this);
+		createInfo.BindingCallback = [&](Ref<ScriptAssembly> assembly) {
+			if (m_ScriptGlue.contains(assembly.Raw()))
+			{
+				for (auto& glue : m_ScriptGlue[assembly.Raw()])
+				{
+					glue->OnAssemblyLoaded(assembly);
+					glue->Register(assembly);
+				}
+				assembly->UploadInternalCalls();
 			}
 		};
 		AttributeConstructor::Init();
 
 		m_Engine = HazardScriptEngine::Create(&createInfo);
+		Ref<ScriptAssembly> coreAssembly = m_Engine->GetLoadedAssembly("HazardScripting");
+
+		RegisterScriptGlueFor<InternalCalls>(coreAssembly);
+
+		m_Engine->Reload();
 	}
 	void ScriptEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		//m_Engine->RunGarbageCollector();
 	}
-	bool ScriptEngine::HasModule(const std::string& moduleName)
+
+	bool ScriptEngine::FindModule(const std::string& moduleName)
 	{
-		return m_Engine->GetAppAssembly()->HasScript(moduleName);
-        return false;
+		for (auto& assembly : m_Engine->GetAssemblies())
+		{
+			if (assembly->HasScript(moduleName))
+				return true;
+		}
+		return false;
 	}
-	ScriptMetadata& ScriptEngine::GetScript(const std::string& moduleName) 
+
+	ScriptMetadata ScriptEngine::GetScript(const std::string& moduleName)
 	{
-		return m_Engine->GetAppAssembly()->GetScript(moduleName);
+		for (auto& assembly : m_Engine->GetAssemblies())
+		{
+			if (assembly->HasScript(moduleName))
+				return assembly->GetScript(moduleName);
+		}
+		return ScriptMetadata();
 	}
+
 	void ScriptEngine::SendDebugMessage(const ScriptMessage& message)
 	{
 		m_Engine->SendDebugMessage(message);
 	}
 	void ScriptEngine::ReloadAssemblies()
 	{
-		m_Engine->Reload();
+		//m_Engine->Reload();
 	}
 	void ScriptEngine::SetDebugCallback(ScriptMessageCallback callback)
 	{
 		m_MessageCallback = callback;
-		for (auto& m : m_QueuedMessages) {
+		for (auto& m : m_QueuedMessages)
+		{
 			m_MessageCallback(m);
 		}
 		m_QueuedMessages.clear();
@@ -89,26 +108,13 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		if (component.ModuleName == "") return;
-		if (!m_Engine->GetAppAssembly()->HasScript(component.ModuleName)) return;
+		if (!FindModule(component.ModuleName)) return;
 
-		ScriptMetadata& script = m_Engine->GetAppAssembly()->GetScript(component.ModuleName);
-		component.m_Handle = script.CreateObject();
-
-		uint64_t entityID = entity.GetUID();
-		component.m_Handle->GetScript().ValidateOrLoadMethod("Hazard.Entity:.ctor(ulong)");
-
-		void* params[] = { &entityID };
-		component.m_Handle->Invoke("Hazard.Entity:.ctor(ulong)", params);
+		ScriptMetadata script = GetScript(component.ModuleName);
+		component.m_Handle = script.CreateObject<uint64_t>((uint64_t)entity.GetUID());
 	}
-}
-
-HazardScript::NativeType GetCustomType(const char* name) 
-{
-	TYPEDEF("Hazard.Vector2", NativeType::Float2);
-	TYPEDEF("Hazard.Vector3", NativeType::Float3);
-	TYPEDEF("Hazard.Color", NativeType::Float4);
-	TYPEDEF("Hazard.Status", NativeType::UInt32);
-	TYPEDEF("Hazard.Key", NativeType::UInt32);
-	TYPEDEF("Hazard.Rendering.BufferUsage", NativeType::UInt32);
-	return HazardScript::NativeType::Value;
+	const std::vector<Ref<ScriptAssembly>>& ScriptEngine::GetAssemblies()
+	{
+		return m_Engine->GetAssemblies();
+	}
 }

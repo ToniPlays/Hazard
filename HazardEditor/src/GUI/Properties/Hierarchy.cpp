@@ -131,7 +131,7 @@ namespace UI
 		if (e.HasComponent<ScriptComponent>()) {
 			ScriptEngine& engine = Application::GetModule<ScriptEngine>();
 			auto& sc = e.GetComponent<ScriptComponent>();
-			scriptState = !engine.HasModule(sc.ModuleName);
+			scriptState = !engine.FindModule(sc.ModuleName);
 		}
 
 		if (e.HasComponent<SpriteRendererComponent>())
@@ -236,9 +236,7 @@ namespace UI
 	void Hierarchy::SelectEntity(const Entity& entity)
 	{
 		if (!Input::IsKeyDown(Key::LeftControl))
-		{
 			m_SelectionContext.clear();
-		}
 		else
 		{
 			auto it = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), entity);

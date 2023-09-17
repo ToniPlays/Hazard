@@ -77,8 +77,8 @@ namespace Hazard
 				if (component.m_Handle)
 				{
 					YamlUtils::Map(out, "Fields", [&]() {
-						for (auto& [name, field] : component.m_Handle->GetScript().GetFields())
-							ScriptSerializer::SerializeFieldEditor(component.m_Handle, out, field);
+						//for (auto& [name, field] : component.m_Handle->GetScript().GetFields())
+						//	ScriptSerializer::SerializeFieldEditor(component.m_Handle, out, field);
 					});
 				}
 			});

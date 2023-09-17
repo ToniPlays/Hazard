@@ -7,18 +7,18 @@
 
 #include "AllBindings.h"
 
-#define BIND_ICALL(x) engine->RegisterInternalCall("Hazard.InternalCalls::"#x, (void*)x)
+#define BIND_ICALL(x) assembly->AddInternalCall("Hazard.InternalCalls", #x, &x)
 
 using namespace HazardScript;
 
 namespace Hazard
 {
-	class InternalCall : public IScriptGlue {
+	class InternalCalls : public IScriptGlue {
 	public:
-		virtual void Register(ScriptEngine* engine)
+		virtual void Register(Ref<ScriptAssembly> assembly)
 		{
 			HZR_PROFILE_FUNCTION();
-			handler = &Application::GetModule<WorldHandler>();
+
 			/*MonoImage* image = HazardScript::HazardScriptEngine::GetMonoData().CoreAssembly->GetImage();
 
 			RegisterComponent(TagComponent, image);
@@ -107,12 +107,12 @@ namespace Hazard
 
 
 			//Debug --------------------------------------------
-			//BIND_ICALL(Debug_Log_Native);
-			//BIND_ICALL(Debug_Info_Native);
-			//BIND_ICALL(Debug_Warn_Native);
-			//BIND_ICALL(Debug_Error_Native);
-			//BIND_ICALL(Debug_Critical_Native);
-			//BIND_ICALL(Debug_Trace_Native);
+			BIND_ICALL(Debug_Log_Native);
+			BIND_ICALL(Debug_Info_Native);
+			BIND_ICALL(Debug_Warn_Native);
+			BIND_ICALL(Debug_Error_Native);
+			BIND_ICALL(Debug_Critical_Native);
+			BIND_ICALL(Debug_Trace_Native);
 
 
 			//Math ---------------------------------------------

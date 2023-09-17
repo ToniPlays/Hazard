@@ -11,17 +11,17 @@ namespace Hazard
 	void ScriptSerializer::SerializeFieldEditor(Ref<HazardScript::ScriptObject> object, YAML::Emitter& out, Ref<FieldMetadata> field)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (!(field->GetFlags() & MonoFlags_Public || field->Has<ShowInPropertiesAttribute>())) 
-		{
-			HZR_ASSERT(false, "");
-			return;
-		}
+		//if (!(field->GetFlags() & MonoFlags_Public || field->Has<ShowInPropertiesAttribute>())) 
+		//{
+		//	HZR_ASSERT(false, "");
+		//	return;
+		//}
 
-
-		const ManagedType& elementType = field->GetType().IsArray() ? field->GetType().GetElementType() : field->GetType();
+		/*const ManagedType& elementType = field->GetType().IsArray() ? field->GetType().GetElementType() : field->GetType();
 
 		if (field->GetType().IsArray())
 		{
+			/*
 			YamlUtils::Map(out, field->GetName(), [&]() {
 				for (size_t i = 0; i < object->GetFieldValueCount(field->GetName()); i++) {
 					std::string key = std::to_string(i);
@@ -29,9 +29,12 @@ namespace Hazard
 				}
 				});
 			return;
+			
 		}
 		SerializeFieldValue(out, field->GetName(), field->GetName(), elementType.NativeType, object.Raw());
+		*/
 	}
+	/*
 	void ScriptSerializer::SerializeFieldValue(YAML::Emitter& out, const std::string& name, const std::string& key, const NativeType& type,HazardScript::ScriptObject* object)
 	{
 		switch (type)
@@ -88,17 +91,19 @@ namespace Hazard
 			break;
 		}
 	}
+		*/
 	void ScriptSerializer::DeserializeFieldEditor(Ref<HazardScript::ScriptObject> object, const std::string& name, YAML::Node& valueNode)
 	{
 		HZR_PROFILE_FUNCTION();
-		ScriptMetadata& script = object->GetScript();
-		if (!script.HasField(name)) return;
+		//ScriptMetadata& script = object->GetScript();
+		//if (!script.FindModule(name)) return;
 
-		FieldMetadata& field = script.GetField(name);
-		const ManagedType& elementType = field.GetType().IsArray() ? field.GetType().GetElementType() : field.GetType();
+		//FieldMetadata& field = script.GetField(name);
+		//const ManagedType& elementType = field.GetType().IsArray() ? field.GetType().GetElementType() : field.GetType();
 
-		DeserializeFieldValue(name, object, valueNode, elementType.NativeType);
+		//DeserializeFieldValue(name, object, valueNode, elementType.NativeType);
 	}
+	/*
 	void ScriptSerializer::DeserializeFieldValue(const std::string& name, Ref<HazardScript::ScriptObject> object, YAML::Node& valueNode, const NativeType& type)
 	{
 		switch (type)
@@ -160,4 +165,5 @@ namespace Hazard
 			break;
 		}
 	}
+	*/
 }

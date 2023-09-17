@@ -4,6 +4,8 @@
 #include "Severity.h"
 #include <functional>
 
+#include "Metadata/ScriptAssembly.h"
+
 namespace HazardScript 
 {
 	struct ScriptMessage 
@@ -14,7 +16,7 @@ namespace HazardScript
 	};
 
 	using ScriptDebugCallback = std::function<void(ScriptMessage)>;
-	using BindingCallback = std::function<void()>;
+	using BindingCallback = std::function<void(Ref<ScriptAssembly>)>;
 
 	struct HazardScriptCreateInfo 
 	{

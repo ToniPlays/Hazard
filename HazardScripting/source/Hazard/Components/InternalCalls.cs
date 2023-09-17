@@ -5,119 +5,101 @@ using System.Runtime.CompilerServices;
 
 namespace Hazard
 {
-    internal partial class InternalCalls
+    internal static unsafe partial class InternalCalls
     {
         #region CameraComponent
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern int CameraComponent_GetProjection_Native(ulong id);
+        internal static delegate*<ulong, int> CameraComponent_GetProjection_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void CameraComponent_SetProjection_Native(ulong id, int projection);
+        internal static delegate*<ulong, int, void> CameraComponent_SetProjection_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void CameraComponent_GetClipping_Native(ulong id, out Vector2 clipping);
+        internal static delegate*<ulong, Vector2> CameraComponent_GetClipping_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void CameraComponent_SetClipping_Native(ulong id, float near, float far);
+        internal static delegate*<ulong, float, float, void> CameraComponent_SetClipping_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float CameraComponent_GetFOV_Native(ulong id);
+        internal static delegate*<ulong, float> CameraComponent_GetFOV_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void CameraComponent_SetFOV_Native(ulong id, float fov);
+        internal static delegate*<ulong, float, void> CameraComponent_SetFOV_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float CameraComponent_GetOrthoSize_Native(ulong id);
+        internal static delegate*<ulong, float> CameraComponent_GetOrthoSize_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void CameraComponent_SetOrthoSize_Native(ulong id, float size);
+        internal static delegate*<ulong, float, void> CameraComponent_SetOrthoSize_Native;
 
         #endregion
         #region MeshComponent
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong MeshComponent_GetMesh_Native(ulong id);
+        internal static delegate*<ulong, ulong> MeshComponent_GetMesh_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void MeshComponent_SetMesh_Native(ulong id, ulong meshID);
+        internal static delegate*<ulong, ulong, void> MeshComponent_SetMesh_Native;
 
         #endregion
         #region SpriteRenderer
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SpriteRendererComponent_GetColor_Native(ulong id, out Color color);
+        internal static delegate*<ulong, Color> SpriteRendererComponent_GetColor_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SpriteRendererComponent_SetColor_Native(ulong id, ref Color color);
+        internal static delegate*<ulong, Color, void> SpriteRendererComponent_SetColor_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong SpriteRendererComponent_GetSprite_Native(ulong id);
+        internal static delegate*<ulong, ulong> SpriteRendererComponent_GetSprite_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SpriteRendererComponent_SetSprite_Native(ulong id, ulong handle);
+        internal static delegate*<ulong, ulong, void> SpriteRendererComponent_SetSprite_Native;
 
         #endregion
         #region TagComponent
         //Tag component
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string TagComponent_GetName_Native(ulong id);
+        [Todo("Binding", Status.Awaiting)]
+        internal static delegate*<ulong, string> TagComponent_GetName_Native;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void TagComponent_SetName_Native(ulong id, string name);
+        [Todo("Binding", Status.Awaiting)]
+        internal static delegate*<ulong, string, void> TagComponent_SetName_Native;
         #endregion
         #region TransformComponent
         //Transform component
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void TransformComponent_GetPosition_Native(ulong id, out Vector3 position);
+        [Todo("Binding", Status.Awaiting)]
+        internal static delegate*<ulong, Vector3> TransformComponent_GetPosition_Native;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void TransformComponent_SetPosition_Native(ulong id, ref Vector3 position);
+        [Todo("Binding", Status.Awaiting)]
+        internal static delegate*<ulong, Vector3, void> TransformComponent_SetPosition_Native;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void TransformComponent_GetRotation_Native(ulong id, out Vector3 rotation);
+        [Todo("Binding", Status.Awaiting)]
+        internal static delegate*<ulong, Vector3> TransformComponent_GetRotation_Native;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void TransformComponent_SetRotation_Native(ulong id, ref Vector3 rotation);
+        [Todo("Binding", Status.Awaiting)]
+        internal static delegate*<ulong, Vector3, void> TransformComponent_SetRotation_Native;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void TransformComponent_GetScale_Native(ulong id, out Vector3 scale);
+        [Todo("Binding", Status.Awaiting)]
+        internal static delegate*<ulong, Vector3> TransformComponent_GetScale_Native;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void TransformComponent_SetScale_Native(ulong id, ref Vector3 scale);
+        [Todo("Binding", Status.Awaiting)]
+        internal static delegate*<ulong, Vector3, void> TransformComponent_SetScale_Native;
 
         #endregion
         #region SkyLightComponent
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern float SkyLightComponent_GetIntensity_Native(ulong id);
+        internal static delegate*<ulong, float> SkyLightComponent_GetIntensity_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SkyLightComponent_SetIntensity_Native(ulong id, float value);
+        internal static delegate*<ulong, float, void> SkyLightComponent_SetIntensity_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong SkyLightComponent_GetEnvironmentMap_Native(ulong id);
+        internal static delegate*<ulong, ulong> SkyLightComponent_GetEnvironmentMap_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void SkyLightComponent_SetEnvironmentMap_Native(ulong id, ulong value);
+        internal static delegate*<ulong, ulong, void> SkyLightComponent_SetEnvironmentMap_Native;
         #endregion
     }
 }

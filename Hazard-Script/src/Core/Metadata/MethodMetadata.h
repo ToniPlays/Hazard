@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Attribute.h"
-#include "ManagedType.h"
 
 namespace HazardScript 
 {
@@ -9,12 +8,8 @@ namespace HazardScript
 	{
 	public:
 		MethodMetadata() = default;
-		//MethodMetadata(MonoMethod* method);
 
-		MonoFlags& GetFlags() { return m_Flags; }
 		std::string GetName() { return m_Name; }
-		ManagedType& GetReturnType() { return m_ManagedMethod.ReturnType; }
-		//MonoObject* Invoke(MonoObject* obj, void** params = nullptr);
 
 		template<typename T>
 		bool Has() const 
@@ -43,8 +38,6 @@ namespace HazardScript
 		void LoadAttributes();
 
 	private:
-		ManagedMethod m_ManagedMethod;
-		MonoFlags m_Flags;
 		std::string m_Name;
 
 		std::vector<Ref<Attribute>> m_Attributes;

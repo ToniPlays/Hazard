@@ -4,15 +4,12 @@
 #include "UtilityCore.h"
 #include "ValueWrapper.h"
 #include "Attribute.h"
-#include "Metadata/ManagedType.h"
 #include "FieldValueStorageBase.h"
 #include "MathCore.h"
 #include "Core/Metadata/FieldMetadata.h"
 
 namespace HazardScript
 {
-	static ValueWrapper GetDefaultValueForType(const ManagedType& type);
-
 #define DEFAULT_TYPE(Type)	template<>																					\
 							Type GetStoredValue() { return m_Storage.Get<Type>(); }										\
 							template<>																					\

@@ -15,7 +15,7 @@ namespace HazardScript
 		LoadAttributes();
 	}
 	*/
-	uint32_t FieldMetadata::GetElementCount(uint32_t handle)
+	uint32_t FieldMetadata::GetElementCount(const Coral::ManagedObject& handle)
 	{
 		/*
 		if (!m_Type.IsArray()) return 1;
@@ -24,7 +24,7 @@ namespace HazardScript
 		*/
 		return 0;
 	}
-	void FieldMetadata::SetArraySize(uint32_t handle, uint32_t elements)
+	void FieldMetadata::SetArraySize(const Coral::ManagedObject& handle, uint32_t elements)
 	{
 		/*
 		HZR_ASSERT(m_Type.IsArray(), "Attempted to set array size of non array type");
@@ -34,42 +34,6 @@ namespace HazardScript
 	}
 	void FieldMetadata::LoadAttributes()
 	{
-		/*
-		MonoClass* monoClass = mono_field_get_parent(m_Field);
-		MonoCustomAttrInfo* info = mono_custom_attrs_from_field(monoClass, m_Field);
-		if (info == nullptr) return;
-
-		m_Attributes.reserve(info->num_attrs);
-
-		for (int i = 0; i < info->num_attrs; i++)
-		{
-			MonoCustomAttrEntry entry = info->attrs[i];
-			MonoClass* a = mono_method_get_class(entry.ctor);
-			MonoObject* obj = mono_custom_attrs_get_attr(info, a);
-			MonoClass* attribClass = mono_object_get_class(obj);
-
-			auto attrib = AttributeBuilder::Create(mono_class_get_name(attribClass), obj);
-			if (attrib)
-				m_Attributes.push_back(attrib);
-		}
-		*/
-	}
-	void FieldMetadata::RegisterInstance(uint32_t handle)
-	{
-		if (m_InstanceData.find(handle) != m_InstanceData.end()) 
-			return;
-
-		if (m_Type.IsArray())
-			m_InstanceData[handle] = Ref<ArrayFieldValueStorage>::Create(this);
-		else
-			m_InstanceData[handle] = Ref<FieldValueStorage>::Create(0, this);
-	}
-	void FieldMetadata::RemoveInstance(uint32_t handle)
-	{
-		m_InstanceData.erase(handle);
-	}
-	void FieldMetadata::SetLive(uint32_t handle, bool live) 
-	{
-		m_InstanceData[handle]->SetLive(live);
+		
 	}
 }

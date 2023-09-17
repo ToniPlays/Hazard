@@ -385,29 +385,26 @@ namespace UI
 
 			if (changed)
 			{
-				if (scriptEngine.HasModule(oldModule) && c.m_Handle)
+				if (scriptEngine.FindModule(oldModule) && c.m_Handle)
 					c.m_Handle = nullptr;
 
-				if (scriptEngine.HasModule(c.ModuleName))
+				if (scriptEngine.FindModule(c.ModuleName))
 				{
-					ScriptMetadata& script = scriptEngine.GetScript(c.ModuleName);
-					c.m_Handle = script.CreateObject();
-					script.ValidateOrLoadMethod("Hazard.Entity:.ctor(ulong)");
-
-					UID uid = entities[0].GetUID();
-					void* params[] = { &uid };
-					c.m_Handle->Invoke("Hazard.Entity:.ctor(ulong)", params);
+					ScriptMetadata script = scriptEngine.GetScript(c.ModuleName);
+					uint64_t uid = entities[0].GetUID();
+					c.m_Handle = script.CreateObject(uid);
+					__debugbreak();
 				}
 			}
 			if (c.m_Handle)
 			{
-				ScriptMetadata& script = c.m_Handle->GetScript();
+				//ScriptMetadata& script = c.m_Handle->GetScript();
 
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 
 				auto world = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
-
+				/*
 				for (auto& [name, field] : script.GetFields())
 				{
 					const char* label = name.c_str();
@@ -420,6 +417,7 @@ namespace UI
 						ImUI::ShiftY(2.0f);
 						});
 				}
+				*/
 				ImGui::Columns();
 			}
 

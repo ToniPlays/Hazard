@@ -16,23 +16,38 @@ namespace HazardScript
 	{
 	public:
 		ScriptAssembly() = default;
-		~ScriptAssembly();
+		~ScriptAssembly() { __debugbreak(); };
 
-		bool LoadAssembly(Coral::HostInstance& host);
-		bool Unload(Coral::HostInstance& host);
+		bool LoadAssembly(Coral::HostInstance& host, Coral::AssemblyLoadContext& context);
+		
+		void AddInternalCall(std::string_view className, std::string_view functionName, void* funcPtr);
+		void UploadInternalCalls();
+
+		std::string GetName() const { return File::GetNameNoExt(m_Path); }
 
 		void SetSourcePath(const std::filesystem::path& path) { m_Path = path; }
-		std::filesystem::path& GetSourcePath() { return m_Path; }
+		std::filesystem::path GetSourcePath() const { return m_Path; }
 
-		std::unordered_map<std::string, Ref<ScriptMetadata>>& GetScripts() { return m_Scripts; }
 		std::vector<ReferencedAssembly>& GetReferencedAssemblies() { return m_ReferencedAssemblies; }
 
-		bool HasScript(const std::string& name) {
-			return m_Scripts.find(name) != m_Scripts.end();
-		}
-		ScriptMetadata& GetScript(const std::string& name) 
+		bool HasScript(const std::string& name) const
 		{
-			return *m_Scripts[name];
+			for (auto& type : m_Assembly.GetTypes())
+			{
+				if (type.FullName.ToString() == name)
+					return true;
+			}
+			return false;
+		}
+
+		ScriptMetadata GetScript(const std::string& name) const
+		{
+			for (auto& type : m_Assembly.GetTypes())
+			{
+				if (type.FullName.ToString() == name)
+					return ScriptMetadata(m_Host, type);
+			}
+			return ScriptMetadata();
 		}
 
 		template<typename T>
@@ -40,23 +55,19 @@ namespace HazardScript
 		{
 			std::vector<Ref<ScriptMetadata>> results;
 
-			for (auto& [name, script] : m_Scripts) {
-				if (script->Has<T>())
-					results.push_back(script);
+			for (Coral::ReflectionType& type : m_Assembly.GetTypes())
+			{
+				//if (script->Has<T>())
+				//	results.push_back(script);
 			}
 			return results;
 		}
 
 	private:
-		void LoadReferencedAssemblies();
-		void LoadScripts();
-		void Release();
-
-	private:
 		std::filesystem::path m_Path;
 		Coral::ManagedAssembly m_Assembly;
+		Coral::HostInstance m_Host;
 
-		std::unordered_map<std::string, Ref<ScriptMetadata>> m_Scripts;
 		std::vector<ReferencedAssembly> m_ReferencedAssemblies;
 	};
 }

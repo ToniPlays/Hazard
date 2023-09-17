@@ -13,20 +13,38 @@ namespace Hazard
 
         public float Intensity
         {
-            get => InternalCalls.SkyLightComponent_GetIntensity_Native(ParentEntity.ID);
-            set => InternalCalls.SkyLightComponent_SetIntensity_Native(ParentEntity.ID, value);
+            get
+            {
+                unsafe
+                {
+                    return InternalCalls.SkyLightComponent_GetIntensity_Native(ParentEntity.ID);
+                }
+            }
+            set
+            {
+                unsafe
+                {
+                    InternalCalls.SkyLightComponent_SetIntensity_Native(ParentEntity.ID, value);
+                }
+            }
         }
         public Rendering.EnvironmentMap GetEnvironmentMap()
         {
-            ulong id = InternalCalls.SkyLightComponent_GetEnvironmentMap_Native(ParentEntity.ID);
-            if (id == 0) 
-                return null;
+            unsafe
+            {
+                ulong id = InternalCalls.SkyLightComponent_GetEnvironmentMap_Native(ParentEntity.ID);
+                if (id == 0)
+                    return null;
 
-            return new Rendering.EnvironmentMap(id);
+                return new Rendering.EnvironmentMap(id);
+            }
         }
         public void SetEnvironmentMap(Rendering.EnvironmentMap environmentMap)
         {
-            InternalCalls.SkyLightComponent_SetEnvironmentMap_Native(ParentEntity.ID, environmentMap.ID);
+            unsafe
+            {
+                InternalCalls.SkyLightComponent_SetEnvironmentMap_Native(ParentEntity.ID, environmentMap.ID);
+            }
         }
     }
 }

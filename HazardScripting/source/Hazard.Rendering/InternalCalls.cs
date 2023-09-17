@@ -8,68 +8,52 @@ using Hazard.Rendering;
 
 namespace Hazard
 {
-    internal partial class InternalCalls
+    internal static unsafe partial class InternalCalls
     {
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern uint IndexBuffer_GetSize_Native(ulong id);
+        internal static unsafe delegate*<ulong, uint> IndexBuffer_GetSize_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong IndexBuffer_Create_Native(ref IndexBufferCreateInfo info);
+        internal static unsafe delegate*<IndexBufferCreateInfo, ulong> IndexBuffer_Create_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void IndexBuffer_Destroy_Native(ulong id);
-
+        internal static unsafe delegate*<ulong, void> IndexBuffer_Destroy_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong VertexBuffer_GetSize_Native(ulong id);
+        internal static unsafe delegate*<ulong, ulong> VertexBuffer_GetSize_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong VertexBuffer_Create_Native(ref VertexBufferCreateInfo info);
+        internal static unsafe delegate*<VertexBufferCreateInfo, ulong> VertexBuffer_Create_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void VertexBuffer_Destroy_Native(ulong id);
+        internal static unsafe delegate*<ulong, ulong> VertexBuffer_Destroy_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong Mesh_Create_Native(ref MeshCreateInfoInternal info);
+        internal static unsafe delegate*<MeshCreateInfoInternal, ulong> Mesh_Create_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Mesh_Destroy_Native(ulong id);
+        internal static unsafe delegate*<ulong, ulong> Mesh_Destroy_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong EnvironmentMap_GetCubemapTexture_Native(ulong id, int type);
+        internal static unsafe delegate*<ulong, int, ulong> EnvironmentMap_GetCubemapTexture_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void EnvironmentMap_SetCubemapTexture_Native(ulong id, int type, ulong handle);
+        internal static unsafe delegate*<ulong, int, ulong, void> EnvironmentMap_SetCubemapTexture_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ulong EnvironmentMap_Create_Native();
+        internal static unsafe delegate*<ulong> EnvironmentMap_Create_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void EnvironmentMap_Destroy_Native(ulong id);
+        internal static unsafe delegate*<ulong, void> EnvironmentMap_Destroy_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void EnvironmentMap_GenerateRadiance_Native(ulong id, ulong sourceImage);
+        internal static unsafe delegate*<ulong, ulong, void> EnvironmentMap_GenerateRadiance_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void EnvironmentMap_GenerateIrradiance_Native(ulong id, ulong cubemap);
+        internal static unsafe delegate*<ulong, ulong, void> EnvironmentMap_GenerateIrradiance_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void EnvironmentMap_GeneratePrefilter_Native(ulong id, ulong cubemap);
+        internal static unsafe delegate*<ulong, ulong, void> EnvironmentMap_GeneratePrefilter_Native;
 
     }
 }

@@ -15,7 +15,7 @@ namespace Editor
 	void EditorScriptGlue::OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) 
 	{
 		using namespace HazardScript;
-
+		/*
 		if (Application::HasModule<GUIManager>()) 
 		{
 			auto& menubar = Application::GetModule<GUIManager>().GetMenuBar();
@@ -26,5 +26,6 @@ namespace Editor
 			for (auto& script : view)
 				menubar.AddMenuItem(script->Get<MenuBarItemAttribute>()->Path, nullptr);
 		}
+		*/
 	}
 }
