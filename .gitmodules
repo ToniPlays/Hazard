@@ -25,6 +25,3 @@
 [submodule "Hazard/vendor/ImGui"]
 	path = Hazard/vendor/ImGui
 	url = https://github.com/ocornut/imgui.git
-[submodule "Hazard/vendor/Coral"]
-	path = Hazard/vendor/Coral
-	url = https://github.com/peter1745/Coral.git
