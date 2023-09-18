@@ -17,18 +17,25 @@ namespace HazardRenderer::Metal
         MetalGPUBuffer(BufferCreateInfo* createInfo);
         ~MetalGPUBuffer();
         
-        void SetData(const BufferCopyRegion& copyRegion) override;
-        void SetData_RT(const BufferCopyRegion& copyRegion);
-        const size_t GetSize() const override { return m_Size; }
         const std::string& GetDebugName() const override { return m_DebugName; };
+        
+        const size_t GetSize() const override { return m_Size; }
+        Buffer ReadData(const BufferCopyRegion& region) override { return Buffer(); }
+        
+        void SetData(const BufferCopyRegion& copyRegion) override;
+        const uint32_t GetUsageFlags() const override { return m_UsageFlags; }
+ 
         
         //Metal specific
         MTL::Buffer* GetMetalBuffer() const { return m_Buffer; }
         
     private:
-        size_t m_Size;
+        void SetData_RT(const BufferCopyRegion& copyRegion);
+        
+    private:
         std::string m_DebugName;
-        BufferLayout m_Layout;
+        size_t m_Size;
+        uint32_t m_UsageFlags;
         
         Buffer m_LocalBuffer;
         MTL::Buffer* m_Buffer;

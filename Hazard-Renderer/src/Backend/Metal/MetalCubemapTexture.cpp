@@ -8,22 +8,14 @@
 namespace HazardRenderer::Metal
 {
     MetalCubemapTexture::MetalCubemapTexture(CubemapTextureCreateInfo* createInfo)
-        : m_FilePath(createInfo->FilePath), m_Format(createInfo->Format)
+        : m_Format(createInfo->Format)
     {
         HZR_PROFILE_FUNCTION();
         m_DebugName = createInfo->DebugName;
         m_Usage = createInfo->Usage;
-        
-        if (createInfo->pCubemapSrc)
-        {
-            m_Width = createInfo->pCubemapSrc->pCubemap->GetWidth();
-            m_Height = createInfo->pCubemapSrc->pCubemap->GetWidth();
-        }
-        else
-        {
-            m_Width = createInfo->Width;
-            m_Height = createInfo->Height;
-        }
+            
+        m_Width = createInfo->Width;
+        m_Height = createInfo->Height;
         
         m_MipLevels = createInfo->GenerateMips ? GetMipLevelCount(m_Width, m_Height) : 1;
         

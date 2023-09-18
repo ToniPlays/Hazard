@@ -59,30 +59,30 @@ namespace HazardRenderer {
         bool IsFullscreen() const override { return m_WindowData.Fullscreen; }
         bool IsMaximized() const override { return m_WindowData.Maximized; }
         glm::vec2 GetPosition() override;
+        std::vector<Resolution> GetAvailableResolutions() const;
+        void SetResolution(const Resolution& resolution);
 
         WindowProps& GetWindowInfo() override { return m_WindowData; }
         GraphicsContext* GetContext() const override { return m_Context; };
         Ref<Swapchain> GetSwapchain() override { return m_Context->GetSwapchain(); }
-        void SetDebugCallback(const RendererMessageCallback& callback) override
+        virtual void SetDebugCallback(const RendererMessageCallback& callback) override
         {
             s_DebugCallback = callback;
-            
             for (auto& m : s_QueueMessages)
                 s_DebugCallback(m);
-            
+
             s_QueueMessages.clear();
         }
-    private:
-        void SetCallbacks();
-        
+
     private:
         WindowProps m_WindowData;
         GraphicsContext* m_Context;
         GLFWwindow* m_Window = nullptr;
         static inline RendererMessageCallback s_DebugCallback = nullptr;
         static inline std::vector<RenderMessage> s_QueueMessages;
-        
+        void SetCallbacks();
         inline static Window* s_CurrentWindow = nullptr;
+
     };
 }
 #endif

@@ -29,7 +29,8 @@ namespace Hazard
 		const AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 		const AssetMetadata& packMetadata = AssetManager::GetMetadata(metadata.AssetPackHandle);
 
-		std::filesystem::path filePath = packMetadata.Handle != INVALID_ASSET_HANDLE ? packMetadata.Key : path;
+		std::string filePath = packMetadata.Handle != INVALID_ASSET_HANDLE ? packMetadata.Key : path.string();
+        
 		AssetHandle packHandle = metadata.AssetPackHandle != INVALID_ASSET_HANDLE ? metadata.AssetPackHandle : AssetHandle();
 
 		asset->SetSourceFile(File::GetPathNoExt(path));
@@ -52,7 +53,8 @@ namespace Hazard
 		CachedBuffer packBuffer = AssetPack::ToBuffer(pack);
 
 		if (!File::WriteBinaryFile(filePath, packBuffer.GetData(), packBuffer.GetSize()))
-			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath.string()));
+			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath));
+        
 		if (!File::WriteFile(File::GetPathNoExt(path), ""))
 			throw JobException(fmt::format("Saving script source failed: {0}", File::GetPathNoExt(path).string()));
 	}

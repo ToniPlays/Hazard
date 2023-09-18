@@ -16,7 +16,7 @@ namespace Hazard
 		const AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 		const AssetMetadata& packMetadata = AssetManager::GetMetadata(metadata.AssetPackHandle);
 
-		std::filesystem::path filePath = packMetadata.Handle != INVALID_ASSET_HANDLE ? packMetadata.Key : path;
+		std::string filePath = packMetadata.Handle != INVALID_ASSET_HANDLE ? packMetadata.Key : path.string();
 		AssetHandle packHandle = metadata.AssetPackHandle != INVALID_ASSET_HANDLE ? metadata.AssetPackHandle : AssetHandle();
 
 		AssetPackElement element = {};
@@ -34,7 +34,7 @@ namespace Hazard
 		CachedBuffer packBuffer = AssetPack::ToBuffer(pack);
 
 		if (!File::WriteBinaryFile(filePath, packBuffer.GetData(), packBuffer.GetSize()))
-			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath.string()));
+			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath));
 	}
 
 	static void LoadEnvironmentMapJob(Ref<Job> job, AssetHandle handle)

@@ -97,7 +97,7 @@ if os.host() == "macosx" then
     Library["SPIRV_Cross_GLSL_Release"] = CELLAR .. "spirv-cross/2021-01-15/lib/spirv-cross-glsl"
     Library["SPIRV_Tools_Release"] = "SPIRV-Tools"
 
-    Library["Assimp_Lib"] =  CELLAR .. "assimp/5.2.5/lib/libassimp.dylib"
+    Library["Assimp_Lib"] =  CELLAR .. "assimp/5.2.5/lib/libassimp.5.2.4.dylib"
     
 end
 

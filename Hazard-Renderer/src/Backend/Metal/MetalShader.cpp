@@ -112,17 +112,14 @@ namespace HazardRenderer::Metal
             {
                 BufferCreateInfo bufferInfo = {};
                 bufferInfo.Name = buffer.Name;
-                bufferInfo.Set = set;
-                bufferInfo.Binding = binding;
                 bufferInfo.Size = buffer.Size;
-                bufferInfo.Usage = buffer.UsageFlags;
                 
                 MetalWriteDescriptor writeDescriptor = {};
                 writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
                 writeDescriptor.DebugName = buffer.Name;
                 writeDescriptor.Binding = binding;
                 writeDescriptor.ArraySize = 0;
-                writeDescriptor.BoundValue[0] = UniformBuffer::Create(&bufferInfo);
+                writeDescriptor.BoundValue[0] = GPUBuffer::Create(&bufferInfo);
                 writeDescriptor.Flags = buffer.UsageFlags;
 
                 descriptorSet.AddWriteDescriptor(writeDescriptor);
@@ -181,8 +178,8 @@ namespace HazardRenderer::Metal
                 
                 for (uint32_t i = 0; i < sampler.ArraySize; i++)
                 {
-                    if (sampler.Dimension == 2)
-                        Set(sampler.Name, i, whiteTexture);
+                    //if (sampler.Dimension == 2)
+                    //    Set(sampler.Name, i, whiteTexture);
                 }
             }
         }

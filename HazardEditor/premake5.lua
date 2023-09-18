@@ -55,8 +55,7 @@ project "HazardEditor"
 		"Hazard",
 		"Hazard-Script",
 		"Box2D",
-		"yaml-cpp",
-		"%{LibraryDir.CoralNetHost}",
+		"yaml-cpp"
 	}
 
 	postbuildcommands {
@@ -75,6 +74,7 @@ project "HazardEditor"
 			"Hazard-Script",
 			"Optick",
 			"%{Library.Assimp_Lib}",
+			"%{LibraryDir.CoralNetHost}"
 		}
 		includedirs {
 
@@ -91,11 +91,11 @@ project "HazardEditor"
 		links 
 		{
 			"IOKit.framework",
+			"QuartzCore.framework",
 			"CoreFoundation.framework",
 			"Cocoa.framework",
 			"Metal.framework",
-			"MetalKit.framework",
-			"%{Library.Assimp_Lib}",
+			"MetalKit.framework"
 		}
         	files 
 		{

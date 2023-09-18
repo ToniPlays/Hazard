@@ -170,14 +170,10 @@ namespace HazardRenderer::Metal
     void MetalRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
-        Ref<MetalVertexBuffer> buffer = vertexBuffer.As<MetalVertexBuffer>();
+        Ref<MetalGPUBuffer> buffer = vertexBuffer.As<MetalGPUBuffer>();
         Renderer::Submit([instance, buffer, binding]() mutable {
             instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, 28 + binding);
         });
-    }
-    void MetalRenderCommandBuffer::SetUniformBuffers(const Ref<UniformBuffer>* uniformBuffer, uint32_t count)
-    {
-        
     }
     void MetalRenderCommandBuffer::SetPipeline(Ref<Pipeline> pipeline)
     {
@@ -194,14 +190,14 @@ namespace HazardRenderer::Metal
                 metalPipeline->BindCompute(instance->m_ComputeEncoder);
         });
     }
-    void MetalRenderCommandBuffer::Draw(size_t count, Ref<IndexBuffer> indexBuffer)
+    void MetalRenderCommandBuffer::Draw(size_t count, Ref<GPUBuffer> indexBuffer)
     {
         DrawInstanced(count, 1, indexBuffer);
     }
-    void MetalRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<IndexBuffer> indexBuffer)
+    void MetalRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
-        Ref<MetalIndexBuffer> mtlIndexBuffer = indexBuffer.As<MetalIndexBuffer>();
+        Ref<MetalGPUBuffer> mtlIndexBuffer = indexBuffer.As<MetalGPUBuffer>();
         Renderer::Submit([instance, mtlIndexBuffer, count, instanceCount]() mutable {
             
             auto primitiveType = instance->m_CurrentPipeline->GetMetalPrimitiveType();
@@ -216,11 +212,11 @@ namespace HazardRenderer::Metal
             }
         });
     }
-    void MetalRenderCommandBuffer::DrawIndirect(Ref<ArgumentBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset, Ref<IndexBuffer> indexBuffer) {
+    void MetalRenderCommandBuffer::DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset, Ref<GPUBuffer> indexBuffer) {
         
         Ref<MetalRenderCommandBuffer> instance = this;
-        Ref<MetalArgumentBuffer> argBuffer = argumentBuffer.As<MetalArgumentBuffer>();
-        Ref<MetalIndexBuffer> mtlIndexBuffer = indexBuffer.As<MetalIndexBuffer>();
+        Ref<MetalGPUBuffer> argBuffer = argumentBuffer.As<MetalGPUBuffer>();
+        Ref<MetalGPUBuffer> mtlIndexBuffer = indexBuffer.As<MetalGPUBuffer>();
         
         Renderer::Submit([instance, argBuffer, mtlIndexBuffer, drawCount, stride, offset]() mutable {
             
@@ -241,15 +237,15 @@ namespace HazardRenderer::Metal
             }
         });
     }
-    void MetalRenderCommandBuffer::DispatchCompute(const DispatchComputeInfo& computeInfo)
+    void MetalRenderCommandBuffer::DispatchCompute(GroupSize GlobalGroupSize)
     {
-        m_WaitOnSubmit = computeInfo.WaitForCompletion;
+        m_WaitOnSubmit = true;
         Ref<MetalRenderCommandBuffer> instance = this;
         
         if(!m_ComputeEncoder)
             m_ComputeEncoder = m_CommandBuffer->computeCommandEncoder();
         
-        Renderer::Submit([instance, size = computeInfo.GroupSize]() mutable {
+        Renderer::Submit([instance, size = GlobalGroupSize]() mutable {
         
             MTL::Size localGroup = { 32, 32, 1 };
             MTL::Size groupSize = {
@@ -263,14 +259,14 @@ namespace HazardRenderer::Metal
     }
     void MetalRenderCommandBuffer::TraceRays(const TraceRaysInfo& traceRaysInfo)
     {
-        DispatchComputeInfo computeInfo = {};
-        computeInfo.GroupSize.x = traceRaysInfo.Extent.Width;
-        computeInfo.GroupSize.y = traceRaysInfo.Extent.Height;
-        computeInfo.GroupSize.z = traceRaysInfo.Extent.Depth;
-        computeInfo.WaitForCompletion = true;
+        GroupSize groupSize = {};
+        groupSize.x = traceRaysInfo.Extent.Width;
+        groupSize.y = traceRaysInfo.Extent.Height;
+        groupSize.z = traceRaysInfo.Extent.Depth;
         
-        DispatchCompute(computeInfo);
+        DispatchCompute(groupSize);
     }
+/*
     void MetalRenderCommandBuffer::BuildAccelerationStructure(const AccelerationStructureBuildInfo &info)
     {
         Ref<AccelerationStructure> structure = info.AccelerationStructure;
@@ -296,5 +292,6 @@ namespace HazardRenderer::Metal
                 mips.Cubemap.As<MetalCubemapTexture>()->GenerateMipmaps_RT(instance->m_CommandBuffer);
             });
     }
+ */
 }
 #endif

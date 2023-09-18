@@ -23,7 +23,7 @@ namespace HazardRenderer::Metal
         if(info->Data)
         {
             m_LocalBuffer = Buffer::Copy(info->Data, info->Size);
-            Ref<MetalVertexBuffer> instance = this;
+            Ref<MetalGPUBuffer> instance = this;
             Renderer::SubmitResourceCreate([instance]() mutable {
                 
                 auto device = MetalContext::GetMetalDevice();
@@ -34,7 +34,7 @@ namespace HazardRenderer::Metal
         }
         else
         {
-            Ref<MetalVertexBuffer> instance = this;
+            Ref<MetalGPUBuffer> instance = this;
             Renderer::SubmitResourceCreate([instance]() mutable {
                 
                 auto device = MetalContext::GetMetalDevice();
@@ -51,7 +51,7 @@ namespace HazardRenderer::Metal
     }
     void MetalGPUBuffer::SetData(const BufferCopyRegion& copyRegion)
     {
-        Ref<MetalVertexBuffer> instance = this;
+        Ref<MetalGPUBuffer> instance = this;
         m_LocalBuffer.Write(copyRegion.Data, copyRegion.Size, copyRegion.Offset);
         Renderer::Submit([instance, copyRegion]() mutable {
             instance->SetData_RT(copyRegion);

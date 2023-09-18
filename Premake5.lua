@@ -44,7 +44,7 @@ workspace "Hazard"
         architecture "universal"
         xcodebuildsettings
         {
-            ["MACOSX_DEPLOYMENT_TARGET"] = "12.0",
+            ["MACOSX_DEPLOYMENT_TARGET"] = "13.0",
             ["IPHONEOS_DEPLOYMENT_TARGET"] = "14.0",
             ["ALWAYS_SEARCH_USER_PATHS"] = "YES",
             ["CLANG_ENABLE_OBJC_WEAK"] = "YES",

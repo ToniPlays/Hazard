@@ -108,8 +108,8 @@ namespace HazardRenderer::Metal
             }
         }
         
-        m_PipelineDescriptor->setVertexFunction(m_Shader->GetFunction(ShaderStage::Vertex));
-        m_PipelineDescriptor->setFragmentFunction(m_Shader->GetFunction(ShaderStage::Fragment));
+        //m_PipelineDescriptor->setVertexFunction(m_Shader->GetFunction(ShaderStage::Vertex));
+        //m_PipelineDescriptor->setFragmentFunction(m_Shader->GetFunction(ShaderStage::Fragment));
         m_PipelineDescriptor->setInputPrimitiveTopology(DrawTypeToMTLTopology(m_Specs.DrawType));
         m_PipelineDescriptor->setVertexDescriptor(vertexDescriptor);
         
@@ -181,14 +181,14 @@ namespace HazardRenderer::Metal
         m_ComputeDescriptor = MTL::ComputePipelineDescriptor::alloc()->init();
         SetDebugLabel(m_ComputeDescriptor, m_Specs.DebugName);
         
-        if(m_Specs.Usage == PipelineUsage::ComputeBit)
-            m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Compute));
+        //if(m_Specs.Usage == PipelineUsage::ComputeBit)
+        //    m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Compute));
         //else
         //    m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Raygen));
         
         NS::Error* error;
         
-        m_ComputePipeline = device->GetMetalDevice()->newComputePipelineState(m_Shader->GetFunction(ShaderStage::Compute), &error);
+        //m_ComputePipeline = device->GetMetalDevice()->newComputePipelineState(m_Shader->GetFunction(ShaderStage::Compute), &error);
         
         if(error->code() != 0)
             std::cout << error->description()->utf8String() << std::endl;

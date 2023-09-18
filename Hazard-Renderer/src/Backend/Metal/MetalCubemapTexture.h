@@ -44,7 +44,6 @@ namespace HazardRenderer::Metal
         
         Buffer m_LocalBuffer;
         
-        std::string m_FilePath = "";
         std::string m_DebugName = "";
         
         Ref<Image2D> m_SourceImage = nullptr;
