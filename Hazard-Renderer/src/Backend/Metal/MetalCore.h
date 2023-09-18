@@ -10,10 +10,7 @@
 #include "MetalShader.h"
 
 #include "MetalRenderPass.h"
-#include "MetalVertexBuffer.h"
-#include "MetalIndexBuffer.h"
-#include "MetalUniformBuffer.h"
-#include "MetalArgumentBuffer.h"
+#include "MetalGPUBuffer.h"
 
 #include "MetalCubemapTexture.h"
 

@@ -4,7 +4,7 @@
 #include "MetalShaderCompiler.h"
 #include "MetalContext.h"
 #include "Backend/Core/Renderer.h"
-#include "MetalVertexBuffer.h"
+#include "MetalGPUBuffer.h"
 
 #include "Backend/Core/Window.h"
 
@@ -33,7 +33,7 @@ namespace HazardRenderer::Metal
             NS::Error* libError;
             std::string result;
             
-            if(!compiler.Decompile(spirv, result, stage == ShaderStage::Raygen))
+            if(!compiler.Decompile(spirv, result, stage == SHADER_STAGE_RAYGEN_BIT))
             {
                 std::cout << result << std::endl;
                 std::cout << compiler.GetErrorMessage() << std::endl;
@@ -79,118 +79,10 @@ namespace HazardRenderer::Metal
                 continue;
             }
             
-            m_Functions[stage] = func;
+            //m_Functions[stage] = func;
         }
         
         Reflect();
-    }
-
-    void MetalShader::Set(const std::string &name, uint32_t index, Ref<Image2D> image)
-    {
-        for (auto& [set, descriptor] : m_DescriptorSet)
-        {
-            auto write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, name);
-            if(write == nullptr) continue;
-            if (write->DebugName != name)
-                continue;
-            
-            Ref<Image2D> instance = image;
-            Renderer::Submit([write, index, instance]() {
-                write->BoundValue[index] = instance;
-            });
-            return;
-        }
-        for (auto& [set, descriptor] : m_DescriptorSet)
-        {
-            auto write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE, name);
-            if(write == nullptr) continue;
-            if (write->DebugName != name)
-                continue;
-            
-            Ref<Image2D> instance = image;
-            Renderer::Submit([write, index, instance]() {
-                write->BoundValue[index] = instance;
-            });
-            return;
-        }
-    }
-    void MetalShader::Set(const std::string &name, uint32_t index, Ref<CubemapTexture> cubemap)
-    {
-        for (auto& [set, descriptor] : m_DescriptorSet)
-        {
-            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, name);
-            if (!write) continue;
-
-            Ref<CubemapTexture> instance = cubemap;
-            Renderer::Submit([write, index, instance]() {
-                write->BoundValue[index] = instance;
-            });
-            return;
-        }
-        
-        for (auto& [set, descriptor] : m_DescriptorSet)
-        {
-            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE, name);
-            if (!write) continue;
-
-            Ref<CubemapTexture> instance = cubemap;
-            Renderer::Submit([write, index, instance]() {
-                write->BoundValue[index] = instance;
-            });
-            return;
-        }
-    }
-    void MetalShader::Set(const std::string &name, uint32_t index, Ref<AccelerationStructure> accelerationStructure)
-    {
-        for (auto& [set, descriptor] : m_DescriptorSet)
-        {
-            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE, name);
-            if (!write) continue;
-
-            Renderer::Submit([write, index, accelerationStructure]() {
-                write->BoundValue[index] = accelerationStructure;
-            });
-            return;
-        }
-    }
-    void MetalShader::Set(const std::string &name, uint32_t index, Ref<BufferBase> buffer)
-    {
-        for (auto& [set, descriptor] : m_DescriptorSet)
-        {
-            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_STORAGE_BUFFER, name);
-            if (!write) continue;
-            
-            Renderer::Submit([write, index, buffer]() mutable {
-                write->BoundValue[index] = buffer;
-            });
-            return;
-        }
-    }
-    void MetalShader::Set(const std::string &name, Buffer buffer)
-    {
-        for (auto& [set, descriptor] : m_DescriptorSet)
-        {
-            auto* write = descriptor.GetWriteDescriptor(MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT, name);
-            if (!write) continue;
-
-            Buffer data = Buffer::Copy(buffer);
-            
-            Renderer::Submit([write, data]() mutable {
-                write->Buffer.Write(data.Data, data.Size);
-                data.Release();
-            });
-            return;
-        }
-    }
-
-    void MetalShader::Set(uint32_t index, Ref<GPUBuffer> buffer, size_t offset)
-    {
-        Ref<MetalShader> instance = this;
-        Ref<MetalGPUBuffer> buff = buffer.As<GPUBuffer>();
-        
-        Renderer::Submit([instance, buff, index, offset]() mutable {
-            instance->m_InputBuffers[index] = { buff, offset };
-        });
     }
     
     void MetalShader::BindResources(MTL::RenderCommandEncoder* encoder)
@@ -218,7 +110,7 @@ namespace HazardRenderer::Metal
             MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
             for (auto& [binding, buffer] : buffers)
             {
-                UniformBufferCreateInfo bufferInfo = {};
+                BufferCreateInfo bufferInfo = {};
                 bufferInfo.Name = buffer.Name;
                 bufferInfo.Set = set;
                 bufferInfo.Binding = binding;

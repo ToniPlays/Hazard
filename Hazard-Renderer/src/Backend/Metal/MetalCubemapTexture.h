@@ -21,9 +21,6 @@ namespace HazardRenderer::Metal
         uint32_t GetHeight() const override { return m_Height; }
         glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
         uint32_t GetMipLevels() const override { return m_MipLevels; }
-        const std::string& GetPath() const override { return m_FilePath; };
-        
-        Ref<Image2D> GetSourceImage() override { return m_SourceImage; }
         
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }

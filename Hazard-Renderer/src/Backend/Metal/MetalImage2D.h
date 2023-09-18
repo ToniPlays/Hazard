@@ -25,6 +25,7 @@ namespace HazardRenderer::Metal
         
         Buffer ReadPixels(const ImageCopyRegion& region) override;
         
+        TextureType GetType() const override { return TextureType::Image2D; }
         uint32_t GetWidth() override { return m_Width; };
         uint32_t GetHeight() override { return m_Height; };
         ImageFormat GetFormat() const override { return m_Format; }
@@ -34,6 +35,8 @@ namespace HazardRenderer::Metal
         virtual float GetAspectRatio() override { return (float)m_Width / (float)m_Height; };
         virtual Buffer GetBuffer() const override { return m_LocalBuffer; };
         virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
+        
+        
         
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }

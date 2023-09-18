@@ -7,3 +7,5 @@
 #include "Core/Metadata/MethodMetadata.h"
 #include "Core/AttributeBuilder.h"
 #include "Core/FieldValueStorage.h"
+
+#define BIND_ICALL(x) assembly->AddInternalCall("Hazard.InternalCalls", #x, (void*)x)

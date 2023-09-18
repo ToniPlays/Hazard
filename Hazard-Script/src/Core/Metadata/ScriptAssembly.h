@@ -58,7 +58,7 @@ namespace HazardScript
 		{
 			std::vector<Ref<ScriptMetadata>> results;
 
-			for (Coral::ReflectionType& type : m_Assembly.GetTypes())
+			for (Coral::ReflectionType type : m_Assembly.GetTypes())
 			{
 				//if (script->Has<T>())
 				//	results.push_back(script);

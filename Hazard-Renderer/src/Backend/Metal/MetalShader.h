@@ -4,9 +4,9 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Backend/Core/Shader.h"
-#include "Backend/Core/Buffers.h"
+#include "Backend/Core/GPUBuffer.h"
 #include "MetalDescriptorSet.h"
-#include "MetalVertexBuffer.h"
+#include "MetalGPUBuffer.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -16,7 +16,7 @@ namespace HazardRenderer::Metal
 {
     struct MetalInputBuffer
     {
-        Ref<MetalVertexBuffer> Buffer;
+        Ref<MetalGPUBuffer> Buffer;
         size_t Offset = 0;
     };
 
@@ -28,19 +28,12 @@ namespace HazardRenderer::Metal
         ~MetalShader();
         
         void Reload() override;
-        void Set(const std::string& name, uint32_t index, Ref<Image2D> image) override;
-        void Set(const std::string& name, uint32_t index, Ref<CubemapTexture> cubemap) override;
-        void Set(const std::string& name, uint32_t index, Ref<AccelerationStructure> accelerationStructure) override;
-        void Set(const std::string& name, uint32_t index, Ref<BufferBase> buffer) override;
-        void Set(const std::string& name, Buffer buffer) override;
-        
-        void Set(uint32_t index, Ref<GPUBuffer> buffer, size_t offset = 0) override;
 
-        const ShaderData& GetShaderData() override { return m_ShaderData; };
-        std::unordered_map<ShaderStage, Buffer> GetShaderCode() const override { return m_ShaderCode; };
+        const ShaderData& GetShaderData() const override { return m_ShaderData; };
+        std::unordered_map<uint32_t, Buffer> GetShaderCode() const override { return m_ShaderCode; };
         
         //Metal specific
-        MTL::Function* GetFunction(const ShaderStage& stage) { return m_Functions[stage]; }
+        //MTL::Function* GetFunction(const ShaderStage& stage) { return m_Functions[stage]; }
         void BindResources(MTL::RenderCommandEncoder* encoder);
         void BindResources(MTL::ComputeCommandEncoder* encoder);
         
@@ -49,8 +42,8 @@ namespace HazardRenderer::Metal
         
     private:
         ShaderData m_ShaderData;
-        std::unordered_map<ShaderStage, Buffer> m_ShaderCode;
-        std::unordered_map<ShaderStage, MTL::Function*> m_Functions;
+        std::unordered_map<uint32_t, Buffer> m_ShaderCode;
+        //std::unordered_map<ShaderStage, MTL::Function*> m_Functions;
         
         std::unordered_map<uint32_t, MetalDescriptorSet> m_DescriptorSet;
         std::unordered_map<uint32_t, MetalInputBuffer> m_InputBuffers;

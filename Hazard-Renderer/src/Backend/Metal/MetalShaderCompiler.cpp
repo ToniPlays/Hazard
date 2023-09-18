@@ -10,21 +10,22 @@
 
 namespace HazardRenderer::Metal
 {
-    static shaderc_shader_kind ShaderStageToShaderC(const ShaderStage& type)
+    static shaderc_shader_kind ShaderStageToShaderC(uint32_t type)
     {
-        switch (type)
+        switch(type)
         {
-        case ShaderStage::Vertex:       return shaderc_vertex_shader;
-        case ShaderStage::Fragment:     return shaderc_fragment_shader;
-        case ShaderStage::Compute:      return shaderc_compute_shader;
-        case ShaderStage::Geometry:     return shaderc_geometry_shader;
-        case ShaderStage::Raygen:       return shaderc_raygen_shader;
-        case ShaderStage::Miss:         return shaderc_miss_shader;
-        case ShaderStage::ClosestHit:   return shaderc_closesthit_shader;
-        case ShaderStage::AnyHit:       return shaderc_anyhit_shader;
-        case ShaderStage::None:         return (shaderc_shader_kind)0;
+            case SHADER_STAGE_VERTEX_BIT: return shaderc_glsl_vertex_shader;
+            case SHADER_STAGE_FRAGMENT_BIT: return shaderc_glsl_fragment_shader;
+            case SHADER_STAGE_COMPUTE_BIT: return shaderc_glsl_compute_shader;
+            case SHADER_STAGE_GEOMETRY_BIT: return shaderc_glsl_geometry_shader;
+            case SHADER_STAGE_RAYGEN_BIT: return shaderc_glsl_raygen_shader;
+            case SHADER_STAGE_MISS_BIT: return shaderc_glsl_miss_shader;
+            case SHADER_STAGE_CLOSEST_HIT_BIT: return shaderc_glsl_closesthit_shader;
+            case SHADER_STAGE_ANY_HIT_BIT: return shaderc_glsl_anyhit_shader;
+            case SHADER_STAGE_NONE: return (shaderc_shader_kind)0;
+                
         }
-        return (shaderc_shader_kind)0;
+       return (shaderc_shader_kind)0;
     }
 
     MetalShaderCompiler::~MetalShaderCompiler()
