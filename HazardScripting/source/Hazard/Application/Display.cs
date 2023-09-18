@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Coral.Managed.Interop;
+using System.Runtime.CompilerServices;
 
 namespace Hazard
 {
@@ -22,11 +23,18 @@ namespace Hazard
             get { unsafe { return InternalCalls.Display_IsVsync_Native(); } }
             set { unsafe { InternalCalls.Display_SetVsync_Native(value); } }
         }
+
+        public static Resolution Resolution
+        {
+            get { unsafe { return InternalCalls.Display_GetResolution_Native(); } }
+        }
+
         public static Resolution[] GetResolutions() 
         { 
             unsafe 
             {
-                return InternalCalls.Display_GetResolutions_Native();
+                UnmanagedArray result = InternalCalls.Display_GetResolutions_Native();
+                return result.ToSpan<Resolution>().ToArray();
             }
         }
         public static void SetResolution(Resolution resolution)

@@ -376,7 +376,8 @@ namespace UI
 			ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
 				Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
 
-				if (script) {
+				if (script)
+				{
 					c.ModuleName = script->GetModuleName();
 					changed = true;
 				}

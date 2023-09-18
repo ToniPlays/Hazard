@@ -33,11 +33,19 @@ namespace HazardRenderer
 
 		int Width = 0;
 		int Height = 0;
+		float RefreshRate = 0.0f;
 		uint32_t ImagesInFlight = 0;
 		Window* Window;
 
 		std::function<void(Event&)> EventCallback;
 		WindowProps() = default;
+	};
+
+	struct Resolution 
+	{
+		float Width;
+		float Height;
+		float RefreshRate;
 	};
 
 	class Window
@@ -70,6 +78,8 @@ namespace HazardRenderer
 		virtual bool IsMaximized() const = 0;
 		virtual bool IsFocused() const = 0;
 		virtual glm::vec2 GetPosition() = 0;
+		virtual std::vector<Resolution> GetAvailableResolutions() const = 0;
+		virtual void SetResolution(const Resolution& resolution) = 0;
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;

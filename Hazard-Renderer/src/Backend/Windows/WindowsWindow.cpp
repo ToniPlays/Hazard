@@ -12,7 +12,7 @@
 
 #include <vector>
 
-namespace HazardRenderer 
+namespace HazardRenderer
 {
 	Window* Window::Create(HazardRendererCreateInfo* info)
 	{
@@ -49,7 +49,8 @@ namespace HazardRenderer
 		s_DebugCallback = info->pAppInfo->MessageCallback;
 		m_WindowData.EventCallback = info->pAppInfo->EventCallback;
 
-		if (!m_WindowData.EventCallback) {
+		if (!m_WindowData.EventCallback)
+		{
 			m_WindowData.EventCallback = [](Event& e) {};
 		}
 
@@ -83,11 +84,12 @@ namespace HazardRenderer
 
 			if (windowInfo.FullScreen)
 			{
-				monitor = glfwGetPrimaryMonitor();
 				if (m_WindowData.Width <= 0 || m_WindowData.Height <= 0)
 				{
-					m_WindowData.Width = glfwGetVideoMode(monitor)->width;
-					m_WindowData.Height = glfwGetVideoMode(monitor)->height;
+					const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+					m_WindowData.Width = mode->width;
+					m_WindowData.Height = mode->height;
+					m_WindowData.RefreshRate = mode->refreshRate;
 				}
 			}
 			HZR_ASSERT(m_WindowData.Width > 0, "Window width cannot be less than 0");
@@ -101,10 +103,14 @@ namespace HazardRenderer
 			if (info->pAppInfo->IconCount > 0)
 				SetWindowIcon(info->pAppInfo->IconCount, info->pAppInfo->pIcons);
 
+			if (monitor == nullptr)
+				monitor = glfwGetPrimaryMonitor();
+
 			m_Context->Init(this, info);
 			m_Context->SetClearColor(windowInfo.Color);
 			m_WindowData.Width = m_Context->GetSwapchain()->GetWidth();
 			m_WindowData.Height = m_Context->GetSwapchain()->GetHeight();
+			m_WindowData.RefreshRate = glfwGetVideoMode(monitor)->refreshRate;
 
 			//Center window
 			monitor = glfwGetPrimaryMonitor();
@@ -146,7 +152,8 @@ namespace HazardRenderer
 	{
 		std::vector<GLFWimage> glfwImages(count);
 
-		for (uint32_t i = 0; i < count; i++) {
+		for (uint32_t i = 0; i < count; i++)
+		{
 			GLFWimage img = glfwImages[i];
 			const std::filesystem::path& path = File::GetFileAbsolutePath(std::string(images[i]));
 
@@ -158,7 +165,7 @@ namespace HazardRenderer
 		}
 		glfwSetWindowIcon(m_Window, count, glfwImages.data());
 
-		for (auto& image : glfwImages) 
+		for (auto& image : glfwImages)
 			stbi_image_free(image.pixels);
 	}
 
@@ -167,6 +174,32 @@ namespace HazardRenderer
 		int x, y;
 		glfwGetWindowPos(m_Window, &x, &y);
 		return { x, y };
+	}
+
+	std::vector<Resolution> WindowsWindow::GetAvailableResolutions() const
+	{
+		int count = 0;
+		const GLFWvidmode* modePtr = glfwGetVideoModes(glfwGetPrimaryMonitor(), &count);
+
+		std::vector<Resolution> result;
+
+		for (uint32_t i = 0; i < count; i++)
+		{
+			const GLFWvidmode mode = modePtr[i];
+			Resolution resolution = {};
+			resolution.Width = mode.width;
+			resolution.Height = mode.height;
+			resolution.RefreshRate = mode.refreshRate;
+			result.push_back(resolution);
+		}
+		return result;
+	}
+
+	void WindowsWindow::SetResolution(const Resolution& resolution)
+	{
+		int x, y;
+		glfwGetWindowPos(m_Window, &x, &y);
+		glfwSetWindowMonitor(m_Window, NULL, x, y, resolution.Width, resolution.Height, resolution.RefreshRate);
 	}
 
 	void WindowsWindow::SetPosition(glm::vec2 position)
@@ -179,7 +212,7 @@ namespace HazardRenderer
 		m_WindowData.Fullscreen = fullscreen;
 		GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 		const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-		glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+		glfwSetWindowMonitor(m_Window, monitor, 0, 0, m_WindowData.Width, m_WindowData.Height, m_WindowData.RefreshRate);
 	}
 	void WindowsWindow::SetCallbacks()
 	{
@@ -189,73 +222,73 @@ namespace HazardRenderer
 			data.Height = h;
 			data.Width = w;
 
-            data.Window->GetContext()->GetSwapchain()->Resize(data.Width, data.Height);
-            
+			data.Window->GetContext()->GetSwapchain()->Resize(data.Width, data.Height);
+
 			WindowResizeEvent event(w, h);
 			data.EventCallback(event);
 
-			});
+		});
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			WindowCloseEvent event;
 			data.EventCallback(event);
 
-			});
+		});
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
-			case GLFW_PRESS:
-			{
-				KeyPressedEvent e(key, 0);
-				data.EventCallback(e);
-				break;
-			}
-			case GLFW_RELEASE:
-			{
-				KeyReleasedEvent e(key);
-				data.EventCallback(e);
-				break;
-			}
-			case GLFW_REPEAT:
-			{
-				KeyPressedEvent e(key, 1);
-				data.EventCallback(e);
-				break;
-			}
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent e(key, 0);
+					data.EventCallback(e);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					KeyReleasedEvent e(key);
+					data.EventCallback(e);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					KeyPressedEvent e(key, 1);
+					data.EventCallback(e);
+					break;
+				}
 			}
 			Input::UpdateKey(key, action);
-			});
+		});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			switch (action)
 			{
-			case GLFW_PRESS:
-			{
-				MouseButtonPressedEvent e(button);
-				data.EventCallback(e);
-				break;
+				case GLFW_PRESS:
+				{
+					MouseButtonPressedEvent e(button);
+					data.EventCallback(e);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					MouseButtonReleasedEvent e(button);
+					data.EventCallback(e);
+					break;
+				}
 			}
-			case GLFW_RELEASE:
-			{
-				MouseButtonReleasedEvent e(button);
-				data.EventCallback(e);
-				break;
-			}
-			}
-			});
+		});
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent e((float)xOffset, (float)yOffset);
 			data.EventCallback(e);
-			});
+		});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseMovedEvent e((float)xPos, (float)yPos);
 			data.EventCallback(e);
-			});
+		});
 		glfwSetJoystickCallback([](int device, int status) {
 			if (status == GLFW_CONNECTED)
 			{
@@ -272,18 +305,18 @@ namespace HazardRenderer
 				data.EventCallback(event);
 				Input::DisconnectGamepad(device);
 			}
-			});
+		});
 		glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focus) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.focus = focus;
 
 			WindowFocusEvent e(focus);
 			data.EventCallback(e);
-			});
+		});
 		glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int minimized) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Minimized = minimized;
-			});
+		});
 		/*
 		glfwSetTitlebarHitTestCallback(m_Window, [](GLFWwindow* window, int x, int y, int* hit) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);

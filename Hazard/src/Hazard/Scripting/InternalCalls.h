@@ -115,6 +115,9 @@ namespace Hazard
 			BIND_ICALL(Display_SetFullscreen_Native);
 			BIND_ICALL(Display_IsVsync_Native);
 			BIND_ICALL(Display_SetVsync_Native);
+			BIND_ICALL(Display_GetResolution_Native);
+			BIND_ICALL(Display_GetResolutions_Native);
+			BIND_ICALL(Display_SetResolution_Native);
 
 			//Math ---------------------------------------------
 			BIND_ICALL(Math_RandomRange_Native);
