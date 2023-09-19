@@ -3,6 +3,7 @@
 #include "Hazard.h"
 #include "Project/ProjectManager.h"
 #include "AssetPanelItem.h"
+#include "Hazard/ImGUI/UIElements/TextField.h"
 
 namespace UI
 {
@@ -81,6 +82,8 @@ namespace UI
 		std::vector<Ref<Hazard::Texture2DAsset>> m_Textures;
 		std::unordered_map<AssetHandle, Ref<Hazard::Texture2DAsset>> m_Icons;
 		Ref<HazardRenderer::Sampler> m_IconSampler;
+
+		Hazard::ImUI::TextField m_SearchField;
 
 		float m_Scale = 100.0f;
 		uint32_t m_Flags = 0;

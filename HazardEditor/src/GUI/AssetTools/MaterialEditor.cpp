@@ -46,13 +46,14 @@ namespace UI
 	}
 	void MaterialEditor::DrawMaterialParam(const std::string& name, const Hazard::MaterialParam& param)
 	{
+		/*
 		using namespace HazardRenderer;
 		switch (param.Type)
 		{
 			case ShaderDataType::Float:
 			{
 				float value = m_Material->Get<float>(name);
-				if (ImUI::InputFloat(name.c_str(), value, 0.0f, 0.05f))
+				if (ImUI::InputFloatX(name.c_str(), value, 0.0f, 0.05f))
 					m_Material->Set(name, value);
 				break;
 			}
@@ -90,5 +91,6 @@ namespace UI
 			}
 			default: break;
 		}
+		*/
 	}
 }

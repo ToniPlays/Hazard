@@ -21,7 +21,7 @@ namespace Hazard
 		handler.OnBegin();
 		return true;
 	}
-	static bool WorldManager_LoadWorldFromString_Native(const CharType* tag)
+	static bool WorldManager_LoadWorldFromString_Native(Coral::NativeString name)
 	{
 		return false;
 	}

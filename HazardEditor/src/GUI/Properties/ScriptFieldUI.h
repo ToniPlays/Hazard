@@ -51,16 +51,16 @@ namespace UI
 		if (field->Has<RangeAttribute>())
 		{
 			Ref<RangeAttribute> attrib = field->Get<RangeAttribute>();
-			modified = ImUI::InputFloat(value, 0.0f, attrib->Min, attrib->Max);
+			//modified = ImUI::InputFloatX(value, 0.0f, attrib->Min, attrib->Max);
 		}
 		else if (field->Has<SliderAttribute>())
 		{
 			Ref<SliderAttribute> attrib = field->Get<SliderAttribute>();
-			modified = ImUI::SliderFloat(value, 0.0f, attrib->Min, attrib->Max);
+			//modified = ImUI::SliderFloat(value, 0.0f, attrib->Min, attrib->Max);
 		}
 		else
 		{
-			modified = ImUI::InputFloat(value, 0.0f);
+			//modified = ImUI::InputFloatX(value, 0.0f);
 		}
 
 		if (modified)
@@ -202,22 +202,40 @@ namespace UI
 	template<>
 	bool ScriptField<glm::vec2>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world)
 	{
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+
 		glm::vec2 value = obj->GetFieldValue<glm::vec2>(field->GetName());
 
-		bool modified = ImUI::InputFloat2(value, 0.0f);
-		if (modified)
-			obj->SetFieldValue(field->GetName(), value, index);
-		return modified;
+		ImUI::InputFloat input(field->GetName(), 2);
+		input.ConfigureField(0, "X", style.Colors.AxisX);
+		input.ConfigureField(1, "Y", style.Colors.AxisY);
+		input.SetFieldValue(0, value.x);
+		input.SetFieldValue(1, value.y);
+		input.Render();
+
+		if (input.DidAnyChange())
+			obj->SetFieldValue(field->GetName(), glm::vec2{ input.GetValue(0), input.GetValue(1) }, index);
+		return input.DidAnyChange();
 	}
 	template<>
 	bool ScriptField<glm::vec3>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world)
 	{
-		glm::vec3 value = obj->GetFieldValue<glm::vec3>(field->GetName(), index);
-		bool modified = ImUI::InputFloat3(value, 0.0f);
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
-		if (modified)
-			obj->SetFieldValue(field->GetName(), value, index);
-		return modified;
+		glm::vec3 value = obj->GetFieldValue<glm::vec3>(field->GetName());
+
+		ImUI::InputFloat input(field->GetName(), 3);
+		input.ConfigureField(0, "X", style.Colors.AxisX);
+		input.ConfigureField(1, "Y", style.Colors.AxisY);
+		input.ConfigureField(2, "Z", style.Colors.AxisZ);
+		input.SetFieldValue(0, value.x);
+		input.SetFieldValue(1, value.y);
+		input.SetFieldValue(2, value.z);
+		input.Render();
+
+		if (input.DidAnyChange())
+			obj->SetFieldValue(field->GetName(), glm::vec3{ input.GetValue(0), input.GetValue(1), input.GetValue(2) }, index);
+		return input.DidAnyChange();
 	}
 	template<>
 	bool ScriptField<glm::vec4>(uint32_t index, Ref<HazardScript::FieldMetadata> field, Ref<HazardScript::ScriptObject> obj, Ref<World> world)
@@ -245,7 +263,7 @@ namespace UI
 			Ref<TextAreaAttribute> attrib = field->Get<TextAreaAttribute>();
 			modified = ImUI::TextArea(value, attrib->Min, attrib->Max);
 		}
-		else modified = ImUI::TextField(value);
+		else modified = ImUI::TextField_OLD(value);
 
 		if (modified)
 			obj->SetFieldValue<std::string>(field->GetName(), value, index);

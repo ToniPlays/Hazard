@@ -11,6 +11,9 @@ namespace UI
 
 	Hierarchy::Hierarchy() : Panel("Hierarchy")
 	{
+		m_SearchField = ImUI::TextField("");
+		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
+		m_SearchField.SetHint("Search...");
 	}
 	void Hierarchy::Update()
 	{
@@ -23,25 +26,21 @@ namespace UI
 		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-		ImUI::TextFieldWithHint(m_SearchValue, "Search...");
+		m_SearchField.Render();
 
 		const char* columns[] = { "Name", "Type", "Modifiers" };
 
 		ImUI::Table("Hierarchy", columns, 3, [&]() {
 
-
 			for (auto& entity : world->GetEntitiesWith<TagComponent>())
 			{
 				Entity e(entity, world.Raw());
 				TagComponent& tag = e.GetComponent<TagComponent>();
-				if (!StringUtil::Contains(tag.Tag, m_SearchValue)) continue;
+
+				if (!StringUtil::Contains(tag.Tag, m_SearchField.GetValue())) continue;
 
 				bool isSelected = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), e) != m_SelectionContext.end();
-
 				ImUI::ScopedStyleColor color(ImGuiCol_Header, style.Window.HeaderHighlighted);
-
-
 
 				bool clicked = ImUI::TableRowTreeItem(std::to_string(tag.Uid).c_str(), tag.Tag.c_str(), isSelected, []() {
 

@@ -202,7 +202,7 @@ namespace UI
 		{
 			ImGui::SetKeyboardFocusHere();
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - edgeOffset * 4.0f);
-			ImUI::TextField(m_RenameValue);
+			ImUI::TextField_OLD(m_RenameValue);
 
 			if (ImGui::IsItemDeactivated())
 			{

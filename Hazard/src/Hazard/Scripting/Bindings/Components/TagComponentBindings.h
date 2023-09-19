@@ -9,14 +9,13 @@ namespace Hazard
 {
 	using namespace HazardScript;
 
-	static const CharType* TagComponent_GetName_Native(uint64_t id)
+	static Coral::NativeString TagComponent_GetName_Native(uint64_t id)
 	{
 		auto& tag = GET_ENTITY(id).GetComponent<TagComponent>();
-		auto str = Coral::StringHelper::ConvertUtf8ToWide(tag.Tag);
-		return str.c_str();
+		return Coral::NativeString::FromUTF8(tag.Tag);
 	}
-	static void TagComponent_SetName_Native(uint64_t id, const CharType* tag)
+	static void TagComponent_SetName_Native(uint64_t id, Coral::NativeString tag)
 	{
-		GET_ENTITY(id).GetTag().Tag = Coral::StringHelper::ConvertWideToUtf8(tag);
+		GET_ENTITY(id).GetTag().Tag = tag.ToString();
 	}
 }

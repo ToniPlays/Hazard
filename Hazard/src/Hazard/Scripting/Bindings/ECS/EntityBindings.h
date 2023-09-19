@@ -24,15 +24,13 @@ namespace Hazard
 
 	using namespace HazardScript;
 
-	static uint64_t Entity_InstantiateOrigin_Native(const CharType* name)
+	static uint64_t Entity_InstantiateOrigin_Native(Coral::NativeString name)
 	{
-		std::string entityName = Coral::StringHelper::ConvertWideToUtf8(name);
-		return Application::GetModule<WorldHandler>().GetCurrentWorld()->CreateEntity(entityName).GetUID();
+		return Application::GetModule<WorldHandler>().GetCurrentWorld()->CreateEntity(name.ToString()).GetUID();
 	}
-	static uint64_t Entity_InstantiateAt_Native(const CharType* name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
+	static uint64_t Entity_InstantiateAt_Native(Coral::NativeString name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 	{
-		std::string entityName = Coral::StringHelper::ConvertWideToUtf8(name);
-		Entity e = Application::GetModule<WorldHandler>().GetCurrentWorld()->CreateEntity(entityName);
+		Entity e = Application::GetModule<WorldHandler>().GetCurrentWorld()->CreateEntity(name.ToString());
 
 		auto& tc = e.GetTransform();
 		tc.SetTranslation(position);

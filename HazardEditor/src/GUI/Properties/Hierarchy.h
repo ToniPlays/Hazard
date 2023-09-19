@@ -5,8 +5,10 @@
 #include "Hazard/ECS/WorldHandler.h"
 #include "Hazard/ECS/Entity.h"
 #include "Core/EditorEvent.h"
+#include "Hazard/ImGUI/UIElements/TextField.h"
 
-namespace UI {
+namespace UI 
+{
 	class Hierarchy : public Hazard::ImUI::Panel {
 	public:
 		Hierarchy();
@@ -25,6 +27,6 @@ namespace UI {
 	private:
 		std::vector<Hazard::Entity> m_SelectionContext;
 
-		std::string m_SearchValue;
+		Hazard::ImUI::TextField m_SearchField;
 	};
 }

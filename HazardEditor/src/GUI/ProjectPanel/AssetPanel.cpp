@@ -19,6 +19,10 @@ namespace UI
 		SetRootFolder(ProjectManager::GetAssetFolder());
 
 		m_IconSampler = Hazard::RenderEngine::GetResources().DefaultImageSampler;
+
+		m_SearchField = ImUI::TextField("");
+		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
+		m_SearchField.SetHint("Search...");
 	}
 	void AssetPanel::Update()
 	{
@@ -131,6 +135,10 @@ namespace UI
 			ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
 			ImGui::BeginChild("##FileTree");
 			{
+
+				ImUI::ShiftY(4.0f);
+				m_SearchField.Render();
+				ImUI::ShiftY(4.0f);
 
 				ImUI::ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0, ImGuiStyleVar_FramePadding, ImVec2(4, 4));
 				ImUI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {

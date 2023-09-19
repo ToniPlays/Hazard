@@ -4,6 +4,7 @@
 #include "Hazard.h"
 #include "Hazard/Scripting/HScript.h"
 #include "ScriptFieldUI.h"
+#include "Hazard/ImGUI/UIElements/TextField.h"
 
 #include "Editor/EditorUtils.h"
 
@@ -11,7 +12,7 @@
 
 namespace UI
 {
-	constexpr float colWidth = 100.0f;
+	constexpr float colWidth = 125.0f;
 
 	using namespace Hazard;
 	template<typename T>
@@ -31,7 +32,6 @@ namespace UI
 	template<>
 	bool ComponentMenu<TagComponent>(std::vector<Entity>& entities)
 	{
-
 		std::string& tag = entities[0].GetTag().Tag;
 		bool mixed = false;
 
@@ -44,12 +44,13 @@ namespace UI
 			}
 		}
 
-		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-		if (ImUI::TextField(tag, "##tag", mixed))
+		ImUI::TextField tagField(tag);
+		tagField.Render();
+
+		if (tagField.DidChange())
 		{
 			for (auto& entity : entities)
-				entity.GetTag().Tag = tag;
+				entity.GetTag().Tag = tagField.GetValue();
 		}
 		return false;
 	}
@@ -57,9 +58,11 @@ namespace UI
 	bool ComponentMenu<TransformComponent>(std::vector<Entity>& entities)
 	{
 		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_MAP_MARKER " Transform"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
-			ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
 
+			ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
 			auto& firstTc = entities[0].GetComponent<TransformComponent>();
+
+			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 			uint32_t flags = 0;
 			glm::vec3 translation = firstTc.GetTranslation();
@@ -88,68 +91,82 @@ namespace UI
 
 			rotation = glm::degrees(rotation);
 
-			ImGui::Columns(2, 0, false);
-			ImGui::SetColumnWidth(0, colWidth);
-			uint32_t result = ImUI::InputFloat3("Translation", translation, 0.0f, flags);
+			ImUI::InputFloat translationInput("Translation", 3);
+			translationInput.ConfigureField(0, "X", style.Colors.AxisX, flags & BIT(0));
+			translationInput.ConfigureField(1, "Y", style.Colors.AxisY, flags & BIT(1));
+			translationInput.ConfigureField(2, "Z", style.Colors.AxisZ, flags & BIT(2));
+			translationInput.SetFieldValue(0, translation.x, 0.0f);
+			translationInput.SetFieldValue(1, translation.y, 0.0f);
+			translationInput.SetFieldValue(2, translation.z, 0.0f);
+			translationInput.Render();
 
-			if (result != 0)
+			if (translationInput.DidAnyChange())
 			{
 				for (auto& entity : entities)
 				{
 					auto& tc = entity.GetComponent<TransformComponent>();
 					glm::vec3 position = tc.GetTranslation();
 
-					position.x = (result & BIT(0)) ? translation.x : position.x;
-					position.y = (result & BIT(1)) ? translation.y : position.y;
-					position.z = (result & BIT(2)) ? translation.z : position.z;
+					position.x = translationInput.DidChange(0) ? translationInput.GetValue(0) : position.x;
+					position.y = translationInput.DidChange(1) ? translationInput.GetValue(1) : position.y;
+					position.z = translationInput.DidChange(2) ? translationInput.GetValue(2) : position.z;
 
 					tc.SetTranslation(position);
 				}
 			}
-			ImUI::ShiftY(3.0f);
+
 			ImGui::Separator();
-			ImUI::ShiftY(2.0f);
 
+			ImUI::InputFloat rotationInput("Rotation", 3);
+			rotationInput.ConfigureField(0, "X", style.Colors.AxisX, flags & BIT(3));
+			rotationInput.ConfigureField(1, "Y", style.Colors.AxisY, flags & BIT(4));
+			rotationInput.ConfigureField(2, "Z", style.Colors.AxisZ, flags & BIT(5));
+			rotationInput.SetFieldValue(0, rotation.x, 0.0f);
+			rotationInput.SetFieldValue(1, rotation.y, 0.0f);
+			rotationInput.SetFieldValue(2, rotation.z, 0.0f);
+			rotationInput.Render();
 
-			result = ImUI::InputFloat3("Rotation", rotation, 0.0f, flags >> 3);
-			if (result != 0)
+			if (rotationInput.DidAnyChange())
 			{
 				for (auto& entity : entities)
 				{
 					auto& tc = entity.GetComponent<TransformComponent>();
 					glm::vec3 rot = tc.GetRotationEuler();
 
-					rot.x = (result & BIT(0)) ? glm::radians(rotation.x) : rot.x;
-					rot.y = (result & BIT(1)) ? glm::radians(rotation.y) : rot.y;
-					rot.z = (result & BIT(2)) ? glm::radians(rotation.z) : rot.z;
+					rot.x = rotationInput.DidChange(0) ? glm::radians(rotationInput.GetValue(0)) : rot.x;
+					rot.y = rotationInput.DidChange(1) ? glm::radians(rotationInput.GetValue(1)) : rot.y;
+					rot.z = rotationInput.DidChange(2) ? glm::radians(rotationInput.GetValue(2)) : rot.z;
 
 					tc.SetRotation(rot);
 				}
 			}
-			ImUI::ShiftY(3.0f);
-			ImGui::Separator();
-			ImUI::ShiftY(2.0f);
 
-			result = ImUI::InputFloat3("Scale", scale, 1.0f, flags >> 6);
-			if (result != 0)
+			ImGui::Separator();
+
+			ImUI::InputFloat scaleInput("Scale", 3);
+			scaleInput.ConfigureField(0, "X", style.Colors.AxisX, flags & BIT(6));
+			scaleInput.ConfigureField(1, "Y", style.Colors.AxisY, flags & BIT(7));
+			scaleInput.ConfigureField(2, "Z", style.Colors.AxisZ, flags & BIT(8));
+			scaleInput.SetFieldValue(0, scale.x, 1.0f);
+			scaleInput.SetFieldValue(1, scale.y, 1.0f);
+			scaleInput.SetFieldValue(2, scale.z, 1.0f);
+			scaleInput.Render();
+
+			if (scaleInput.DidAnyChange())
 			{
 				for (auto& entity : entities)
 				{
 					auto& tc = entity.GetComponent<TransformComponent>();
 					glm::vec3 sc = tc.GetScale();
 
-					sc.x = (result & BIT(0)) ? scale.x : sc.x;
-					sc.y = (result & BIT(1)) ? scale.y : sc.y;
-					sc.z = (result & BIT(2)) ? scale.z : sc.z;
+					sc.x = scaleInput.GetValue(0) ? scaleInput.GetValue(0) : sc.x;
+					sc.y = scaleInput.GetValue(1) ? scaleInput.GetValue(1) : sc.y;
+					sc.z = scaleInput.GetValue(2) ? scaleInput.GetValue(2) : sc.z;
 
 					tc.SetScale(sc);
 				}
 			}
-			ImGui::Columns();
-
-			ImUI::ShiftY(3.0f);
 			ImGui::Separator();
-			ImUI::ShiftY(2.0f);
 
 		}, [&]() {
 			ImUI::MenuItem("Reset", [&]() {
@@ -253,9 +270,12 @@ namespace UI
 		bool removed = false;
 		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_VIDEO_CAMERA " Camera"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
 								  ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+
 			ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 			ImGui::Columns(2);
 			ImGui::SetColumnWidth(0, colWidth);
+
+			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 			auto& firstCamera = entities[0].GetComponent<CameraComponent>();
 
@@ -290,7 +310,7 @@ namespace UI
 			{
 				if ((Projection)selected == Projection::Perspective)
 				{
-					if (ImUI::InputFloat("Fov", fov, 60.0f, 0.03f, 0.001f, 0.0f, (flags & BIT(3)) != 0))
+					if (false)
 					{
 						for (auto& entity : entities)
 						{
@@ -301,7 +321,7 @@ namespace UI
 				}
 				else
 				{
-					if (ImUI::InputFloat("Size", size, 5.0f, 0.0001f, 0.0f, 0.0f, (flags & BIT(4)) != 0))
+					if (false)
 					{
 						for (auto& entity : entities)
 						{
@@ -312,17 +332,25 @@ namespace UI
 				}
 			}
 
+			ImGui::Columns();
 
-			uint32_t result = ImUI::InputFloat2("Clipping", clipping, 1.0f, flags >> 1);
-			if (result != 0)
+			ImUI::InputFloat clipInput("Clipping", 2);
+			clipInput.ConfigureField(0, "N", style.Colors.AxisY);
+			clipInput.ConfigureField(1, "F", style.Colors.Warning);
+			clipInput.SetFieldValue(0, clipping.x, 0.03f);
+			clipInput.SetFieldValue(1, clipping.y, 1000.0f);
+			clipInput.Render();
+
+			if (clipInput.DidAnyChange())
 			{
 				for (auto& entity : entities)
 				{
 					auto& cc = entity.GetComponent<CameraComponent>();
 					glm::vec2 c = cc.GetClipping();
-					c.x = (result & BIT(0)) ? c.x : clipping.x;
-					c.y = (result & BIT(0)) ? c.y : clipping.y;
-					cc.SetClipping(clipping);
+
+					c.x = clipInput.DidChange(0) ? clipInput.GetValue(0) : c.x;
+					c.y = clipInput.DidChange(1) ? clipInput.GetValue(1) : c.y;
+					cc.SetClipping(c);
 				}
 			}
 
@@ -491,17 +519,20 @@ namespace UI
 						entity.GetComponent<SkyLightComponent>().EnvironmentMapHandle = handle;
 				});
 			});
+
 			ImGui::NextColumn();
-			if (ImUI::InputFloat("Lod level", lodLevel, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
+			/*
+			if (ImUI::InputFloatX("Lod level", lodLevel, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
 			{
 				for (auto& entity : entities)
 					entity.GetComponent<SkyLightComponent>().LodLevel = lodLevel;
 			}
-			if (ImUI::InputFloat("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, (flags & BIT(2)) != 0))
+			if (ImUI::InputFloatX("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, (flags & BIT(2)) != 0))
 			{
 				for (auto& entity : entities)
 					entity.GetComponent<SkyLightComponent>().Intensity = intensity;
 			}
+			*/
 		}, [&]() {
 			ImUI::MenuItem("Reset", [&]() {
 				for (auto& entity : entities)
@@ -560,11 +591,13 @@ namespace UI
 				for (auto& entity : entities)
 					entity.GetComponent<DirectionalLightComponent>().LightColor = color;
 			}
-			if (ImUI::InputFloat("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, flags & BIT(1)))
+			/*
+			if (ImUI::InputFloatX("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, flags & BIT(1)))
 			{
 				for (auto& entity : entities)
 					entity.GetComponent<DirectionalLightComponent>().Intensity = intensity;
 			}
+			*/
 			ImGui::Columns();
 		}, [&]() {
 			ImUI::MenuItem("Reset", [&]() {
@@ -623,11 +656,13 @@ namespace UI
 				for (auto& entity : entities)
 					entity.GetComponent<PointLightComponent>().LightColor = color;
 			}
-			if (ImUI::InputFloat("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, flags & BIT(1)))
+			/*
+			if (ImUI::InputFloatX("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, flags & BIT(1)))
 			{
 				for (auto& entity : entities)
 					entity.GetComponent<PointLightComponent>().Intensity = intensity;
 			}
+			*/
 			ImGui::Columns();
 		}, [&]() {
 			ImUI::MenuItem("Reset", [&]() {

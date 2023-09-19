@@ -143,7 +143,7 @@ namespace UI
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, 200);
 
-		ImUI::InputFloat("Scale factor", info.Scale);
+		//ImUI::InputFloatX("Scale factor", info.Scale);
 		ImGui::Columns();
 
 		if (m_Import)
