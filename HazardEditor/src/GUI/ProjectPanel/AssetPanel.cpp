@@ -57,6 +57,33 @@ namespace UI
 		RefreshFolderItems();
 		return false;
 	}
+	void AssetPanel::SetSelectedFolder(const std::filesystem::path& path)
+	{
+		if (path == m_CurrentPath) return;
+
+		Application::Get().SubmitMainThread([&, folder = path]() {
+			m_CurrentPath = folder;
+
+			if (m_PathSelection.size() <= m_CurrentPathSelection)
+				m_PathSelection.resize(m_CurrentPathSelection + 1);
+			else
+				m_PathSelection.erase(std::next(m_PathSelection.begin(), m_CurrentPathSelection + 1), m_PathSelection.end()); //Remove all previous values
+			
+			m_PathSelection[m_CurrentPathSelection] = folder;
+			m_CurrentPathSelection++;
+			Refresh();
+		});
+	}
+	void AssetPanel::SetPreviouslySelectedFolder(uint32_t index)
+	{
+		if (m_PathSelection[index - 1] == m_CurrentPath) return;
+
+		Application::Get().SubmitMainThread([&, index]() {
+			m_CurrentPath = m_PathSelection[index - 1];
+			m_CurrentPathSelection = index;
+			Refresh();
+		});
+	}
 	void AssetPanel::OpenImport()
 	{
 		std::filesystem::path file = File::OpenFileDialog();
@@ -92,14 +119,26 @@ namespace UI
 		}
 
 		ImGui::SameLine(0, 15);
+
+		if (m_CurrentPathSelection <= 1)
+			ImGui::BeginDisabled();
+
 		if (ImGui::Button((const char*)ICON_FK_ARROW_CIRCLE_O_LEFT, { 28.0, 28.0f }))
-		{
-		}
+			SetPreviouslySelectedFolder(m_CurrentPathSelection - 1);
+
+		if (m_CurrentPathSelection <= 1)
+			ImGui::EndDisabled();
+
+		if (m_PathSelection.size() <= m_CurrentPathSelection + 1)
+			ImGui::BeginDisabled();
 
 		ImGui::SameLine(0, 0);
 		if (ImGui::Button((const char*)ICON_FK_ARROW_CIRCLE_O_RIGHT, { 28.0, 28.0f }))
 		{
+			SetPreviouslySelectedFolder(m_CurrentPathSelection + 1);
 		}
+		if (m_PathSelection.size() <= m_CurrentPathSelection + 1)
+			ImGui::EndDisabled();
 
 		ImGui::SameLine(0, 5);
 		DrawCurrentFolderPath();
@@ -165,6 +204,7 @@ namespace UI
 		float thumbailSize = m_Scale * 1.3f;
 		const float paddingForOutline = 2.0f;
 		const float scrollBarrOffset = 20.0f + ImGui::GetStyle().ScrollbarSize;
+
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		float panelWidth = size.x - scrollBarrOffset;
 		float cellSize = thumbailSize + 2.0f + paddingForOutline;
@@ -274,6 +314,12 @@ namespace UI
 		});
 	}
 
+	void AssetPanel::Refresh()
+	{
+		m_FolderData = GenerateFolderStructure();
+		RefreshFolderItems();
+	}
+
 	void AssetPanel::RefreshFolderItems()
 	{
 		std::vector<AssetPanelItem> directories;
@@ -330,7 +376,7 @@ namespace UI
 
 		if (ImGui::Button((const char*)ICON_FK_FOLDER " Content", { 0, 28.0f }))
 		{
-			GoToFolderDepth(m_CurrentPath, 0);
+			SetSelectedFolder(m_RootPath);
 		}
 		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 		{
@@ -342,18 +388,17 @@ namespace UI
 
 		for (size_t i = m_Paths.size(); i > 0; i--)
 		{
-
 			const auto& path = m_Paths[i - 1];
 			ImGui::SameLine(0.0f, 8.0f);
 			ImGui::TextColored(style.Window.HeaderActive, (const char*)ICON_FK_CHEVRON_RIGHT);
 			ImGui::SameLine(0.0f, 8.0f);
 
 			if (ImGui::Button(File::GetName(path).c_str(), { 0, 28.0f }))
-				GoToFolderDepth(m_CurrentPath, (uint32_t)i + 1);
+				GoToFolderDepth(i - 1);
 
-			for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
+			for (uint32_t j = 0; j < (uint32_t)AssetType::Last; j++)
 			{
-				ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path](AssetHandle handle) {
+				ImUI::DropTarget<AssetHandle>((AssetType)j, [&, path](AssetHandle handle) {
 					//EditorAssetManager::MoveAssetToFolder(handle, path);
 					Refresh();
 				});
@@ -365,7 +410,7 @@ namespace UI
 		ImUI::Treenode(File::GetName(folder.Path).c_str(), ImGuiTreeNodeFlags_SpanAvailWidth, [&]() {
 			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
 			{
-				m_CurrentPath = folder.Path;
+				SetSelectedFolder(folder.Path);
 				Application::Get().SubmitMainThread([&]() {
 					RefreshFolderItems();
 				});
@@ -459,17 +504,14 @@ namespace UI
 
 		return result;
 	}
-	void AssetPanel::GoToFolderDepth(const std::filesystem::path& path, uint32_t index)
+	void AssetPanel::GoToFolderDepth(uint32_t index)
 	{
 		std::filesystem::path newPath = m_CurrentPath;
 
-		for (uint32_t i = 0; i < index + 1; i++)
+		for (uint32_t i = 0; i < index; i++)
 			newPath = newPath.parent_path();
 
-		m_CurrentPath = newPath;
-		Application::Get().SubmitMainThread([&]() {
-			RefreshFolderItems();
-		});
+		SetSelectedFolder(newPath);
 	}
 	void AssetPanel::CreateFolder(const std::filesystem::path& path)
 	{

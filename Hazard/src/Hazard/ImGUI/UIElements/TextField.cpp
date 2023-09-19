@@ -49,7 +49,7 @@ namespace Hazard::ImUI
 
 				if (ImGui::Button((const char*)ICON_FK_TIMES, { buttonHeight, buttonHeight }))
 				{
-					Clear();
+					strcpy(buffer, "");
 				}
 				ImGui::PopFont();
 			}

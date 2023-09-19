@@ -73,7 +73,7 @@ namespace UI
 		ImGui::Text("Freed: %s", StringUtil::BytesToString(allocStats.TotalFreed).c_str());
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		const char* columns[] = { "Time", "Function" };
+		const char* columns[] = { "Time", "Memory usage" };
 
 		ImUI::Table("MemoryAlloc", columns, 2, size, [&]() {
 
