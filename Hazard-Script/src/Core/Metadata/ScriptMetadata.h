@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include "../Instance/ScriptObject.h"
 #include "Coral/HostInstance.hpp"
-#include "Coral/ManagedType.hpp"
 
 namespace HazardScript
 {

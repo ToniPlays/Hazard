@@ -112,6 +112,9 @@
     <Compile Include="source\Hazard.Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hazard\vendor\Coral\Coral.Managed\Coral.Managed.csproj" />
+    <ProjectReference Include="..\Hazard\vendor\Coral\Coral.Managed\Coral.Managed.csproj">
+      <Project>{11178401-7DD7-FF37-4612-49B5B2914414}</Project>
+      <Name>Coral.Managed</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

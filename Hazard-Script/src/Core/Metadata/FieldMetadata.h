@@ -18,9 +18,8 @@ namespace HazardScript
 	{
 	public:
 		FieldMetadata() = default;
-		//FieldMetadata(MonoClassField* field);
 
-		std::string GetName() const { return Coral::StringHelper::ConvertWideToUtf8(m_Field.Name); }
+		std::string GetName() const { return m_Field.Name.ToString(); }
 		Coral::TypeVisibility GetTypeVisibility() const { return m_Field.visibility; }
 
 		template<typename T>

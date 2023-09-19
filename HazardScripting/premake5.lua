@@ -13,3 +13,7 @@ project "HazardScripting"
 	{
 		"src"
 	}
+	links
+	{
+		"Coral.Managed"
+	}

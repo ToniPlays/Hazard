@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard.h"
-#include "Coral/Array.hpp"
+#include "Coral/NativeArray.hpp"
 
 namespace Hazard
 {
@@ -41,11 +41,11 @@ namespace Hazard
 		return resolution;
 	}
 
-	static Coral::Array<HazardRenderer::Resolution> Display_GetResolutions_Native()
+	static Coral::NativeArray<HazardRenderer::Resolution> Display_GetResolutions_Native()
 	{
 		auto& window = Application::GetModule<RenderContextManager>().GetWindow();
 		auto resolutions = window.GetAvailableResolutions();
-		return Coral::Array(resolutions);
+		return Coral::NativeArray(resolutions);
 	}
 
 	static void Display_SetResolution_Native(Resolution resolution)

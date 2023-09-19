@@ -63,10 +63,6 @@ def main(argv):
     subprocess.call(["git", "branch"])
     print("Updating submodules")
 
-
-    if(Utils.YesNo("Update submodules from remote? [Y/N]")):
-        subprocess.call(["git", "pull", "--recurse-submodules"])
-    subprocess.call(["git", "submodule", "init"])
     subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
 
     print("\nRunning premake")

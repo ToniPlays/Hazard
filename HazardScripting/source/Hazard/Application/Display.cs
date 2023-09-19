@@ -33,8 +33,7 @@ namespace Hazard
         { 
             unsafe 
             {
-                UnmanagedArray result = InternalCalls.Display_GetResolutions_Native();
-                return result.ToSpan<Resolution>().ToArray();
+                return InternalCalls.Display_GetResolutions_Native();
             }
         }
         public static void SetResolution(Resolution resolution)

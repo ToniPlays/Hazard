@@ -9,7 +9,7 @@ namespace Hazard
         public string Name
         {
             get { unsafe { return InternalCalls.TagComponent_GetName_Native(ParentEntity.ID); } }
-            set { unsafe { InternalCalls.TagComponent_SetName_Native(ParentEntity.ID, UnmanagedString.FromString(value)); } }
+            set { unsafe { InternalCalls.TagComponent_SetName_Native(ParentEntity.ID, value); } }
         }
     }
 }

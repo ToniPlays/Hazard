@@ -7,60 +7,60 @@ namespace Hazard
     {
         public static void Log(string format, params object[] parameters)
         {
-            unsafe { InternalCalls.Debug_Log_Native(UnmanagedString.FromString(Formatter.Format(format, parameters))); }
+            unsafe { InternalCalls.Debug_Log_Native(Formatter.Format(format, parameters)); }
         }
         public static void Info(string format, params object[] parameters)
         {
-            unsafe { InternalCalls.Debug_Info_Native(UnmanagedString.FromString(Formatter.Format(format, parameters))); }
+            unsafe { InternalCalls.Debug_Info_Native(Formatter.Format(format, parameters)); }
         }
         public static void Warn(string format, params object[] parameters)
         {
-            unsafe { InternalCalls.Debug_Warn_Native(UnmanagedString.FromString(Formatter.Format(format, parameters))); }
+            unsafe { InternalCalls.Debug_Warn_Native(Formatter.Format(format, parameters)); }
         }
         public static void Error(string format, params object[] parameters)
         {
-            unsafe { InternalCalls.Debug_Error_Native(UnmanagedString.FromString(Formatter.Format(format, parameters))); }
+            unsafe { InternalCalls.Debug_Error_Native(Formatter.Format(format, parameters)); }
         }
         public static void Critical(string format, params object[] parameters)
         {
-            unsafe { InternalCalls.Debug_Critical_Native(UnmanagedString.FromString(Formatter.Format(format, parameters))); }
+            unsafe { InternalCalls.Debug_Critical_Native(Formatter.Format(format, parameters)); }
         }
         public static void Trace(string format, params object[] parameters)
         {
-            unsafe { InternalCalls.Debug_Trace_Native(UnmanagedString.FromString(Formatter.Format(format, parameters))); }
+            unsafe { InternalCalls.Debug_Trace_Native(Formatter.Format(format, parameters)); }
         }
         public static void Assert(bool success, string format, params object[] parameters)
         {
             if (success) return;
             unsafe
             {
-                InternalCalls.Debug_Trace_Native(UnmanagedString.FromString(Formatter.Format(format, parameters)));
+                InternalCalls.Debug_Trace_Native(Formatter.Format(format, parameters));
             }
         }
 
         public static void Log(object message)
         {
-            unsafe { InternalCalls.Debug_Log_Native(UnmanagedString.FromString(Formatter.Format(message))); }
+            unsafe { InternalCalls.Debug_Log_Native(Formatter.Format(message)); }
         }
         public static void Info(object message)
         {
-            unsafe { InternalCalls.Debug_Info_Native(UnmanagedString.FromString(Formatter.Format(message))); }
+            unsafe { InternalCalls.Debug_Info_Native(Formatter.Format(message)); }
         }
         public static void Warn(object message)
         {
-            unsafe { InternalCalls.Debug_Warn_Native(UnmanagedString.FromString(Formatter.Format(message))); }
+            unsafe { InternalCalls.Debug_Warn_Native(Formatter.Format(message)); }
         }
         public static void Error(object message)
         {
-            unsafe { InternalCalls.Debug_Error_Native(UnmanagedString.FromString(Formatter.Format(message))); }
+            unsafe { InternalCalls.Debug_Error_Native(Formatter.Format(message)); }
         }
         public static void Critical(object message)
         {
-            unsafe { InternalCalls.Debug_Critical_Native(UnmanagedString.FromString(Formatter.Format(message))); }
+            unsafe { InternalCalls.Debug_Critical_Native(Formatter.Format(message)); }
         }
         public static void Trace(object message)
         {
-            unsafe { InternalCalls.Debug_Trace_Native(UnmanagedString.FromString(Formatter.Format(message))); }
+            unsafe { InternalCalls.Debug_Trace_Native(Formatter.Format(message)); }
         }
         public static void Assert(bool success, object message)
         {
@@ -68,7 +68,7 @@ namespace Hazard
 
             unsafe
             {
-                InternalCalls.Debug_Trace_Native(UnmanagedString.FromString(Formatter.Format(message)));
+                InternalCalls.Debug_Trace_Native(Formatter.Format(message));
             }
         }
     }

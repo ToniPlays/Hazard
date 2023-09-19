@@ -25,6 +25,9 @@
     <Filter Include="src\EditorScripting">
       <UniqueIdentifier>{16AF639D-8210-41AB-0B7E-875D77DE776A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\EditorScripting\Bindings">
+      <UniqueIdentifier>{33113AD5-1FCC-2981-C883-A2CBB41D7411}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI">
       <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
     </Filter>
@@ -129,6 +132,12 @@
     <ClInclude Include="src\Editor\EditorWorldManager.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorScripting\Bindings\ApplicationBindings.h">
+      <Filter>src\EditorScripting\Bindings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EditorScripting\Bindings\DisplayBindings.h">
+      <Filter>src\EditorScripting\Bindings</Filter>
+    </ClInclude>
     <ClInclude Include="src\EditorScripting\EditorScriptGlue.h">
       <Filter>src\EditorScripting</Filter>
     </ClInclude>
@@ -222,8 +231,6 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\EditorScripting\Bindings\ApplicationBindings.h" />
-    <ClInclude Include="src\EditorScripting\Bindings\DisplayBindings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">

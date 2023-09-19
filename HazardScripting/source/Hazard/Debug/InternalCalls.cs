@@ -8,11 +8,11 @@ namespace Hazard
 {
     internal static unsafe partial class InternalCalls
     {
-        internal static unsafe delegate*<UnmanagedString, void> Debug_Log_Native;
-        internal static unsafe delegate*<UnmanagedString, void> Debug_Info_Native;
-        internal static unsafe delegate*<UnmanagedString, void> Debug_Warn_Native;
-        internal static unsafe delegate*<UnmanagedString, void> Debug_Error_Native;
-        internal static unsafe delegate*<UnmanagedString, void> Debug_Critical_Native;
-        internal static unsafe delegate*<UnmanagedString, void> Debug_Trace_Native;
+        internal static unsafe delegate*<NativeString, void> Debug_Log_Native;
+        internal static unsafe delegate*<NativeString, void> Debug_Info_Native;
+        internal static unsafe delegate*<NativeString, void> Debug_Warn_Native;
+        internal static unsafe delegate*<NativeString, void> Debug_Error_Native;
+        internal static unsafe delegate*<NativeString, void> Debug_Critical_Native;
+        internal static unsafe delegate*<NativeString, void> Debug_Trace_Native;
     }
 }

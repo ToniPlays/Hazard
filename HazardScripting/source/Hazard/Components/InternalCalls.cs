@@ -61,9 +61,9 @@ namespace Hazard
         #endregion
         #region TagComponent
         //Tag component
-        internal static delegate*<ulong, UnmanagedString> TagComponent_GetName_Native;
+        internal static delegate*<ulong, NativeString> TagComponent_GetName_Native;
 
-        internal static delegate*<ulong, UnmanagedString, void> TagComponent_SetName_Native;
+        internal static delegate*<ulong, NativeString, void> TagComponent_SetName_Native;
         #endregion
         #region TransformComponent
         //Transform component
