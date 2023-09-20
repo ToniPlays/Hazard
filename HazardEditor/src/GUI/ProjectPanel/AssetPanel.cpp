@@ -6,6 +6,7 @@
 #include "Core/GUIManager.h"
 #include "GUI/AllPanels.h"
 #include "Hazard/Rendering/RenderEngine.h"
+#include "Hazard/ImGUI/UIElements/Treenode.h"
 
 #include "Core/Defines.h"
 
@@ -68,7 +69,7 @@ namespace UI
 				m_PathSelection.resize(m_CurrentPathSelection + 1);
 			else
 				m_PathSelection.erase(std::next(m_PathSelection.begin(), m_CurrentPathSelection + 1), m_PathSelection.end()); //Remove all previous values
-			
+
 			m_PathSelection[m_CurrentPathSelection] = folder;
 			m_CurrentPathSelection++;
 			Refresh();
@@ -116,6 +117,7 @@ namespace UI
 		ImGui::SameLine(0, 5);
 		if (ImGui::Button((const char*)ICON_FK_FILE_TEXT " Save all", { 75.0, 28.0f }))
 		{
+
 		}
 
 		ImGui::SameLine(0, 15);
@@ -179,15 +181,20 @@ namespace UI
 				m_SearchField.Render();
 				ImUI::ShiftY(4.0f);
 
-				ImUI::ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0, ImGuiStyleVar_FramePadding, ImVec2(4, 4));
-				ImUI::Treenode("Favorites", ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed, [&]() {
+				ImUI::ScopedStyleStack vars(ImGuiStyleVar_FrameRounding, 0);
+				ImUI::Treenode favorites("Favorites", true);
+				favorites.Content([&]() {
 					ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
-
 				});
-				ImUI::Treenode(ProjectManager::GetProjectName().c_str(), ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen, [&]() {
+
+				ImUI::Treenode folders(ProjectManager::GetProjectName(), true);
+				folders.DefaultOpen();
+				folders.Content([&]() {
 					for (const auto& folder : m_FolderData)
 						DrawFolderTreeItem(folder);
 				});
+				favorites.Render();
+				folders.Render();
 
 				ImUI::ContextMenu([&]() {
 					ImUI::MenuItem("Refresh", [&]() {
@@ -407,7 +414,9 @@ namespace UI
 	}
 	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)
 	{
-		ImUI::Treenode(File::GetName(folder.Path).c_str(), ImGuiTreeNodeFlags_SpanAvailWidth, [&]() {
+		ImUI::Treenode treenode(File::GetName(folder.Path).c_str(), false);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 			if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered())
 			{
 				SetSelectedFolder(folder.Path);
@@ -416,10 +425,9 @@ namespace UI
 				});
 			}
 			for (const auto& subfolder : folder.SubFolders)
-			{
 				DrawFolderTreeItem(subfolder);
-			}
 		});
+		treenode.Render();
 
 		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 		{

@@ -1661,6 +1661,8 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\ImGUI\UIElements\InputFloat.h" />
     <ClInclude Include="src\Hazard\ImGUI\UIElements\TextField.h" />
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\Dropdown.h" />
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\Treenode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1830,5 +1832,7 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\UIElements\InputFloat.cpp" />
     <ClCompile Include="src\Hazard\ImGUI\UIElements\TextField.cpp" />
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\Dropdown.cpp" />
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\Treenode.cpp" />
   </ItemGroup>
 </Project>

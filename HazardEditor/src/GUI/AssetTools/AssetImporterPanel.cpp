@@ -7,6 +7,8 @@
 #include "Core/GUIManager.h"
 #include "GUI/ProjectPanel/AssetPanel.h"
 
+#include "Hazard/ImGUI/UIElements/Dropdown.h"
+
 namespace UI
 {
 	using namespace Hazard;
@@ -82,52 +84,43 @@ namespace UI
 		ImUI::ShiftY(4);
 
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
-		ImGui::Columns(2, 0, false);
-		ImGui::SetColumnWidth(0, 200);
-		{
-			ImGui::Text("Texture wrap mode");
-			ImGui::NextColumn();
 
-			std::string wrapMode[] = { "Repeat", "Repeat mirrored", "Clamp to border", "Clamp to edge" };
-			uint32_t selected = (uint32_t)info.Wrapping;
+		ImUI::Dropdown wrapMode("Texture wrap mode", 200);
+		wrapMode.SetOptions({ "Repeat", "Repeat mirrored", "Clamp to border", "Clamp to edge" });
+		wrapMode.SetSelected((uint32_t)info.Wrapping);
+		wrapMode.Render();
 
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			if (ImUI::Combo("##wrapMode", wrapMode, 4, selected))
-			{
-				info.Wrapping = (ImageWrap)selected;
-			}
-		}
-		ImGui::NextColumn();
-		std::string filter[] = { "Linear", "Nearest", "Linear mip", "Nearest mip" };
-		{
-			ImGui::Text("Texture min filter");
-			ImGui::NextColumn();
+		if (wrapMode.DidChange())
+			info.Wrapping = (ImageWrap)wrapMode.GetSelected();
 
-			uint32_t selected = (uint32_t)info.MinFilter;
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			if (ImUI::Combo("##minfilter", filter, 4, selected))
-				info.MinFilter = (FilterMode)selected;
-		}
-		ImGui::NextColumn();
-		{
-			ImGui::Text("Texture mag filter");
-			ImGui::NextColumn();
+		ImUI::Dropdown minFilter("Texture min filter", 200);
+		minFilter.SetOptions({ "Linear", "Nearest", "Linear mip", "Nearest mip" });
+		minFilter.SetSelected((uint32_t)info.MinFilter);
+		minFilter.Render();
 
-			uint32_t selected = (uint32_t)info.MagFilter;
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			if (ImUI::Combo("##magfilter", filter, 4, selected))
-				info.MagFilter = (FilterMode)selected;
-		}
-		ImGui::NextColumn();
+		if (minFilter.DidChange())
+			info.MinFilter = (FilterMode)minFilter.GetSelected();
+
+		ImUI::Dropdown magFilter("Texture mag filter", 200);
+		magFilter.SetOptions({ "Linear", "Nearest", "Linear mip", "Nearest mip" });
+		magFilter.SetSelected((uint32_t)info.MagFilter);
+		magFilter.Render();
+
+		if (magFilter.DidChange())
+			info.MagFilter = (FilterMode)magFilter.GetSelected();
+
+		ImGui::Columns(2, 0, 200);
 		ImUI::Checkbox("Generate mipmaps", info.GenerateMips);
 		ImUI::Checkbox("Flip vertically", info.FlipOnLoad);
 		ImGui::Columns();
+
+		m_ImportDataBuffer.Write(&info, sizeof(ImageImportSettings));
 
 		if (m_Import)
 		{
 			auto& dst = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>()->GetOpenDirectory();
 
-			ImportImage(m_CurrentFilePath, dst, m_ImportDataBuffer.Read<ImageImportSettings>());
+			ImportImage(m_CurrentFilePath, dst, info);
 
 			m_Open = false;
 			m_Import = false;
@@ -172,7 +165,7 @@ namespace UI
 		static uint32_t resolution = Math::GetBaseLog(map->GetSpec().Resolution) - 6;
 		uint32_t selectedImage = 0;
 		static AssetHandle sourceImageHandle = map->GetSourceImageHandle();
-		
+
 		for (uint32_t i = 0; i < sourceImages.size(); i++)
 		{
 			if (sourceImages[i].Handle != sourceImageHandle) continue;
@@ -189,8 +182,12 @@ namespace UI
 		});
 
 		ImGui::NextColumn();
-		std::string options[] = { "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" };
-		ImUI::Combo("Resolution", "##res", options, 8, resolution);
+		ImGui::Columns();
+
+		ImUI::Dropdown resolutions("Resolution", 200);
+		resolutions.SetOptions({ "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" });
+		resolutions.SetSelected(6);
+		resolutions.Render();
 
 		std::vector<std::string> displayNames;
 		displayNames.reserve(m_SelectableAssets["RadianceMap"].size() + 1);
@@ -199,19 +196,26 @@ namespace UI
 		for (auto& metadata : m_SelectableAssets["RadianceMap"])
 			displayNames.push_back(metadata.Key.c_str());
 
-		if (ImUI::Combo("Source image", "##src", displayNames.data(), displayNames.size(), selectedImage))
+		ImUI::Dropdown radianceDropdown("Radiance", 200);
+		radianceDropdown.SetOptions(displayNames);
+		radianceDropdown.SetSelected(selectedImage);
+		radianceDropdown.Render();
+
+		if (radianceDropdown.DidChange() && radianceDropdown.GetSelected() != 0)
 		{
-			if (selectedImage == 0) sourceImageHandle = INVALID_ASSET_HANDLE;
-			else sourceImageHandle = m_SelectableAssets["RadianceMap"][selectedImage - 1].Handle;
+			sourceImageHandle = m_SelectableAssets["RadianceMap"][radianceDropdown.GetSelected() - 1].Handle;
+			map->Update(samples, resolution, sourceImageHandle);
 		}
-		ImGui::Columns();
 
 		if (m_Import)
 		{
 			Application::Get().SubmitMainThread([&]() {
 				Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(m_AssetHandle);
-				map->Update(samples, (1 << 6 + resolution), sourceImageHandle);
+				map->Update(samples, (1 << 6 + resolution), map->GetSourceImageHandle());
+				map->Invalidate();
+
 				AssetManager::SaveAsset(map);
+				Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>()->Refresh();
 			});
 
 			m_Open = false;

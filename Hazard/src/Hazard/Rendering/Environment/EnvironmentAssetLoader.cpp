@@ -45,6 +45,7 @@ namespace Hazard
 
 		Ref<EnvironmentMap> map = Ref<EnvironmentMap>::Create();
 		map->Update(header.Samples, header.Resolution, header.ImageHandle);
+		map->Invalidate();
 
 		map->IncRefCount();
 		job->GetStage()->SetResult(map);

@@ -17,7 +17,7 @@ namespace Hazard::ImUI
 		ImVec2 contentSize = ImGui::GetContentRegionAvail();
 		ScopedColourStack bgColor(ImGuiCol_ChildBg, style.Frame.FrameColor, ImGuiCol_Button, style.Frame.FrameColor);
 		ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, style.Frame.Rounding);
-		ImGui::BeginChild("#textField", { contentSize.x, fieldHeight }, false, 0);
+		ImGui::BeginChild(("##" + std::to_string((uint64_t)this)).c_str(), {contentSize.x, fieldHeight}, false, 0);
 		{
 			ImUI::Shift(4.0f, (fieldHeight - buttonHeight) * 0.5f);
 			if (!m_Icon.empty())

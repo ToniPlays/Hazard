@@ -32,9 +32,8 @@ namespace UI
 		ImUI::TextFieldWithHint(m_MemorySearchVal, "Search...");
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		const char* columns[] = { "Category", "Time" };
 
-		ImUI::Table("MemoryUsage", columns, 2, size, [&]() {
+		ImUI::Table("MemoryUsage", { "Category", "Time" }, size, [&]() {
 
 			float rowHeight = 24.0f;
 
@@ -73,9 +72,8 @@ namespace UI
 		ImGui::Text("Freed: %s", StringUtil::BytesToString(allocStats.TotalFreed).c_str());
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		const char* columns[] = { "Time", "Memory usage" };
 
-		ImUI::Table("MemoryAlloc", columns, 2, size, [&]() {
+		ImUI::Table("MemoryAlloc", { "Time", "Memory usage" }, size, [&]() {
 
 			float rowHeight = 24.0f;
 

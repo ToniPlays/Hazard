@@ -2,6 +2,7 @@
 #include "RenderCommandListPanel.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Rendering/Renderers/WorldRenderer.h"
+#include "Hazard/ImGUI/UIElements/Treenode.h"
 
 using namespace Hazard;
 
@@ -20,13 +21,13 @@ namespace UI
 
 			if (!renderer->IsValid()) continue;
 
-			ImUI::Treenode("##worldCommandList", ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen, [&]() {
-				const char* elements[] = { "Type", "Value" };
-
+			ImUI::Treenode commandList("WorldCommandList", true);
+			commandList.DefaultOpen();
+			commandList.Content([&]() {
 				ImVec2 size = ImGui::GetContentRegionAvail();
 				size.y = 150.0f;
 
-				ImUI::Table("WorldRenderer", elements, 2, size, [&]() {
+				ImUI::Table("WorldRenderer", { "Type", "Value" }, size, [&]() {
 
 					ImGui::TableNextRow(0);
 
@@ -63,16 +64,17 @@ namespace UI
 				});
 				DrawDetailedInfo(list);
 			});
+			commandList.Render();
 		}
 	}
 
 	void RenderCommandListPanel::DrawDetailedInfo(RendererDrawList& drawList)
 	{
-		ImUI::Treenode("Cameras", ImGuiTreeNodeFlags_Framed, [&]() {
-
+		ImUI::Treenode cameras("Cameras", true);
+		cameras.DefaultOpen();
+		cameras.Content([&]() {
 			for (auto& data : drawList.WorldRenderer->GetCameraData())
 			{
-
 				const glm::vec3& pos = glm::inverse(data.View)[3];
 				ImGui::TableNextColumn();
 				ImGui::Text("Position");
@@ -80,29 +82,5 @@ namespace UI
 				ImGui::Text("[%.2f, %.2f, %.2f]", pos.x, pos.y, pos.z);
 			}
 		});
-		ImUI::Treenode("Shadow pass", ImGuiTreeNodeFlags_Framed, [&]() {});
-		ImUI::Treenode("Geometry pass", ImGuiTreeNodeFlags_Framed, [&]() {
-			/*
-		for (auto& [material, list] : drawList.MeshList) {
-
-			auto specs = material->GetPipeline()->GetSpecifications();
-
-			ImUI::Treenode(specs.DebugName.c_str(), 0, [&]() {
-				ImGui::Columns(2, 0, false);
-
-				for(auto& [vertexBuffer, drawCall] : meshDrawList)
-				{
-					ImGui::Text("%s", drawCall.VertexBuffer->GetDebugName().c_str());
-					ImGui::NextColumn();
-					ImGui::Text("%zu", drawCall.Instances.size());
-					ImGui::NextColumn();
-				}
-
-				ImGui::Columns();
-				});
-		}
-				*/
-		});
-		ImUI::Treenode("Composite pass", ImGuiTreeNodeFlags_Framed, [&]() {});
 	}
 }

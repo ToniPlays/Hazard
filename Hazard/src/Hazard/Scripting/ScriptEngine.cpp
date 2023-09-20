@@ -99,13 +99,13 @@ namespace Hazard
 	void ScriptEngine::SetDebugCallback(ScriptMessageCallback callback)
 	{
 		m_MessageCallback = callback;
+
 		for (auto& m : m_QueuedMessages)
-		{
 			m_MessageCallback(m);
-		}
+
 		m_QueuedMessages.clear();
 	}
-	void ScriptEngine::InitializeComponent(Entity& entity, ScriptComponent& component)
+	void ScriptEngine::InitializeComponent(const Entity& entity, ScriptComponent& component)
 	{
 		HZR_PROFILE_FUNCTION();
 		if (component.ModuleName == "") return;

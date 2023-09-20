@@ -24,6 +24,7 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 	AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
 	CachedBuffer buffer = AssetPack::ToBuffer(pack);
 
+	//TODO: FIX ME
 	File::WriteBinaryFile(path, buffer.GetData(), buffer.GetSize());
 	AssetManager::ImportAssetPack(pack, path);
 
@@ -34,6 +35,10 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings)
 {
 	using namespace HazardRenderer;
+
+	if (!File::Exists(file))
+		throw JobException(fmt::format("Source file does not exist: {}", file.string()));
+
 	TextureHeader textureHeader = TextureFactory::LoadTextureFromSourceFile(file, settings.FlipOnLoad);
 
 	Buffer data;
@@ -45,9 +50,9 @@ void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesyst
 	fileHeader.Dimensions = textureHeader.Dimensions;
 	fileHeader.Channels = textureHeader.Channels;
 	fileHeader.Format = textureHeader.Format;
-	fileHeader.MinFilter = 0; //(uint8_t)info.Filters.MinFilter;
-	fileHeader.MagFilter = 0; //(uint8_t)info.Filters.MagFilter;
-	fileHeader.WrapMode = 0;  //(uint8_t)info.Filters.Wrapping;
+	fileHeader.MinFilter = (uint8_t)settings.MinFilter;
+	fileHeader.MagFilter = (uint8_t)settings.MagFilter;
+	fileHeader.WrapMode = (uint8_t)settings.Wrapping;
 
 	data.Write(&fileHeader, sizeof(TextureFileHeader));
 	data.Write(textureHeader.ImageData.Data, textureHeader.ImageData.Size, sizeof(TextureFileHeader));

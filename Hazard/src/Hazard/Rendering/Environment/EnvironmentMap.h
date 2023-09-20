@@ -19,6 +19,7 @@ namespace Hazard
 		~EnvironmentMap();
 
         void Update(uint32_t samples, uint32_t resolution, AssetHandle sourceImage);
+		void Invalidate();
         
 		AssetHandle GetSourceImageHandle() const { return m_SourceImageHandle; }
 		EnvironmentMapSpec GetSpec() const { return m_Spec; }

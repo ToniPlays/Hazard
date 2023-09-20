@@ -13,9 +13,8 @@ namespace UI
 		ImUI::TextFieldWithHint(m_SearchValue, "Search...");
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		const char* columns[] = { "Path", "Type", "Pack handle", "Handle" };
 
-		ImUI::Table("AssetPanel", columns, 4, size, [&]() {
+		ImUI::Table("AssetPanel", { "Path", "Type", "Pack handle", "Handle" }, size, [&]() {
 			float rowHeight = 24.0f;
 
 			auto& registry = AssetManager::GetMetadataRegistry();

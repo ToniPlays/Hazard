@@ -226,46 +226,6 @@ namespace Hazard::ImUI
 		ImGui::NextColumn();
 		return modified;
 	}
-
-	static bool Combo(const char* id, const std::string* options, uint32_t count, uint32_t& selected, bool isMixed = false)
-	{
-		ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
-		uint32_t currentSelection = selected;
-		bool modified = false;
-
-		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
-		if (ImGui::BeginCombo(id, options[selected].c_str()))
-		{
-			for (uint32_t i = 0; i < count; i++)
-			{
-				bool isSelected = i == selected;
-
-				if (ImGui::Selectable(options[i].c_str(), i == currentSelection))
-				{
-					currentSelection = i;
-					modified = true;
-					selected = i;
-				}
-				if (isSelected)
-				{
-					ImGui::SetItemDefaultFocus();
-				}
-			}
-			ImGui::EndCombo();
-		}
-		ImGui::PopItemFlag();
-		return modified;
-	}
-	static bool Combo(const char* name, const char* id, const std::string* options, uint32_t count, uint32_t& selected, bool isMixed = false)
-	{
-		ShiftY(4.0f);
-		ImGui::Text("%s", name);
-		ImGui::NextColumn();
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-		bool modified = Combo(id, options, count, selected, isMixed);
-		ImGui::NextColumn();
-		return modified;
-	}
 	static bool ColorPicker(const char* id, Color& color, bool isMixed = false)
 	{
 
@@ -398,39 +358,6 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Treenodes
 
-	template<typename T>
-	static bool Treenode(const char* title, ImGuiTreeNodeFlags flags, T callback)
-	{
-		if (ImGui::TreeNodeEx(title, flags))
-		{
-			callback();
-			ImGui::TreePop();
-			return true;
-		}
-		return false;
-	}
-
-	template<typename T>
-	static bool Treenode(const char* title, void* id, ImGuiTreeNodeFlags flags, T callback)
-	{
-		if (ImGui::TreeNode(id, title, flags))
-		{
-
-			callback();
-			ImGui::TreePop();
-			return true;
-		}
-		return false;
-	}
-	static bool Treenode(const char* title, ImGuiTreeNodeFlags flags)
-	{
-		if (ImGui::TreeNodeEx(title, flags))
-		{
-			return true;
-		}
-		return false;
-	}
-
 	template<typename T, typename Prop>
 	static bool TreenodeWithOptions(const char* title, ImGuiTreeNodeFlags flags, T callback, Prop propCallback = nullptr)
 	{
@@ -457,6 +384,7 @@ namespace Hazard::ImUI
 			Style& style = StyleManager::GetCurrent();
 			ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 0, 0 });
+
 			if (ImGui::Button((const char*)ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
 			{
 				ImGui::OpenPopup("Settings");
@@ -481,10 +409,10 @@ namespace Hazard::ImUI
 
 #pragma endregion
 #pragma region Table
-	template<typename T>
-	static void Table(const char* tableName, const char** columns, uint32_t columnCount, ImVec2 size, T callback)
-	{
 
+	template<typename T>
+	static void Table(const char* tableName, const std::vector<std::string>& headers, ImVec2 size, T callback)
+	{
 		if (size.x <= 0.0f || size.y <= 0.0f) return;
 
 		float edgeOffset = 4.0f;
@@ -502,12 +430,12 @@ namespace Hazard::ImUI
 			| ImGuiTableFlags_ScrollY
 			| ImGuiTableFlags_RowBg;
 
-		if (!ImGui::BeginTable(tableName, columnCount, flags, size))
+		if (!ImGui::BeginTable(tableName, headers.size(), flags, size))
 			return;
 
 		//Setup
-		for (uint32_t i = 0; i < columnCount; i++)
-			ImGui::TableSetupColumn(columns[i]);
+		for (uint32_t i = 0; i < headers.size(); i++)
+			ImGui::TableSetupColumn(headers[i].c_str());
 
 		//Headers
 		{
@@ -517,7 +445,7 @@ namespace Hazard::ImUI
 			ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
 			ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);
 
-			for (uint32_t i = 0; i < columnCount; i++)
+			for (uint32_t i = 0; i < headers.size(); i++)
 			{
 				ImGui::TableSetColumnIndex(i);
 				const char* columnName = ImGui::TableGetColumnName(i);
@@ -534,12 +462,6 @@ namespace Hazard::ImUI
 		//Draw content from callback
 		callback();
 		ImGui::EndTable();
-	}
-
-	template<typename T>
-	static void Table(const char* tableName, const char** columns, uint32_t columnCount, T callback)
-	{
-		Table(tableName, columns, columnCount, ImGui::GetContentRegionAvail(), callback);
 	}
 
 	template<typename T>

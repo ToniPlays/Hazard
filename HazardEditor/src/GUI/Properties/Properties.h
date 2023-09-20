@@ -6,7 +6,8 @@
 
 namespace UI
 {
-	class Properties : public Hazard::ImUI::Panel {
+	class Properties : public Hazard::ImUI::Panel
+	{
 	public:
 		Properties();
 
@@ -25,12 +26,12 @@ namespace UI
 	template<typename T>
 	inline void Properties::DrawAddComponentMenuIfNotExists(const char* title, std::vector<Entity>& entities)
 	{
-		if (!AllEntitiesContain<T>(entities))
-		{
-			ImUI::MenuItem(title, [&]() {
-				std::vector<Entity> entities = m_SelectionContext;
-				AddComponentToAll<T>(entities);
-				});
-		}
+		bool canAdd = !AllEntitiesContain<T>(entities);
+
+		if (!canAdd) ImGui::BeginDisabled();
+		ImUI::MenuItem(title, [&]() {
+			AddComponentToAll<T>(m_SelectionContext);
+		});
+		if (!canAdd) ImGui::EndDisabled();
 	}
 }

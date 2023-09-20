@@ -52,7 +52,7 @@ namespace Hazard {
 		void RemoveComponent<TransformComponent>() {};
 
 		template<typename T>
-		T& GetComponent() 
+		T& GetComponent() const
 		{
 			HZR_TIMED_FUNCTION();
 			return m_World->m_Registry.get<T>(m_Handle);
@@ -64,7 +64,7 @@ namespace Hazard {
 		bool IsValid();
 
 		const entt::entity& GetHandle() const { return m_Handle; }
-		const UID& GetUID() { return GetComponent<TagComponent>().Uid; }
+		const UID& GetUID() const { return GetComponent<TagComponent>().Uid; }
 
 		bool IsVisible() { return GetComponent<TagComponent>().Visible; }
 		bool ReceivesUpdate() { return GetComponent<TagComponent>().ReceiveUpdate; }
@@ -72,8 +72,8 @@ namespace Hazard {
 		void SetVisible(bool visible) { GetComponent<TagComponent>().Visible = visible; }
 		void SetReceiveUpdate(bool receive) { GetComponent<TagComponent>().ReceiveUpdate = receive; }
 
-		TransformComponent& GetTransform() { return GetComponent<TransformComponent>(); }
-		TagComponent& GetTag() { return GetComponent<TagComponent>(); }
+		TransformComponent& GetTransform() const { return GetComponent<TransformComponent>(); }
+		TagComponent& GetTag() const { return GetComponent<TagComponent>(); }
 
 	public:
 		operator bool() const { return m_Handle != entt::null; }

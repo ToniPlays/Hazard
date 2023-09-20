@@ -16,7 +16,6 @@ namespace UI
 		ImUI::TextFieldWithHint(m_SearchVal, "Search...");
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		const char* columns[] = { "Status", "Message" };
 
 		Hazard::ScriptEngine& engine = Application::GetModule<Hazard::ScriptEngine>();
 
@@ -24,7 +23,7 @@ namespace UI
 		{
 			ImGui::Text("Assembly: %s", File::GetNameNoExt(assembly->GetSourcePath()).c_str());
 
-			ImUI::Table("TodoStatus", columns, 2, size, [&]() {
+			ImUI::Table("TodoStatus", { "Status", "Message" }, size, [&]() {
 				/*
 				for (auto& [name, metadata] : assembly->GetScripts())
 				{

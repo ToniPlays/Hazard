@@ -6,8 +6,9 @@
 
 #include "MedianPoint.h"
 #include "Core/EditorAssetManager.h"
-
 #include "Hazard/Rendering/RenderEngine.h"
+
+#include "Hazard/ImGUI/UIElements/Dropdown.h"
 
 using namespace HazardRenderer;
 
@@ -342,31 +343,25 @@ namespace UI
 		ImGui::SetColumnWidth(0, 80);
 		ImGui::Text("Frametime");
 		ImGui::NextColumn();
-		ImGui::Text("%.3f ms", Time::s_DeltaTime * 1000.0f);
+		ImGui::Text("%.3f ms", Time::s_DeltaTime * 1000.0);
 		ImGui::NextColumn();
 
 		ImGui::Text("FPS");
 		ImGui::NextColumn();
-		ImGui::Text("%.2f", 1.0f / Time::s_DeltaTime);
-		ImGui::NextColumn();
-
-		/*ImGui::Text("Active jobs");
-		ImGui::NextColumn();
-		ImGui::Text("%zu", Application::Get().GetJobSystem().GetJobCount());
-		ImGui::NextColumn();*/
-
-		std::string shading[] = { "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" };
+		ImGui::Text("%.2f", 1.0 / Time::s_DeltaTime);
+		ImGui::Columns();
 
 		auto& renderEngine = Application::GetModule<RenderEngine>();
 		uint32_t flags = renderEngine.GetFlags();
-		uint32_t selected = 0;
 
-		if (flags & RendererFlags_Overdraw)
-			selected = 3;
+		ImUI::Dropdown shading("Shading", 80);
+		shading.SetOptions({ "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" });
+		shading.SetSelected(flags & RendererFlags_Overdraw ? 3 : 0);
+		shading.Render();
 
-		if (ImUI::Combo("Shading", "##shading", shading, 4, selected))
+		if (shading.DidChange())
 		{
-			switch (selected)
+			switch (shading.GetSelected())
 			{
 				case 0: flags = 0; break;
 				case 3: flags |= RendererFlags_Overdraw; break;
@@ -379,9 +374,7 @@ namespace UI
 		{
 			RendererSettings settings = renderEngine.GetSettings();
 			if (ImUI::Checkbox("RTX", settings.Raytraced))
-			{
 				Application::GetModule<RenderEngine>().GetSettings() = settings;
-			}
 		}
 
 		ImGui::Columns();

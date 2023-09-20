@@ -40,7 +40,7 @@ namespace Hazard
 
 		void ReloadAssemblies();
 		void SetDebugCallback(ScriptMessageCallback callback);
-		void InitializeComponent(Entity& entity, ScriptComponent& component);
+		void InitializeComponent(const Entity& entity, ScriptComponent& component);
 
 		const std::vector<Ref<HazardScript::ScriptAssembly>>& GetAssemblies();
 

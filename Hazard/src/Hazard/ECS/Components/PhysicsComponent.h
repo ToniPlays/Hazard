@@ -52,14 +52,16 @@ namespace Hazard
 	};
 	struct RigidbodyComponent : ComponentBase 
 	{
-
+		Physics::BodyType Type = Physics::BodyType::Static;
+		float Weight = 0.0f;
+		bool Simulated = true;
 	};
 	struct BoxColliderComponent : ComponentBase 
 	{
-
+		float Width = 1.0f;
 	};
 	struct SphereColliderComponent : ComponentBase
 	{
-
+		float Radius = 1.0f;
 	};
 }

@@ -5,6 +5,8 @@
 #include "Hazard/Scripting/HScript.h"
 #include "ScriptFieldUI.h"
 #include "Hazard/ImGUI/UIElements/TextField.h"
+#include "Hazard/ImGUI/UIElements/Dropdown.h"
+#include "Hazard/ImGUI/UIElements/Treenode.h"
 
 #include "Editor/EditorUtils.h"
 
@@ -16,13 +18,13 @@ namespace UI
 
 	using namespace Hazard;
 	template<typename T>
-	bool ComponentMenu(std::vector<Entity>& entities)
+	bool ComponentMenu(const std::vector<Entity>& entities)
 	{
 		STATIC_ASSERT(false, T);
 	}
 
 	template<typename T>
-	bool ComponentMenuIfExists(std::vector<Entity>& entities)
+	bool ComponentMenuIfExists(const std::vector<Entity>& entities)
 	{
 		if (AllEntitiesContain<T>(entities))
 			return ComponentMenu<T>(entities);
@@ -30,9 +32,9 @@ namespace UI
 	}
 
 	template<>
-	bool ComponentMenu<TagComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<TagComponent>(const std::vector<Entity>& entities)
 	{
-		std::string& tag = entities[0].GetTag().Tag;
+		std::string tag = entities[0].GetTag().Tag;
 		bool mixed = false;
 
 		for (auto& entity : entities)
@@ -55,9 +57,11 @@ namespace UI
 		return false;
 	}
 	template<>
-	bool ComponentMenu<TransformComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<TransformComponent>(const std::vector<Entity>& entities)
 	{
-		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_MAP_MARKER " Transform"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+		ImUI::Treenode treenode((char*)(" " ICON_FK_MAP_MARKER " Transform"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 
 			ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 6.0f));
 			auto& firstTc = entities[0].GetComponent<TransformComponent>();
@@ -168,7 +172,13 @@ namespace UI
 			}
 			ImGui::Separator();
 
-		}, [&]() {
+		});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
+
+			ImGui::Separator();
 			ImUI::MenuItem("Reset", [&]() {
 				for (auto& entity : entities)
 				{
@@ -178,16 +188,19 @@ namespace UI
 					c.SetScale({ 1, 1, 1 });
 				}
 			});
+			ImGui::BeginDisabled();
+			ImUI::MenuItem("Remove", [&]() {});
+			ImGui::EndDisabled();
 		});
+		treenode.Render();
 		return false;
 	}
 	template<>
-	bool ComponentMenu<SpriteRendererComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<SpriteRendererComponent>(const std::vector<Entity>& entities)
 	{
-		bool removed = false;
-
-		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_PICTURE_O " Sprite renderer"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
-								  ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+		ImUI::Treenode treenode((char*)(" " ICON_FK_PICTURE_O " Sprite renderer"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 
 			auto& firstSr = entities[0].GetComponent<SpriteRendererComponent>();
 
@@ -243,46 +256,48 @@ namespace UI
 				}
 			}
 			ImGui::Columns();
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
+		});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
 
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {
 				for (auto& entity : entities)
 				{
 					auto& c = entity.GetComponent<SpriteRendererComponent>();
-					c.TextureHandle = INVALID_ASSET_HANDLE;
 					c.Color = Color::White;
+					c.TextureHandle = INVALID_ASSET_HANDLE;
 				}
 			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<SpriteRendererComponent>(entities);
+				});
 			});
-		}, [&]() {
 		});
 
-		if (removed)
-			RemoveComponentFromAll<SpriteRendererComponent>(entities);
-
+		treenode.Render();
 		return false;
 	}
 	template<>
-	bool ComponentMenu<CameraComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<CameraComponent>(const std::vector<Entity>& entities)
 	{
-		bool removed = false;
-		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_VIDEO_CAMERA " Camera"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
-								  ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_VIDEO_CAMERA " Camera"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 
 			ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
-			ImGui::Columns(2);
-			ImGui::SetColumnWidth(0, colWidth);
-
 			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 			auto& firstCamera = entities[0].GetComponent<CameraComponent>();
-
 			uint32_t selected = (uint32_t)firstCamera.GetProjectionType();
 			glm::vec2 clipping = firstCamera.GetClipping();
+
 			float fov = firstCamera.GetFov();
 			float size = firstCamera.GetSize();
+
 			uint32_t flags = 0;
 
 			for (auto& entity : entities)
@@ -296,43 +311,49 @@ namespace UI
 				flags |= (c.GetSize() != size) ? BIT(4) : 0;
 			}
 
-			std::string projectionTypes[] = { "Perspective", "Orthographic" };
+			ImUI::Dropdown projectionTypes("Projection", colWidth);
+			projectionTypes.SetOptions({ "Perspective", "Orthographic" });
+			projectionTypes.SetSelected(selected);
+			projectionTypes.SetMixed(flags & BIT(0));
+			projectionTypes.Render();
+
 			//Projection type here
-			if (ImUI::Combo("Projection", "##projection", projectionTypes, 2, selected, flags & BIT(0)))
+			if (projectionTypes.DidChange())
 			{
 				for (auto& entity : entities)
 				{
 					auto& c = entity.GetComponent<CameraComponent>();
-					c.SetProjection((Projection)selected);
-				}
-			}
-			if (!(flags & BIT(0)))
-			{
-				if ((Projection)selected == Projection::Perspective)
-				{
-					if (false)
-					{
-						for (auto& entity : entities)
-						{
-							auto& cc = entity.GetComponent<CameraComponent>();
-							cc.SetFov(fov);
-						}
-					}
-				}
-				else
-				{
-					if (false)
-					{
-						for (auto& entity : entities)
-						{
-							auto& cc = entity.GetComponent<CameraComponent>();
-							cc.SetSize(size);
-						}
-					}
+					c.SetProjection((Projection)projectionTypes.GetSelected());
 				}
 			}
 
-			ImGui::Columns();
+			bool isPerspective = (Projection)selected == Projection::Perspective;
+
+			if (!(flags & BIT(0)))
+			{
+				ImUI::InputFloat sizeInput(isPerspective ? "Fov" : "Size", 1);
+				sizeInput.ConfigureField(0, "X", style.Colors.AxisX);
+				sizeInput.SetFieldValue(0, isPerspective ? fov : size, isPerspective ? 60.0f : 1.0f);
+				sizeInput.Render();
+
+				if (isPerspective && sizeInput.DidAnyChange())
+				{
+					for (auto& entity : entities)
+					{
+						auto& cc = entity.GetComponent<CameraComponent>();
+						cc.SetFov(sizeInput.GetValue(0));
+					}
+				}
+				else if (sizeInput.DidAnyChange())
+				{
+					for (auto& entity : entities)
+					{
+						auto& cc = entity.GetComponent<CameraComponent>();
+						cc.SetSize(sizeInput.GetValue(0));
+					}
+				}
+				ImGui::Dummy({ 0, 4 });
+			}
 
 			ImUI::InputFloat clipInput("Clipping", 2);
 			clipInput.ConfigureField(0, "N", style.Colors.AxisY);
@@ -354,41 +375,38 @@ namespace UI
 				}
 			}
 
-			ImGui::Columns();
-		}, [&]() {
+		});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
+
+			ImGui::Separator();
 			ImUI::MenuItem("Reset", [&]() {
 				for (auto& entity : entities)
 				{
-					auto& cc = entity.GetComponent<CameraComponent>();
-					cc.SetProjection(Projection::Perspective);
-					cc.SetFov(60.0f);
-					cc.SetClipping({ 0.03, 100.0f });
+					auto& c = entity.GetComponent<CameraComponent>();
+					c.SetFov(60.0f);
+					c.SetSize(1.0f);
+					c.SetClipping({ 0.03f, 1000.0f });
 				}
 			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-			/*ImUI::DragSource("Hazard.CameraComponent", &e.GetUID(), [&]() {
-				ImGui::Text("Camera component");
-				ImGui::Text(std::to_string(e.GetUID()).c_str());
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([entities]() {
+					RemoveComponentFromAll<CameraComponent>(entities);
 				});
-				*/
+			});
 		});
-
-		if (removed)
-			RemoveComponentFromAll<CameraComponent>(entities);
-
+		treenode.Render();
 		return false;
 	}
 	template<>
-	bool ComponentMenu<ScriptComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<ScriptComponent>(const std::vector<Entity>& entities)
 	{
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_CODE " Script"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 
-		bool removed = false;
-
-		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CODE " Script"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
-								  ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
 			using namespace HazardScript;
 			ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -411,7 +429,6 @@ namespace UI
 				}
 			});
 
-
 			if (changed)
 			{
 				if (scriptEngine.FindModule(oldModule) && c.m_Handle)
@@ -419,63 +436,52 @@ namespace UI
 
 				if (scriptEngine.FindModule(c.ModuleName))
 				{
-					ScriptMetadata script = scriptEngine.GetScript(c.ModuleName);
-					uint64_t uid = entities[0].GetUID();
-					c.m_Handle = script.CreateObject(uid);
+					Application::Get().SubmitMainThread([e = entities[0]]() {
+						ScriptEngine& scriptEngine = Application::Get().GetModule<ScriptEngine>();
+						scriptEngine.InitializeComponent(e, e.GetComponent<ScriptComponent>());
+					});
 				}
 			}
 			if (c.m_Handle)
 			{
-				//ScriptMetadata& script = c.m_Handle->GetScript();
-
 				ImGui::Columns(2, 0, false);
 				ImGui::SetColumnWidth(0, colWidth);
 
 				auto world = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
-				/*
-				for (auto& [name, field] : script.GetFields())
-				{
-					const char* label = name.c_str();
-					Ref<FieldMetadata> f = field;
-
-					ImUI::Group(name.c_str(), [&]() {
-						UI::ScriptField(label, f, c.m_Handle, world);
-						ImUI::ShiftY(3.0f);
-						ImGui::Separator();
-						ImUI::ShiftY(2.0f);
-						});
-				}
-				*/
 				ImGui::Columns();
 			}
-
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
-			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-			/*ImUI::DragSource("Hazard.ScriptComponent", &e.GetUID(), [&]() {
-				ImGui::Text("Script component");
-				ImGui::Text(std::to_string(e.GetUID()).c_str());
-				});
-				*/
 		});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
 
-		if (removed)
-			RemoveComponentFromAll<ScriptComponent>(entities);
-
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {
+				Application::Get().SubmitMainThread([entities]() {
+					for (auto entity : entities)
+					{
+						auto& sc = entity.GetComponent<ScriptComponent>();
+						sc.ModuleName = "";
+						sc.m_Handle = nullptr;
+					}
+				});
+			});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					for (auto entity : entities) entity.RemoveComponent<ScriptComponent>();
+				});
+			});
+		});
+		treenode.Render();
 		return false;
 	}
 	template<>
-	bool ComponentMenu<SkyLightComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<SkyLightComponent>(const std::vector<Entity>& entities)
 	{
-
-		bool removed = false;
-
-		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_GLOBE " Sky light"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
-								  ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_GLOBE " Sky light"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 
 			auto& firstDir = entities[0].GetComponent<SkyLightComponent>();
 			AssetHandle mapHandle = firstDir.EnvironmentMapHandle;
@@ -491,26 +497,15 @@ namespace UI
 				flags |= (sc.LodLevel != lodLevel) ? BIT(2) : 0;
 			}
 
-			ImGui::Columns(2, 0, false);
-			ImGui::SetColumnWidth(0, colWidth);
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
-
-			ImGui::Text("Map");
-			ImGui::NextColumn();
-
 			std::string path = "None";
 			if (mapHandle != INVALID_ASSET_HANDLE)
 				path = AssetManager::GetMetadata(mapHandle).Key;
 			else if (flags & BIT(0))
 				path = "---";
 
-
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			if (ImUI::TextFieldWithHint(path, "Source image"))
-			{
-
-			}
-			ImGui::PopStyleVar();
+			ImUI::TextField sourceImage("Source image");
+			sourceImage.SetHint("Image asset");
+			sourceImage.Render();
 
 			ImUI::DropTarget<AssetHandle>(AssetType::EnvironmentMap, [&](AssetHandle handle) {
 				Application::Get().SubmitMainThread([handle, entities]() mutable {
@@ -519,52 +514,40 @@ namespace UI
 						entity.GetComponent<SkyLightComponent>().EnvironmentMapHandle = handle;
 				});
 			});
-
-			ImGui::NextColumn();
-			/*
-			if (ImUI::InputFloatX("Lod level", lodLevel, 0.0f, 0.025f, 0.0f, 1.0f, (flags & BIT(1)) != 0))
-			{
-				for (auto& entity : entities)
-					entity.GetComponent<SkyLightComponent>().LodLevel = lodLevel;
-			}
-			if (ImUI::InputFloatX("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, (flags & BIT(2)) != 0))
-			{
-				for (auto& entity : entities)
-					entity.GetComponent<SkyLightComponent>().Intensity = intensity;
-			}
-			*/
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
-				for (auto& entity : entities)
-				{
-					auto& slc = entity.GetComponent<SkyLightComponent>();
-					slc.Intensity = 1.0f;
-					slc.EnvironmentMapHandle = 0;
-					slc.LodLevel = 0.0f;
-				}
-
-			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-			/*ImUI::DragSource("Hazard.SkyLightComponent", &e.GetUID(), [&]() {
-				ImGui::Text("Sky light");
-				ImGui::Text(std::to_string(e.GetUID()).c_str());
-				});
-				*/
 		});
-		if (removed)
-			RemoveComponentFromAll<SkyLightComponent>(entities);
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
+
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {
+				Application::Get().SubmitMainThread([entities]() {
+					for (auto entity : entities)
+					{
+						auto& slc = entity.GetComponent<SkyLightComponent>();
+						slc.EnvironmentMapHandle = INVALID_ASSET_HANDLE;
+						slc.Intensity = 1.0f;
+						slc.LodLevel = 1.0f;
+					}
+				});
+			});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<SkyLightComponent>(entities);
+				});
+			});
+		});
+		treenode.Render();
 
 		return false;
 	}
 	template<>
-	bool ComponentMenu<DirectionalLightComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<DirectionalLightComponent>(const std::vector<Entity>& entities)
 	{
-		bool removed = false;
-
-		ImUI::TreenodeWithOptions("Directional light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_SUN_O " Directional light"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 			ImGui::Columns(2, 0, false);
 			ImGui::SetColumnWidth(0, colWidth);
 
@@ -591,45 +574,41 @@ namespace UI
 				for (auto& entity : entities)
 					entity.GetComponent<DirectionalLightComponent>().LightColor = color;
 			}
-			/*
-			if (ImUI::InputFloatX("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, flags & BIT(1)))
-			{
-				for (auto& entity : entities)
-					entity.GetComponent<DirectionalLightComponent>().Intensity = intensity;
-			}
-			*/
+
 			ImGui::Columns();
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
-				for (auto& entity : entities)
-				{
-					auto& dir = entity.GetComponent<DirectionalLightComponent>();
-					dir.Intensity = 1.0f;
-					dir.LightColor = Color::White;
-				}
-			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-			/*ImUI::DragSource("Hazard.DirectionalLightComponent", &e.GetUID(), [&]() {
-				ImGui::Text("Directional light");
-				ImGui::Text(std::to_string(e.GetUID()).c_str());
-				});
-				*/
 		});
-		if (removed)
-			RemoveComponentFromAll<DirectionalLightComponent>(entities);
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
+
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {
+				Application::Get().SubmitMainThread([entities]() {
+					for (auto entity : entities)
+					{
+						auto& dlc = entity.GetComponent<DirectionalLightComponent>();
+						dlc.Intensity = 1.0f;
+						dlc.LightColor = Color::White;
+					}
+				});
+			});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<DirectionalLightComponent>(entities);
+				});
+			});
+		});
+		treenode.Render();
 
 		return false;
 	}
 	template<>
-	bool ComponentMenu<PointLightComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<PointLightComponent>(const std::vector<Entity>& entities)
 	{
-
-		bool removed = false;
-
-		ImUI::TreenodeWithOptions("Point light", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_LIGHTBULB_O " Point light"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 			ImGui::Columns(2, 0, false);
 			ImGui::SetColumnWidth(0, colWidth);
 
@@ -656,46 +635,42 @@ namespace UI
 				for (auto& entity : entities)
 					entity.GetComponent<PointLightComponent>().LightColor = color;
 			}
-			/*
-			if (ImUI::InputFloatX("Intensity", intensity, 1.0f, 0.025f, 0.0f, 0.0f, flags & BIT(1)))
-			{
-				for (auto& entity : entities)
-					entity.GetComponent<PointLightComponent>().Intensity = intensity;
-			}
-			*/
 			ImGui::Columns();
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
-				for (auto& entity : entities)
-				{
-					auto& dir = entity.GetComponent<PointLightComponent>();
-					dir.Intensity = 1.0f;
-					dir.LightColor = Color::White;
-				}
-			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-			/*ImUI::DragSource("Hazard.PointLightComponent", &e.GetUID(), [&]() {
-				ImGui::Text("Directional light");
-				ImGui::Text(std::to_string(e.GetUID()).c_str());
-				});
-				*/
 		});
-		if (removed)
-			RemoveComponentFromAll<PointLightComponent>(entities);
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
+
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {
+				Application::Get().SubmitMainThread([entities]() {
+					for (auto entity : entities)
+					{
+						auto& plc = entity.GetComponent<PointLightComponent>();
+						plc.Intensity = 1.0f;
+						plc.Radius = 1.0f;
+						plc.LightColor = Color::White;
+					}
+				});
+			});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<PointLightComponent>(entities);
+				});
+			});
+		});
+		treenode.Render();
 
 		return false;
 	}
 	template<>
-	bool ComponentMenu<MeshComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<MeshComponent>(const std::vector<Entity>& entities)
 	{
-		bool removed = false;
 
-		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CUBE " Mesh"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed |
-								  ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
-
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_CUBE " Mesh"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {
 			auto& firstMc = entities[0].GetComponent<MeshComponent>();
 
 			uint32_t flags = 0;
@@ -729,144 +704,185 @@ namespace UI
 			else if (flags & BIT(1))
 				materialName = "---";
 
+			ImUI::TextField meshField("Mesh");
+			meshField.SetHint("Mesh asset");
+			meshField.Render();
 
-			ImGui::Columns(2, 0, false);
-			ImGui::SetColumnWidth(0, colWidth);
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
-
-			ImGui::Text("Mesh");
-			ImGui::NextColumn();
-
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			if (ImUI::TextFieldWithHint(meshName, "Mesh file"))
-			{
-
-			}
 			ImUI::DropTarget<AssetHandle>(AssetType::Mesh, [&](AssetHandle handle) {
 				Application::Get().SubmitMainThread([handle, entities]() {
 					for (auto entity : entities)
 						entity.GetComponent<MeshComponent>().MeshHandle = handle;
 				});
 			});
-			ImGui::NextColumn();
-			ImGui::Text("Material");
-			ImGui::NextColumn();
-			ImGui::PushID("##materialInput");
 
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			if (ImUI::TextFieldWithHint(materialName, "Material"))
-			{
+			ImUI::TextField materialField("Material");
+			materialField.SetHint("Material asset");
+			materialField.Render();
 
-			}
 			ImUI::DropTarget<AssetHandle>(AssetType::Material, [&](AssetHandle handle) {
 				Application::Get().SubmitMainThread([handle, entities]() {
 					for (auto entity : entities)
 						entity.GetComponent<MeshComponent>().MaterialHandle = handle;
 				});
 			});
-
-			ImGui::PopStyleVar();
-			ImGui::PopID();
-			ImGui::Columns();
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
-				for (auto& entity : entities)
-				{
-					auto& c = entity.GetComponent<MeshComponent>();
-					c.MeshHandle = INVALID_ASSET_HANDLE;
-					c.MaterialHandle = INVALID_ASSET_HANDLE;
-				}
-			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-
 		});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
 
-		if (removed)
-			RemoveComponentFromAll<MeshComponent>(entities);
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {
+				Application::Get().SubmitMainThread([entities]() {
+					for (auto entity : entities)
+						entity.GetComponent<MeshComponent>().MaterialHandle = INVALID_ASSET_HANDLE;
+				});
+			});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<MeshComponent>(entities);
+				});
+			});
+		});
+		treenode.Render();
 
 		return false;
 	}
 	template<>
-	bool ComponentMenu<Rigidbody2DComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<RigidbodyComponent>(const std::vector<Entity>& entities)
 	{
-		bool removed = false;
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_ROCKET " Rigidbody"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
 
-		ImUI::TreenodeWithOptions("Rigidbody 2D", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
-								  ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
-
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
-			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-			/*ImUI::DragSource("Hazard.Rigidbody2DComponent", &e.GetUID(), [&]() {
-				ImGui::Text("Rigidbody 2D");
-				ImGui::Text(std::to_string(e.GetUID()).c_str());
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<RigidbodyComponent>(entities);
 				});
-				*/
+			});
 		});
-		if (removed)
-			RemoveComponentFromAll<Rigidbody2DComponent>(entities);
+		treenode.Render();
 
 		return false;
 	}
 	template<>
-	bool ComponentMenu<BoxCollider2DComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<BoxColliderComponent>(const std::vector<Entity>& entities)
 	{
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_CODEPEN " Box collider"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
 
-		bool removed = false;
-
-		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CODEPEN " Box collider 2D"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
-								  ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
-
-
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
-			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-			/*ImUI::DragSource("Hazard.BoxCollider2DComponent", &e.GetUID(), [&]() {
-				ImGui::Text("Box collider 2D");
-				ImGui::Text(std::to_string(e.GetUID()).c_str());
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<BoxColliderComponent>(entities);
 				});
-				*/
+			});
 		});
-		if (removed)
-			RemoveComponentFromAll<BoxCollider2DComponent>(entities);
+		treenode.Render();
 
 		return false;
 	}
 	template<>
-	bool ComponentMenu<CircleCollider2DComponent>(std::vector<Entity>& entities)
+	bool ComponentMenu<SphereColliderComponent>(const std::vector<Entity>& entities)
 	{
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_CIRCLE_O_NOTCH " Sphere collider"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
 
-		bool removed = false;
-
-		ImUI::TreenodeWithOptions((const char*)(" " ICON_FK_CIRCLE_O " Circle collider 2D"), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth |
-								  ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding, [&]() {
-		}, [&]() {
-			ImUI::MenuItem("Reset", [&]() {
-			});
-			ImUI::MenuItem("Remove component", [&]() {
-				removed = true;
-			});
-		}, [&]() {
-			/*ImUI::DragSource("Hazard.CircleCollider2DComponent", &e.GetUID(), [&]() {
-				ImGui::Text("Circle collider 2D");
-				ImGui::Text(std::to_string(e.GetUID()).c_str());
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<SphereColliderComponent>(entities);
 				});
-				*/
+			});
 		});
-		if (removed)
-			RemoveComponentFromAll<CircleCollider2DComponent>(entities);
+		treenode.Render();
 
+		return false;
+	}
+	template<>
+	bool ComponentMenu<Rigidbody2DComponent>(const std::vector<Entity>& entities)
+	{
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_OBJECT_UNGROUP " Rigidbody 2D"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
+
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<Rigidbody2DComponent>(entities);
+				});
+			});
+		});
+		treenode.Render();
+
+		return false;
+	}
+	template<>
+	bool ComponentMenu<BoxCollider2DComponent>(const std::vector<Entity>& entities)
+	{
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_CODEPEN " Box collider 2D"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
+
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<BoxCollider2DComponent>(entities);
+				});
+			});
+		});
+		treenode.Render();
+
+		return false;
+	}
+	template<>
+	bool ComponentMenu<CircleCollider2DComponent>(const std::vector<Entity>& entities)
+	{
+		ImUI::Treenode treenode((const char*)(" " ICON_FK_CIRCLE_O " Circle collider 2D"), true);
+		treenode.DefaultOpen();
+		treenode.Content([&]() {});
+		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
+			ImUI::MenuHeader("Component menu");
+			ImUI::MenuItem("Copy", []() {});
+			ImUI::MenuItem("Paste", []() {});
+
+			ImGui::Separator();
+			ImUI::MenuItem("Reset", [&]() {});
+			ImUI::MenuItem("Remove", [&]() {
+				Application::Get().SubmitMainThread([=]() {
+					RemoveComponentFromAll<CircleCollider2DComponent>(entities);
+				});
+			});
+		});
+		treenode.Render();
 		return false;
 	}
 }

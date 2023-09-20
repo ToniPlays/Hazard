@@ -17,7 +17,6 @@ namespace UI
 	void Console::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
-		const char* columns[] = { "Type", "Timestamp", "Message" };
 
 		ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
@@ -26,7 +25,7 @@ namespace UI
 
 		DrawToolbar({ consoleSize.x, 28.0f });
 
-		ImUI::Table("Console", columns, 3, consoleSize, [&]() {
+		ImUI::Table("Console", { "Type", "Timestamp", "Message" }, consoleSize, [&]() {
 
 			float rowHeight = 24.0f;
 			for (auto& message : m_Messages) 

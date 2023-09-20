@@ -28,8 +28,10 @@ namespace Hazard
 		m_SourceImageHandle = sourceImage;
 		m_Spec.Samples = samples;
 		m_Spec.Resolution = resolution;
-
-		if (sourceImage != INVALID_ASSET_HANDLE)
+	}
+	void EnvironmentMap::Invalidate() 
+	{
+		if (m_SourceImageHandle != INVALID_ASSET_HANDLE)
 			GenerateRadiance();
 	}
 
