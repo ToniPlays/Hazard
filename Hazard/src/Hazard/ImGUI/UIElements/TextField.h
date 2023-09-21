@@ -15,7 +15,8 @@ namespace Hazard::ImUI
 		~TextField() {}
 
 		void Render();
-		void Clear() { m_Value = ""; }
+		void Clear() { m_Value = ""; m_DidChange = true; }
+		void SetValue(const std::string& value) { m_Value = value; }
 		void SetIcon(const std::string& icon) { m_Icon = icon; };
 		void SetIcon(const char* icon) { m_Icon = icon; };
 		void SetHint(const std::string& hint) { m_Hint = hint; };

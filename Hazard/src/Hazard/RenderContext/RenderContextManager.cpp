@@ -44,8 +44,6 @@ namespace Hazard
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 		//AssetManager::RegisterLoader<PipelineAssetLoader>(AssetType::Pipeline);
 		AssetManager::RegisterLoader<ShaderAssetLoader>(AssetType::Shader);
-
-		ShaderLibrary::Init();
 	}
 	void RenderContextManager::PreRender()
 	{

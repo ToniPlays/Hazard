@@ -3,6 +3,7 @@
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Rendering/Renderers/WorldRenderer.h"
 #include "Hazard/ImGUI/UIElements/Treenode.h"
+#include "Hazard/ImGUI/UIElements/Table.h"
 
 using namespace Hazard;
 
@@ -27,41 +28,29 @@ namespace UI
 				ImVec2 size = ImGui::GetContentRegionAvail();
 				size.y = 150.0f;
 
-				ImUI::Table("WorldRenderer", { "Type", "Value" }, size, [&]() {
+				struct Content 
+				{
+					std::string Key;
+					std::string Value;
+				};
 
-					ImGui::TableNextRow(0);
-
+				ImUI::Table<Content> table("WorldRenderer", size);
+				table.SetColumns({ "Type", "Value" });
+				table.RowHeight(24.0f);
+				table.RowContent([](const Content& item) {
+					ImGui::Text("%s", item.Key.c_str());
 					ImGui::TableNextColumn();
-					ImGui::Text("Camera count");
-					ImGui::TableNextColumn();
-					ImGui::Text("%s", std::to_string(renderer->GetCameraData().size()).c_str());
-
-					ImGui::TableNextColumn();
-					ImGui::Text("Quad count");
-					ImGui::TableNextColumn();
-					ImGui::Text("%s", std::to_string(list.Stats.QuadCount).c_str());
-
-					ImGui::TableNextColumn();
-					ImGui::Text("Mesh count");
-					ImGui::TableNextColumn();
-					ImGui::Text("%s", std::to_string(list.Stats.MeshCount).c_str());
-
-					ImGui::TableNextColumn();
-					ImGui::Text("Vertices");
-					ImGui::TableNextColumn();
-					ImGui::Text("%s", std::to_string(list.Stats.Vertices).c_str());
-
-					ImGui::TableNextColumn();
-					ImGui::Text("Indices");
-					ImGui::TableNextColumn();
-					ImGui::Text("%s", std::to_string(list.Stats.Indices).c_str());
-
-					ImGui::TableNextColumn();
-					ImGui::Text("Draw calls");
-					ImGui::TableNextColumn();
-					ImGui::Text("%s", std::to_string(list.Stats.DrawCalls).c_str());
-
+					ImGui::Text("%s", item.Value.c_str());
 				});
+
+				table.AddRow({ "Camera", std::to_string(renderer->GetCameraData().size()) });
+				table.AddRow({ "Quads", std::to_string(list.Stats.QuadCount) });
+				table.AddRow({ "Mesh", std::to_string(list.Stats.MeshCount) });
+				table.AddRow({ "Vertices", std::to_string(list.Stats.Vertices) });
+				table.AddRow({ "Indices", std::to_string(list.Stats.Indices) });
+				table.AddRow({ "Draws", std::to_string(list.Stats.DrawCalls) });
+
+				table.Render();
 				DrawDetailedInfo(list);
 			});
 			commandList.Render();

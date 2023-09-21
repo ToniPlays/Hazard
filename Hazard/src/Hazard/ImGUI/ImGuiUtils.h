@@ -6,7 +6,6 @@
 
 namespace ImGui
 {
-
     static bool TreeNodeWithIcon(ImGuiID id, ImGuiTreeNodeFlags flags, const char* label, const char* label_end, ImColor iconTint = IM_COL32_WHITE)
     {
         ImGuiWindow* window = GetCurrentWindow();

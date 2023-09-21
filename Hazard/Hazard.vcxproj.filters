@@ -25,6 +25,9 @@
     <Filter Include="src\Hazard\ImGUI">
       <UniqueIdentifier>{804F9F82-6C48-BED4-957A-A35981D29DE0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\ImGUI\UIElements">
+      <UniqueIdentifier>{CA0D99FA-361B-C7E0-BF01-C3CB2B0E9397}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Logging">
       <UniqueIdentifier>{ACBC9795-98A0-58EB-0101-533EED03436D}</UniqueIdentifier>
     </Filter>
@@ -212,6 +215,21 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\ImGUI\StyleManager.h">
       <Filter>src\Hazard\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\Dropdown.h">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\InputFloat.h">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\Table.h">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\TextField.h">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\Treenode.h">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ImGUI\UILibrary.h">
       <Filter>src\Hazard\ImGUI</Filter>
@@ -1659,10 +1677,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\ImGUI\UIElements\InputFloat.h" />
-    <ClInclude Include="src\Hazard\ImGUI\UIElements\TextField.h" />
-    <ClInclude Include="src\Hazard\ImGUI\UIElements\Dropdown.h" />
-    <ClInclude Include="src\Hazard\ImGUI\UIElements\Treenode.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1721,6 +1735,21 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\StyleManager.cpp">
       <Filter>src\Hazard\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\Dropdown.cpp">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\InputFloat.cpp">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\Table.cpp">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\TextField.cpp">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\Treenode.cpp">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
@@ -1830,9 +1859,5 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\ImGUI\UIElements\InputFloat.cpp" />
-    <ClCompile Include="src\Hazard\ImGUI\UIElements\TextField.cpp" />
-    <ClCompile Include="src\Hazard\ImGUI\UIElements\Dropdown.cpp" />
-    <ClCompile Include="src\Hazard\ImGUI\UIElements\Treenode.cpp" />
   </ItemGroup>
 </Project>

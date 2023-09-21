@@ -20,19 +20,26 @@ private:
 
 class PerformanceProfiler
 {
+
 public:
+	struct TimerData
+	{
+		float Time;
+		float MaxTime;
+	};
+
 	static void SetPerFrameTiming(const char* name, float time, float maxTime = 0.0f) {
 		if (s_PerFrameData.find(name) == s_PerFrameData.end())
 		{
-			s_PerFrameData[name] = time;
+			s_PerFrameData[name] = { time, maxTime };
 			return;
 		}
-		s_PerFrameData[name] += time;
+		s_PerFrameData[name].Time += time;
 	}
 	static void Clear() { s_PerFrameData.clear(); }
-	static const std::unordered_map<const char*, float>& GetPerFrameData() { return s_PerFrameData; }
+	static const std::unordered_map<const char*, TimerData>& GetPerFrameData() { return s_PerFrameData; }
 private:
-	inline static std::unordered_map<const char*, float> s_PerFrameData;
+	inline static std::unordered_map<const char*, TimerData> s_PerFrameData;
 };
 
 class ScopePerfTimer
@@ -40,14 +47,19 @@ class ScopePerfTimer
 public:
 	ScopePerfTimer(const char* name)
 		: m_Name(name) {}
+	ScopePerfTimer(const char* name, float maxTime)
+		: m_Name(name), m_MaxTime(maxTime)
+	{
+	}
 
 	~ScopePerfTimer()
 	{
 		float time = m_Timer.ElapsedMillis();
-		PerformanceProfiler::SetPerFrameTiming(m_Name, time);
+		PerformanceProfiler::SetPerFrameTiming(m_Name, time, m_MaxTime);
 	}
 private:
 	const char* m_Name;
+	float m_MaxTime = 100.0f;
 	Timer m_Timer;
 };
 

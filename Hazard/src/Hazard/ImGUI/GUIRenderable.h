@@ -5,13 +5,13 @@
 
 namespace Hazard::ImUI
 {
-	class GUIRenderable {
+	class GUIRenderable 
+	{
 	public:
+		GUIRenderable() = default;
+
 		virtual void Update() {};
 		virtual void Render() = 0;
 		virtual bool OnEvent(Event& e) = 0;
-
-	private:
-
 	};
 }

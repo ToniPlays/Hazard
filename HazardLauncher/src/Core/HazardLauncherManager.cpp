@@ -19,7 +19,7 @@ bool HazardLauncherManager::OpenProject(const HazardProject& project)
 bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 {
 	if (!File::Exists(path)) return false;
-	if (File::GetFileExtension(path) != "hzrproj") return false;
+	if (File::GetFileExtension(path) != ".hzrproj") return false;
 	
 	auto parent = File::GetDirectoryOf(path);
 

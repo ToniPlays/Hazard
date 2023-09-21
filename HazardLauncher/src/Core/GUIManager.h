@@ -5,6 +5,8 @@
 #include "Platform/EditorGuiPlatform.h"
 #include "HazardLauncherManager.h"
 
+#include "Hazard/ImGUI/UIElements/TextField.h"
+
 #define CONFIG_PATH "launcherConfig.hzrcfg"
 
 class GUIManager : public Hazard::Module 
@@ -41,9 +43,8 @@ private:
 	Hazard::ImUI::PanelManager m_PanelManager;
 	HazardLauncherManager m_Manager;
 
-	std::filesystem::path m_CurrentProjectPath;
-	std::string m_SearchValue;
-	std::string m_ProjectName;
+	Hazard::ImUI::TextField m_SearchField;
+	Hazard::ImUI::TextField m_NewProjectPath;
 
 	bool m_EnvVarExists = false;
 };

@@ -38,6 +38,7 @@ project "HazardLauncher"
 		"%{IncludeDir.Hazard_UI}",
 		"%{IncludeDir.PortableFileDialogs}",
 		"%{IncludeDir.VMA}",
+		"%{IncludeDir.Coral}",
 		"%{IncludeDir.Optick}",
 		"src"
 	}

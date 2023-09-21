@@ -1,13 +1,11 @@
 #pragma once
 
-
 #include "HazardScriptCore.h"
 #include "Metadata/ScriptAssembly.h"
 #include "Coral/HostInstance.hpp"
 
 namespace HazardScript 
 {
-
 	struct CoralData
     {
 		std::filesystem::path CoralDirectory;

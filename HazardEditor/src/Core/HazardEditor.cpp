@@ -60,7 +60,7 @@ void HazardEditorApplication::PreInit()
 		std::filesystem::current_path(workingDir);
 		HZR_INFO("Working directory: {0} ", std::filesystem::current_path().string());
 	}
-	HazardProject& project = PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hproj"));
+	HazardProject& project = PushModule<ProjectManager>().LoadProjectFromFile(CommandLineArgs::Get<std::string>("hprj"));
 
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 

@@ -1,5 +1,6 @@
 
 #include "ProjectTodoPanel.h"
+#include "Hazard/ImGUI/UIElements/Table.h"
 #include "Core/HazardScriptEngine.h"
 #include "Hazard/Scripting/Attributes/AllAttributes.h"
 
@@ -23,27 +24,14 @@ namespace UI
 		{
 			ImGui::Text("Assembly: %s", File::GetNameNoExt(assembly->GetSourcePath()).c_str());
 
-			ImUI::Table("TodoStatus", { "Status", "Message" }, size, [&]() {
-				/*
-				for (auto& [name, metadata] : assembly->GetScripts())
-				{
-					auto& classAttrib = metadata->Get<TodoAttribute>();
-					if (classAttrib)
-						DrawElement(name, "", classAttrib);
+			ImUI::Table<Ref<TodoAttribute>> table("Assembly", size);
+			table.SetColumns({ "Status", "Message" });
+			table.RowHeight(24.0f);
+			table.RowContent([this](const Ref<TodoAttribute>& item) {
+				DrawElement("", "", item);
+			});
 
-					/*for (auto& [n, field] : metadata->GetFields())
-					{
-						auto& attrib = field->Get<TodoAttribute>();
-						if (attrib) DrawElement(name, n, attrib);
-					}
-					for (auto& [n, method] : metadata->GetMethods())
-					{
-						auto& attrib = method->Get<TodoAttribute>();
-						if (attrib) DrawElement(name, n, attrib);
-					}
-				}
-				*/
-				});
+			table.Render();
 			ImUI::ShiftY(4.0f);
 		}
 	}
@@ -54,16 +42,12 @@ namespace UI
 		if (!name.empty())
 			title += "." + name;
 
-		ImUI::TableRowClickable((const char*)name.c_str(), rowHeight);
-
-		ImUI::Group((const char*)name.c_str(), [&]() {
-			const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-			ImUI::Separator({ 4.0, rowHeight }, style.Colors.AxisX);
-			ImGui::SameLine();
-			ImGui::Text("%s", title.c_str());
-			ImGui::TableNextColumn();
-			ImUI::ShiftX(4.0f);
-			ImGui::Text("%s", attrib->Detail.c_str());
-			});
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		ImUI::Separator({ 4.0, rowHeight }, style.Colors.AxisX);
+		ImGui::SameLine();
+		ImGui::Text("%s", title.c_str());
+		ImGui::TableNextColumn();
+		ImUI::ShiftX(4.0f);
+		ImGui::Text("%s", attrib->Detail.c_str());
 	}
 }

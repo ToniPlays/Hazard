@@ -22,6 +22,8 @@ namespace Hazard
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
 		AssetManager::RegisterLoader<MaterialAssetLoader>(AssetType::Material);
 		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
+		
+		ShaderLibrary::Init();
 
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
@@ -50,6 +52,7 @@ namespace Hazard
 		m_CircleRenderer.Init();
 		m_CircleRenderer.CreateResources(m_RenderPass);
 		m_RenderContextManager = &Application::GetModule<RenderContextManager>();
+
 
 		CreateRasterizedRenderGraph();
 	}

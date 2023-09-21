@@ -9,6 +9,7 @@
 #include "Hazard/Rendering/RenderEngine.h"
 
 #include "Hazard/ImGUI/UIElements/Dropdown.h"
+#include <Editor/EditorModeManager.h>
 
 using namespace HazardRenderer;
 
@@ -141,9 +142,7 @@ namespace UI
 
 			auto windowPos = ImGui::GetWindowPos();
 			auto mousePos = Input::GetMousePos();
-			glm::vec2 pos;
-			pos.x = mousePos.x - windowPos.x;
-			pos.y = mousePos.y - windowPos.y - 36;
+			glm::vec2 pos = { mousePos.x - windowPos.x, mousePos.y - windowPos.y - 36 };
 
 			OnMouseClicked(pos);
 		}
@@ -154,52 +153,12 @@ namespace UI
 			});
 		});
 
-		ImGui::SetCursorPos({ corner.x + 8, corner.y + 8 });
-
-		if (ImGui::Button((const char*)ICON_FK_COG, { 28, 28 }))
-			m_DrawSettings = !m_DrawSettings;
-
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
-		ImGui::SameLine(0, 8);
-		std::string text = m_EditorCamera.Is2DEnabled() ? "2D Projection" : "3D Projection";
-
-		if (ImGui::Button(text.c_str(), { 0, 28 }))
-		{
-			m_EditorCamera.SetIs2D(!m_EditorCamera.Is2DEnabled());
-		}
-
-		ImGui::SameLine(0, 8);
-		if (ImGui::Button((const char*)ICON_FK_EYE " Show", { 0, 28 }))
-			m_DrawStats = !m_DrawStats;
-
-		ImGui::PopStyleVar();
-
+		DrawLeftToolbar(corner);
 		ImGui::SameLine();
-		ImGui::SetCursorPosX(size.x - (84 + 8));
-		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 28);
+		DrawPlaymodeButtons(size);
+		ImGui::SameLine();
+		DrawRightToolbar(size);
 
-		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-		const ImVec4& backgroundColor = style.ChildBackgroundColor;
-		const ImVec4& offColor = style.Window.TextDisabled;
-
-		ImGui::BeginChild("##gizmoTools", { 84, 28 });
-		ImGui::SameLine(0, 0);
-		if (ImUI::ColoredButton((const char*)ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 28 }))
-		{
-			m_Gizmos.SetType(Gizmo::Translate);
-		}
-		ImGui::SameLine(0, 0);
-		if (ImUI::ColoredButton((const char*)ICON_FK_REPEAT, backgroundColor, m_Gizmos.GetType() != Gizmo::Rotate ? offColor : style.Colors.AxisY, { 0, 28 }))
-		{
-			m_Gizmos.SetType(Gizmo::Rotate);
-		}
-		ImGui::SameLine(0, 0);
-		if (ImUI::ColoredButton((const char*)ICON_FK_EXPAND, backgroundColor, m_Gizmos.GetType() != Gizmo::Scale ? offColor : style.Colors.Warning, { 0, 28 }))
-		{
-			m_Gizmos.SetType(Gizmo::Scale);
-		}
-
-		ImGui::EndChild();
 		m_WindowFocused = ImGui::IsWindowFocused();
 
 		if (m_DrawStats)
@@ -414,5 +373,93 @@ namespace UI
 
 		ImGui::Columns();
 		ImGui::EndChild();
+	}
+	void Viewport::DrawLeftToolbar(ImVec2 corner)
+	{
+		ImGui::SetCursorPos({ corner.x + 8, corner.y + 8 });
+
+		if (ImGui::Button((const char*)ICON_FK_COG, { 28, 28 }))
+			m_DrawSettings = !m_DrawSettings;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 8, 2 });
+		ImGui::SameLine(0, 8);
+		std::string text = m_EditorCamera.Is2DEnabled() ? "2D Projection" : "3D Projection";
+
+		if (ImGui::Button(text.c_str(), { 0, 28 }))
+			m_EditorCamera.SetIs2D(!m_EditorCamera.Is2DEnabled());
+
+		ImGui::SameLine(0, 8);
+		if (ImGui::Button((const char*)ICON_FK_EYE " Show", { 0, 28 }))
+			m_DrawStats = !m_DrawStats;
+
+		ImGui::PopStyleVar();
+	}
+	void Viewport::DrawRightToolbar(ImVec2 size)
+	{
+		ImGui::SetCursorPosX(size.x - (84 + 8));
+		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 28);
+
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		const ImVec4& backgroundColor = style.ChildBackgroundColor;
+		const ImVec4& offColor = style.Window.TextDisabled;
+
+		ImGui::BeginChild("##gizmoTools", { 84, 28 });
+		ImGui::SameLine(0, 0);
+		if (ImUI::ColoredButton((const char*)ICON_FK_ARROWS, backgroundColor, m_Gizmos.GetType() != Gizmo::Translate ? offColor : style.Colors.AxisX, { 0, 28 }))
+			m_Gizmos.SetType(Gizmo::Translate);
+
+		ImGui::SameLine(0, 0);
+		if (ImUI::ColoredButton((const char*)ICON_FK_REPEAT, backgroundColor, m_Gizmos.GetType() != Gizmo::Rotate ? offColor : style.Colors.AxisY, { 0, 28 }))
+			m_Gizmos.SetType(Gizmo::Rotate);
+
+		ImGui::SameLine(0, 0);
+		if (ImUI::ColoredButton((const char*)ICON_FK_EXPAND, backgroundColor, m_Gizmos.GetType() != Gizmo::Scale ? offColor : style.Colors.Warning, { 0, 28 }))
+			m_Gizmos.SetType(Gizmo::Scale);
+
+		ImGui::EndChild();
+	}
+	void Viewport::DrawPlaymodeButtons(ImVec2 size)
+	{
+		ImGui::SetCursorPosX((size.x - 84) * 0.5f);
+		ImUI::ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, 8.0f);
+
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+		ImVec4 backgroundColor = style.ChildBackgroundColor;
+		backgroundColor.w = 0.8f;
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, backgroundColor);
+
+		ImGui::BeginChild("##mode", { 90, 36 });
+		ImGui::SameLine(0, 0);
+
+		const Editor::EditorMode& mode = Editor::EditorModeManager::GetCurrentMode();
+
+		if (mode == Editor::EditorMode::Edit)
+			ImGui::BeginDisabled();
+		if (ImUI::ColoredButton((const char*)ICON_FK_STOP, { 0, 0, 0, 0 }, style.Window.Text, { 30, 36 }))
+		{
+			Editor::EditorModeManager::EndPlayMode();
+		}
+		if (mode == Editor::EditorMode::Edit)
+			ImGui::EndDisabled();
+
+		ImGui::SameLine(0, 0);
+		if (ImUI::ColoredButton((const char*)ICON_FK_PAUSE, { 0, 0, 0, 0 }, style.Window.Text, { 30, 36 }))
+		{
+
+		}
+		ImGui::SameLine(0, 0);
+
+		if (mode != Editor::EditorMode::Edit)
+			ImGui::BeginDisabled();
+
+		if (ImUI::ColoredButton((const char*)ICON_FK_PLAY, { 0, 0, 0, 0 }, style.Window.Text, { 30, 36 }))
+		{
+			Editor::EditorModeManager::BeginPlayMode();
+		}
+		if (mode != Editor::EditorMode::Edit)
+			ImGui::EndDisabled();
+
+		ImGui::EndChild();
+		ImGui::PopStyleColor();
 	}
 }

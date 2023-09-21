@@ -1,12 +1,13 @@
 
 #include "Hazard.h"
+#include "Hazard/ImGUI/UIElements/TextField.h"
 
 namespace UI 
 {
 	class PerformanceDebugPanel : public Hazard::ImUI::Panel
 	{
 	public:
-		PerformanceDebugPanel() : Hazard::ImUI::Panel("PerformanceDebugPanel") { m_Open = false; };
+		PerformanceDebugPanel();
 
 		void Update() override {};
 		void OnPanelRender() override;
@@ -17,6 +18,6 @@ namespace UI
 		ImVec4 GetMemoryColor(size_t bytes);
 
 	private:
-		std::string m_MemorySearchVal;
+		Hazard::ImUI::TextField m_SearchField;
 	};
 }

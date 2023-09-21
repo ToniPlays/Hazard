@@ -7,6 +7,9 @@
 #include "Platform/Vulkan/EditorPlatformVulkan.h"
 #include "Platform/Metal/EditorPlatformMetal.h"
 
+#include "Hazard/ImGUI/UIElements/Table.h"
+#include "Hazard/ImGUI/UILibrary.h"
+
 
 #include "imgui.h"
 #include <Directory.h>
@@ -19,19 +22,21 @@ void GUIManager::Init()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
+	m_Window = &Application::Get().GetModule<RenderContextManager>().GetWindow();
+
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-	io.FontDefault = io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Regular.ttf", 16.0f);
+	io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/Fonts/roboto/Roboto-Regular.ttf", 16.0f);
 	io.DisplaySize = { (float)m_Window->GetWidth(), (float)m_Window->GetHeight() };
 
 	ImFontConfig config;
 	config.MergeMode = true;
 	static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-	io.Fonts->AddFontFromFileTTF("res/fonts/fontawesome-webfont.ttf", 22.0f, &config, icon_ranges);
-	io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 16.0f);
-	io.Fonts->AddFontFromFileTTF("res/fonts/roboto/Roboto-Black.ttf", 24.0f);
+	io.Fonts->AddFontFromFileTTF("assets/Fonts/fontawesome-webfont.ttf", 16.0f, &config, icon_ranges);
+	io.Fonts->AddFontFromFileTTF("assets/Fonts/roboto/Roboto-Black.ttf", 16.0f);
+	io.Fonts->AddFontFromFileTTF("assets/Fonts/roboto/Roboto-Black.ttf", 22.0f);
 
 	//Initialize style
 
@@ -46,10 +51,17 @@ void GUIManager::Init()
 	}
 
 	InitImGuiPlatform(*m_Window);
-	
+
 	m_Manager.LoadFromConfigFile(CONFIG_PATH);
 
 	m_EnvVarExists = File::HasEnvinronmentVar("HAZARD_DIR");
+
+	m_SearchField = ImUI::TextField("");
+	m_SearchField.SetHint("Search...");
+	m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
+
+	m_NewProjectPath = ImUI::TextField("");
+	m_NewProjectPath.SetHint("Project path");
 }
 
 void GUIManager::Update()
@@ -58,121 +70,107 @@ void GUIManager::Update()
 }
 void GUIManager::Render()
 {
-	const ImUI::Style& style = ImUI::StyleManager().GetCurrent();
-	m_Platform->BeginFrame();
+	Renderer::Submit([this]() mutable {
+		const ImUI::Style& style = ImUI::StyleManager().GetCurrent();
+		m_Platform->BeginFrame();
 
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-	ImGui::SetNextWindowPos(viewport->Pos);
-	ImGui::SetNextWindowSize(viewport->Size);
-	ImGui::SetNextWindowViewport(viewport->ID);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
 
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-	ImGui::Begin("HazardLauncher", 0, window_flags);
+		ImGui::Begin("HazardLauncher", 0, window_flags);
 
-	/*
-	if(ImUI::Dockspace::CustomTitleBar(m_Platform->GetWindow(), 32)) {
-	}*/
+		ImGui::Columns(2, 0, false);
+		ImGui::SetColumnWidth(0, 250);
+		DrawSideBar();
 
-	ImGui::Columns(2, 0, false);
-	ImGui::SetColumnWidth(0, 250);
-	DrawSideBar();
-	ImGui::NextColumn();
-	ImVec2 contentSize = ImGui::GetContentRegionAvail();
-	contentSize.y -= 125.0f;
+		ImGui::NextColumn();
+		ImVec2 contentSize = ImGui::GetContentRegionAvail();
+		contentSize.y -= 125.0f;
 
-	ImGui::BeginChild("Content", contentSize);
+		ImGui::BeginChild("Content", contentSize);
 
-	ImUI::Shift(12.0, 16.0f);
-	ImGui::Text((const char*)ICON_FK_SEARCH);
-	ImGui::SameLine(0, 5.0f);
-	ImUI::ShiftY(-6.0f);
-	ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 4.0f);
-	ImUI::TextField(m_SearchValue, "Search...");
-	ImUI::Shift(-4.0, 4.0f);
+		m_SearchField.Render();
 
-	const char* headers[] = { "Project", "Version", "Modified" };
-	ImUI::Table("ProjectTable", headers, 3, [&]() {
-		constexpr float rowHeight = 48.0f;
+		ImUI::Table<HazardProject> table("ProjectTable", ImGui::GetContentRegionAvail());
+		table.SetColumns({ "Project", "Version", "Modified" });
+		table.RowHeight(36.0f);
+		table.RowContent([style](const HazardProject& project) {
+			ImUI::Separator({ 2.0f, 36.0f }, style.Colors.AxisZ);
+			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+			ImGui::SameLine(0, 8.0f);
+			ImGui::Text("%s", project.Name.c_str());
+			ImGui::PopFont();
+			ImGui::TableNextColumn();
 
-		for (HazardProject project : m_Manager.GetProjects()) {
+			ImUI::ShiftX(8.0f);
+			ImGui::Text("0.0.0");
 
-			if (!m_SearchValue.empty()) {
-				if (!StringUtil::Contains(project.Name, m_SearchValue))
-					continue;
-			}
-
-			bool clicked = ImUI::TableRowClickable("SomeName", rowHeight);
-			ImUI::Group(project.Name.c_str(), [&]() {
-
-				ImUI::ShiftX(4.0f);
-				ImUI::Separator({ 2.0, rowHeight }, style.Colors.AxisZ);
-				ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
-				ImGui::SameLine(0, 8.0f);
-				ImGui::Text("%s", project.Name.c_str());
-				ImGui::PopFont();
-				ImGui::TableNextColumn();
-
-				ImUI::ShiftX(8.0f);
-				ImGui::Text("0.0.0");
-
-				ImGui::TableNextColumn();
-				ImUI::ShiftX(8.0f);
-				ImGui::Text("12.2.2022");
-				});
-
-			if (clicked) {
-				if (m_Manager.OpenProject(project)) {
-					WindowCloseEvent e;
-					HazardLoop::GetCurrent().OnEvent(e);
-				}
-				else 
-				{
-					ImGui::OpenPopup("ErrorPopup");
-				}
-			}
-		}
-
+			ImGui::TableNextColumn();
+			ImUI::ShiftX(8.0f);
+			ImGui::Text("12.2.2022");
 		});
 
-	ImGui::EndChild();
-	ImGui::Columns();
-	DrawBottomBar();
+		for (const HazardProject& project : m_Manager.GetProjects())
+			table.AddRow(project);
 
-	ImGui::End();
+		table.Render();
 
-	ImGui::PopStyleVar(3);
-
-	if (ImGui::BeginPopup("ErrorPopup")) 
-	{
-		ImGui::EndPopup();
-	}
-
-	if (!m_EnvVarExists) 
-	{
-		ImGui::OpenPopup("Install location");
-	}
-	if (ImGui::BeginPopupModal("Install location"))
-	{
-		if (ImGui::Button("Set installation folder")) {
-			std::filesystem::path hazardDir = Directory::OpenFolderDialog();
-			if (!hazardDir.empty())
-				if (File::SetEnvironmentVar("HAZARD_DIR", hazardDir.string())) {
-					m_EnvVarExists = true;
-					ImGui::CloseCurrentPopup();
-				}
+		if (table.DidSelect())
+		{
+			if (m_Manager.OpenProject(table.SelectedValue()))
+			{
+				WindowCloseEvent e;
+				HazardLoop::GetCurrent().OnEvent(e);
+			}
+			else
+				ImGui::OpenPopup("ErrorPopup");
 		}
-		ImGui::EndPopup();
-	}
 
-	ImGui::Render();
-	m_Platform->EndFrame();
+		ImGui::EndChild();
+		ImGui::Columns();
+		DrawBottomBar();
+
+		ImGui::End();
+
+		ImGui::PopStyleVar(3);
+
+		if (ImGui::BeginPopup("ErrorPopup"))
+		{
+			ImGui::EndPopup();
+		}
+
+		if (!m_EnvVarExists)
+		{
+			ImGui::OpenPopup("Install location");
+		}
+		if (ImGui::BeginPopupModal("Install location"))
+		{
+			if (ImGui::Button("Set installation folder"))
+			{
+				std::filesystem::path hazardDir = Directory::OpenFolderDialog();
+				if (!hazardDir.empty())
+					if (File::SetEnvironmentVar("HAZARD_DIR", hazardDir.string()))
+					{
+						m_EnvVarExists = true;
+						ImGui::CloseCurrentPopup();
+					}
+			}
+			ImGui::EndPopup();
+		}
+
+		ImGui::Render();
+		m_Platform->EndFrame();
+	});
 }
 bool GUIManager::OnEvent(Event& e)
 {
@@ -182,27 +180,29 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 {
 	switch (window.GetWindowInfo().SelectedAPI)
 	{
-#ifdef HZR_INCLUDE_OPENGL
-	case RenderAPI::OpenGL:
-		m_Platform = hnew EditorPlatformOpenGL(window);
-		break;
-#endif
-#ifdef HZR_INCLUDE_VULKAN
-	case RenderAPI::Vulkan: {
-		m_Platform = hnew EditorPlatformVulkan(window);
-		break;
-	}
-#endif
-#ifdef HZR_INCLUDE_METAL
-	case RenderAPI::Metal: {
-		m_Platform = hnew EditorPlatformMetal(window);
-		break;
-	}
-#endif
-	default:
-		HZR_ASSERT(false, "No suitable rendering backend included for ImGui");
-		break;
-	}
+	#ifdef HZR_INCLUDE_OPENGL
+		case RenderAPI::OpenGL:
+			m_Platform = hnew EditorPlatformOpenGL(window);
+			break;
+		#endif
+		#ifdef HZR_INCLUDE_VULKAN
+		case RenderAPI::Vulkan:
+		{
+			m_Platform = hnew EditorPlatformVulkan(window);
+			break;
+		}
+	#endif
+	#ifdef HZR_INCLUDE_METAL
+		case RenderAPI::Metal:
+		{
+			m_Platform = hnew EditorPlatformMetal(window);
+			break;
+		}
+	#endif
+		default:
+			HZR_ASSERT(false, "No suitable rendering backend included for ImGui");
+			break;
+}
 }
 
 void GUIManager::DrawSideBar()
@@ -228,20 +228,20 @@ void GUIManager::DrawBottomBar()
 	ImGui::Text("Project Location");
 	ImGui::SameLine(0, 5.0f);
 	ImUI::ShiftY(-4.0f);
-	std::string path = m_CurrentProjectPath.string();
+	ImGui::BeginChild("##path", { 350, 28 });
 
-	ImGui::SetNextItemWidth(350.0f);
-	if (ImUI::TextField(path, "Project path")) {
-		m_CurrentProjectPath = path;
-	}
+	m_NewProjectPath.Render();
+
+	ImGui::EndChild();
 	{
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
 		ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 		ImGui::SameLine(0, 5.0f);
-		if (ImGui::Button("Browse", { 100, 24 })) {
+		if (ImGui::Button("Browse", { 100, 28 }))
+		{
 			std::filesystem::path newPath = Directory::OpenFolderDialog();
-			if (!newPath.empty()) 
-				m_CurrentProjectPath = newPath;
+			if (!newPath.empty())
+				m_NewProjectPath.SetValue(newPath.string());
 		}
 
 		ImGui::SameLine(0, 356.0f);
@@ -250,20 +250,22 @@ void GUIManager::DrawBottomBar()
 
 		ImGui::SetNextItemWidth(250.0f);
 		ImGui::PushID("##name");
-		if (ImUI::TextField(m_ProjectName, "Project name")) {
+		/*if (ImUI::TextField(m_ProjectName, "Project name"))
+		{
 		}
+		*/
 		ImGui::PopID();
 
 		ImGui::SetCursorPos({ size.x - 216.0f, size.y - 32.0f });
-		if (ImGui::Button("Create", { 100, 24 }))
+		if (ImGui::Button("Create", { 100, 28 }))
 		{
-			if (!m_CurrentProjectPath.empty() && !m_ProjectName.empty()) 
+			if (!m_NewProjectPath.GetValue().empty())
 			{
 				HazardProject project = {};
-				project.Name = m_ProjectName;
-				project.Path = m_CurrentProjectPath / project.Name;
+				project.Name = "m_ProjectName";
+				project.Path = std::filesystem::path(m_NewProjectPath.GetValue()) / project.Name;
 
-				if (m_Manager.CreateProject(project)) 
+				if (m_Manager.CreateProject(project))
 					m_Manager.SaveConfigToFile(CONFIG_PATH);
 
 			}
@@ -271,13 +273,15 @@ void GUIManager::DrawBottomBar()
 		}
 		ImGui::SameLine(0, 8);
 
-		if (ImGui::Button("Add project", { 100, 24 }))
+		if (ImGui::Button("Add project", { 100, 28 }))
 		{
 			std::filesystem::path newPath = File::OpenFileDialog({ "All files", "* ", "Hazard Project (.hzrproj)", "*.hzrproj" });
-			if (!newPath.empty()) {
+			if (!newPath.empty())
+			{
 				if (m_Manager.ImportProject(newPath))
 					m_Manager.SaveConfigToFile(CONFIG_PATH);
-				else {
+				else
+				{
 					ImGui::OpenPopup("ErrorPopup");
 				}
 			}

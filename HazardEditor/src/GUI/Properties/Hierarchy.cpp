@@ -28,7 +28,7 @@ namespace UI
 
 		m_SearchField.Render();
 
-		ImUI::Table("Hierarchy", { "Name", "Type", "Modifiers" }, ImGui::GetContentRegionAvail(), [&]() {
+		ImUI::Table_OLD("Hierarchy", { "Name", "Type", "Modifiers" }, ImGui::GetContentRegionAvail(), [&]() {
 
 			for (auto& entity : world->GetEntitiesWith<TagComponent>())
 			{

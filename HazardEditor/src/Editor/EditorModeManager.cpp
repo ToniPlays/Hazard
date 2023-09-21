@@ -11,6 +11,8 @@ namespace Editor
 {
 	void EditorModeManager::BeginPlayMode()
 	{
+		if (s_CurrentMode == EditorMode::Play) return;
+
 		s_CurrentMode = EditorMode::Play;
 		HZR_WARN("BeginPlayMode");
 		auto& manager = Application::GetModule<GUIManager>();
@@ -35,6 +37,8 @@ namespace Editor
 	}
 	void EditorModeManager::EndPlayMode()
 	{
+		if (s_CurrentMode != EditorMode::Play) return;
+
 		HZR_WARN("StopPlayMode");
 		s_CurrentMode = EditorMode::Edit;
 		auto& handler = Application::GetModule<WorldHandler>();

@@ -1,4 +1,6 @@
 
+#if 0
+
 #include "TriangleTest.h"
 #include "TexturedQuad.h"
 #include "UniformBufferTest.h"
@@ -89,3 +91,4 @@ int main(int argc, char** argv)
 	}
     return 0;
 }
+#endif

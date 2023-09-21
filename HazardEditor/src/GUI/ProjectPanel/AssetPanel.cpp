@@ -176,7 +176,6 @@ namespace UI
 			ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
 			ImGui::BeginChild("##FileTree");
 			{
-
 				ImUI::ShiftY(4.0f);
 				m_SearchField.Render();
 				ImUI::ShiftY(4.0f);

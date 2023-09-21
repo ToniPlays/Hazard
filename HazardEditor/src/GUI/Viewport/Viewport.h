@@ -34,6 +34,10 @@ namespace UI
 		void DrawStatsWindow();
 		void DrawSettingsWindow();
 
+		void DrawLeftToolbar(ImVec2 corner);
+		void DrawRightToolbar(ImVec2 size);
+		void DrawPlaymodeButtons(ImVec2 size);
+
 	private:
 		uint32_t m_Width = 1280, m_Height = 720;
 		TransformationGizmo m_Gizmos;

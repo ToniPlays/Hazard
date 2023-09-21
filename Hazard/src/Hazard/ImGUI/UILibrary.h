@@ -411,15 +411,16 @@ namespace Hazard::ImUI
 #pragma region Table
 
 	template<typename T>
-	static void Table(const char* tableName, const std::vector<std::string>& headers, ImVec2 size, T callback)
+	static void Table_OLD(const char* tableName, const std::vector<std::string>& headers, ImVec2 size, T callback)
 	{
 		if (size.x <= 0.0f || size.y <= 0.0f) return;
 
 		float edgeOffset = 4.0f;
 
-		ScopedStyleVar cellPadding(ImGuiStyleVar_CellPadding, ImVec2(4.0f, 0.0f));
 		ImVec4 bgColor = StyleManager::GetCurrent().BackgroundColor;
 		const ImU32 colRowAlt = ColorWithMultiplier(bgColor, 1.2f);
+
+		ScopedStyleVar cellPadding(ImGuiStyleVar_CellPadding, ImVec2(4.0f, 0.0f));
 		ScopedStyleColor rowColor(ImGuiCol_TableRowBg, bgColor);
 		ScopedStyleColor altRowColor(ImGuiCol_TableRowBgAlt, colRowAlt);
 		ScopedStyleColor tableBG(ImGuiCol_ChildBg, bgColor);
@@ -552,7 +553,7 @@ namespace Hazard::ImUI
 			ImGui::PopStyleColor();
 		return clicked;
 	}
-	static bool TableRowClickable(const char* id, float rowHeight)
+	static bool TableRowClickable(uint32_t rowId, float rowHeight)
 	{
 		ImGuiWindow* window = ImGui::GetCurrentWindow();
 		window->DC.CurrLineSize.y = rowHeight;
@@ -568,7 +569,7 @@ namespace Hazard::ImUI
 		ImGui::PushClipRect(rowAreaMin, rowAreaMax, false);
 
 		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);
-		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(id),
+		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), rowId + 1,
 												  &isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnDoubleClick);
 
 		ImGui::SetItemAllowOverlap();

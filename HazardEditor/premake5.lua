@@ -34,7 +34,7 @@ project "HazardEditor"
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
-        	"%{IncludeDir.Metal}",
+        "%{IncludeDir.Metal}",
 		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.SPIRV_Cross}",

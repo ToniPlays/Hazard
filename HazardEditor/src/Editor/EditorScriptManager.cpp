@@ -1,5 +1,6 @@
 
 #include "EditorScriptManager.h"
+#include "EditorModeManager.h"
 #include "Project/ProjectManager.h"
 
 #include "Hazard.h"
@@ -53,15 +54,15 @@ namespace Editor
 	}
 	void EditorScriptManager::ReloadAssembly()
 	{
+		EditorModeManager::EndPlayMode();
 		Hazard::Application::GetModule<Hazard::ScriptEngine>().ReloadAssemblies();
 	}
 	void EditorScriptManager::RecompileAndLoad()
 	{
 		auto console = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::Console>();
 
-		if (console->ClearOnBuild()) {
+		if (console->ClearOnBuild())
 			console->Clear(true);
-		}
 
 		Ref<Job> generateProject = Ref<Job>::Create(GenerateProjectFilesJob, this);
 		Ref<Job> compileSource = Ref<Job>::Create(CompileSourcesJob, this);

@@ -21,7 +21,7 @@ Color::Color()
 }
 Color::Color(const char* color)
 {
-	const Color& c = Color::FromHex(color);
+	Color c = Color::FromHex(color);
 	this->r = c.r;
 	this->g = c.g;
 	this->b = c.b;

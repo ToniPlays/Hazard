@@ -43,8 +43,6 @@ namespace UI
 	bool Properties::OnSelectionContextChange(Events::SelectionContextChange& e)
 	{
 		m_SelectionContext = e.GetEntitites();
-		if (m_SelectionContext.size() > 0)
-			HZR_INFO("Selected entity with UID {}", m_SelectionContext[0].GetUID());
 		return false;
 	}
 	void Properties::DrawContextMenu(std::vector<Entity>& e)

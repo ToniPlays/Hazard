@@ -1,5 +1,6 @@
 
 #include "AssetManagerDebugPanel.h"
+#include "Hazard/ImGUI/UIElements/Table.h"
 
 namespace UI
 {
@@ -14,38 +15,33 @@ namespace UI
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		ImUI::Table("AssetPanel", { "Path", "Type", "Pack handle", "Handle" }, size, [&]() {
-			float rowHeight = 24.0f;
-
-			auto& registry = AssetManager::GetMetadataRegistry();
-			for (auto& [key, metadata] : registry)
-			{
-				if (metadata.Type == AssetType::Undefined) continue;
-				if (!StringUtil::Contains(metadata.Key, m_SearchValue) && !StringUtil::Contains(std::to_string(metadata.Handle), m_SearchValue)) continue;
-
-				ImUI::TableRowClickable((const char*)key.c_str(), rowHeight);
-
-				auto& n = key;
-				auto& meta = metadata;
-
-				ImUI::Group((const char*)&key, [&]() {
-
-					ImUI::Separator({ 4.0, rowHeight }, GetLoadStateColor(meta.LoadState));
-					ImGui::SameLine();
-					ImGui::Text("%s", n.string().c_str());
-					ImGui::TableNextColumn();
-					ImUI::ShiftX(4.0f);
-					ImGui::Text("%s", Hazard::Utils::AssetTypeToString(meta.Type));
-					ImGui::TableNextColumn();
-					ImUI::ShiftX(4.0f);
-					ImGui::Text("%s", std::to_string(meta.AssetPackHandle).c_str());
-					ImGui::TableNextColumn();
-					ImUI::ShiftX(4.0f);
-					ImGui::Text("%s", std::to_string(meta.Handle).c_str());
-				});
-			}
+		ImUI::Table<AssetMetadata> table("AssetPanel", size);
+		table.SetColumns({ "Path", "Type", "Pack handle", "Handle" });
+		table.Reserve(AssetManager::GetMetadataRegistry().size());
+		table.RowHeight(24.0f);
+		table.RowContent([&](const AssetMetadata& metadata) {
+			ImUI::Separator({ 4.0, 24.0f }, GetLoadStateColor(metadata.LoadState));
+			ImGui::SameLine();
+			ImGui::Text("%s", metadata.Key.c_str());
+			ImGui::TableNextColumn();
+			ImUI::ShiftX(4.0f);
+			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(metadata.Type));
+			ImGui::TableNextColumn();
+			ImUI::ShiftX(4.0f);
+			ImGui::Text("%s", std::to_string(metadata.AssetPackHandle).c_str());
+			ImGui::TableNextColumn();
+			ImUI::ShiftX(4.0f);
+			ImGui::Text("%s", std::to_string(metadata.Handle).c_str());
 		});
 
+		for (auto& [key, metadata] : AssetManager::GetMetadataRegistry())
+		{
+			if (metadata.Type == AssetType::Undefined) continue;
+			if (!StringUtil::Contains(metadata.Key, m_SearchValue) && !StringUtil::Contains(std::to_string(metadata.Handle), m_SearchValue)) continue;
+
+			table.AddRow(metadata);
+		}
+		table.Render();
 	}
 	ImColor AssetManagerDebugPanel::GetLoadStateColor(const LoadState& state)
 	{

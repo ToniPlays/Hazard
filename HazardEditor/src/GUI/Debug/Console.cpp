@@ -2,6 +2,8 @@
 #include "Console.h"
 #include "Core/MessageFlags.h"
 
+#include "Hazard/ImGUI/UIElements/Table.h"
+
 
 namespace UI
 {
@@ -21,55 +23,66 @@ namespace UI
 		ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 		ImVec2 consoleSize = ImGui::GetContentRegionAvail();
-		consoleSize.y -= 32.0f;
+		consoleSize.y -= 36.0f;
 
-		DrawToolbar({ consoleSize.x, 28.0f });
+		DrawToolbar({ consoleSize.x, 32.0f });
 
-		ImUI::Table("Console", { "Type", "Timestamp", "Message" }, consoleSize, [&]() {
+		ImUI::Table<ConsoleMessage> table("Console", consoleSize);
+		table.SetColumns({ "Type", "Timestamp", "Message" });
+		table.RowHeight(24.0f);
+		table.RowContent([&](const ConsoleMessage& message) {
+			ImGui::PushID(message.Message.c_str());
 
-			float rowHeight = 24.0f;
-			for (auto& message : m_Messages) 
-			{
-				if (!(message.Flags & m_DisplayFlags) && m_DisplayFlags) continue;
+			ImUI::Separator({ 4.0, 24.0f }, GetMessageColor(message.Flags));
+			ImGui::SameLine();
+			ImGui::Text("%s", GetMessageType(message));
+			ImGui::TableNextColumn();
+			ImUI::ShiftX(4.0f);
+			ImGui::Text("Time");
 
-				bool clicked = ImUI::TableRowClickable(message.Message.c_str(), rowHeight);
+			ImGui::TableNextColumn();
+			ImUI::ShiftX(4.0f);
+			ImGui::Text("%s", message.Message.c_str());
 
-				ImUI::Group((const char*)&message, [&]() {
-					ImUI::Separator({ 4.0, rowHeight }, GetMessageColor(message.Flags));
-					ImGui::SameLine();
-					ImGui::Text("%s", GetMessageType(message));
-					ImGui::TableNextColumn();
-					ImUI::ShiftX(4.0f);
-					ImGui::Text("Time");
+			ImGui::PopID();
+		});
 
-					ImGui::TableNextColumn();
-					ImUI::ShiftX(4.0f);
-					ImGui::Text("%s", message.Message.c_str());
+		for (auto& message : m_Messages)
+		{
+			if (!(message.Flags & m_DisplayFlags) && m_DisplayFlags) continue;
+			table.AddRow(message);
+		}
 
-					if (clicked) {
-						ImGui::OpenPopup(message.Message.c_str());
-						ImVec2 size = ImGui::GetMainViewport()->Size;
-						ImGui::SetNextWindowSize({ size.x * 0.5f, size.y * 0.5f });
-						ImGui::SetNextWindowPos({ size.x / 2.0f, size.y / 2.5f }, 0, { 0.5, 0.5 });
-						m_DetailedPanelOpen = true;
-					}
-					{
-						ImUI::ScopedStyleVar windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
-						ImUI::ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2(4, 8));
-						ImUI::ScopedStyleColor color(ImGuiCol_PopupBg, style.ChildBackgroundColor);
-						if (ImGui::BeginPopupModal(message.Message.c_str(), &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
+		table.Render();
 
-							ImGui::Text("%s", message.Description.c_str());
-							ImGui::EndPopup();
-						}
-					}
-					});
-			}
-			});
+		static ConsoleMessage selectedMessage;
+
+		if (table.DidSelect())
+		{
+			selectedMessage = table.SelectedValue();
+			ImGui::OpenPopup(selectedMessage.Message.c_str());
+
+			ImVec2 size = ImGui::GetMainViewport()->Size;
+			ImGui::SetNextWindowSize({ size.x * 0.5f, size.y * 0.5f });
+			ImGui::SetNextWindowPos({ size.x / 2.0f, size.y / 2.5f }, 0, { 0.5, 0.5 });
+			m_DetailedPanelOpen = true;
+		}
+
+		ImUI::ScopedStyleVar windowPadding(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
+		ImUI::ScopedStyleVar framePadding(ImGuiStyleVar_FramePadding, ImVec2(4, 8));
+		ImUI::ScopedStyleColor color(ImGuiCol_PopupBg, style.ChildBackgroundColor);
+
+		if (ImGui::BeginPopupModal(selectedMessage.Message.c_str(), &m_DetailedPanelOpen, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+		{
+
+			ImGui::Text("%s", selectedMessage.Description.c_str());
+			ImGui::EndPopup();
+		}
 	}
 	bool Console::KeyPressed(KeyPressedEvent& e)
 	{
-		if (e.GetKeyCode() == Key::Escape && m_DetailedPanelOpen) {
+		if (e.GetKeyCode() == Key::Escape && m_DetailedPanelOpen)
+		{
 			m_DetailedPanelOpen = false;
 			return true;
 		}
@@ -108,38 +121,48 @@ namespace UI
 			ImGui::BeginChild("Toolbar", size);
 			{
 				ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
-				if (ImGui::Button("Clear", { 75.0f, 28.0f })) {
+				if (ImGui::Button("Clear", { 75.0f, 32.0f }))
+				{
 					Clear();
 				}
 			}
 			ImGui::SameLine(0, 5);
-			if (ColoredButton("Clear on build", (m_ClearOnBuild ? style.Frame.FrameColor : style.Window.Header), style.Window.Text, { 100.0f, 28.0f })) {
+			if (ColoredButton("Clear on build", (m_ClearOnBuild ? style.Frame.FrameColor : style.Window.Header), style.Window.Text, { 100.0f, 32.0f }))
+			{
 				m_ClearOnBuild = !m_ClearOnBuild;
 			}
 
 			ImGui::SameLine(0, 5);
-			if (ColoredButton("Clear on play", (m_ClearOnPlay ? style.Frame.FrameColor : style.Window.Header), style.Window.Text, { 100.0f, 28.0f })) {
+			if (ColoredButton("Clear on play", (m_ClearOnPlay ? style.Frame.FrameColor : style.Window.Header), style.Window.Text, { 100.0f, 32.0f }))
+			{
 				m_ClearOnPlay = !m_ClearOnPlay;
 			}
 
-			ImGui::SameLine(ImGui::GetContentRegionAvail().x - 136, 0);
-			if (ColoredButton((const char*)ICON_FK_PAPERCLIP, (m_DisplayFlags & MessageFlags_Debug ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Debug), { 28, 28 })) {
+			ImGui::SameLine(ImGui::GetContentRegionAvail().x - 154, 0);
+
+
+			if (ColoredButton((const char*)ICON_FK_PAPERCLIP, (m_DisplayFlags & MessageFlags_Debug ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Debug), { 32.0f, 32.0f }))
+			{
 				m_DisplayFlags ^= MessageFlags_Debug;
 			}
 			ImGui::SameLine();
-			if (ColoredButton((const char*)ICON_FK_INFO_CIRCLE, (m_DisplayFlags & MessageFlags_Info ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Info), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_INFO_CIRCLE, (m_DisplayFlags & MessageFlags_Info ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Info), { 32.0f, 32.0f }))
+			{
 				m_DisplayFlags ^= MessageFlags_Info;
 			}
 			ImGui::SameLine();
-			if (ColoredButton((const char*)ICON_FK_EXCLAMATION_TRIANGLE, (m_DisplayFlags & MessageFlags_Warning ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Warning), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_EXCLAMATION_TRIANGLE, (m_DisplayFlags & MessageFlags_Warning ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Warning), { 32.0f, 32.0f }))
+			{
 				m_DisplayFlags ^= MessageFlags_Warning;
 			}
 			ImGui::SameLine();
-			if (ColoredButton((const char*)ICON_FK_EXCLAMATION_CIRCLE, (m_DisplayFlags & MessageFlags_Error ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Error), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_EXCLAMATION_CIRCLE, (m_DisplayFlags & MessageFlags_Error ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Error), { 32.0f, 32.0f }))
+			{
 				m_DisplayFlags ^= MessageFlags_Error;
 			}
 			ImGui::SameLine();
-			if (ColoredButton((const char*)ICON_FK_BUG, (m_DisplayFlags & MessageFlags_Fatal ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Fatal), { 28, 28 })) {
+			if (ColoredButton((const char*)ICON_FK_BUG, (m_DisplayFlags & MessageFlags_Fatal ? style.Frame.FrameColor : style.Window.Header), GetMessageColor(MessageFlags_Fatal), { 32.0f, 32.0f }))
+			{
 				m_DisplayFlags ^= MessageFlags_Fatal;
 			}
 

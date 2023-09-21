@@ -5,7 +5,6 @@
 
 std::vector<std::string> StringUtil::SplitString(const std::string& string, char delim) 
 {
-
 	std::vector<std::string> result;
 	std::istringstream f(string);
 	std::string s;
