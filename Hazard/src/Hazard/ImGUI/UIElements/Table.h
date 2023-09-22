@@ -42,7 +42,7 @@ namespace Hazard::ImUI
 			const ImU32 colRowAlt = ColorWithMultiplier(bgColor, 1.2f);
 
 			ScopedStyleVar cellPadding(ImGuiStyleVar_CellPadding, ImVec2(4.0f, 0.0f));
-			ScopedColourStack rowColor(ImGuiCol_TableRowBg, bgColor, ImGuiCol_TableRowBgAlt, colRowAlt, ImGuiCol_ChildBg, bgColor);
+			ScopedColorStack rowColor(ImGuiCol_TableRowBg, bgColor, ImGuiCol_TableRowBgAlt, colRowAlt, ImGuiCol_ChildBg, bgColor);
 
 			ImGuiTableFlags flags = ImGuiTableFlags_NoPadInnerX
 				| ImGuiTableFlags_Resizable
@@ -59,7 +59,7 @@ namespace Hazard::ImUI
 			//Headers
 			{
 				const ImU32 activeColor = ColorWithMultiplier(bgColor, 1.3f);
-				ScopedColourStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
+				ScopedColorStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
 
 				ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
 				ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);

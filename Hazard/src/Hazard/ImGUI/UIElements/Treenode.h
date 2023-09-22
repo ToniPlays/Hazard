@@ -23,6 +23,7 @@ namespace Hazard::ImUI
 		void Render();
 		void DefaultOpen() { m_Flags |= ImGuiTreeNodeFlags_DefaultOpen; }
 		void Content(std::function<void()> content) { m_ContentCallback = content; };
+		void Content(void(*content)()) { m_ContentCallback = content; };
 		void Menu(const std::string& icon, std::function<void()> menu) 
 		{
 			m_MenuIcon = icon; 

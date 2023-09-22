@@ -56,9 +56,7 @@ namespace Hazard
 		info.pIndices = indices.data();
 
 		if (info.IndexCount == 0 || info.VertexCount == 0)
-		{
 			throw JobException("Unable to create mesh");
-		}
 
 		Ref<Mesh> asset = Ref<Mesh>::Create(&info);
 		asset->IncRefCount();

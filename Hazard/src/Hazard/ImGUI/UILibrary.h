@@ -382,7 +382,7 @@ namespace Hazard::ImUI
 			ImGui::SameLine(contentRegion.x - lineHeight * 0.5f - 12);
 
 			Style& style = StyleManager::GetCurrent();
-			ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
+			ScopedColorStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 0, 0 });
 
 			if (ImGui::Button((const char*)ICON_FK_LIST_UL, ImVec2{ lineHeight, lineHeight }))
@@ -441,7 +441,7 @@ namespace Hazard::ImUI
 		//Headers
 		{
 			const ImU32 activeColor = ColorWithMultiplier(bgColor, 1.3f);
-			ScopedColourStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
+			ScopedColorStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
 
 			ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
 			ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);
@@ -614,7 +614,7 @@ namespace Hazard::ImUI
 	}
 	static void Separator(ImVec2 size, ImVec4 color);
 
-	static void MenuHeader(const char* label)
+	static void MenuHeader(const char* label, uint32_t negativeOffset = 0)
 	{
 		ImGui::PushID(label);
 		const Style& style = StyleManager::GetCurrent();
@@ -623,7 +623,7 @@ namespace Hazard::ImUI
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
 		ImUI::ShiftY(ImGui::GetTextLineHeight() * 0.5f);
-		ImUI::Separator({ size.x, 2.0f }, style.Window.TextDark);
+		ImUI::Separator({ size.x - negativeOffset, 2.0f }, style.Window.TextDark);
 		ImUI::ShiftY(ImGui::GetTextLineHeight() * -0.5f);
 		ImGui::PopID();
 	}

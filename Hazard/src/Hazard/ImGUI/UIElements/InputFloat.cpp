@@ -48,7 +48,7 @@ namespace Hazard::ImUI
 
 		ImVec4 hovered = ImGui::ColorConvertU32ToFloat4(ColorWithMultiplier(config.Color, 0.9f));
 		ImVec4 active = ImGui::ColorConvertU32ToFloat4(ColorWithMultiplier(config.Color, 0.8f));
-		ScopedColourStack colors(ImGuiCol_Button, config.Color, ImGuiCol_ButtonHovered, hovered, ImGuiCol_ButtonActive, active);
+		ScopedColorStack colors(ImGuiCol_Button, config.Color, ImGuiCol_ButtonHovered, hovered, ImGuiCol_ButtonActive, active);
 
 
 		ImGui::PushFont(font);

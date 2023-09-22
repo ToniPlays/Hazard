@@ -69,12 +69,10 @@ namespace UI
 		ImGui::SetCursorPos(buttonPos);
 
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
-		ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
+		ImUI::ScopedColorStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 
 		if (ImGui::Button(m_IsImportingNew ? "Import" : "Reimport", { 100, 32 }))
-		{
 			m_Import = true;
-		}
 	}
 	void AssetImporterPanel::DrawImageImportSettings()
 	{

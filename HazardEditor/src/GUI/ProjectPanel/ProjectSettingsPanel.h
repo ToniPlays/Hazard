@@ -2,13 +2,14 @@
 
 #include "Hazard.h"
 #include "Hazard/ImGUI/Panel.h"
+#include "Hazard/ImGUI/UIElements/TextField.h"
 
 namespace UI
 {
 	class ProjectSettingsPanel : public Hazard::ImUI::Panel
 	{
 	public:
-		ProjectSettingsPanel() : Hazard::ImUI::Panel("Project Settings", false) {};
+		ProjectSettingsPanel();
 		~ProjectSettingsPanel() = default;
 
 		void Update() override {};
@@ -16,6 +17,10 @@ namespace UI
 		bool OnEvent(Event& e) override { return false; };
 
 	private:
+		void RenderNavbar();
 		void DrawInputSettingsPanel();
+
+	private:
+		Hazard::ImUI::TextField m_SearchField;
 	};
 }

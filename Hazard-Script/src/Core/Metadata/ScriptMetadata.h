@@ -10,7 +10,7 @@ namespace HazardScript
 {
 	class Attribute;
 
-	class ScriptMetadata : public RefCount
+	class ScriptMetadata
 	{
 		friend class ScriptObject;
 	public:

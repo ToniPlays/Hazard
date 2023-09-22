@@ -103,7 +103,7 @@ namespace UI
 		ImUI::ScopedStyleColor childBg(ImGuiCol_ChildBg, style.BackgroundColor);
 		ImGui::BeginChild("Toolbar", size);
 		{
-			ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
+			ImUI::ScopedColorStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 			if (ImGui::Button((const char*)ICON_FK_PLUS " ADD", { 75.0, 28.0f }))
 			{
 

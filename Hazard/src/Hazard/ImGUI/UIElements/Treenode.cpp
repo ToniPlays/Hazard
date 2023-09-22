@@ -24,7 +24,7 @@ namespace Hazard::ImUI
 			ImGui::SameLine(contentRegion.x - lineHeight * 0.5f - 12);
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 0, 0 });
 
-			ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
+			ScopedColorStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 
 			if (ImGui::ButtonEx(m_MenuIcon.c_str(), ImVec2 { lineHeight, lineHeight }, ImGuiButtonFlags_PressedOnClick))
 				ImGui::OpenPopup(m_Title.c_str());

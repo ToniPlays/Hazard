@@ -15,7 +15,7 @@ namespace Hazard::ImUI
 		strcpy(buffer, m_Value.c_str());
 
 		ImVec2 contentSize = ImGui::GetContentRegionAvail();
-		ScopedColourStack bgColor(ImGuiCol_ChildBg, style.Frame.FrameColor, ImGuiCol_Button, style.Frame.FrameColor);
+		ScopedColorStack bgColor(ImGuiCol_ChildBg, style.Frame.FrameColor, ImGuiCol_Button, style.Frame.FrameColor);
 		ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, style.Frame.Rounding);
 		ImGui::BeginChild(("##" + std::to_string((uint64_t)this)).c_str(), {contentSize.x, fieldHeight}, false, 0);
 		{

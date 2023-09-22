@@ -1,8 +1,10 @@
 #include "ProgressOverlay.h"
 
+#include "Hazard/ImGUI/UILibrary.h"
+
 namespace UI
 {
-	ProgressOverlay::ProgressOverlay() : Overlay("Progress", { 300, 0 }, { 24, 32 })
+	ProgressOverlay::ProgressOverlay() : Overlay("Progress", { 400, 0 }, { 24, 32 })
 	{
 		Open();
 	}
@@ -39,21 +41,22 @@ namespace UI
 	}
 	void ProgressOverlay::DrawProgressCard(const std::string& graphName, const std::string& currentJob, float progress)
 	{
-		std::string progressText = fmt::format("{0}/{1}", (uint32_t)(progress * 100.0f), 100);
-		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[1]);
+		std::string progressText = fmt::format("{0}/100", (uint32_t)(progress * 100.0f));
 
 		float width = ImGui::CalcTextSize(progressText.c_str()).x;
 		float panelWidth = ImGui::GetContentRegionAvail().x;
 
-		ImGui::Text("%s", graphName.c_str());
+		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+		Hazard::ImUI::MenuHeader(graphName.c_str(), width - 32);
+		ImGui::PopFont();
+
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(panelWidth - width);
 		ImGui::Text("%s", progressText.c_str());
-		ImGui::PopFont();
 
 		if (!currentJob.empty())
 			ImGui::Text("%s", currentJob.c_str());
 
-		ImGui::ProgressBar(progress, { panelWidth, 24 });
+		ImGui::ProgressBar(progress, { panelWidth, 32 });
 	}
 }

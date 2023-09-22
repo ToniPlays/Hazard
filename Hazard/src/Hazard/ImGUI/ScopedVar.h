@@ -42,14 +42,14 @@ namespace Hazard::ImUI
 			ImGui::PopFont();
 		}
 	};
-	class ScopedColourStack
+	class ScopedColorStack
 	{
 	public:
-		ScopedColourStack(const ScopedColourStack&) = delete;
-		ScopedColourStack operator=(const ScopedColourStack&) = delete;
+		ScopedColorStack(const ScopedColorStack&) = delete;
+		ScopedColorStack operator=(const ScopedColorStack&) = delete;
 
 		template <typename ColourType, typename... OtherColours>
-		ScopedColourStack(ImGuiCol firstColourID, ColourType firstColour, OtherColours&& ... otherColourPairs)
+		ScopedColorStack(ImGuiCol firstColourID, ColourType firstColour, OtherColours&& ... otherColourPairs)
 			: m_Count((sizeof... (otherColourPairs) / 2) + 1)
 		{
 			static_assert ((sizeof... (otherColourPairs) & 1u) == 0,
@@ -58,7 +58,7 @@ namespace Hazard::ImUI
 			PushColour(firstColourID, firstColour, std::forward<OtherColours>(otherColourPairs)...);
 		}
 
-		~ScopedColourStack() {
+		~ScopedColorStack() {
 			ImGui::PopStyleColor(m_Count);
 		}
 
