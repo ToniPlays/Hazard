@@ -9,7 +9,7 @@
 #include "box2d/b2_polygon_shape.h"
 #include "box2d/b2_world_callbacks.h"
 
-namespace Hazard::Physics 
+namespace Hazard::Physics
 {
 	void Physics2D::Begin(float gravity)
 	{
@@ -47,7 +47,7 @@ namespace Hazard::Physics
 	}
 	void* Physics2D::CreateCollider(PhysicsCollider2DCreateInfo* createInfo)
 	{
-		if (createInfo->Body == nullptr) 
+		if (createInfo->Body == nullptr)
 		{
 			HZR_CORE_WARN("Cannot create Collider for null body");
 			return nullptr;
@@ -55,44 +55,45 @@ namespace Hazard::Physics
 
 		b2FixtureDef fixture;
 
-		switch (createInfo->Type) {
-		case ColliderType::Box: 
+		switch (createInfo->Type)
 		{
-			b2PolygonShape box;
-			box.SetAsBox(createInfo->Size.x * createInfo->Scale.x, createInfo->Size.y * createInfo->Scale.y, 
-				b2Vec2(createInfo->Offset.x, createInfo->Offset.y), 0.0f);
+			case ColliderType::Box:
+			{
+				b2PolygonShape box;
+				box.SetAsBox(createInfo->Size.x * createInfo->Scale.x, createInfo->Size.y * createInfo->Scale.y,
+							 b2Vec2(createInfo->Offset.x, createInfo->Offset.y), 0.0f);
 
-			fixture.shape = &box;
-			fixture.density = createInfo->Density;
-			fixture.friction = createInfo->Friction;
-			fixture.restitution = createInfo->Restitution;
-			fixture.restitutionThreshold = createInfo->RestitutionThreshold;
-			fixture.isSensor = createInfo->IsSensor;
+				fixture.shape = &box;
+				fixture.density = createInfo->Density;
+				fixture.friction = createInfo->Friction;
+				fixture.restitution = createInfo->Restitution;
+				fixture.restitutionThreshold = createInfo->RestitutionThreshold;
+				fixture.isSensor = createInfo->IsSensor;
 
-			return ((b2Body*)createInfo->Body)->CreateFixture(&fixture);
-		}
-		case ColliderType::Circle: 
-		{
-			b2CircleShape circle;
-			circle.m_p.Set(createInfo->Offset.x, createInfo->Offset.y);
-			circle.m_radius = createInfo->Radius * createInfo->Scale.x;
-			fixture.shape = &circle;
-			fixture.density = createInfo->Density;
-			fixture.friction = createInfo->Friction;
-			fixture.restitution = createInfo->Restitution;
-			fixture.restitutionThreshold = createInfo->RestitutionThreshold;
-			fixture.isSensor = createInfo->IsSensor;
-			
-			return ((b2Body*)createInfo->Body)->CreateFixture(&fixture);
-		}
-		case ColliderType::Capsule: 
-		{
-		
-		}
-		case ColliderType::Custom: 
-		{
+				return ((b2Body*)createInfo->Body)->CreateFixture(&fixture);
+			}
+			case ColliderType::Circle:
+			{
+				b2CircleShape circle;
+				circle.m_p.Set(createInfo->Offset.x, createInfo->Offset.y);
+				circle.m_radius = createInfo->Radius * createInfo->Scale.x;
+				fixture.shape = &circle;
+				fixture.density = createInfo->Density;
+				fixture.friction = createInfo->Friction;
+				fixture.restitution = createInfo->Restitution;
+				fixture.restitutionThreshold = createInfo->RestitutionThreshold;
+				fixture.isSensor = createInfo->IsSensor;
 
-		}
+				return ((b2Body*)createInfo->Body)->CreateFixture(&fixture);
+			}
+			case ColliderType::Capsule:
+			{
+
+			}
+			case ColliderType::Custom:
+			{
+
+			}
 		}
 		return nullptr;
 	}

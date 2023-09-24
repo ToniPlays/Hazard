@@ -2,6 +2,7 @@
 
 #include "Event.h"
 #include <sstream>
+#include "GamepadCodes.h"
 
 class WindowResizeEvent : public Event {
 
@@ -218,7 +219,7 @@ public:
 class GamepadEvent : public Event
 {
 public:
-	GamepadEvent(int gamepad) : m_GamepadIndex(gamepad) {};
+	GamepadEvent(uint32_t gamepad) : m_GamepadIndex(gamepad) {};
 
 	std::string ToString() const override
 	{
@@ -226,7 +227,7 @@ public:
 		ss << "GamepadEvent: " << m_GamepadIndex;
 		return ss.str();
 	}
-	int GetGamepadIndex() { return m_GamepadIndex; }
+	uint32_t GetGamepadIndex() { return m_GamepadIndex; }
 
 protected:
 	int m_GamepadIndex = -1;
@@ -236,7 +237,7 @@ protected:
 class GamepadConnectedEvent : public GamepadEvent
 {
 public:
-	GamepadConnectedEvent(int gamepad)
+	GamepadConnectedEvent(int32_t gamepad)
 		: GamepadEvent(gamepad) {}
 
 	std::string ToString() const override
@@ -262,44 +263,46 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(GamepadConnected)
+	EVENT_CLASS_TYPE(GamepadDisconnected)
 };
 
 
 class GamepadAxisMovedEvent : public GamepadEvent
 {
 public:
-	GamepadAxisMovedEvent(int gamepad, float x, float y)
-		: GamepadEvent(gamepad), m_X(x), m_Y(y) {}
+	GamepadAxisMovedEvent(int gamepad, Gamepad::GamepadCode axis, float value)
+		: GamepadEvent(gamepad), m_Axis(axis), m_Value(value) {}
+
+	inline int GetGamepadAxis() const { return m_Axis; }
+	inline float GetAxisValue() const { return m_Value; }
 
 	std::string ToString() const override
 	{
 		std::stringstream ss;
-		ss << "GamepadAxisMovedEvent: " << m_X << ", " << m_Y;
+		ss << "GamepadAxisMovedEvent: " << Gamepad::ToString(m_Axis) << ", " << m_Value;
 		return ss.str();
 	}
+
+	EVENT_CLASS_TYPE(GamepadAxisMoved)
+
 private:
-	float m_X;
-	float m_Y;
-	EVENT_CLASS_TYPE(GamepadConnected)
+	Gamepad::GamepadCode m_Axis;
+	float m_Value;
 };
 
-class GamepadButtonEvent : public GamepadEvent
+class GamepadButtonEvent : public Event
 {
 public:
-	GamepadButtonEvent(int gamepad, int button)
-		: GamepadEvent(gamepad), m_Button(button) {}
-
-	std::string ToString() const override
-	{
-		std::stringstream ss;
-		ss << "GamepadButtonEvent: " << m_Button;
-		return ss.str();
-	}
+	inline int GetGamepadButton() const { return m_Button; }
+	EVENT_CLASS_CATEGORY(EventCategoryGamepadAxis | EventCategoryGamepadButton)
 
 protected:
+	GamepadButtonEvent(int gamepad, int button)
+		: m_Gamepad(gamepad), m_Button(button) {}
+
+	int m_Gamepad;
 	int m_Button;
-	EVENT_CLASS_TYPE(GamepadConnected)
+
 };
 class GamepadButtonPressedEvent : public GamepadButtonEvent
 {
@@ -313,8 +316,7 @@ public:
 		ss << "GamepadButtonPressedEvent: " << m_Button;
 		return ss.str();
 	}
-private:
-	EVENT_CLASS_TYPE(GamepadConnected)
+	EVENT_CLASS_TYPE(GamepadButtonPressed)
 };
 
 class GamepadButtonReleasedEvent : public GamepadButtonEvent
@@ -329,6 +331,5 @@ public:
 		ss << "GamepadButtonReleasedEvent: " << m_Button;
 		return ss.str();
 	}
-private:
-	EVENT_CLASS_TYPE(GamepadConnected)
+	EVENT_CLASS_TYPE(GamepadButtonReleased)
 };

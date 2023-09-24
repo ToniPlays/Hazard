@@ -7,18 +7,21 @@
 #define BIND_EVENT(x) std::bind(&x, this, std::placeholders::_1)
 
 //What type of event happened
-enum class EventType {
+enum class EventType
+{
 	None = 0,
 	WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved, WindowTitleBarHitTest,
 	AppTick, AppUpdate, AppRender, AppEvent, AppCloseEvent,
 	ModuleError, ModuleWarn,
 	KeyPressed, KeyReleased, KeyTyped,
 	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled,
-	GamepadButtonPressed, GamepadButtonReleased, GamepadConnected, GamepadDisconnected
+	GamepadButtonPressed, GamepadButtonReleased, GamepadAxisMoved,
+	GamepadConnected, GamepadDisconnected
 };
 
 //Events belong to a category
-enum EventCategory {
+enum EventCategory
+{
 	None = 0,
 	EventCategoryApplication = BIT(0),
 	EventCategoryInput = BIT(1),
@@ -38,7 +41,8 @@ enum EventCategory {
 
 //Actual event class
 
-class Event {
+class Event
+{
 	friend class EventDispathcer;
 public:
 	bool handled = false;
@@ -48,33 +52,47 @@ public:
 	virtual int GetCategoryFlags() const = 0;
 	virtual std::string ToString() const { return GetName(); }
 
-	inline bool IsInCategory(EventCategory category) {
+	inline bool IsInCategory(EventCategory category)
+	{
 		return GetCategoryFlags() & category;
 	}
 };
 
 
 //Event dispatcher handles events
-class EventDispatcher 
+class EventDispatcher
 {
 public:
 	EventDispatcher(Event& event) : m_Event(event) {}
 
 	//Dispath the event for layer
 	template<typename T, typename F>
-	bool Dispatch(const F& eventMethod) 
+	bool Dispatch(const F& eventMethod)
 	{
-		if (m_Event.GetEventType() == T::GetStaticType()) 
+		if (m_Event.GetEventType() == T::GetStaticType())
 		{
 			m_Event.handled = eventMethod(static_cast<T&>(m_Event));
 		}
 		return m_Event.handled;
 	}
+
+	template<typename T, typename F>
+	bool DispatchUntilHandled(const F& eventMethod)
+	{
+		if (m_Event.GetEventType() == T::GetStaticType() && !m_DidHandle)
+		{
+			m_Event.handled = eventMethod(static_cast<T&>(m_Event));
+			m_DidHandle = m_Event.handled;
+		}
+		return m_Event.handled;
+	}
+
 private:
 	Event& m_Event;
+	bool m_DidHandle = false;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Event& e) 
+inline std::ostream& operator<<(std::ostream& os, const Event& e)
 {
 	return os << e.ToString();
 }

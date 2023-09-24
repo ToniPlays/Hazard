@@ -62,6 +62,9 @@ void GUIManager::Init()
 
 	m_NewProjectPath = ImUI::TextField("");
 	m_NewProjectPath.SetHint("Project path");
+
+	m_NewProjectName = ImUI::TextField("");
+	m_NewProjectName.SetHint("Project name");
 }
 
 void GUIManager::Update()
@@ -235,7 +238,7 @@ void GUIManager::DrawBottomBar()
 	ImGui::EndChild();
 	{
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
-		ImUI::ScopedColourStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
+		ImUI::ScopedColorStack colors(ImGuiCol_Button, style.Window.Header, ImGuiCol_ButtonHovered, style.Window.HeaderHovered, ImGuiCol_ButtonActive, style.Window.HeaderActive);
 		ImGui::SameLine(0, 5.0f);
 		if (ImGui::Button("Browse", { 100, 28 }))
 		{
@@ -250,10 +253,8 @@ void GUIManager::DrawBottomBar()
 
 		ImGui::SetNextItemWidth(250.0f);
 		ImGui::PushID("##name");
-		/*if (ImUI::TextField(m_ProjectName, "Project name"))
-		{
-		}
-		*/
+
+		m_NewProjectName.Render();
 		ImGui::PopID();
 
 		ImGui::SetCursorPos({ size.x - 216.0f, size.y - 32.0f });
@@ -262,7 +263,7 @@ void GUIManager::DrawBottomBar()
 			if (!m_NewProjectPath.GetValue().empty())
 			{
 				HazardProject project = {};
-				project.Name = "m_ProjectName";
+				project.Name = m_NewProjectName.GetValue();
 				project.Path = std::filesystem::path(m_NewProjectPath.GetValue()) / project.Name;
 
 				if (m_Manager.CreateProject(project))

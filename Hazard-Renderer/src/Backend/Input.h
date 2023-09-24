@@ -6,18 +6,13 @@
 #include "Backend/Core/Window.h"
 #include <glm/glm.hpp>
 
-struct Axis2D
-{
-	float X;
-	float Y;
-	float Multiplier;
-};
 
 struct Joystick
 {
 	std::string Name;
-	std::unordered_map<uint32_t, uint32_t> Buttons;
-	std::unordered_map<uint32_t, Axis2D> Axis;
+	uint32_t Binding;
+	std::vector<uint32_t> Buttons;
+	std::vector<float> Axis;
 	bool Connected = false;
 };
 
@@ -40,7 +35,7 @@ public:
 	static void ConnectGamepad(int device);
 	static void DisconnectGamepad(int device);
 	static bool IsButtonDown(int device, const Gamepad::GamepadCode& code);
-	static Axis2D GetAxis(int device, const Gamepad::GamepadCode& code);
+	static float GetAxis(int device, const Gamepad::GamepadCode& code);
 	static bool IsAxis(int device, const Gamepad::GamepadCode& code);
 
 	static const std::vector<Joystick>& GetGamepads() { return s_Gamepads; }

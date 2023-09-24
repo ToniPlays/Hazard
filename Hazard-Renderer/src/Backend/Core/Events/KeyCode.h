@@ -1,13 +1,16 @@
 #pragma once
 
 #include <iostream>
+#include <UtilityCore.h>
 
-namespace Key {
+namespace Key
+{
 
 	using KeyCode = uint16_t;
 
 	enum : KeyCode
 	{
+		None = 0,
 		// From glfw3.h
 		Space = 32,
 		Apostrophe = 39, /* ' */
@@ -112,23 +115,23 @@ namespace Key {
 		F25 = 314,
 
 		/* Keypad */
-		KP0 = 320,
-		KP1 = 321,
-		KP2 = 322,
-		KP3 = 323,
-		KP4 = 324,
-		KP5 = 325,
-		KP6 = 326,
-		KP7 = 327,
-		KP8 = 328,
-		KP9 = 329,
-		KPDecimal = 330,
-		KPDivide = 331,
-		KPMultiply = 332,
-		KPSubtract = 333,
-		KPAdd = 334,
-		KPEnter = 335,
-		KPEqual = 336,
+		NumPad0 = 320,
+		NumPad1 = 321,
+		NumPad2 = 322,
+		NumPad3 = 323,
+		NumPad4 = 324,
+		NumPad5 = 325,
+		NumPad6 = 326,
+		NumPad7 = 327,
+		NumPad8 = 328,
+		NumPad9 = 329,
+		NumPadDecimal = 330,
+		NumPadDivide = 331,
+		NumPadMultiply = 332,
+		NumPadSubtract = 333,
+		NumPadAdd = 334,
+		NumPadEnter = 335,
+		NumPadEqual = 336,
 
 		LeftShift = 340,
 		LeftControl = 341,
@@ -140,4 +143,140 @@ namespace Key {
 		RightSuper = 347,
 		Menu = 348
 	};
+
+	static const char* ToString(KeyCode key)
+	{
+		switch (key)
+		{
+			TO_STRING(None);
+			TO_STRING(Space);
+			TO_STRING(Apostrophe);
+			TO_STRING(Comma);
+			TO_STRING(Minus);
+			TO_STRING(Period);
+			TO_STRING(Slash);
+
+			case D0: return "0";
+			case D1: return "1";
+			case D2: return "2";
+			case D3: return "3";
+			case D4: return "4";
+			case D5: return "5";
+			case D6: return "6";
+			case D7: return "7";
+			case D8: return "8";
+			case D9: return "9";
+
+				TO_STRING(Semicolon);
+				TO_STRING(Equal);
+
+				TO_STRING(A);
+				TO_STRING(B);
+				TO_STRING(C);
+				TO_STRING(D);
+				TO_STRING(E);
+				TO_STRING(F);
+				TO_STRING(G);
+				TO_STRING(H);
+				TO_STRING(I);
+				TO_STRING(J);
+				TO_STRING(K);
+				TO_STRING(L);
+				TO_STRING(M);
+				TO_STRING(N);
+				TO_STRING(O);
+				TO_STRING(P);
+				TO_STRING(Q);
+				TO_STRING(R);
+				TO_STRING(S);
+				TO_STRING(T);
+				TO_STRING(U);
+				TO_STRING(V);
+				TO_STRING(W);
+				TO_STRING(X);
+				TO_STRING(Y);
+				TO_STRING(Z);
+
+				TO_STRING(LeftBracket);
+				TO_STRING(Backslash);
+				TO_STRING(RightBracket);
+				TO_STRING(GraveAccent);
+
+				TO_STRING(World1);
+				TO_STRING(World2);
+				TO_STRING(Escape);
+				TO_STRING(Enter);
+				TO_STRING(Tab);
+				TO_STRING(Backspace);
+				TO_STRING(Insert);
+				TO_STRING(Delete);
+				TO_STRING(Right);
+				TO_STRING(Left);
+				TO_STRING(Down);
+				TO_STRING(Up);
+				TO_STRING(PageUp);
+				TO_STRING(PageDown);
+				TO_STRING(Home);
+				TO_STRING(End);
+				TO_STRING(CapsLock);
+				TO_STRING(ScrollLock);
+				TO_STRING(NumLock);
+				TO_STRING(PrintScreen);
+				TO_STRING(Pause);
+				TO_STRING(F1);
+				TO_STRING(F2);
+				TO_STRING(F3);
+				TO_STRING(F4);
+				TO_STRING(F5);
+				TO_STRING(F6);
+				TO_STRING(F7);
+				TO_STRING(F8);
+				TO_STRING(F9);
+				TO_STRING(F10);
+				TO_STRING(F11);
+				TO_STRING(F12);
+				TO_STRING(F13);
+				TO_STRING(F14);
+				TO_STRING(F15);
+				TO_STRING(F16);
+				TO_STRING(F17);
+				TO_STRING(F18);
+				TO_STRING(F19);
+				TO_STRING(F20);
+				TO_STRING(F21);
+				TO_STRING(F22);
+				TO_STRING(F23);
+				TO_STRING(F24);
+				TO_STRING(F25);
+
+
+				TO_STRING(NumPad0);
+				TO_STRING(NumPad1);
+				TO_STRING(NumPad2);
+				TO_STRING(NumPad3);
+				TO_STRING(NumPad4);
+				TO_STRING(NumPad5);
+				TO_STRING(NumPad6);
+				TO_STRING(NumPad7);
+				TO_STRING(NumPad8);
+				TO_STRING(NumPad9);
+				TO_STRING(NumPadDecimal);
+				TO_STRING(NumPadDivide);
+				TO_STRING(NumPadMultiply);
+				TO_STRING(NumPadSubtract);
+				TO_STRING(NumPadAdd);
+				TO_STRING(NumPadEnter);
+				TO_STRING(NumPadEqual);
+
+				TO_STRING(LeftShift);
+				TO_STRING(LeftControl);
+				TO_STRING(LeftAlt);
+				TO_STRING(LeftSuper);
+				TO_STRING(RightShift);
+				TO_STRING(RightControl);
+				TO_STRING(RightAlt);
+				TO_STRING(RightSuper);
+				TO_STRING(Menu);
+		}
+	}
 }

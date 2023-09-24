@@ -231,6 +231,9 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\InputSettings.h" />
+    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\ScriptPreprocessorSettings.h" />
+    <ClInclude Include="src\Project\ProjectSettingsSchema.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">

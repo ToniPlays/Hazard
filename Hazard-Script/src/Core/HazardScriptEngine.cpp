@@ -55,8 +55,8 @@ namespace HazardScript
 		m_HostInstance.UnloadAssemblyLoadContext(m_LoadContext);
 		m_LoadContext = m_HostInstance.CreateAssemblyLoadContext("Context");
 
-		HZR_ASSERT(LoadAssembly(m_CoralData.CoreAssembly), "Failed to load assembly");
-		HZR_ASSERT(LoadAssembly(m_CoralData.AppAssembly), "Failed to load assembly");
+		LoadAssembly(m_CoralData.CoreAssembly);
+		LoadAssembly(m_CoralData.AppAssembly);
 
 		m_Assemblies.clear();
 		m_Assemblies.push_back(m_CoralData.CoreAssembly);
@@ -68,8 +68,10 @@ namespace HazardScript
 	}
 	bool HazardScriptEngine::LoadAssembly(Ref<ScriptAssembly> assembly)
 	{
-		bool succeeded = assembly->LoadAssembly(m_HostInstance, m_LoadContext);
+		bool succeeded = false;
 
+		succeeded = assembly->LoadAssembly(m_HostInstance, m_LoadContext);
+		
 		if (succeeded)
 			m_CoralData.BindingCallback(assembly);
 

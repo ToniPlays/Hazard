@@ -28,18 +28,25 @@ namespace Editor
 
 	void EditorScriptManager::GenerateProjectFiles()
 	{
-		auto& project = ProjectManager::GetProject().GetProjectData();
-		std::filesystem::path genProjectPath = project.ProjectDirectory / "Library";
+		auto& project = ProjectManager::GetProject();
+		auto& info = project.GetInfo();
+		std::filesystem::path genProjectPath = info.ProjectPath / "Project";
 		std::string command = (genProjectPath / "Win-CreateScriptProject.bat").string();
-		HZR_INFO(command);
+
+		std::stringstream ss;
+		for (auto& define : project.GetScriptingSettings().Defines)
+			ss << define << " ";
+
+		command = fmt::format("{0} --define=\"{1}\"", command, ss.str());
+		HZR_INFO("Executing: {0}", command);
 		File::SystemCall(command);
-		HZR_INFO("Generated project files");
 	}
 	void EditorScriptManager::CompileSource()
 	{
-		auto& project = ProjectManager::GetProject().GetProjectData();
-		std::filesystem::path buildPath = project.ProjectDirectory / "Library";
-		std::string command = (buildPath / "BuildSolution.bat").string() + " > " + buildPath.string() + "/build.hlog";
+		auto& project = ProjectManager::GetProject().GetInfo();
+		std::filesystem::path scriptPath = project.ProjectPath / "Project";
+		std::filesystem::path buildPath = project.ProjectPath / "Library";
+		std::string command = (scriptPath / "BuildSolution.bat").string() + " > " + buildPath.string() + "/build.hlog";
 		File::SystemCall(command);
 		HZR_INFO("Compiled source files");
 

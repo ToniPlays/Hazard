@@ -45,6 +45,7 @@ private:
 
 	Hazard::ImUI::TextField m_SearchField;
 	Hazard::ImUI::TextField m_NewProjectPath;
+	Hazard::ImUI::TextField m_NewProjectName;
 
 	bool m_EnvVarExists = false;
 };

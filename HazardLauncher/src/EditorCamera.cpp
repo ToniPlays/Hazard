@@ -33,6 +33,7 @@ namespace Editor {
 	}
 	void EditorCamera::OnUpdate()
 	{
+		/*
 		Axis2D axis = Input::GetAxis(0, Gamepad::AxisRight);
 
 		const glm::vec2& mouse = Input::GetMousePos();
@@ -109,6 +110,7 @@ namespace Editor {
 			m_Position = CalculatePosition();
 		}
 		UpdateView();
+		*/
 	}
 
 	bool EditorCamera::OnEvent(Event& e)

@@ -14,19 +14,13 @@ HazardProject::HazardProject(const std::filesystem::path& path)
 		HZR_FATAL(path.string());
 		HZR_ASSERT(false, "This needs to be fixed");
 	}
-
-	YAML::Node root = YAML::LoadFile(path.string());
-
-	if (root["General"])
-		DeserializeGeneral(root["General"]);
-
-	m_Data.ProjectDirectory = File::GetDirectoryOf(path);
+	m_Info.ProjectPath = path;
 }
 
 void HazardProject::ProcessAssets()
 {
-	std::filesystem::path libraryPath = m_Data.ProjectDirectory / "Library";
-	std::filesystem::path assetPath = m_Data.ProjectDirectory / "Assets";
+	std::filesystem::path libraryPath = m_Info.ProjectPath / "Library";
+	std::filesystem::path assetPath = m_Info.ProjectPath / "Assets";
 
 	for (auto& item : Directory::GetAllInDirectory(assetPath, true))
 		ProcessAsset(item);
@@ -43,10 +37,3 @@ void HazardProject::ProcessAsset(const std::filesystem::path& path)
 	AssetManager::ImportAssetPack(pack, path);
 	pack.Free();
 }
-
-void HazardProject::DeserializeGeneral(const YAML::Node& node)
-{
-	YamlUtils::Deserialize(node, "Project name", m_Data.ProjectName, std::string("New project"));
-	YamlUtils::Deserialize(node, "Startup world", m_Data.StartupWorld, std::filesystem::path(""));
-}
-

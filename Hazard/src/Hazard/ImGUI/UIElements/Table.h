@@ -17,16 +17,18 @@ namespace Hazard::ImUI
 	{
 	public:
 		Table() = default;
+		Table(const char* name, ImVec2 size, bool clickable = true) : m_Name(name), m_Size(size), m_IsClickable(clickable) {};
 		Table(const std::string& name, ImVec2 size) : m_Name(name), m_Size(size) {};
 		~Table() {}
-		
+
 		void RowHeight(float height) { m_RowHeight = height; }
 		void SetColumns(const std::vector<std::string>& columns) { m_Columns = columns; }
 
 		void Reserve(uint64_t count) { m_Rows.reserve(count); }
 		void AddRow(const T& row) { m_Rows.push_back(row); }
+		const std::vector<T> GetRows() { return m_Rows; }
 
-		void RowContent(const std::function<void(const T&)> content) { m_Content = content; }
+		void RowContent(const std::function<void(T&)> content) { m_Content = content; }
 
 		bool DidSelect() const { return m_DidClick != 0; }
 		uint64_t SelectedRow() const { return m_DidClick - 1; }
@@ -34,9 +36,13 @@ namespace Hazard::ImUI
 
 		void Render()
 		{
+			float edgeOffset = 4.0f;
+
+			if (m_Size.y == 0.0f)
+				m_Size.y = m_RowHeight * m_Rows.size() + m_Rows.size() * edgeOffset + 27.0f + edgeOffset;
+
 			if (m_Size.x <= 0.0f || m_Size.y <= 0.0f) return;
 
-			float edgeOffset = 4.0f;
 
 			ImVec4 bgColor = StyleManager::GetCurrent().BackgroundColor;
 			const ImU32 colRowAlt = ColorWithMultiplier(bgColor, 1.2f);
@@ -82,8 +88,18 @@ namespace Hazard::ImUI
 			for (uint64_t i = 0; i < m_Rows.size(); i++)
 			{
 				ImGui::PushID(i);
-				if (ImUI::TableRowClickable(i, m_RowHeight))
-					m_DidClick = i + 1;
+
+				if (m_IsClickable)
+				{
+					if (ImUI::TableRowClickable(i, m_RowHeight))
+						m_DidClick = i + 1;
+				}
+				else
+				{
+					ImGui::TableNextRow();
+					ImGui::TableNextColumn();
+				}
+
 				m_Content(m_Rows[i]);
 				ImGui::PopID();
 			}
@@ -98,6 +114,7 @@ namespace Hazard::ImUI
 		uint32_t m_DidClick = 0;
 		std::vector<std::string> m_Columns;
 		std::vector<T> m_Rows;
-		std::function<void(const T&)> m_Content;
+		std::function<void(T&)> m_Content;
+		bool m_IsClickable = true;
 	};
 }

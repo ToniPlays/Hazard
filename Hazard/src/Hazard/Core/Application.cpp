@@ -2,6 +2,7 @@
 #include <hzrpch.h>
 #include "Application.h"
 #include "HazardLoop.h"
+#include "Hazard/Input/InputManager.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Scripting/ScriptEngine.h"
@@ -27,6 +28,8 @@ namespace Hazard
 			PushModule<RenderContextManager>(info->AppInfo, info->RenderContextInfo);
 		if (info->RendererInfo)
 			PushModule<RenderEngine>(info->RendererInfo);
+
+		PushModule<InputManager>();
 	}
 	void Application::Quit()
 	{

@@ -1677,6 +1677,12 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Input\InputManager.h" />
+    <ClInclude Include="src\Hazard\Input\InputSchema.h" />
+    <ClInclude Include="src\Hazard\Input\KeyboardInputDevice.h" />
+    <ClInclude Include="src\Hazard\Input\InputDevice.h" />
+    <ClInclude Include="src\Hazard\Input\MouseInputDevice.h" />
+    <ClInclude Include="src\Hazard\Input\GamepadInputDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1859,5 +1865,9 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Input\InputManager.cpp" />
+    <ClCompile Include="src\Hazard\Input\MouseInputDevice.cpp" />
+    <ClCompile Include="src\Hazard\Input\KeyboardInputDevice.cpp" />
+    <ClCompile Include="src\Hazard\Input\GamepadInputDevice.cpp" />
   </ItemGroup>
 </Project>

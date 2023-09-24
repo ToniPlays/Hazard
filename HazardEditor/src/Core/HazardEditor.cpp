@@ -86,8 +86,8 @@ void HazardEditorApplication::PreInit()
 	EntityComponentCreateInfo entity = {};
 	entity.StartupFile = "world.hpack";
 
-	std::string dllFile = project.GetProjectData().ProjectName + ".dll";
-	std::filesystem::path appAssemblyPath = project.GetProjectData().ProjectDirectory / "Library" / "Scripts" / "Binaries" / dllFile;
+	std::string dllFile = project.GetInfo().ProjectName + ".dll";
+	std::filesystem::path appAssemblyPath = project.GetInfo().ProjectPath / "Library" / "Scripts" / "Binaries" / dllFile;
 
 	ScriptEngineCreateInfo scriptEngine = {};
 	scriptEngine.CoreAssemblyPath = "../HazardScripting/bin/Debug/net7.0/HazardScripting.dll";
@@ -141,8 +141,6 @@ void HazardEditorApplication::Init()
 	});
 
 	scriptEngine.ReloadAssemblies();
-
-	auto& world = ProjectManager::GetProject().GetProjectData().StartupWorld;
 }
 
 void HazardEditorApplication::Update()

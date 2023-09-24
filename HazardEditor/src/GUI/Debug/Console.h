@@ -22,7 +22,8 @@ namespace UI {
 
 		bool KeyPressed(KeyPressedEvent& e);
 
-		void AddMessage(const ConsoleMessage& message) {
+		void AddMessage(const ConsoleMessage& message) 
+		{
 			m_Messages.push_back(message);
 		}
 		void Clear(bool force = false);

@@ -51,11 +51,11 @@ namespace Hazard {
 	void HazardLoop::Close()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
-        AssetManager::Shutdown();
         
 		m_Application->Close();
 		m_ModuleHandler->Close();
         
+        AssetManager::Shutdown();
 		HZR_PROFILE_SESSION_END();
 		//OPTICK_SHUTDOWN();
 		

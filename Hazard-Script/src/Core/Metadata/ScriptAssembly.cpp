@@ -6,6 +6,8 @@ namespace HazardScript
 {
 	bool ScriptAssembly::LoadAssembly(Coral::HostInstance& host, Coral::AssemblyLoadContext& context)
 	{
+		if (!File::Exists(m_Path)) return false;
+
 		std::string path = File::GetFileAbsolutePath(m_Path).lexically_normal().string();
 		m_Host = host;
 		m_Assembly = context.LoadAssembly(path);

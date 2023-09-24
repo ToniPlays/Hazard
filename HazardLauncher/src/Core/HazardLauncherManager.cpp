@@ -80,7 +80,7 @@ void HazardLauncherManager::SaveConfigToFile(const std::filesystem::path& path)
 bool HazardLauncherManager::CreateProject(const HazardProject& project)
 {
 	Directory::Create(project.Path);
-	File::Copy("res/TemplateProject", project.Path, CopyOptions::Recursive);
+	File::Copy("res/ProjectTemplate", project.Path, CopyOptions::Recursive);
 	{
 		std::ifstream stream(project.Path / "premake5.lua");
 		std::stringstream ss;
@@ -100,22 +100,22 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		out << StringUtil::Replace(ss.str(), "%PROJECT_NAME%", project.Name);
 	}
 	{
-		std::ifstream stream(project.Path / "Library" / "Win-CreateScriptProject.bat");
+		std::ifstream stream(project.Path / "Project" / "Win-CreateScriptProject.bat");
 		std::stringstream ss;
 		ss << stream.rdbuf();
 		stream.close();
 
-		std::ofstream out(project.Path / "Library" / "Win-CreateScriptProject.bat");
+		std::ofstream out(project.Path / "Project" / "Win-CreateScriptProject.bat");
 		out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", File::GetEnvironmentVar("HAZARD_DIR"));
 	}
 	{
-		std::ifstream stream(project.Path / "Library" / "BuildSolution.bat");
+		std::ifstream stream(project.Path / "Project" / "BuildSolution.bat");
 		std::stringstream ss;
 		ss << stream.rdbuf();
 		stream.close();
 
 		std::string csProj = project.Path.string() + "\\" + (project.Name + ".csproj");
-		std::ofstream out(project.Path / "Library" / "BuildSolution.bat");
+		std::ofstream out(project.Path / "Project" / "BuildSolution.bat");
 		out << StringUtil::Replace(ss.str(), "%CSPROJ%", csProj);
 	}
 
@@ -125,15 +125,16 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		Directory::Create(project.Path / "Assets" / "Sprites");
 		Directory::Create(project.Path / "Assets" / "Models");
 		Directory::Create(project.Path / "Assets" / "Worlds");
+		Directory::Create(project.Path / "Assets" / "Editor");
 	}
 
-	std::filesystem::path genProjectPath = project.Path / "Library" / "Win-CreateScriptProject.bat";
+	std::filesystem::path genProjectPath = project.Path / "Project" / "Win-CreateScriptProject.bat";
 	int id = File::CreateSubprocess(genProjectPath.string(), "");
 	File::WaitForSubprocess(&id);
 	
-	HZR_THREAD_DELAY(1000ms);
+	HZR_THREAD_DELAY(500ms);
 	{
-		std::filesystem::path buildPath = project.Path / "Library" / "BuildSolution.bat";
+		std::filesystem::path buildPath = project.Path / "Project" / "BuildSolution.bat";
 		File::SystemCall(buildPath.string());
 	}
 

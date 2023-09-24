@@ -11,13 +11,16 @@ namespace Hazard::ImUI
 		constexpr float buttonHeight = 22.0f;
 		const Style& style = StyleManager::GetCurrent();
 
+		m_DidClear = false;
+		m_DidChange = false;
+
 		char buffer[512] = { 0 };
 		strcpy(buffer, m_Value.c_str());
 
 		ImVec2 contentSize = ImGui::GetContentRegionAvail();
 		ScopedColorStack bgColor(ImGuiCol_ChildBg, style.Frame.FrameColor, ImGuiCol_Button, style.Frame.FrameColor);
 		ScopedStyleVar rounding(ImGuiStyleVar_ChildRounding, style.Frame.Rounding);
-		ImGui::BeginChild(("##" + std::to_string((uint64_t)this)).c_str(), {contentSize.x, fieldHeight}, false, 0);
+		ImGui::BeginChild(("##" + std::to_string((uint64_t)this)).c_str(), { contentSize.x, fieldHeight }, false);
 		{
 			ImUI::Shift(4.0f, (fieldHeight - buttonHeight) * 0.5f);
 			if (!m_Icon.empty())
@@ -50,6 +53,8 @@ namespace Hazard::ImUI
 				if (ImGui::Button((const char*)ICON_FK_TIMES, { buttonHeight, buttonHeight }))
 				{
 					strcpy(buffer, "");
+					m_DidChange = true;
+					m_DidClear = true;
 				}
 				ImGui::PopFont();
 			}
