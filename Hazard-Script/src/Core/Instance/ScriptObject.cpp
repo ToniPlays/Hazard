@@ -7,6 +7,6 @@ namespace HazardScript
 {
 	ScriptObject::~ScriptObject()
 	{
-		m_Handle.GetHost()->DestroyInstance(m_Handle);
+		m_Handle.Destroy();
 	}
 }

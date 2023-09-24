@@ -8,13 +8,13 @@
 
 namespace HazardScript
 {
-	ScriptMetadata::ScriptMetadata(const Coral::HostInstance& host, const Coral::ReflectionType& type) : m_Host(host), m_ReflectionType(type)
+	ScriptMetadata::ScriptMetadata(const Coral::HostInstance& host, Coral::Type* type) : m_Host(host), m_ReflectionType(type)
 	{
-
+		HZR_ASSERT(type != nullptr, "");
 	}
 	std::string ScriptMetadata::GetName()
 	{
-		return m_ReflectionType.Name.ToString();
+		return std::string(m_ReflectionType->GetName());
 	}
 }
 

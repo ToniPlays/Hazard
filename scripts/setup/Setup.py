@@ -63,7 +63,7 @@ def main(argv):
     subprocess.call(["git", "branch"])
     print("Updating submodules")
 
-    subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
+    #subprocess.call(["git", "submodule", "update", "--init", "--recursive"])
 
     print("\nRunning premake")
     

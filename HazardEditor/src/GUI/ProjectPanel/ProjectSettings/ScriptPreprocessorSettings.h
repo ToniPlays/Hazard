@@ -2,6 +2,7 @@
 #include "UtilityCore.h"
 
 #include "Hazard/ImGUI/UIElements/Table.h"
+#include <Editor/EditorScriptManager.h>
 
 namespace UI
 {
@@ -9,7 +10,8 @@ namespace UI
 	static void DrawScriptDefineList(std::vector<std::string>* defines)
 	{
 		ImVec2 size = ImGui::GetContentRegionAvail();
-		if (ImGui::Button("New", { 150, 24 }))
+		ImGui::SetCursorPosX(size.x - 154);
+		if (ImGui::Button("New", { 150, 32 }))
 			defines->push_back("");
 
 		ImUI::Table<uint32_t> table("Define table", { size.x, 0 }, false);
@@ -31,6 +33,28 @@ namespace UI
 
 		for (uint32_t i = 0; i < defines->size(); i++)
 			table.AddRow(i);
+
+		table.Render();
+	}
+	static void DrawScriptPredefinedList(const std::vector<Editor::ScriptPreprocessor>& defines)
+	{
+		ImVec2 size = ImGui::GetContentRegionAvail();
+
+		ImUI::Table<Editor::ScriptPreprocessor> table("Predefined", { size.x, 0 }, false);
+		table.SetColumns({ "Name", "Availability" });
+		table.RowHeight(18.0f);
+		table.RowContent([](Editor::ScriptPreprocessor define) mutable {
+			ImUI::Shift(4.0f, 4.0f);
+			ImGui::Text(define.Name.c_str());
+			ImGui::TableNextColumn();
+
+			ImUI::Shift(4.0f, 4.0f);
+			ImGui::Text(define.Availability.c_str());
+			ImGui::TableNextColumn();
+		});
+
+		for (auto& define : defines)
+			table.AddRow(define);
 
 		table.Render();
 	}

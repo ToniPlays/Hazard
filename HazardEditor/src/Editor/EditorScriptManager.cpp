@@ -26,6 +26,17 @@ namespace Editor
 		manager->ReloadAssembly();
 	}
 
+	void EditorScriptManager::Init()
+	{
+		m_Preprocessors.push_back({ "HZR_WINDOWS", "Available on Windows platforms" });
+		m_Preprocessors.push_back({ "HZR_MACOS", "Available on MacOS platforms" });
+		m_Preprocessors.push_back({ "HZR_LINUX", "Available on Windows platforms" });
+		m_Preprocessors.push_back({ "HZR_IOS", "Available on iOS platforms" });
+		m_Preprocessors.push_back({ "HZR_ANDROID", "Available on Android platforms" });
+		m_Preprocessors.push_back({ "HZR_EDITOR", "Available in the Editor" });
+		m_Preprocessors.push_back({ "DEV_BUILD", "Available when Development build is enabled" });
+	}
+
 	void EditorScriptManager::GenerateProjectFiles()
 	{
 		auto& project = ProjectManager::GetProject();
@@ -103,7 +114,8 @@ namespace Editor
 	{
 		std::vector<UI::ConsoleMessage> result;
 
-		if (StringUtil::Contains(source, "Build succeeded")) {
+		if (StringUtil::Contains(source, "Build succeeded"))
+		{
 			result.push_back({ "Build succeeded", "", MessageFlags_Debug | MessageFlags_Clearable });
 		}
 		else if (StringUtil::Contains(source, "Build FAILED."))

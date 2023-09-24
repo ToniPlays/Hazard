@@ -7,14 +7,14 @@
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/ECS/Entity.h"
 
-#define RegisterComponent(Type, Assembly) {																						\
-		Coral::TypeId coralType = Assembly->GetTypeByName("Hazard." #Type ", " + std::string(assembly->GetQualifiedName()));	\
-		if (coralType)																											\
-		{																														\
-			hasComponentFuncs[coralType] = [](uint64_t entityID) { return GET_ENTITY(entityID).HasComponent<Type>(); };			\
-			createComponentFuncs[coralType] = [](uint64_t entityID) { GET_ENTITY(entityID).AddComponent<Type>(); };				\
-		}																														\
-	}																															\
+#define RegisterComponent(T, Assembly) {																				\
+		Coral::Type* coralType = &Assembly->GetTypeByName("Hazard." #T);													\
+		if (coralType)																									\
+		{																												\
+			hasComponentFuncs[coralType] = [](uint64_t entityID) { return GET_ENTITY(entityID).HasComponent<T>(); };	\
+			createComponentFuncs[coralType] = [](uint64_t entityID) { GET_ENTITY(entityID).AddComponent<T>(); };		\
+		}																												\
+	}																													\
 
 namespace Hazard 
 {

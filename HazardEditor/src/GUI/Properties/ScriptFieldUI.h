@@ -12,7 +12,7 @@ namespace UI
 		if (field->Has<HideInPropertiesAttribute>()) return false;
 		if (field->Has<ShowInPropertiesAttribute>()) return true;
 
-		return field->GetTypeVisibility() == Coral::TypeVisibility::Public;
+		return field->GetTypeVisibility() == Coral::TypeAccessibility::Public;
 	}
 
 	template<typename T>

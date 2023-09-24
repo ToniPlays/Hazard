@@ -2,11 +2,20 @@
 
 #include "GUI/Debug/Console.h"
 
-namespace Editor {
+namespace Editor 
+{
+	struct ScriptPreprocessor
+	{
+		std::string Name;
+		std::string Availability;
+	};
 
-	class EditorScriptManager {
+	class EditorScriptManager 
+	{
 	public:
 		EditorScriptManager() = default;
+
+		void Init();
 
 		void GenerateProjectFiles();
 		void CompileSource();
@@ -20,10 +29,13 @@ namespace Editor {
 		bool OnEvent(Event& e);
 		bool OnWindowFocusEvent(WindowFocusEvent& e);
 
+		std::vector<ScriptPreprocessor>& GetPreprocessorDefines() { return m_Preprocessors; }
+
 	private:
 		std::vector<UI::ConsoleMessage> ParseBuildResult(const std::string& source);
 
 	private:
 		bool m_ReloadOnFocus = false;
+		std::vector<ScriptPreprocessor> m_Preprocessors;
 	};
 }

@@ -20,6 +20,5 @@ public:
 	Editor::EditorScriptManager& GetScriptManager() { return m_ScriptManager; };
 
 private:
-
 	Editor::EditorScriptManager m_ScriptManager;
 };

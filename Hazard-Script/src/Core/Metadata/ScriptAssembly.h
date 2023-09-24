@@ -26,7 +26,7 @@ namespace HazardScript
 		std::string GetName() const { return File::GetNameNoExt(m_Path); }
 		std::string_view GetQualifiedName() const { return m_Assembly.GetName(); }
 
-		Coral::TypeId GetTypeByName(std::string_view typeName) const { return m_Assembly.GetTypeId(typeName); }
+		Coral::Type& GetTypeByName(std::string_view typeName) const { return m_Assembly.GetType(typeName); }
 
 		void SetSourcePath(const std::filesystem::path& path) { m_Path = path; }
 		std::filesystem::path GetSourcePath() const { return m_Path; }
@@ -37,7 +37,7 @@ namespace HazardScript
 		{
 			for (auto& type : m_Assembly.GetTypes())
 			{
-				if (type.FullName.ToString() == name)
+				if (type->GetName() == name)
 					return true;
 			}
 			return false;
@@ -47,7 +47,7 @@ namespace HazardScript
 		{
 			for (auto& type : m_Assembly.GetTypes())
 			{
-				if (type.FullName.ToString() == name)
+				if (type->GetName() == name)
 					return ScriptMetadata(m_Host, type);
 			}
 			return ScriptMetadata();
@@ -58,7 +58,7 @@ namespace HazardScript
 		{
 			std::vector<Ref<ScriptMetadata>> results;
 
-			for (Coral::ReflectionType type : m_Assembly.GetTypes())
+			for (auto& [typeName, type] : m_Assembly.GetTypes())
 			{
 				//if (script->Has<T>())
 				//	results.push_back(script);

@@ -118,7 +118,6 @@ void HazardEditorApplication::Init()
 
 	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
-
 	window.SetDebugCallback([](const RenderMessage& message) {
 
 		auto& manager = Application::GetModule<GUIManager>();
@@ -139,8 +138,9 @@ void HazardEditorApplication::Init()
 		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 		console->AddMessage({ message.Message, message.StackTrace, messageFlags });
 	});
-
 	scriptEngine.ReloadAssemblies();
+
+	m_ScriptManager.Init();
 }
 
 void HazardEditorApplication::Update()

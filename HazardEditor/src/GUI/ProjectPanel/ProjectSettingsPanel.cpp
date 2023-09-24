@@ -9,6 +9,8 @@
 #include "ProjectSettings/InputSettings.h"
 #include "ProjectSettings/ScriptPreprocessorSettings.h"
 #include <Project/ProjectManager.h>
+#include <Editor/EditorScriptManager.h>
+#include <Core/HazardEditor.h>
 
 namespace UI
 {
@@ -301,10 +303,17 @@ namespace UI
 	}
 	void ProjectSettingsPanel::DrawScriptingPreprocessors()
 	{
+		HazardEditorApplication& app = (HazardEditorApplication&)Application::Get();
+		auto& predefined = app.GetScriptManager().GetPreprocessorDefines();
 		auto& manager = Application::GetModule<ProjectManager>();
 		auto& project = manager.GetProject();
 
 		DrawScriptDefineList(&project.GetScriptingSettings().Defines);
+		
+		ImUI::Shift(4.0f, 4.0f);
+		ImGui::Text("Other preprocessors");
+		ImUI::ShiftY(4.0f);
+		DrawScriptPredefinedList(predefined);
 	}
 	void ProjectSettingsPanel::DrawScriptingDependencies()
 	{

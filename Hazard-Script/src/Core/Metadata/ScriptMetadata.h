@@ -15,7 +15,7 @@ namespace HazardScript
 		friend class ScriptObject;
 	public:
 		ScriptMetadata() = default;
-		ScriptMetadata(const Coral::HostInstance& host, const Coral::ReflectionType& type);
+		ScriptMetadata(const Coral::HostInstance& host, Coral::Type* type);
 
 		std::string GetName();
 
@@ -54,14 +54,13 @@ namespace HazardScript
 
 		template<typename... Args>
 		ScriptObject* CreateObject(Args&&... args) {
-			std::string typeName = m_ReflectionType.AssemblyQualifiedName.ToString();
 			ScriptObject* object = hnew ScriptObject();
-			object->m_Handle = m_Host.CreateInstance(typeName, std::forward<Args>(args)...);
+			object->m_Handle = m_ReflectionType->CreateInstance(std::forward<Args>(args)...);
 			return object;
 		}
 
 	private:
-		Coral::ReflectionType m_ReflectionType;
+		Coral::Type* m_ReflectionType;
 		Coral::HostInstance m_Host;
 		std::vector<Ref<Attribute>> m_Attributes;
 	};

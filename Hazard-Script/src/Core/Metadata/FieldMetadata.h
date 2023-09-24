@@ -6,8 +6,8 @@
 #include "Core/FieldValueStorageBase.h"
 #include "Core/ValueWrapper.h"
 
-#include "Coral/ManagedField.hpp"
 #include "Coral/ManagedObject.hpp"
+#include "Coral/FieldInfo.hpp"
 #include "Coral/StringHelper.hpp"
 
 #include <unordered_map>
@@ -19,8 +19,8 @@ namespace HazardScript
 	public:
 		FieldMetadata() = default;
 
-		std::string GetName() const { return m_Field.Name.ToString(); }
-		Coral::TypeVisibility GetTypeVisibility() const { return m_Field.visibility; }
+		std::string GetName() const { return m_Field.GetName(); }
+		Coral::TypeAccessibility GetTypeVisibility() const { return m_Field.GetAccessibility(); }
 
 		template<typename T>
 		bool Has() const 
@@ -71,7 +71,7 @@ namespace HazardScript
 		void LoadAttributes();
 
 	private:
-		Coral::ManagedField m_Field;
+		Coral::FieldInfo m_Field;
 
 		std::vector<Ref<Attribute>> m_Attributes;
 		std::unordered_map<uint32_t, Ref<FieldValueStorageBase>> m_InstanceData;
