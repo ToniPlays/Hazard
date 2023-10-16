@@ -20,7 +20,7 @@ namespace HazardRenderer
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanDescriptorSet>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_METAL
-            case RenderAPI::Metal: return nullptr;
+            case RenderAPI::Metal: return Ref<Metal::MetalDescriptorSet>::Create(createInfo);
 #endif
 		default:
 			HZR_ASSERT(false, "Unknown RenderAPI");

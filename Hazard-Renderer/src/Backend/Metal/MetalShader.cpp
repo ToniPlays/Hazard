@@ -78,10 +78,8 @@ namespace HazardRenderer::Metal
                 Window::SendDebugMessage(message);
                 continue;
             }
-            
-            //m_Functions[stage] = func;
+            m_Functions[stage] = func;
         }
-        
         Reflect();
     }
     
@@ -104,110 +102,6 @@ namespace HazardRenderer::Metal
     void MetalShader::Reflect()
     {
         m_ShaderData = ShaderCompiler::GetShaderResources(m_ShaderCode);
-
-        for (auto& [set, buffers] : m_ShaderData.UniformsDescriptions)
-        {
-            MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
-            for (auto& [binding, buffer] : buffers)
-            {
-                BufferCreateInfo bufferInfo = {};
-                bufferInfo.Name = buffer.Name;
-                bufferInfo.Size = buffer.Size;
-                
-                MetalWriteDescriptor writeDescriptor = {};
-                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-                writeDescriptor.DebugName = buffer.Name;
-                writeDescriptor.Binding = binding;
-                writeDescriptor.ArraySize = 0;
-                writeDescriptor.BoundValue[0] = GPUBuffer::Create(&bufferInfo);
-                writeDescriptor.Flags = buffer.UsageFlags;
-
-                descriptorSet.AddWriteDescriptor(writeDescriptor);
-            }
-        }
-        
-        for (auto& [set, constants] : m_ShaderData.PushConstants)
-        {
-            MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
-            for (auto& [binding, constant] : constants)
-            {
-                MetalWriteDescriptor writeDescriptor = {};
-                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_PUSH_CONSTANT;
-                writeDescriptor.DebugName = constant.Name;
-                writeDescriptor.Binding = binding;
-                writeDescriptor.ArraySize = 0;
-                writeDescriptor.Size = constant.Size;
-                writeDescriptor.Buffer.Allocate(writeDescriptor.Size);
-                writeDescriptor.Buffer.ZeroInitialize();
-                writeDescriptor.Flags = constant.UsageFlags;
-
-                descriptorSet.AddWriteDescriptor(writeDescriptor);
-            }
-        }
-        for (auto& [set, buffers] : m_ShaderData.StorageBuffers)
-        {
-            MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
-            for (auto& [binding, buffer] : buffers)
-            {
-                MetalWriteDescriptor writeDescriptor = {};
-                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-                writeDescriptor.DebugName = buffer.Name;
-                writeDescriptor.Binding = binding;
-                writeDescriptor.ArraySize = 0;
-                writeDescriptor.Flags = buffer.UsageFlags;
-
-                descriptorSet.AddWriteDescriptor(writeDescriptor);
-            }
-        }
-        
-        for (auto& [set, samplers] : m_ShaderData.ImageSamplers)
-        {
-            MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
-            for (auto& [binding, sampler] : samplers)
-            {
-                MetalWriteDescriptor writeDescriptor = {};
-                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-                writeDescriptor.DebugName = sampler.Name;
-                writeDescriptor.Binding = binding;
-                writeDescriptor.ArraySize = sampler.ArraySize;
-                writeDescriptor.Dimension = sampler.Dimension;
-
-                descriptorSet.AddWriteDescriptor(writeDescriptor);
-
-                auto& whiteTexture = MetalContext::GetInstance()->GetDefaultResources().WhiteTexture;
-                
-                for (uint32_t i = 0; i < sampler.ArraySize; i++)
-                {
-                    //if (sampler.Dimension == 2)
-                    //    Set(sampler.Name, i, whiteTexture);
-                }
-            }
-        }
-        for (auto& [set, storageImage] : m_ShaderData.StorageImages)
-        {
-            MetalDescriptorSet& descriptorSet = m_DescriptorSet[set];
-            for (auto& [binding, image] : storageImage)
-            {
-                MetalWriteDescriptor writeDescriptor = {};
-                writeDescriptor.Type = MTL_DESCRIPTOR_TYPE_STORAGE_IMAGE;
-                writeDescriptor.DebugName = image.Name;
-                writeDescriptor.Binding = binding;
-                writeDescriptor.ArraySize = image.ArraySize;
-                writeDescriptor.ActualBinding = binding;
-                writeDescriptor.Dimension = image.Dimension;
-
-                descriptorSet.AddWriteDescriptor(writeDescriptor);
-            }
-        }
-        
-        MetalShaderCompiler compiler;
-        for(auto& [stage, code] : m_ShaderCode)
-        {
-            auto resources = compiler.GetMSLBindings(code);
-            
-            for(auto& [set, descriptor] : m_DescriptorSet)
-                descriptor.UpdateBindings(resources);
-        }
     }
 }
 #endif

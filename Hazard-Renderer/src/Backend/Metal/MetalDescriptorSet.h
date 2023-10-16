@@ -6,6 +6,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "MetalShaderCompiler.h"
+#include "Backend/Core/DescriptorSet.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
@@ -41,23 +42,21 @@ namespace HazardRenderer::Metal
         std::unordered_map<uint32_t, Ref<RefCount>> BoundValue;
     };
 
-    class MetalDescriptorSet
+    class MetalDescriptorSet : public DescriptorSet
     {
     public:
-        MetalDescriptorSet() = default;
+        MetalDescriptorSet(DescriptorSetCreateInfo* info);
         ~MetalDescriptorSet() = default;
 
-        void AddWriteDescriptor(MetalWriteDescriptor writeDescriptor);
-        std::unordered_map<uint32_t, std::unordered_map<uint32_t, MetalWriteDescriptor>>& GetDescriptorSets() { return m_WriteDescriptors; }
-        MetalWriteDescriptor* GetWriteDescriptor(uint32_t type, uint32_t index) { return &m_WriteDescriptors[type][index]; }
-        MetalWriteDescriptor* GetWriteDescriptor(uint32_t type, const std::string& name);
-
-        void UpdateBindings(const std::unordered_map<std::string, MSLBinding> bindings);
+        void Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll = false) override;
+        void Write(uint32_t binding, Ref<GPUBuffer> buffer, bool updateAll = false) override;
+        
+        //Metal specific
         void BindGraphicsResources(MTL::RenderCommandEncoder* encoder);
         void BindComputeResources(MTL::ComputeCommandEncoder* encoder);
 
     private:
-        std::unordered_map<uint32_t, std::unordered_map<uint32_t, MetalWriteDescriptor>> m_WriteDescriptors;
+        
     };
 }
 #endif

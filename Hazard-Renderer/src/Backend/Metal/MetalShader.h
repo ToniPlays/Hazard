@@ -33,7 +33,7 @@ namespace HazardRenderer::Metal
         std::unordered_map<uint32_t, Buffer> GetShaderCode() const override { return m_ShaderCode; };
         
         //Metal specific
-        //MTL::Function* GetFunction(const ShaderStage& stage) { return m_Functions[stage]; }
+        MTL::Function* GetFunction(uint32_t stage) { return m_Functions[stage]; }
         void BindResources(MTL::RenderCommandEncoder* encoder);
         void BindResources(MTL::ComputeCommandEncoder* encoder);
         
@@ -43,7 +43,7 @@ namespace HazardRenderer::Metal
     private:
         ShaderData m_ShaderData;
         std::unordered_map<uint32_t, Buffer> m_ShaderCode;
-        //std::unordered_map<ShaderStage, MTL::Function*> m_Functions;
+        std::unordered_map<uint32_t, MTL::Function*> m_Functions;
         
         std::unordered_map<uint32_t, MetalDescriptorSet> m_DescriptorSet;
         std::unordered_map<uint32_t, MetalInputBuffer> m_InputBuffers;

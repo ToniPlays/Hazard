@@ -108,8 +108,8 @@ namespace HazardRenderer::Metal
             }
         }
         
-        //m_PipelineDescriptor->setVertexFunction(m_Shader->GetFunction(ShaderStage::Vertex));
-        //m_PipelineDescriptor->setFragmentFunction(m_Shader->GetFunction(ShaderStage::Fragment));
+        m_PipelineDescriptor->setVertexFunction(m_Shader->GetFunction(SHADER_STAGE_VERTEX_BIT));
+        m_PipelineDescriptor->setFragmentFunction(m_Shader->GetFunction(SHADER_STAGE_FRAGMENT_BIT));
         m_PipelineDescriptor->setInputPrimitiveTopology(DrawTypeToMTLTopology(m_Specs.DrawType));
         m_PipelineDescriptor->setVertexDescriptor(vertexDescriptor);
         

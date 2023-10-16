@@ -93,6 +93,7 @@ namespace TexturedQuad {
 
 
 		DescriptorSetCreateInfo descriptorInfo = {};
+        descriptorInfo.DebugName = "Descriptor";
 		descriptorInfo.Set = 0;
 		descriptorInfo.pLayout = &descriptorLayout;
 		
