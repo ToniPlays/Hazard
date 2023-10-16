@@ -54,16 +54,16 @@ namespace HazardScript
 		}
 
 		template<typename T>
-		std::vector<Ref<ScriptMetadata>> ViewAttributes() 
+		std::vector<ScriptMetadata> ViewAttributes() 
 		{
-			std::vector<Ref<ScriptMetadata>> results;
+			//std::vector<ScriptMetadata> results;
 
-			for (auto& [typeName, type] : m_Assembly.GetTypes())
+			/*for (auto& type : m_Assembly.GetTypes())
 			{
 				//if (script->Has<T>())
 				//	results.push_back(script);
-			}
-			return results;
+			}*/
+            return {};
 		}
 
 	private:

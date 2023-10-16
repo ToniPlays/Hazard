@@ -13,6 +13,7 @@ namespace HazardRenderer {
     {
         friend class Window;
         friend class Input;
+        
     public:
         MacOSWindow(HazardRendererCreateInfo* createInfo);
         virtual ~MacOSWindow();
@@ -59,8 +60,8 @@ namespace HazardRenderer {
         bool IsFullscreen() const override { return m_WindowData.Fullscreen; }
         bool IsMaximized() const override { return m_WindowData.Maximized; }
         glm::vec2 GetPosition() override;
-        std::vector<Resolution> GetAvailableResolutions() const;
-        void SetResolution(const Resolution& resolution);
+        std::vector<Resolution> GetAvailableResolutions() const override;
+        void SetResolution(const Resolution& resolution) override;
 
         WindowProps& GetWindowInfo() override { return m_WindowData; }
         GraphicsContext* GetContext() const override { return m_Context; };
@@ -73,7 +74,9 @@ namespace HazardRenderer {
 
             s_QueueMessages.clear();
         }
-
+    //TODO: Fix
+    inline static Window* s_CurrentWindow = nullptr;
+        
     private:
         WindowProps m_WindowData;
         GraphicsContext* m_Context;
@@ -81,7 +84,7 @@ namespace HazardRenderer {
         static inline RendererMessageCallback s_DebugCallback = nullptr;
         static inline std::vector<RenderMessage> s_QueueMessages;
         void SetCallbacks();
-        inline static Window* s_CurrentWindow = nullptr;
+        
 
     };
 }

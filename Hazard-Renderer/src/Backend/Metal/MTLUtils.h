@@ -77,7 +77,7 @@ namespace HazardRenderer::Metal
         return MTL::PixelFormatInvalid;
     }
     
-    bool FormatBlendable(const ImageFormat& format)
+    static bool FormatBlendable(const ImageFormat& format)
     {
         switch (format)
         {
@@ -86,7 +86,7 @@ namespace HazardRenderer::Metal
         }
     }
     
-    MTL::CompareFunction DepthOpToMTLDepthOp(const DepthOp& op)
+    static MTL::CompareFunction DepthOpToMTLDepthOp(const DepthOp& op)
     {
         switch (op)
         {
@@ -102,7 +102,7 @@ namespace HazardRenderer::Metal
         }
         return MTL::CompareFunctionNever;
     }
-    MTL::CullMode CullModeToMTLCullMode(const CullMode& mode)
+    static MTL::CullMode CullModeToMTLCullMode(const CullMode& mode)
     {
         switch(mode)
         {
@@ -113,12 +113,12 @@ namespace HazardRenderer::Metal
     }
 
     template<typename T>
-    void SetDebugLabel(T* object, const std::string& label)
+    static void SetDebugLabel(T* object, const std::string& label)
     {
         NS::String* l = NS::String::alloc()->string(label.c_str(), NS::UTF8StringEncoding);
         object->setLabel(l);
     }
-    uint32_t GetMipLevelCount(uint32_t width, uint32_t height)
+    static uint32_t GetMipLevelCount(uint32_t width, uint32_t height)
     {
         return std::floor(std::log2(glm::min(width, height))) + 1;
     }

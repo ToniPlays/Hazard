@@ -21,7 +21,6 @@ namespace Hazard
 
 		//Loop entities
 		auto entities = root["Entities"];
-		size_t index = 0;
 		if (entities)
 		{
 			for (size_t i = entities.size(); i > 0; --i)

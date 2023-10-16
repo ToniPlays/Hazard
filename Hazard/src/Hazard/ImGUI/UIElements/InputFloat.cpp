@@ -18,9 +18,7 @@ namespace Hazard::ImUI
 				ImUI::ShiftY(4.0f);
 				ImGui::NextColumn();
 			}
-
-			Style& style = StyleManager::GetCurrent();
-
+            
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;

@@ -144,5 +144,6 @@ namespace Hazard
 			case InputSource_Mouse:		return "Mouse";
 			case InputSource_Gamepad:	return "Gamepad";
 		}
+        return "None";
 	}
 }

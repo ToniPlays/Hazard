@@ -278,5 +278,6 @@ namespace Key
 				TO_STRING(RightSuper);
 				TO_STRING(Menu);
 		}
+        return "";
 	}
 }

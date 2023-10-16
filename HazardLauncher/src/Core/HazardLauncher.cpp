@@ -10,7 +10,12 @@ using namespace HazardScript;
 
 void HazardLauncher::PreInit()
 {
-	RenderAPI renderAPI = RenderAPI::Vulkan;
+#ifdef HZR_PLATFORM_WINDOWS
+    RenderAPI renderAPI = RenderAPI::Vulkan;
+#elif defined HZR_PLATFORM_MACOS
+    RenderAPI renderAPI = RenderAPI::Metal;
+#endif
+	
 	ApplicationCreateInfo appInfo = {};
 	appInfo.AppName = "Hazard Launcher";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;

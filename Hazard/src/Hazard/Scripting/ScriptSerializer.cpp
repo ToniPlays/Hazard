@@ -21,7 +21,7 @@ namespace Hazard
 
 		if (field->GetType().IsArray())
 		{
-			/*
+			
 			YamlUtils::Map(out, field->GetName(), [&]() {
 				for (size_t i = 0; i < object->GetFieldValueCount(field->GetName()); i++) {
 					std::string key = std::to_string(i);

@@ -15,8 +15,8 @@ namespace Hazard
 		~InputManager() = default;
 
 		void Init() override;
-		void PostInit();
-		void Update();
+        void PostInit();
+		void Update() override;
 
 		bool OnEvent(Event& e) override;
 

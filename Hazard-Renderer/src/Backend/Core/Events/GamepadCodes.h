@@ -70,6 +70,7 @@ namespace Gamepad {
 			TO_STRING(TriggerLeft);
 			TO_STRING(TriggerRight);
 		}
+        return "";
 	}
 	static bool IsAxis(GamepadCode axis)
 	{

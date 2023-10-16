@@ -53,5 +53,6 @@ namespace Mouse {
 			TO_STRING(ScrollVertical);
 			TO_STRING(ScrollHorizontal);
 		}
+        return "";
 	}
 }

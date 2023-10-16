@@ -1,4 +1,3 @@
-#ifdef HZR_PLATFORM_MACOS
 
 #include "Backend/Input.h"
 
@@ -7,9 +6,9 @@
 
 #include "spdlog/fmt/fmt.h"
 #include <Backend/MacOS/MacOSWindow.h>
+#ifdef HZR_PLATFORM_MACOS
 
 GLFWwindow* s_Window = nullptr;
-
 bool anyKey = false;
 
 void Input::Init(HazardRenderer::Window& window)
@@ -43,16 +42,19 @@ bool Input::IsKeyReleased(const Key::KeyCode& key)
     auto state = s_KeyStates[key];
     return state == GLFW_RELEASE;
 }
-bool Input::IsMouseButtonDown(const Mouse::MouseCode& code) {
+bool Input::IsMouseButtonDown(const Mouse::MouseCode& code)
+{
     auto state = glfwGetMouseButton(s_Window, static_cast<int32_t>(code));
     return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
-bool Input::IsMouseButtonPressed(const Mouse::MouseCode& code) {
+bool Input::IsMouseButtonPressed(const Mouse::MouseCode& code)
+{
     auto state = glfwGetMouseButton(s_Window, static_cast<int32_t>(code));
     return state == GLFW_PRESS;
 }
 
-glm::vec2 Input::GetMousePos() {
+glm::vec2 Input::GetMousePos()
+{
     double xpos, ypos;
     glfwGetCursorPos(s_Window, &xpos, &ypos);
 
@@ -76,64 +78,46 @@ void Input::Update()
     {
         auto& gamepad = s_Gamepads[g];
         if (!gamepad.Connected) continue;
+        
+        auto& info = HazardRenderer::MacOSWindow::s_CurrentWindow->GetWindowInfo();
 
         GLFWgamepadstate state = {};
         glfwGetGamepadState(g, &state);
 
         for (uint32_t i = Gamepad::AxisFirst; i <= Gamepad::AxisLast; i++)
         {
-            float axisX = state.axes[i * 2];
-            float axisY = state.axes[i * 2 + 1];
+            float axisValue = state.axes[i - Gamepad::AxisFirst];
 
-            //Temporary deadzone
-            constexpr float deadzone = 0.075f;
-            axisX = glm::abs(axisX) > deadzone ? axisX : 0;
-            axisY = glm::abs(axisY) > deadzone ? axisY : 0;
-
-            if (gamepad.Axis[i].X != axisX || gamepad.Axis[i].Y != axisY)
+            if (glm::abs(axisValue - gamepad.Axis[i - Gamepad::AxisFirst]) <= 0.05f && axisValue != 0.0f)
             {
-                /*
-                auto& info = HazardRenderer::MacOSWindow::s_CurrentWindow->GetWindowInfo();
-                GamepadAxisMovedEvent event(i, axisX, axisY);
-                info.EventCallback(event);
-                 */
+                axisValue = 0.0f;
+                GamepadAxisMovedEvent axisEvent(g, (Gamepad::GamepadCode)i, axisValue);
+                info.EventCallback(axisEvent);
+                continue;
             }
 
-            gamepad.Axis[i].X = axisX;
-            gamepad.Axis[i].Y = axisY;
-        }
-        for (uint32_t i = Gamepad::TriggerLeft; i <= Gamepad::TriggerRight; i++)
-        {
-            float axisX = state.axes[i + 2];
-            if (gamepad.Axis[i].X != axisX)
-            {
-                /*
-                auto& info = HazardRenderer::MacOSWindow::s_CurrentWindow->GetWindowInfo();
-                GamepadAxisMovedEvent event(i, axisX, 0.0f);
-                info.EventCallback(event);
-                 */
-            }
+            GamepadAxisMovedEvent axisEvent(g, (Gamepad::GamepadCode)i, axisValue);
+            info.EventCallback(axisEvent);
 
-            gamepad.Axis[i].X = axisX;
+            gamepad.Axis[i - Gamepad::AxisFirst] = axisValue;
         }
-        for (uint32_t i = Gamepad::ButtonFirst; i <= Gamepad::ButtonLast; i++)
+        for (uint32_t i = Gamepad::ButtonFirst; i < Gamepad::ButtonLast; i++)
         {
-            int buttonState = state.buttons[i];
+            int buttonState = state.buttons[i - Gamepad::ButtonFirst];
             int buttonLastState = gamepad.Buttons[i];
 
             if (buttonState == buttonLastState) continue;
-            /*
-            auto& info = HazardRenderer::WindowsWindow::s_CurrentWindow->GetWindowInfo();
-             */
+
+            auto& info = HazardRenderer::MacOSWindow::s_CurrentWindow->GetWindowInfo();
             if (buttonState == GLFW_PRESS)
             {
                 GamepadButtonPressedEvent event(g, i);
-                //info.EventCallback(event);
+                info.EventCallback(event);
             }
             else
             {
                 GamepadButtonReleasedEvent event(g, i);
-                //info.EventCallback(event);
+                info.EventCallback(event);
             }
 
             gamepad.Buttons[i] = buttonState;
@@ -149,28 +133,24 @@ void Input::UpdateKey(uint32_t code, int state)
 void Input::ConnectGamepad(int device)
 {
     auto& gamepad = s_Gamepads[device];
-    gamepad.Name = glfwGetJoystickName(device);
+    gamepad.Name = glfwGetGamepadName(device);
+    gamepad.Binding = device;
     gamepad.Connected = true;
 
     if (glfwJoystickIsGamepad(device))
     {
+        gamepad.Axis.push_back(0.0f);
         for (uint32_t i = Gamepad::AxisFirst; i <= Gamepad::AxisLast; i++)
-            gamepad.Axis[i] = { 0.0f, 0.0f, 1.0f };
+            gamepad.Axis.push_back(0.0f);
 
-        for (uint32_t i = Gamepad::ButtonFirst; i < Gamepad::ButtonLast; i++)
-            gamepad.Buttons[i] = 0;
-    }
-    else
-    {
-        //HZR_ASSERT(false, "What is this gamepad {0}", gamepad.Name);
+        for (uint32_t i = Gamepad::ButtonFirst; i <= Gamepad::ButtonLast; i++)
+            gamepad.Buttons.push_back(0);
     }
 }
 void Input::DisconnectGamepad(int device)
 {
     auto& gamepad = s_Gamepads[device];
     gamepad.Connected = false;
-    gamepad.Buttons.clear();
-    gamepad.Axis.clear();
 }
 
 bool Input::IsButtonDown(int device, const Gamepad::GamepadCode& code)
@@ -179,19 +159,14 @@ bool Input::IsButtonDown(int device, const Gamepad::GamepadCode& code)
     return gamepad.Buttons[code];
 }
 
-Axis2D Input::GetAxis(int device, const Gamepad::GamepadCode& code)
+float Input::GetAxis(int device, const Gamepad::GamepadCode& code)
 {
     auto& gamepad = s_Gamepads[device];
-    return gamepad.Axis[code];
+    return gamepad.Axis[code - Gamepad::AxisFirst];
 }
 bool Input::IsAxis(int device, const Gamepad::GamepadCode& code)
 {
-    auto& axis = s_Gamepads[device].Axis[code];
-    
-    constexpr float deadzone = 0.075f;
-    float x = glm::abs(axis.X) > deadzone ? axis.X : 0;
-    float y = glm::abs(axis.Y) > deadzone ? axis.Y : 0;
-
-    return x != 0.0 || y != 0.0f;
+    auto& axis = s_Gamepads[device].Axis[code - Gamepad::AxisFirst];
+    return axis != 0.0f;
 }
 #endif
