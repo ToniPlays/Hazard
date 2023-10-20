@@ -15,7 +15,7 @@ namespace HazardRenderer::OpenGL
 
 		void SetData(const BufferCopyRegion& copyRegion) override;
 		void SetData_RT(const BufferCopyRegion& copyRegion);
-		const size_t GetSize() const override { return m_Size; }
+		const uint64_t GetSize() const override { return m_Size; }
 		std::string& GetDebugName() { return m_DebugName; };
 		const BufferLayout& GetLayout() const override { return m_Layout; }
 
@@ -37,9 +37,9 @@ namespace HazardRenderer::OpenGL
 		OpenGLIndexBuffer(IndexBufferCreateInfo* createInfo);
 		~OpenGLIndexBuffer();
 
-		size_t GetCount() const override { return m_Size / sizeof(uint32_t); }
+		uint64_t GetCount() const override { return m_Size / sizeof(uint32_t); }
 		std::string& GetDebugName() { return m_DebugName; };
-		const size_t GetSize() const { return m_Size; };
+		const uint64_t GetSize() const { return m_Size; };
 
 		//OpenGL specific
 		uint32_t GetBufferID() { return m_BufferID; }
@@ -64,7 +64,7 @@ namespace HazardRenderer::OpenGL
 
 		std::string& GetName() { return m_Name; }
 		const uint32_t GetBinding() const override { return m_Binding; };
-		const size_t GetSize() const override { return m_Size; };
+		const uint64_t GetSize() const override { return m_Size; };
 
 		uint32_t GetUsageFlags() { return m_Usage; };
 		void AddUsageFlags(uint32_t flags) override { m_Usage |= flags; };

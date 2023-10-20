@@ -83,9 +83,7 @@ namespace Hazard
 				if (!graph) 
 					return nullptr;
 
-				graph->Execute();
-
-				Ref<Asset> asset = graph->GetResult<Ref<Asset>>();
+				Ref<Asset> asset = graph->Execute()->GetResult().Read<Ref<Asset>>();
 				if (asset)
 				{
 					metadata.LoadState = LoadState::Loaded;
@@ -103,22 +101,18 @@ namespace Hazard
 			return s_LoadedAssets[metadata.Handle].As<T>();
 		}
 
-		template<typename T>
-		static JobPromise<Ref<T>> GetAssetAsync(const std::string& key)
+		static JobPromise GetAssetAsync(const std::string& key)
 		{
-			return GetAssetAsync<T>(GetHandleFromKey(key));
+			return GetAssetAsync(GetHandleFromKey(key));
 		}
 
-		template<typename T>
-		static JobPromise<Ref<T>> GetAssetAsync(AssetHandle handle)
+		static JobPromise GetAssetAsync(AssetHandle handle)
 		{
-			static_assert(std::is_base_of<Asset, T>::value);
-
 			HZR_PROFILE_FUNCTION();
 			HZR_TIMED_FUNCTION();
 
 			if (handle == INVALID_ASSET_HANDLE)
-				return JobPromise<Ref<T>>();
+				return JobPromise();
 
 			AssetMetadata& metadata = GetMetadata(handle);
 
@@ -131,30 +125,31 @@ namespace Hazard
 				Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
 				if (graph)
 				{
-					Ref<Job> job = Ref<Job>::Create(AddLoadedAssetJop, handle);
+					Ref<Job> job = Ref<Job>::Create("Add loaded asset", AddLoadedAssetJob, handle);
 					graph->AddStage()->QueueJobs({ job });
 				}
-				JobPromise<Ref<Asset>> promise = Application::Get().GetJobSystem().QueueGraph<Ref<Asset>>(graph);
+				JobPromise promise = Application::Get().GetJobSystem().QueueGraph(graph);
 				return promise;
 			}
-			return JobPromise<Ref<T>>(s_LoadedAssets[handle]);
+			return JobPromise();
 		}
 
 		static AssetHandle CreateMemoryOnly(AssetType type, Ref<Asset> asset);
 		static AssetHandle CreateNewAsset(AssetType type, const std::filesystem::path& path);
 
 	private:
-		static void AddLoadedAssetJop(Ref<Job> job, AssetHandle handle)
+		static void AddLoadedAssetJob(Ref<Job> job, AssetHandle handle)
 		{
-			Ref<Asset> asset = job->GetInput<Ref<Asset>>();
-			if (!asset) return;
+			Buffer assetBuffer = job->GetJobGraph()->GetPreviousStage()->GetJobResult(0);
+			if (!assetBuffer.Data) return;
 
-			job->GetStage()->SetResult(asset);
+			Ref<Asset> asset = assetBuffer.Read<Ref<Asset>>();
 			auto& metadata = GetMetadata(handle);
 
 			metadata.LoadState = LoadState::Loaded;
 
 			std::scoped_lock lock(s_Mutex);
+
 			s_LoadedAssets[handle] = asset;
 		}
 
@@ -165,6 +160,7 @@ namespace Hazard
 		inline static AssetMetadata s_NullMetadata;
 		inline static AssetLoader s_AssetLoader;
 
+		inline static bool s_IsInitialized = false;
 		inline static std::mutex s_Mutex;
 	};
 }

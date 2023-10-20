@@ -43,8 +43,8 @@ namespace Hazard
 		void SetProgressHandler(MeshProgressCallback handler) { m_Handler = handler; }
 
 		MeshData LoadMeshFromSource(const std::filesystem::path& file);
-		size_t GetMeshDataSize(const MeshData& data);
-		size_t GetVertexSize(const MeshData& data);
+		uint64_t GetMeshDataSize(const MeshData& data);
+		uint64_t GetVertexSize(const MeshData& data);
 
 	private:
 		static uint32_t GetColorChannel(const aiMesh* mesh);
@@ -58,8 +58,8 @@ namespace Hazard
 		glm::mat4 m_ScaleMatrix = glm::mat4(1.0f);
 		MeshProgressCallback m_Handler;
 
-		std::atomic_size_t m_SceneMeshes = 0;
-		std::atomic_size_t m_ProcessedNodes = 0;
+		std::atomic_uint64_t m_SceneMeshes = 0;
+		std::atomic_uint64_t m_ProcessedNodes = 0;
 
 		Assimp::Importer m_Importer;
 	};

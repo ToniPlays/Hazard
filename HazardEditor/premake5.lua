@@ -34,7 +34,7 @@ project "HazardEditor"
 		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.VulkanSDK}",
-        "%{IncludeDir.Metal}",
+        	"%{IncludeDir.Metal}",
 		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.Assimp}",
 		"%{IncludeDir.SPIRV_Cross}",
@@ -64,15 +64,10 @@ project "HazardEditor"
 
 
 	filter "system:windows"
-		defines 
-		{
-			"HZR_INCLUDE_MONO"
-		}
 		links {
 			"%{Library.Vulkan}",
 			"%{Library.VulkanUtils}",
 			"Hazard-Script",
-			"Optick",
 			"%{Library.Assimp_Lib}",
 			"%{LibraryDir.CoralNetHost}"
 		}

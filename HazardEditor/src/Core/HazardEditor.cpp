@@ -92,7 +92,7 @@ void HazardEditorApplication::PreInit()
 	ScriptEngineCreateInfo scriptEngine = {};
 	scriptEngine.CoreAssemblyPath = "../HazardScripting/bin/Debug/net7.0/HazardScripting.dll";
 	scriptEngine.AppAssemblyPath = appAssemblyPath.string();
-	scriptEngine.CoralDirectory = "../Hazard/vendor/Coral/Coral.Managed/Build/Debug-windows";	
+	scriptEngine.CoralDirectory = "../HazardScripting/bin/Debug/net7.0/";	
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;

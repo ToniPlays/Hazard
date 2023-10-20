@@ -13,8 +13,8 @@ namespace Hazard
 
 	struct LineRendererData
 	{
-		size_t MaxLineCount;
-		size_t MaxVertices;
+		uint64_t MaxLineCount;
+		uint64_t MaxVertices;
 	};
 
 

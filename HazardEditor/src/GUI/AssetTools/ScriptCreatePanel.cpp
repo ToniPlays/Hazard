@@ -37,20 +37,22 @@ namespace UI
 
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, 150);
-		ImUI::Group("Name", [&]() {
-			ImGui::Text("Class name");
-			ImGui::NextColumn();
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			ImUI::TextFieldWithHint(m_CreateInfo.ClassName, "Class name");
-			ImGui::NextColumn();
-		});
-		ImUI::Group("Derive", [&]() {
-			ImGui::Text("Derives from");
-			ImGui::NextColumn();
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			ImUI::TextFieldWithHint(m_CreateInfo.Derives, "Derives from");
-		});
 
+		ImGui::PushID("Name");
+		ImGui::Text("Class name");
+		ImGui::NextColumn();
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+		ImUI::TextFieldWithHint(m_CreateInfo.ClassName, "Class name");
+		ImGui::NextColumn();
+		ImGui::PopID();
+
+		ImGui::PushID("Derive");
+		ImGui::Text("Derives from");
+		ImGui::NextColumn();
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+		ImUI::TextFieldWithHint(m_CreateInfo.Derives, "Derives from");
+
+		ImGui::PopID();
 		ImUI::ShiftY(16.0f);
 		ImGui::NextColumn();
 

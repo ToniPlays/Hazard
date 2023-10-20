@@ -32,8 +32,8 @@ namespace HazardRenderer::OpenGL
 		//void SetUniformBuffers(const Ref<GPUBuffer>* uniformBuffer, uint32_t count) override;
 		void SetPipeline(Ref<Pipeline> pipeline) override;
 
-		void Draw(size_t count, Ref<GPUBuffer> indexBuffer = nullptr) override;
-		void DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;
+		void Draw(uint64_t count, Ref<GPUBuffer> indexBuffer = nullptr) override;
+		void DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;
 		void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<GPUBuffer> indexBuffer = nullptr) override {
 			HZR_ASSERT(false, "Not implemented");
 		};

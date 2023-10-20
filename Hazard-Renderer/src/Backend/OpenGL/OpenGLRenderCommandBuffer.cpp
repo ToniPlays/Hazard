@@ -101,7 +101,7 @@ namespace HazardRenderer::OpenGL
 				descriptor.BindResources(shader->GetProgramID(), false);
 			});
 	}
-	void OpenGLRenderCommandBuffer::Draw(size_t count, Ref<GPUBuffer> indexBuffer)
+	void OpenGLRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
 		/*
@@ -118,7 +118,7 @@ namespace HazardRenderer::OpenGL
 			});
 			*/
 	}
-	void OpenGLRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
+	void OpenGLRenderCommandBuffer::DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
 		/*

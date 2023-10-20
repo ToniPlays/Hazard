@@ -1,8 +1,9 @@
 #pragma once
 
 #include <Ref.h>
+#include "JobFlags.h"
+#include "Job.h"
 
-class Job;
 class JobGraph;
 
 class GraphStage : public RefCount
@@ -19,42 +20,25 @@ public:
 	void SetWeight(float weight) { m_Weight = weight; }
 	const std::vector<Ref<Job>>& GetJobs() { return m_Jobs; }
 	float GetProgress();
+	uint32_t GetFlags() { return m_Flags; }
 
 	const std::string& GetName() { return m_Name; }
 
 	uint32_t GetStageIndex() const { return m_StageIndex; }
     Ref<GraphStage> GetGraphStage(uint32_t index);
 
-	void QueueJobs(const std::vector<Ref<Job>>& jobs, const std::string& name = "");
+	void QueueJobs(const std::vector<Ref<Job>>& jobs);
 
-	Ref<JobGraph> GetGraph()
-	{
-		if (!m_JobGraph) 
-			return nullptr;
-		return m_JobGraph;
-	}
-    
-	template<typename T>
-	T GetResult()
-	{
-		if (!m_ResultBuffer.Data)
-			return T();
+	Ref<JobGraph> GetGraph();
 
-		return m_ResultBuffer.Read<T>();
-	}
-
-	template<typename T>
-	void SetResult(T result)
-	{
-		m_ResultBuffer.Release();
-		m_ResultBuffer.Allocate(sizeof(T));
-		m_ResultBuffer.Write(&result, sizeof(T));
-	}
+	Buffer GetJobResult(uint32_t index);
+	std::vector<Buffer> GetJobResults();
 
 private:
-	void OnJobFinished();
+	void OnJobFinished(Ref<Job> job);
 
 private:
+
 	float m_Weight = 1.0f;
 	std::vector<Ref<Job>> m_Jobs;
 	Ref<JobGraph> m_JobGraph;
@@ -63,6 +47,6 @@ private:
 	std::mutex m_JobMutex;
 	std::atomic_uint64_t m_JobCount;
 
-	Buffer m_ResultBuffer;
+	uint32_t m_Flags = JOB_FLAGS_SUCCEEDED;
 	uint32_t m_StageIndex = 0;
 };

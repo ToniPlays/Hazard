@@ -8,7 +8,8 @@ namespace Hazard::Physics
 {
 	class Physics2D;
 
-	class Physics2DContactListener : public b2ContactListener {
+	class Physics2DContactListener : public b2ContactListener 
+	{
 	public:
 
 		Physics2DContactListener(Physics2D* physics2D) : m_Physics(physics2D) {};

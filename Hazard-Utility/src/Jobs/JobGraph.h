@@ -1,9 +1,11 @@
 #pragma once
 
 #include <Ref.h>
+#include "JobFlags.h"
 #include "GraphStage.h"
 
 class JobSystem;
+class Job;
 
 class JobGraph : public RefCount
 {
@@ -15,30 +17,16 @@ public:
 	const std::string& GetName() const { return m_Name; }
 	uint32_t GetCurrentStageIndex() const { return m_CurrentStage; }
 	Ref<GraphStage> GetCurrentStage() const { return m_Stages[m_CurrentStage]; }
-	size_t GetStageCount() const { return m_Stages.size(); }
+	uint64_t GetStageCount() const { return m_Stages.size(); }
 	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
 	const std::vector<Ref<GraphStage>>& GetStages() const { return m_Stages; }
-
-
+	uint32_t GetFlags() { return m_Flags; }
 
 	Ref<GraphStage> GetNextStage();
+	Ref<GraphStage> GetPreviousStage();
 	Ref<GraphStage> AddStage();
 
-	void CombineStages(Ref<JobGraph> graph, uint32_t offset = 0)
-	{
-		if (graph == nullptr) return;
-
-		auto& stages = graph->GetStages();
-		for (uint32_t i = 0; i < stages.size(); i++)
-		{
-			Ref<GraphStage> stage = GetStage(i + offset);
-			if (!stage) 
-				stage = AddStage();
-
-			stage->m_JobGraph = this;
-			stage->QueueJobs(stages[i]->m_Jobs);
-		}
-	}
+	void CombineStages(Ref<JobGraph> graph, uint32_t offset = 0);
 
 	Ref<JobGraph> Execute();
 
@@ -55,19 +43,17 @@ public:
 			m_CurrentStage.wait(m_CurrentStage);
 	}
 
-	template<typename T>
-	T GetResult()
-	{
-		return m_Stages[m_Stages.size() - 1]->GetResult<T>();
-	}
+	Buffer GetResult();
+	std::vector<Buffer> GetResults();
 
 private:
-	void OnStageFinished();
+	void OnStageFinished(Ref<GraphStage> stage);
 
 private:
 	std::string m_Name;
 	std::vector<Ref<GraphStage>> m_Stages;
 	std::atomic_uint32_t m_CurrentStage = 0;
+	uint32_t m_Flags = JOB_FLAGS_SUCCEEDED;
 
 	JobSystem* m_JobSystem = nullptr;
 };

@@ -33,7 +33,7 @@ namespace HazardRenderer::OpenGL
 		void SetData_RT();
 
 		//OpenGL specific
-		size_t GetID() const { return m_ID; }
+		uint64_t GetID() const { return m_ID; }
 		
 	private:
 		void SetImageData(const Buffer& buffer);

@@ -392,7 +392,7 @@ namespace UI
 			});
 		}
 
-		for (size_t i = m_Paths.size(); i > 0; i--)
+		for (uint64_t i = m_Paths.size(); i > 0; i--)
 		{
 			const auto& path = m_Paths[i - 1];
 			ImGui::SameLine(0.0f, 8.0f);
@@ -460,7 +460,7 @@ namespace UI
 					break;
 				if (metadata.LoadState == LoadState::None)
 				{
-					JobPromise<Ref<Asset>> asset = AssetManager::GetAssetAsync<Asset>(metadata.Handle);
+					JobPromise asset = AssetManager::GetAssetAsync(metadata.Handle);
 					break;
 				}
 				handle = metadata.Handle;

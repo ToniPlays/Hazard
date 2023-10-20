@@ -24,6 +24,7 @@ namespace Hazard
 	{
 		m_MeshFlags = flags;
 	}
+
 	uint32_t MeshFactory::GetColorChannel(const aiMesh* mesh)
 	{
 		for (uint32_t i = 0; i < mesh->GetNumColorChannels(); i++)
@@ -34,18 +35,18 @@ namespace Hazard
 		return UINT32_MAX;
 	}
 
-	size_t MeshFactory::GetMeshDataSize(const MeshData& data)
+	uint64_t MeshFactory::GetMeshDataSize(const MeshData& data)
 	{
 		uint64_t vertexSize = GetVertexSize(data);
 
-		size_t size = 0;
+		uint64_t size = 0;
 		size += data.Vertices.size() * vertexSize;
 		size += data.Indices.size() * sizeof(uint32_t);
 
 		return size;
 	}
 
-	size_t MeshFactory::GetVertexSize(const MeshData& data)
+	uint64_t MeshFactory::GetVertexSize(const MeshData& data)
 	{
 		uint32_t vertexSize = 0;
 		vertexSize += data.Flags & MeshFlags_Positions ? sizeof(glm::vec3) : 0;
@@ -139,7 +140,7 @@ namespace Hazard
 
 		data.Vertices.reserve(mesh->mNumVertices);
 
-		for (size_t i = 0; i < mesh->mNumVertices; i++)
+		for (uint64_t i = 0; i < mesh->mNumVertices; i++)
 		{
 			Vertex3D vertex;
 
@@ -197,6 +198,7 @@ namespace Hazard
 		if (m_Handler)
 			m_Handler(0.5f + ((float)m_ProcessedNodes / (float)m_SceneMeshes) * 0.5f);
 	}
+
 	void MeshFactory::TraverseNode(aiNode* node, MeshData& data, const glm::mat4 parentTransform, uint32_t level)
 	{
 		glm::mat4 local = AssimpMat4ToGlmMat4(node->mTransformation);

@@ -26,8 +26,8 @@ namespace Hazard::ImUI
 
 	private:
 		std::string m_Title;
-		float m_Width;
-		uint64_t m_Selected;
+		float m_Width = 0.0f;
+		uint64_t m_Selected = 0;
 		std::vector<std::string> m_Options;
 		bool m_DidChange = false;
 		bool m_Mixed = false;

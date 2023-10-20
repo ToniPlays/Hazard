@@ -16,6 +16,7 @@ namespace Hazard::ImUI
 	class Table
 	{
 	public:
+
 		Table() = default;
 		Table(const char* name, ImVec2 size, bool clickable = true) : m_Name(name), m_Size(size), m_IsClickable(clickable) {};
 		Table(const std::string& name, ImVec2 size) : m_Name(name), m_Size(size) {};
@@ -108,13 +109,15 @@ namespace Hazard::ImUI
 		}
 
 	private:
+
 		std::string m_Name;
 		ImVec2 m_Size;
-		float m_RowHeight;
 		uint32_t m_DidClick = 0;
+		float m_RowHeight;
+		bool m_IsClickable = true;
+
 		std::vector<std::string> m_Columns;
 		std::vector<T> m_Rows;
 		std::function<void(T&)> m_Content;
-		bool m_IsClickable = true;
 	};
 }

@@ -91,8 +91,8 @@ namespace UI
 	void Console::Clear(bool force)
 	{
 		std::vector<ConsoleMessage> messages;
-		size_t size = m_Messages.size();
-		for (size_t i = 0; i < size; i++)
+		uint64_t size = m_Messages.size();
+		for (uint64_t i = 0; i < size; i++)
 		{
 			ConsoleMessage& message = m_Messages[i];
 			if (!(message.Flags & MessageFlags_Clearable || force))

@@ -45,6 +45,7 @@ namespace Hazard::ImUI
 		ImVec4 SliderGrabActive = ColorToImVec("#505050");
 
 	};
+
 	struct FrameStyle
 	{
 		ImVec2 Padding = { 0, 8 };
@@ -55,6 +56,7 @@ namespace Hazard::ImUI
 		ImVec4 FrameHovered = ColorToImVec("#0B0B09");
 		ImVec4 FrameActive = ColorToImVec("#0B0B09");
 	};
+
 	struct TabStyle 
 	{
 		float TabRounding = 2;
@@ -81,18 +83,21 @@ namespace Hazard::ImUI
 		ImVec4 ScrollbarGrabHovered = ColorToImVec("#4A9F04");
 		ImVec4 ScrollbarGrabActive = ColorToImVec("#418B04");
 	};
+
 	struct ButtonStyle 
 	{
 		ImVec4 Button = ColorToImVec("#222222");
 		ImVec4 ButtonHovered = ColorToImVec("#181818");
 		ImVec4 ButtonActive = ColorToImVec("#222222");
 	};
+
 	struct SeparatorStyle 
 	{
 		ImVec4 Separator = ColorToImVec("#181816");
 		ImVec4 SeparatorHovered = ColorToImVec("#5DC50570");
 		ImVec4 SeparatorActive = ColorToImVec("#5DC505");
 	};
+
 	struct StylePrimaryColors {
 		ImVec4 AxisX = ColorToImVec("#DB3721");
 		ImVec4 AxisY = ColorToImVec("#53B305");
@@ -101,6 +106,7 @@ namespace Hazard::ImUI
 		ImVec4 Warning = ColorToImVec("#FFE600");
 
 	};
+
 	struct Style
 	{
 		WindowStyle Window;

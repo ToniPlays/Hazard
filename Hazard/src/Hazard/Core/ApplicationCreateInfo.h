@@ -40,6 +40,7 @@ namespace Hazard {
 
 	struct AudioEngineCreateInfo
 	{
+
 	};
 	struct EntityComponentCreateInfo 
 	{

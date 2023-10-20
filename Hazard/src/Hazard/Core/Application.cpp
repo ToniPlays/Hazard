@@ -22,10 +22,13 @@ namespace Hazard
 
 		if (info->ScriptEngineInfo)
 			PushModule<ScriptEngine>(info->ScriptEngineInfo);
+
 		if (info->EntityComponent)
 			PushModule<WorldHandler>(info->EntityComponent);
+
 		if (info->RenderContextInfo)
 			PushModule<RenderContextManager>(info->AppInfo, info->RenderContextInfo);
+
 		if (info->RendererInfo)
 			PushModule<RenderEngine>(info->RendererInfo);
 

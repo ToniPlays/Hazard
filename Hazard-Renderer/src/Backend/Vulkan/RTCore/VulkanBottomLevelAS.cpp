@@ -73,7 +73,7 @@ namespace HazardRenderer::Vulkan
 		std::vector<VkAccelerationStructureGeometryKHR> geometries(m_GeometryData.size());
 		std::vector<VkAccelerationStructureBuildRangeInfoKHR> buildRanges(m_GeometryData.size());
 
-		for (size_t i = 0; i < geometries.size(); i++)
+		for (uint64_t i = 0; i < geometries.size(); i++)
 		{
 			uint32_t primitives = m_Geometries[i].IndexBuffer->GetSize() / 3;
 

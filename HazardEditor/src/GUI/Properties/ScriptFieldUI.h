@@ -2,7 +2,6 @@
 
 #include "Hazard/Scripting/Attributes/AllAttributes.h"
 #include "HazardScript.h"
-#include "Hazard/Scripting/MonoUtilities.h"
 
 namespace UI
 {

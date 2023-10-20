@@ -18,7 +18,7 @@ namespace HazardRenderer::Vulkan
 		VulkanTopLevelAS(AccelerationStructureCreateInfo* info);
 		~VulkanTopLevelAS() = default;
 
-		size_t GetCount() const { return 0; };
+		uint64_t GetCount() const { return 0; };
 		void PushInstances(const glm::mat4& transform, Ref<AccelerationStructure> accelerationStructure) override;
 
 		void Build(const BuildType& type);

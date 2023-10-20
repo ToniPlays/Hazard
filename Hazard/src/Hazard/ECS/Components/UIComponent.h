@@ -11,7 +11,5 @@ namespace Hazard {
 	{
 		Color Color = Color::White;
 		AssetHandle TextureHandle = INVALID_ASSET_HANDLE;
-
-		SpriteRendererComponent() = default;
 	};
 }

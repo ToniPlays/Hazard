@@ -45,6 +45,7 @@ namespace Hazard
 		m_EntityUIDMap[tag.Uid] = e;
 		return e;
 	}
+
 	Entity World::CreateEntity(UID id, const std::string& name)
 	{
 		Entity e = { m_Registry.create(), this };
@@ -102,7 +103,8 @@ namespace Hazard
 		HZR_ASSERT(m_EntityUIDMap.find(id) != m_EntityUIDMap.end(), "UID does not exist");
 		return m_EntityUIDMap[id];
 	}
-	Entity World::TryGetEntityFromUUID(const UID& id)
+
+	Entity World::TryGetEntityFromUID(const UID& id)
 	{
 		if (m_EntityUIDMap.find(id) == m_EntityUIDMap.end()) 
 			return Entity();
@@ -114,6 +116,7 @@ namespace Hazard
 		//TODO: Call some functions before destroy
 		m_Registry.destroy(entity);
 	}
+
 	std::tuple<CameraComponent*, TransformComponent*> World::GetWorldCamera() {
 
 		auto group = GetEntitiesWith<CameraComponent, TransformComponent>();
@@ -137,7 +140,7 @@ namespace Hazard
 		
 		copied->m_EntityUIDMap.reserve(sourceEntities.size());
 
-		for (size_t i = sourceEntities.size(); i > 0; i--) 
+		for (uint64_t i = sourceEntities.size(); i > 0; i--)
 		{
 			const auto& entityID = sourceEntities[i - 1];
 			Entity sourceEntity = { entityID, sourceWorld.Raw() };
@@ -169,14 +172,19 @@ namespace Hazard
 	REGISTER_COMPONENT(SphereColliderComponent);
 	
 	template<>
-	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) {
-		Application::GetModule<ScriptEngine>().InitializeComponent(entity, component);
+	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) 
+	{
+		Application::GetModule<ScriptEngine>().InitializeComponent(this, entity);
 	}
 	template<>
-	void World::OnComponentRemoved(Entity& entity, ScriptComponent& component) {}
+	void World::OnComponentRemoved(Entity& entity, ScriptComponent& component) 
+	{
+		Application::GetModule<ScriptEngine>().RemoveComponent(this, entity);
+	}
 
 	template<>
-	void World::OnComponentAdded(Entity& entity, CameraComponent& component) {
+	void World::OnComponentAdded(Entity& entity, CameraComponent& component) 
+	{
 		component.RecalculateProjection(1920, 1080);
 	}
 	template<>

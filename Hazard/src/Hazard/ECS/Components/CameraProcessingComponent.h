@@ -16,22 +16,14 @@ namespace Hazard
 		void SetSize(float size);
 		void SetZNear(float plane);
 		void SetZFar(float plane);
-		void SetClipping(const glm::vec2 clipping) 
-		{
-			SetZNear(clipping.x);
-			SetZFar(clipping.y);
-		}
+		void SetClipping(const glm::vec2 clipping);
 		float GetAspectRatio() { return m_Width / m_Height; }
 		void RecalculateProjection(float w, float h);
 
 		Projection GetProjectionType() { return m_Type; }
 		float GetFov() { return m_Fov; }
 		float GetSize() { return m_Size; }
-		glm::mat4 GetProjection() 
-		{
-			if (m_Dirty) RecalculateProjection(m_Width, m_Height);
-			return m_Projection; 
-		}
+		glm::mat4 GetProjection();
 		glm::vec2 GetClipping() { return { m_ZNear, m_ZFar }; }
 
 	private:

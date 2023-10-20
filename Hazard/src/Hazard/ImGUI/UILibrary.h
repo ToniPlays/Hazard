@@ -43,20 +43,6 @@ namespace Hazard::ImUI
 		return ImRect({ topLeft.x + xOffset, topLeft.y + yOffset }, { bottomRight.x + xOffset, bottomRight.y + yOffset });
 	}
 
-	template<typename T>
-	inline static void Group(void* ptr_id, T callback)
-	{
-		ImGui::PushID(ptr_id);
-		callback();
-		ImGui::PopID();
-	}
-	template<typename T>
-	inline static void Group(const char* id, T callback)
-	{
-		ImGui::PushID(id);
-		callback();
-		ImGui::PopID();
-	}
 	static inline void FocusCurrentWindow()
 	{
 		ImGui::FocusWindow(ImGui::GetCurrentWindow());
@@ -203,10 +189,12 @@ namespace Hazard::ImUI
 		bool modified = false;
 		ImGui::Text("%s", name);
 		ImGui::NextColumn();
-		Group(name, [&]() {
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			modified = SliderFloat(value, clearValue, min, max);
-		});
+		ImGui::PushID(name);
+
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+		modified = SliderFloat(value, clearValue, min, max);
+
+		ImGui::PopID();
 		ImGui::NextColumn();
 		return modified;
 	}
@@ -219,16 +207,17 @@ namespace Hazard::ImUI
 		bool modified = false;
 		ImGui::Text("%s", name);
 		ImGui::NextColumn();
-		Group(name, [&]() {
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			modified = Checkbox(value);
-		});
+		ImGui::PushID(name);
+
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+		modified = Checkbox(value);
+
+		ImGui::PopID();
 		ImGui::NextColumn();
 		return modified;
 	}
 	static bool ColorPicker(const char* id, Color& color, bool isMixed = false)
 	{
-
 		bool modified = false;
 		ImVec4 col = { color.r, color.g, color.b, color.a };
 		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
@@ -348,10 +337,10 @@ namespace Hazard::ImUI
 
 		ImGui::Text("%s", name);
 		ImGui::NextColumn();
-		Group(name, [&]() {
-			modified = TextureSlot(text, texture);
-			callback();
-		});
+		ImGui::PushID(name);
+		modified = TextureSlot(text, texture);
+		callback();
+		ImGui::PopID();
 		ImGui::NextColumn();
 		return modified;
 	}
@@ -450,11 +439,11 @@ namespace Hazard::ImUI
 			{
 				ImGui::TableSetColumnIndex(i);
 				const char* columnName = ImGui::TableGetColumnName(i);
-				Group(columnName, [&]() {
-					Shift(edgeOffset * 3.0f, edgeOffset * 2.0f);
-					ImGui::TableHeader(columnName);
-					Shift(-edgeOffset * 3.0f, -edgeOffset * 2.0f);
-				});
+				ImGui::PushID(columnName);
+				Shift(edgeOffset * 3.0f, edgeOffset * 2.0f);
+				ImGui::TableHeader(columnName);
+				Shift(-edgeOffset * 3.0f, -edgeOffset * 2.0f);
+				ImGui::PopID();
 			}
 			ImGui::SetCursorPosX(ImGui::GetCurrentTable()->OuterRect.Min.x);
 			Underline(true, 0.0f, 5.0f);
@@ -510,14 +499,9 @@ namespace Hazard::ImUI
 		if (selected)
 		{
 			if (isWindowFocused || NavigatedTo())
-			{
 				fillRowWithColour(ColorWithMultiplier(bgCol, 1.2f));
-			}
 			else
-			{
-				const ImColor col = ColorWithMultiplier(bgCol, 0.9f);
-				fillRowWithColour(col);
-			}
+				fillRowWithColour(ColorWithMultiplier(bgCol, 0.9f));
 		}
 
 		if (selected)
@@ -551,6 +535,7 @@ namespace Hazard::ImUI
 
 		if (selected)
 			ImGui::PopStyleColor();
+
 		return clicked;
 	}
 	static bool TableRowClickable(uint32_t rowId, float rowHeight)

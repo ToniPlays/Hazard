@@ -23,27 +23,25 @@ namespace Exporter
 	{
 		AssetType Type;
 		std::string FileName;
-		size_t Size;
+		uint64_t Size;
 
 		BuildResource() = default;
-		BuildResource(AssetType type, const std::string& file, size_t size) : Type(type), FileName(file), Size(size)
+		BuildResource(AssetType type, const std::string& file, uint64_t size) : Type(type), FileName(file), Size(size)
 		{
 		}
 	};
 
 	struct BuildReport
 	{
-		size_t BuildTime = 0;
-		size_t TotalSize = 0;
+		uint64_t BuildTime = 0;
+		uint64_t TotalSize = 0;
 		bool Result = false;
 
 		std::vector<BuildMessage> Messages;
 		std::unordered_map<AssetType, std::vector<BuildResource>> Resources;
-		std::unordered_map<AssetType, size_t> AssetTypeSize;
+		std::unordered_map<AssetType, uint64_t> AssetTypeSize;
 
-		BuildReport()
-		{
-		}
+		BuildReport() = default;
 
 		void AddMessage(BuildMessage message)
 		{

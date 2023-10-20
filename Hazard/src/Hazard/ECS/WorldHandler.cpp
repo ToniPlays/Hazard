@@ -5,6 +5,7 @@
 #include "Loader/WorldSerializer.h"
 #include "Hazard/Rendering/HRenderer.h"
 #include "Hazard/ECS/Loader/WorldAssetLoader.h"
+#include "Hazard/Scripting/ScriptEngine.h"
 #include "HazardScript.h"
 #include "Hazard/Math/Time.h"
 
@@ -102,6 +103,7 @@ namespace Hazard
 			m_World = AssetManager::GetAsset<World>(handle);
 			return m_World;
 		}
+
 		m_World = Ref<World>::Create("0");
 
 		Entity entity = m_World->CreateEntity("Camera");

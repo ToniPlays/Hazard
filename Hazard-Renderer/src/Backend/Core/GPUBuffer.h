@@ -20,15 +20,15 @@ namespace HazardRenderer
     struct BufferCreateInfo
     {
         std::string Name;
-        size_t Size;
+		uint64_t Size;
 		uint32_t UsageFlags = 0;
 		void* Data = nullptr;
     };
 
 	struct BufferCopyRegion
 	{
-		size_t Size = 0;
-		size_t Offset = 0;
+		uint64_t Size = 0;
+		uint64_t Offset = 0;
 		const void* Data = nullptr;
 	};
 
@@ -42,7 +42,7 @@ namespace HazardRenderer
 		virtual Buffer ReadData(const BufferCopyRegion& copyRegion) = 0;
 		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
 		virtual const uint32_t GetUsageFlags() const = 0;
-        virtual const size_t GetSize() const = 0;
+        virtual const uint64_t GetSize() const = 0;
 
 		static Ref<GPUBuffer> Create(BufferCreateInfo* createInfo);
 	};

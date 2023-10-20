@@ -18,6 +18,5 @@ namespace Hazard
 
 	private:
 		std::unordered_map<AssetType, Scope<IAssetLoader>> m_Loaders;
-
 	};
 }

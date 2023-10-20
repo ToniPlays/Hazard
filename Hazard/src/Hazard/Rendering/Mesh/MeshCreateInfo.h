@@ -9,7 +9,7 @@
 
 namespace Hazard {
 
-	enum MeshLoaderFlags : size_t 
+	enum MeshLoaderFlags : uint64_t
 	{
 		MeshLoaderFlags_CalculateTangentSpace = aiProcess_CalcTangentSpace,
 		MeshLoaderFlags_JoinIdenticalVertices = aiProcess_JoinIdenticalVertices,

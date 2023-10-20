@@ -39,8 +39,8 @@ namespace HazardRenderer::Metal
         
         void SetPipeline(Ref<Pipeline> pipeline) override;
         
-        void Draw(size_t count, Ref<GPUBuffer> indexBuffer = nullptr) override;
-        void DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;
+        void Draw(size_t uint64_t, Ref<GPUBuffer> indexBuffer = nullptr) override;
+        void DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;
         void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<GPUBuffer> indexBuffer = nullptr) override;
         void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset = 0, uint32_t maxDraws = 0, Ref<GPUBuffer> indexBuffer = nullptr) override {};
         

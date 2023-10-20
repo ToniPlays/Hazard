@@ -94,7 +94,7 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 	thread->m_Status.notify_all();
 }
 
-JobPromise<bool> JobSystem::QueueJob(Ref<Job> job)
+JobPromise JobSystem::QueueJob(Ref<Job> job)
 {
 	m_JobMutex.lock();
 	m_Jobs.emplace_back(job);
@@ -103,7 +103,7 @@ JobPromise<bool> JobSystem::QueueJob(Ref<Job> job)
 
 	m_JobCount.notify_one();
 
-	return JobPromise<bool>(job);
+	return JobPromise(job);
 }
 void JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 {
@@ -132,6 +132,26 @@ void JobSystem::Terminate()
 	m_JobCount.notify_all();
 }
 
+JobPromise JobSystem::QueueGraph(Ref<JobGraph> graph)
+{
+	{
+		std::scoped_lock lock(m_GraphMutex);
+		m_QueuedGraphs.push_back(graph);
+	}
+
+	QueueGraphJobs(graph);
+	return JobPromise(graph);
+}
+
+uint64_t JobSystem::WaitForUpdate()
+{
+	if (m_JobCount != 0)
+		m_JobCount.wait(m_JobCount);
+	if (m_RunningJobCount != 0)
+		m_RunningJobCount.wait(m_RunningJobCount);
+
+	return m_JobCount;
+}
 void JobSystem::QueueGraphJobs(Ref<JobGraph> graph)
 {
 	if (!graph) return;

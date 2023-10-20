@@ -2,18 +2,11 @@
 #include <Ref.h>
 #include <thread>
 #include <Jobs.h>
+#include "JobFlags.h"
 #include "GraphStage.h"
-#include "JobPromise.h"
-
-enum class ThreadStatus
-{
-	None,
-	Terminated,
-	Waiting,
-	Executing
-};
 
 class JobGraph;
+struct JobPromise;
 
 class Thread : public RefCount
 {
@@ -50,32 +43,13 @@ public:
 	std::vector<Ref<Job>> GetRunningJobs() { return m_RunningJobs; }
 	std::vector<Ref<JobGraph>> GetQueuedGraphs() { return m_QueuedGraphs; }
 
-	JobPromise<bool> QueueJob(Ref<Job> job);
+	JobPromise QueueJob(Ref<Job> job);
 	void QueueJobs(const std::vector<Ref<Job>>& jobs);
 	void WaitForJobsToFinish();
 	void Terminate();
 
-	template<typename T>
-	JobPromise<T> QueueGraph(Ref<JobGraph> graph)
-	{
-		{
-			std::scoped_lock lock(m_GraphMutex);
-			m_QueuedGraphs.push_back(graph);
-		}
-
-		QueueGraphJobs(graph);
-		return JobPromise<T>(graph);
-	}
-
-	uint64_t WaitForUpdate()
-	{
-		if (m_JobCount != 0)
-			m_JobCount.wait(m_JobCount);
-		if (m_RunningJobCount != 0)
-			m_RunningJobCount.wait(m_RunningJobCount);
-
-		return m_JobCount;
-	}
+	JobPromise QueueGraph(Ref<JobGraph> graph);
+	uint64_t WaitForUpdate();
 
 private:
 	void QueueGraphJobs(Ref<JobGraph> graph);

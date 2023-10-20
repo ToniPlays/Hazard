@@ -11,7 +11,7 @@ namespace HazardRenderer::Vulkan {
 	struct AllocatorData 
 	{
 		VmaAllocator Allocator;
-		size_t TotalAllocated;
+		uint64_t TotalAllocated;
 	};
 	static AllocatorData* s_Data = nullptr;
 

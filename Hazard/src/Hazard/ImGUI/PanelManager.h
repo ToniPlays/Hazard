@@ -15,8 +15,10 @@ namespace Hazard::ImUI
 		void Render();
 
 		bool OnEvent(Event& e) {
-			for (auto& renderable : m_Renderables) {
-				if (renderable->OnEvent(e)) return true;
+			for (auto& renderable : m_Renderables) 
+			{
+				if (renderable->OnEvent(e))
+					return true;
 			}
 			return false;
 		}
@@ -30,10 +32,10 @@ namespace Hazard::ImUI
 		}
 		template<typename T>
 		static T* GetRenderable() {
-			for (auto renderable : s_Instance->m_Renderables) {
-				if (dynamic_cast<T*>(renderable)) {
+			for (auto renderable : s_Instance->m_Renderables) 
+			{
+				if (dynamic_cast<T*>(renderable)) 
 					return static_cast<T*>(renderable);
-				}
 			}
 			return nullptr;
 		}

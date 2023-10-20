@@ -24,7 +24,10 @@ namespace UI
 	{
 		JobSystem& system = Hazard::Application::Get().GetJobSystem();
 		for (auto& graph : system.GetQueuedGraphs())
-			DrawProgressCard(graph->GetName().c_str(), graph->GetCurrentStage()->GetName(), graph->GetProgress());
+		{
+			if (!graph->HasFinished())
+				DrawProgressCard(graph->GetName().c_str(), graph->GetCurrentStage()->GetName(), graph->GetProgress());
+		}
 
 		ImGui::Separator();
 		auto jobs = system.GetRunningJobs();

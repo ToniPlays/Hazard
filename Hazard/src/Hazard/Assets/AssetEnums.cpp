@@ -21,7 +21,6 @@ namespace Hazard::Utils
 		if (type == "Material")             return AssetType::Material;
 		if (type == "Buffer")				return AssetType::Buffer;
 
-
 		return AssetType::Undefined;
 	}
 	const char* AssetTypeToString(AssetType type)

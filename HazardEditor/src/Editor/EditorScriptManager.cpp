@@ -22,7 +22,6 @@ namespace Editor
 	}
 	static void ReloadAssembliesJob(Ref<Job> job, EditorScriptManager* manager)
 	{
-		std::this_thread::sleep_for(500ms);
 		manager->ReloadAssembly();
 	}
 
@@ -45,8 +44,20 @@ namespace Editor
 		std::string command = (genProjectPath / "Win-CreateScriptProject.bat").string();
 
 		std::stringstream ss;
-		for (auto& define : project.GetScriptingSettings().Defines)
-			ss << define << " ";
+		auto& defines = project.GetScriptingSettings().Defines;
+		for (uint32_t i = 0; i < defines.size(); i++)
+		{
+			ss << defines[i];
+			if (i < defines.size() - 1 || m_Preprocessors.size() > 0)
+				ss << " ";
+		}
+
+		for (uint32_t i = 0; i < m_Preprocessors.size(); i++)
+		{
+			ss << m_Preprocessors[i].Name;
+			if (i < m_Preprocessors.size() - 1)
+				ss << " ";
+		}
 
 		command = fmt::format("{0} --define=\"{1}\"", command, ss.str());
 		HZR_INFO("Executing: {0}", command);
@@ -82,16 +93,16 @@ namespace Editor
 		if (console->ClearOnBuild())
 			console->Clear(true);
 
-		Ref<Job> generateProject = Ref<Job>::Create(GenerateProjectFilesJob, this);
-		Ref<Job> compileSource = Ref<Job>::Create(CompileSourcesJob, this);
-		Ref<Job> reloadAssembly = Ref<Job>::Create(ReloadAssembliesJob, this);
+		Ref<Job> generateProject = Ref<Job>::Create("Generate C# project", GenerateProjectFilesJob, this);
+		Ref<Job> compileSource = Ref<Job>::Create("Compile C#", CompileSourcesJob, this);
+		Ref<Job> reloadAssembly = Ref<Job>::Create("Reload", ReloadAssembliesJob, this);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("Script compilation", 3);
-		graph->GetStage(0)->QueueJobs({ generateProject }, "Generate C# project");
-		graph->GetStage(1)->QueueJobs({ compileSource }, "Compile C#");
-		graph->GetStage(2)->QueueJobs({ reloadAssembly }, "Reload");
+		graph->GetStage(0)->QueueJobs({ generateProject });
+		graph->GetStage(1)->QueueJobs({ compileSource });
+		graph->GetStage(2)->QueueJobs({ reloadAssembly });
 
-		Application::Get().GetJobSystem().QueueGraph<bool>(graph);
+		Application::Get().GetJobSystem().QueueGraph(graph);
 	}
 	bool EditorScriptManager::OnEvent(Event& e)
 	{

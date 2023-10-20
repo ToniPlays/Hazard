@@ -23,8 +23,8 @@ namespace Hazard
 		bool UseShaderLayout;
 		HazardRenderer::DepthOp DepthOperator;
 		uint32_t ElementCount;
-		size_t StageCount;
-		size_t ShaderHandle;
+		uint64_t StageCount;
+		uint64_t ShaderHandle;
 	};
 
 	class PipelineAssetLoader : public IAssetLoader

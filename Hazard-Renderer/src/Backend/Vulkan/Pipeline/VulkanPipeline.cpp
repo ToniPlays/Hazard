@@ -170,7 +170,7 @@ namespace HazardRenderer::Vulkan
 		rasterizationState.depthBiasEnable = VK_FALSE;
 		rasterizationState.lineWidth = m_Specs.LineWidth;
 
-		size_t colorAttachmentCount = fb->GetSpecification().SwapChainTarget ? 1 : fb->GetColorAttachmentCount();
+		uint64_t colorAttachmentCount = fb->GetSpecification().SwapChainTarget ? 1 : fb->GetColorAttachmentCount();
 		std::vector<VkPipelineColorBlendAttachmentState> blendStates(colorAttachmentCount);
 		if (fb->GetSpecification().SwapChainTarget)
 		{
@@ -185,7 +185,7 @@ namespace HazardRenderer::Vulkan
 		}
 		else
 		{
-			for (size_t i = 0; i < colorAttachmentCount; i++)
+			for (uint64_t i = 0; i < colorAttachmentCount; i++)
 			{
 				blendStates[i].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 

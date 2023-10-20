@@ -26,7 +26,7 @@ namespace Hazard
 		std::vector<Vertex3D> vertices(header.VertexCount);
 		std::vector<uint32_t> indices(header.IndexCount);
 
-		for (size_t i = 0; i < header.VertexCount; i++)
+		for (uint64_t i = 0; i < header.VertexCount; i++)
 		{
 			Vertex3D& v = vertices[i];
 			if (header.Flags & MeshFlags_Positions)
@@ -42,7 +42,8 @@ namespace Hazard
 			if (header.Flags & MeshFlags_TextCoord)
 				v.TexCoords = data.Read<glm::vec2>();
 		}
-		for (size_t i = 0; i < header.IndexCount; i++)
+
+		for (uint64_t i = 0; i < header.IndexCount; i++)
 			indices[i] = data.Read<uint32_t>();
 
 		buffer.Release();
@@ -60,23 +61,25 @@ namespace Hazard
 
 		Ref<Mesh> asset = Ref<Mesh>::Create(&info);
 		asset->IncRefCount();
-		job->GetStage()->SetResult(asset);
+		job->SetResult(&asset, sizeof(Ref<Mesh>));
 	}
 
 	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)
 	{
 		HZR_PROFILE_FUNCTION();
 
-		Ref<Job> meshJob = Ref<Job>::Create(LoadMesh, metadata.Handle);
+		Ref<Job> meshJob = Ref<Job>::Create("Mesh load", LoadMesh, metadata.Handle);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("Mesh", 1);
 		graph->GetStage(0)->QueueJobs({ meshJob });
 
 		return graph;
 	}
+
 	Ref<JobGraph> MeshAssetLoader::Save(Ref<Asset>& asset)
 	{
 		return nullptr;
 	}
+
 	Ref<JobGraph> MeshAssetLoader::Create(const std::filesystem::path& path)
 	{
 		HZR_CORE_ASSERT(false, "");

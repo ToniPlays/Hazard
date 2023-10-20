@@ -78,6 +78,7 @@ void EditorAssetManager::GenerateAndSavePack(Ref<Job> job, std::filesystem::path
 
 	auto packPath = File::GetName(path) + ".hpack";
 	CachedBuffer buffer = EditorAssetManager::GenerateEngineAssetPack(path);
+
 	if (buffer.GetSize() == 0)
 		throw JobException(fmt::format("Asset pack generation failed: {}", path.string()));
 
@@ -102,17 +103,28 @@ void EditorAssetManager::ImportEngineAssets()
 		auto packPath = File::GetName(file) + ".hpack";
 		if (cache.HasFile(packPath)) continue;
 
-		Ref<Job> job = Ref<Job>::Create(GenerateAndSavePack, file);
+		//TODO change
+		auto extension = File::GetFileExtension(file);
+		if (extension == ".glslh") continue;
+		if (extension == ".ttf") continue;
+		if (extension == ".mtl") continue;
+		if (extension == ".txt") continue;
+		if (extension == ".ico") continue;
+		if (extension == ".DS_Store") continue;
+
+		Ref<Job> job = Ref<Job>::Create("Generate", GenerateAndSavePack, file);
 		jobs.push_back(job);
 	}
 
 	Ref<JobGraph> loadingGraph = Ref<JobGraph>::Create("EngineLoad", 1);
 	loadingGraph->GetStage(0)->QueueJobs(jobs);
 
+
 	JobSystem& system = Application::Get().GetJobSystem();
-	JobPromise<bool> promise = system.QueueGraph<bool>(loadingGraph);
+	JobPromise promise = system.QueueGraph(loadingGraph);
 
 	promise.Wait();
+	HZR_CORE_ASSERT(promise.Succeeded(), "Loading engine assets has failed");
 
 	auto files = Directory::GetAllInDirectory(cache.GetCachePath(), true);
 	for (auto& file : files)
@@ -143,7 +155,8 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 			Ref<JobGraph> graph = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan);
 			if (!graph) break;
 
-			AssetPackElement element = graph->Execute()->GetResult<AssetPackElement>();
+			Buffer result = graph->Execute()->GetResult();
+			AssetPackElement element = result.Read<AssetPackElement>();
 			element.Handle = AssetHandle();
 			elements.push_back(element);
 			break;
@@ -159,7 +172,8 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 			settings.GenerateMips = false;
 			settings.FlipOnLoad = true;
 
-			AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
+			Buffer result = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult();
+			AssetPackElement element = result.Read<AssetPackElement>();
 			element.Handle = AssetHandle();
 			elements.push_back(element);
 			break;
@@ -171,7 +185,8 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 
 			UI::MeshImportSettings settings = {};
 
-			AssetPackElement element = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult<AssetPackElement>();
+			Buffer result = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult();
+			AssetPackElement element = result.Read<AssetPackElement>();
 			element.Handle = AssetHandle();
 			elements.push_back(element);
 		}

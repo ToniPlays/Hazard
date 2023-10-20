@@ -20,7 +20,7 @@ std::string StringUtil::RemoveAtEnd(std::string& source, char val)
 {
 	return source.substr(0, source.find_first_of(val));
 }
-size_t StringUtil::OffsetOf(const std::string& source, char delim, size_t offset)
+uint64_t StringUtil::OffsetOf(const std::string& source, char delim, uint64_t offset)
 {
 	std::string offsetValue = source;
 
@@ -30,7 +30,7 @@ size_t StringUtil::OffsetOf(const std::string& source, char delim, size_t offset
 	return offsetValue.find_first_of(delim, offset);
 }
 
-size_t StringUtil::OffsetOf(const std::string& source, const std::string& value, size_t startOffset) 
+uint64_t StringUtil::OffsetOf(const std::string& source, const std::string& value, uint64_t startOffset)
 {
 	return source.find(value, startOffset);
 }
@@ -55,7 +55,7 @@ std::string StringUtil::Replace(const std::string& value, const std::string& fin
 		return value;
 
 	std::string result = value;
-	size_t pos = 0;
+	uint64_t pos = 0;
 
 	while ((pos = value.find(find, pos)) != std::string::npos)
 	{
@@ -96,14 +96,14 @@ bool StringUtil::IsMatching(const std::string& value, const std::string& compare
 }
 std::string_view StringUtil::Between(const std::string_view& source, const std::string& start, const std::string& end)
 {
-	size_t startPos = source.find(start);
-	size_t endPos = source.find(end, startPos + 1);
+	uint64_t startPos = source.find(start);
+	uint64_t endPos = source.find(end, startPos + 1);
 
 	return source.substr(startPos + start.length(), endPos - startPos - end.length());
 }
-std::string StringUtil::GetPreprocessor(const char* type, const std::string& source, size_t endPosition, size_t* offset)
+std::string StringUtil::GetPreprocessor(const char* type, const std::string& source, uint64_t endPosition, uint64_t* offset)
 {
-	size_t valueOffset = OffsetOf(source, type, endPosition);
+	uint64_t valueOffset = OffsetOf(source, type, endPosition);
 
 	if (valueOffset == std::string::npos) 
 	{
@@ -111,7 +111,7 @@ std::string StringUtil::GetPreprocessor(const char* type, const std::string& sou
 		return "";
 	}
 
-	size_t lineEndOffset = source.find_first_of("\r\n", valueOffset);
+	uint64_t lineEndOffset = source.find_first_of("\r\n", valueOffset);
 	std::string line = source.substr(valueOffset, lineEndOffset - valueOffset);
 	*offset = valueOffset + line.length();
 	return line.substr(line.find_first_of(' ') + 1);

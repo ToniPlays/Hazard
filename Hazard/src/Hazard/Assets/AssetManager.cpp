@@ -11,10 +11,12 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		s_Registry.Clear();
+		s_IsInitialized = true;
 	}
 	void AssetManager::Shutdown()
 	{
 		HZR_PROFILE_FUNCTION();
+		s_IsInitialized = false;
 		s_LoadedAssets.clear();
 	}
 	AssetHandle AssetManager::ImportAssetPack(const AssetPack& pack, const std::filesystem::path& path)
@@ -90,7 +92,7 @@ namespace Hazard
 	void AssetManager::RemoveAsset(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (handle == INVALID_ASSET_HANDLE) return;
+		if (handle == INVALID_ASSET_HANDLE || !s_IsInitialized) return;
 
 		AssetMetadata& data = GetMetadata(handle);
 
@@ -111,6 +113,7 @@ namespace Hazard
 		//Find correct file and read data to buffer
 		AssetMetadata& metadata = GetMetadata(handle);
 		AssetMetadata& packMetadata = GetMetadata(metadata.AssetPackHandle);
+
 		if (packMetadata.Handle == INVALID_ASSET_HANDLE)
 			return Buffer();
 
@@ -122,8 +125,9 @@ namespace Hazard
 
 		for (auto& element : pack.Elements)
 		{
-			if (element.Handle == handle)
-				return Buffer::Copy(element.Data);
+			if (element.Handle != handle) continue;
+
+			return Buffer::Copy(element.Data);
 		}
 		return Buffer();
 	}

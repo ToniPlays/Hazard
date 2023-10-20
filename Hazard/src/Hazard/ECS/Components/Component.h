@@ -79,6 +79,7 @@ namespace Hazard {
 		std::string ModuleName;
 		Ref<HazardScript::ScriptObject> m_Handle;
 	};
+
 	struct MeshComponent : public ComponentBase
 	{
 		AssetHandle MeshHandle;

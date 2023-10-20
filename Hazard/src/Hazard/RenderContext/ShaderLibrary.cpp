@@ -127,10 +127,12 @@ namespace Hazard
 			s_LoadedPipelines["EnvironmentIrradiance"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
 	}
+
 	AssetHandle ShaderLibrary::GetPipelineAssetHandle(const std::string& name)
 	{
 		if (s_LoadedPipelines.find(name) == s_LoadedPipelines.end())
 			return INVALID_ASSET_HANDLE;
+
 		return s_LoadedPipelines[name];
 	}
 }

@@ -33,7 +33,7 @@ namespace Editor
 		handler.OnBegin();
 
 		Events::SelectionContextChange e({});
-		manager.OnEvent(e);
+		Hazard::HazardLoop::GetCurrent().OnEvent(e);
 	}
 	void EditorModeManager::EndPlayMode()
 	{
@@ -47,9 +47,7 @@ namespace Editor
 		handler.SetWorld(m_PreviousWorld);
 		Editor::EditorWorldManager::GetWorldRender()->SetTargetWorld(m_PreviousWorld);
 
-		auto& manager = Application::GetModule<GUIManager>();
-
 		Events::SelectionContextChange e({});
-		manager.OnEvent(e);
+		Hazard::HazardLoop::GetCurrent().OnEvent(e);
 	}
 }

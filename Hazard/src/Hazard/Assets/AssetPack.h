@@ -77,7 +77,7 @@ namespace Hazard
 			header.Handle = pack.Handle;
 			header.ElementCount = pack.ElementCount;
 
-			size_t dataSize = 0;
+			uint64_t dataSize = 0;
 
 			for (auto& element : pack.Elements)
 				dataSize += element.Data.Size + sizeof(uint64_t) + element.AddressableName.length() * sizeof(char);

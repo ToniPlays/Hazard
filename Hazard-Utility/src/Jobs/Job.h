@@ -3,36 +3,34 @@
 #include <Ref.h>
 #include <functional>
 #include "JobGraph.h"
-#include "GraphStage.h"
 #include "JobException.h"
+#include "JobFlags.h"
 
-using JobCallback = std::function<void(Ref<Job>)>;
-
-enum class JobStatus {
-	Failure = -1,
-	Executing = 0,
-	Success = 1
-};
+class JobGraph;
+class GraphStage;
 
 class Job : public RefCount
 {
 	friend class JobSystem;
 	friend class GraphStage;
 
+	using JobCallback = std::function<void(Ref<Job>)>;
+
 public:
+
 	Job() = delete;
 	~Job();
 
 	template<typename Fn, typename... Args>
-	Job(Fn&& callback, Args&&... args)
+	Job(const std::string& name, Fn&& callback, Args&&... args) : m_JobName(name)
 	{
 		m_JobCallback = std::bind(&callback, std::placeholders::_1, std::forward<Args>(args)...);
 	}
 
 	const std::string& GetName() { return m_JobName; }
-	void SetJobName(const std::string& name) { m_JobName = name; }
-
 	const std::string& GetTag() { return m_JobTag; }
+	JobStatus GetStatus() { return m_Status; }
+
 	void SetJobTag(const std::string& name) { m_JobTag = name; }
 
 	void Execute();
@@ -42,35 +40,23 @@ public:
 	float WaitForUpdate();
 	float GetProgress() { return m_Progress; }
 
-	template<typename T>
-	T GetInput()
-	{
-		if (!m_Stage)
-			return T();
-
-		if (!m_Stage->GetGraph()) 
-			return T();
-
-		uint32_t index = m_Stage->GetStageIndex() - 1;
-		Ref<GraphStage> stage = m_Stage->GetGraphStage(index);
-		return stage->GetResult<T>();
-	}
-
 	Ref<GraphStage> GetStage() { return m_Stage; }
+	Ref<JobGraph> GetJobGraph();
 
-	Ref<JobGraph> GetJobGraph()
-	{
-		if (!m_Stage) return nullptr;
-		return m_Stage->GetGraph();
-	}
+	Buffer GetResult() { return m_ResultBuffer; }
+	void SetResult(void* data, uint64_t size, uint64_t offset = 0);
 
 private:
 	JobCallback m_JobCallback;
 
 	std::atomic<float> m_Progress = 0.0f;
 	std::atomic<float> m_ExecutionTime = 0.0f;
+	
 	std::string m_JobTag;
 	std::string m_JobName;
+	JobStatus m_Status;
+
+	Buffer m_ResultBuffer;
 
 	Ref<GraphStage> m_Stage = nullptr;
 };

@@ -14,6 +14,7 @@ namespace Hazard
 	class EnvironmentMap : public Asset 
 	{
 		friend class EnvironmentAssetLoader;
+
 	public:
 		EnvironmentMap();
 		~EnvironmentMap();

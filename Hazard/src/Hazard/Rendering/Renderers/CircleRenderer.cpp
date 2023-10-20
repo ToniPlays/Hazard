@@ -12,7 +12,7 @@ namespace Hazard
 	void CircleRenderer::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		constexpr size_t circleCount = 5000;
+		constexpr uint64_t circleCount = 5000;
 		m_Data.MaxCircleCount = circleCount;
 		m_Data.MaxVertices = circleCount * 4;
 		m_Data.MaxIndices = circleCount * 6;
@@ -22,21 +22,25 @@ namespace Hazard
 
 		m_CicleBatch = hnew Batch<CircleVertex>(m_Data.MaxVertices);
 	}
+
 	void CircleRenderer::BeginScene()
 	{
 		HZR_PROFILE_FUNCTION();
 		BeginBatch();
 	}
+
 	void CircleRenderer::EndScene()
 	{
 		HZR_PROFILE_FUNCTION();
 		Flush();
 	}
+
 	void CircleRenderer::BeginBatch()
 	{
 		HZR_PROFILE_FUNCTION();
 		m_CicleBatch->Reset();
 	}
+
 	void CircleRenderer::Flush()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -54,6 +58,7 @@ namespace Hazard
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_CicleBatch->GetIndexCount(), 0);
 	}
+
 	void CircleRenderer::SubmitCircle(const glm::mat4& transform, const glm::vec4& color, float thickness, float fade)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -92,7 +97,7 @@ namespace Hazard
 			BeginScene();
 		}
 
-		//constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 		constexpr float size = 1.0f;
 
 		const glm::vec4 cameraRightVector = { view[0][0], view[1][0], view[2][0], 0.0f };
@@ -115,10 +120,20 @@ namespace Hazard
 		}
 		m_CicleBatch->AddIndices(6);
 	}
+
 	bool CircleRenderer::IsVisible(const glm::mat4& transform)
 	{
 		return true;
 	}
+
+	void CircleRenderer::SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass)
+	{
+		if (renderPass == m_RenderPass) return;
+
+		m_RenderPass = renderPass;
+		CreateResources(renderPass);
+	};
+
 	void CircleRenderer::CreateResources(Ref<RenderPass> renderPass)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -135,7 +150,7 @@ namespace Hazard
 
 			uint32_t* indices = hnew uint32_t[m_Data.MaxIndices];
 
-			for (size_t i = 0; i < m_Data.MaxIndices; i += 6)
+			for (uint64_t i = 0; i < m_Data.MaxIndices; i += 6)
 			{
 				indices[i + 0] = offset + 0;
 				indices[i + 1] = offset + 1;

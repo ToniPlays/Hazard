@@ -16,14 +16,14 @@ namespace Memory
 {
 	struct MemoryStats
 	{
-		size_t TotalAllocated = 0;
-		size_t TotalFreed = 0;
+		uint64_t TotalAllocated = 0;
+		uint64_t TotalFreed = 0;
 	};
 
 	struct MemoryAllocation
 	{
 		void* Memory = nullptr;
-		size_t Size = 0;
+		uint64_t Size = 0;
 		const char* Category = nullptr;
 	};
 
@@ -38,10 +38,10 @@ namespace Memory
 		template<class U>
 		constexpr Mallocator(const Mallocator<U>&) noexcept {}
 
-		T* allocate(std::size_t size)
+		T* allocate(std::uint64_t size)
 		{
 #undef max
-			if (size > std::numeric_limits<std::size_t>::max() / sizeof(T))
+			if (size > std::numeric_limits<std::uint64_t>::max() / sizeof(T))
 				throw std::bad_array_new_length();
 
 			if (auto p = static_cast<T*>(std::malloc(size * sizeof(T))))

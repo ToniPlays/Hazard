@@ -7,37 +7,38 @@ namespace Hazard::ImUI
 {
 	void InputFloat::Render()
 	{
-		Group(m_Title.c_str(), [&]() {
+		ImGui::PushID(m_Title.c_str());
 
-			if (!m_Title.empty())
-			{
-				ImGui::Columns(2, 0, false);
-				ImGui::SetColumnWidth(0, 125);
-				ImUI::ShiftY(4.0f);
-				ImGui::Text("%s", m_Title.c_str());
-				ImUI::ShiftY(4.0f);
-				ImGui::NextColumn();
-			}
-            
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+		if (!m_Title.empty())
+		{
+			ImGui::Columns(2, 0, false);
+			ImGui::SetColumnWidth(0, 125);
+			ImUI::ShiftY(4.0f);
+			ImGui::Text("%s", m_Title.c_str());
+			ImUI::ShiftY(4.0f);
+			ImGui::NextColumn();
+		}
 
-			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-			ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
-			ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
-			ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(4.0f, 0));
-			float itemWidth = (ImGui::GetContentRegionAvail().x - 4.0f * m_Configs.size()) / (float)m_Configs.size() - buttonSize.x;
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
-			for (uint32_t i = 0; i < m_Configs.size(); i++)
-			{
-				DrawInputField(i, buttonSize, itemWidth);
-				if (i < m_Configs.size() - 1) 
-					ImGui::SameLine();
-			}
+		ScopedStyleVar padding(ImGuiStyleVar_FrameBorderSize, 0.0f);
+		ScopedStyleVar spacing(ImGuiStyleVar_ItemSpacing, ImVec2(4.0f, 0));
+		float itemWidth = (ImGui::GetContentRegionAvail().x - 4.0f * m_Configs.size()) / (float)m_Configs.size() - buttonSize.x;
 
-			if (!m_Title.empty())
-				ImGui::Columns();
-		});
+		for (uint32_t i = 0; i < m_Configs.size(); i++)
+		{
+			DrawInputField(i, buttonSize, itemWidth);
+			if (i < m_Configs.size() - 1)
+				ImGui::SameLine();
+		}
+
+		if (!m_Title.empty())
+			ImGui::Columns();
+
+		ImGui::PopID();
 	}
 	void InputFloat::DrawInputField(uint32_t index, ImVec2 buttonSize, float itemWidth)
 	{

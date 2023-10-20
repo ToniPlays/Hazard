@@ -63,7 +63,7 @@ namespace HazardRenderer
 	public:
 		virtual ~TopLevelAS() = default;
 
-		virtual size_t GetCount() const = 0;
+		virtual uint64_t GetCount() const = 0;
 		virtual void PushInstances(const glm::mat4& transform, Ref<AccelerationStructure> accelerationStructure) = 0;
 
 		AccelerationStructureLevel GetLevel() const override { return AccelerationStructureLevel::Top; };
@@ -75,7 +75,7 @@ namespace HazardRenderer
 	public:
 		virtual ~BottomLevelAS() = default;
 
-		virtual size_t GetCount() const = 0;
+		virtual uint64_t GetCount() const = 0;
 		virtual void PushTransforms(const BufferCopyRegion& copyRegion) = 0;
 		AccelerationStructureLevel GetLevel() const override { return AccelerationStructureLevel::Bottom; };
 

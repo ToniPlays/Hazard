@@ -38,11 +38,15 @@ namespace Hazard::Utils
 	const char* AssetTypeToString(AssetType type);
 	AssetType AssetTypeFromExtension(const std::string& ext);
 }
+
 template<>
 void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue);
+
 template<>
 void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType value);
+
 template<>
 void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue);
+
 template<>
 void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetHandle value);

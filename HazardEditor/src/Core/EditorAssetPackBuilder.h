@@ -35,7 +35,7 @@ public:
 	template<>
 	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings)
 	{
-		Ref<Job> job = Ref<Job>::Create(ImageAssetPackJob, file, info, settings);
+		Ref<Job> job = Ref<Job>::Create(fmt::format("{0}", file.string()), ImageAssetPackJob, file, info, settings);
 		job->SetJobTag(file.string());
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(File::GetName(file), 1);
@@ -48,7 +48,7 @@ public:
 		if (!File::Exists(file))
 			return nullptr;
 
-		Ref<Job> job = Ref<Job>::Create(ShaderAssetPackJob, file, renderApi);
+		Ref<Job> job = Ref<Job>::Create(fmt::format("{0}", file.string()), ShaderAssetPackJob, file, renderApi);
 		job->SetJobTag(file.string());
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(File::GetName(file), 1);
@@ -62,7 +62,7 @@ public:
 		if (!File::Exists(file))
 			return nullptr;
 	
-		Ref<Job> job = Ref<Job>::Create(MeshAssetPackJob, file, info, settings);
+		Ref<Job> job = Ref<Job>::Create(fmt::format("{0}", file.string()), MeshAssetPackJob, file, info, settings);
 		job->SetJobTag(file.string());
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(File::GetName(file), 1);
@@ -76,7 +76,7 @@ public:
 		if (!File::Exists(file))
 			return nullptr;
 
-		Ref<Job> job = Ref<Job>::Create(MaterialAssetPackJob, file, settings);
+		Ref<Job> job = Ref<Job>::Create(fmt::format("{0}", file.string()), MaterialAssetPackJob, file, settings);
 		job->SetJobTag(file.string());
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(File::GetName(file), 1);

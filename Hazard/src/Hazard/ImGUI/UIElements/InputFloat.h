@@ -15,9 +15,7 @@ namespace Hazard::ImUI
 		{
 			m_Configs.resize(count);
 		};
-		~InputFloat()
-		{
-		}
+		~InputFloat() = default;
 
 		void Render();
 		void ConfigureField(uint32_t index, const std::string& buttonText, ImVec4 color, bool isMixed = false)
@@ -41,6 +39,7 @@ namespace Hazard::ImUI
 		void DrawInputField(uint32_t index, ImVec2 buttonSize, float itemWidth);
 
 	private:
+
 		std::string m_Title;
 		uint32_t m_Flags = 0;
 

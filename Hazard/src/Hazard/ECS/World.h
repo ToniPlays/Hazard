@@ -39,7 +39,7 @@ namespace Hazard
 		Entity GetEntity(entt::entity entity);
 		Entity GetEntityFromUID(const UID& id);
 
-		Entity TryGetEntityFromUUID(const UID& id);
+		Entity TryGetEntityFromUID(const UID& id);
 		void DestroyEntity(Entity& entity);
 
 		entt::registry& GetWorldRegistry() { return m_Registry; }
@@ -62,6 +62,7 @@ namespace Hazard
 		void OnComponentRemoved(Entity& entity, T& component);
 
 	private:
+
 		std::string m_DebugName;
 		entt::registry m_Registry;
 		std::unordered_map<UID, Entity> m_EntityUIDMap;

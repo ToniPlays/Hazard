@@ -19,6 +19,13 @@ Ref<GraphStage> JobGraph::GetNextStage()
 
 	return m_Stages[m_CurrentStage + 1];
 }
+Ref<GraphStage> JobGraph::GetPreviousStage()
+{
+	if (m_CurrentStage - 1 < 0)
+		return nullptr;
+
+	return m_Stages[m_CurrentStage - 1];
+}
 
 Ref<GraphStage> JobGraph::AddStage()
 {
@@ -26,6 +33,22 @@ Ref<GraphStage> JobGraph::AddStage()
 	stage->m_JobGraph = this;
 	m_Stages.push_back(stage);
 	return stage;
+}
+
+void JobGraph::CombineStages(Ref<JobGraph> graph, uint32_t offset)
+{
+	if (graph == nullptr) return;
+
+	auto& stages = graph->GetStages();
+	for (uint32_t i = 0; i < stages.size(); i++)
+	{
+		Ref<GraphStage> stage = GetStage(i + offset);
+		if (!stage)
+			stage = AddStage();
+
+		stage->m_JobGraph = this;
+		stage->QueueJobs(stages[i]->m_Jobs);
+	}
 }
 
 Ref<JobGraph> JobGraph::Execute()
@@ -52,7 +75,18 @@ float JobGraph::GetProgress()
 	return progress;
 }
 
-void JobGraph::OnStageFinished()
+Buffer JobGraph::GetResult()
+{
+	return m_Stages[m_Stages.size() - 1]->GetJobResult(0);
+}
+
+std::vector<Buffer> JobGraph::GetResults()
+{
+	return std::vector<Buffer>();
+	//return m_Stages[m_Stages.size() - 1]->GetJobResult(0);
+}
+
+void JobGraph::OnStageFinished(Ref<GraphStage> stage)
 {
 	Ref<GraphStage> next = GetNextStage();
 	m_CurrentStage++;
@@ -62,8 +96,8 @@ void JobGraph::OnStageFinished()
 		return;
 
 	if (next->GetJobs().size() == 0)
-		OnStageFinished();
+		OnStageFinished(nullptr);
 
-	if (m_JobSystem)
+	if (m_JobSystem && stage->GetFlags() & JOB_FLAGS_SUCCEEDED)
 		m_JobSystem->QueueJobs(next->m_Jobs);
 }

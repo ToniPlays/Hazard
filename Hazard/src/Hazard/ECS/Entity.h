@@ -80,10 +80,12 @@ namespace Hazard {
 		operator entt::entity() const { return m_Handle; }
 		operator uint32_t() const { return (uint32_t)m_Handle; }
 
-		bool operator ==(const Entity& other) {
+		bool operator ==(const Entity& other) 
+		{
 			return m_Handle == other.m_Handle && m_World == other.m_World;
 		}
-		bool operator !=(const Entity& other) {
+		bool operator !=(const Entity& other) 
+		{
 			return !(*this == other);
 		}
 

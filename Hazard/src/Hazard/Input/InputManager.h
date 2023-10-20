@@ -22,7 +22,7 @@ namespace Hazard
 
 		void InvalidateSchema(InputSchema& schema);
 
-		static const std::unordered_map<InputSource, std::vector<Ref<InputDevice>>>& GetDevices() { return m_ConnectedDevices; }
+		static const std::unordered_map<InputSource, std::vector<Ref<InputDevice>>>& GetDevices() { return s_ConnectedDevices; }
 		static Ref<InputDevice> GetGamepad(uint32_t binding);
 		static InputSchema& GetSchema() { return s_InputSchema; }
 
@@ -35,6 +35,6 @@ namespace Hazard
 
 	private:
 		inline static InputSchema s_InputSchema;
-		inline static std::unordered_map<InputSource, std::vector<Ref<InputDevice>>> m_ConnectedDevices;
+		inline static std::unordered_map<InputSource, std::vector<Ref<InputDevice>>> s_ConnectedDevices;
 	};
 }

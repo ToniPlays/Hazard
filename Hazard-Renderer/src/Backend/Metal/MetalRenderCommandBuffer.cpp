@@ -190,11 +190,11 @@ namespace HazardRenderer::Metal
                 metalPipeline->BindCompute(instance->m_ComputeEncoder);
         });
     }
-    void MetalRenderCommandBuffer::Draw(size_t count, Ref<GPUBuffer> indexBuffer)
+    void MetalRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer)
     {
         DrawInstanced(count, 1, indexBuffer);
     }
-    void MetalRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
+    void MetalRenderCommandBuffer::DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
         Ref<MetalGPUBuffer> mtlIndexBuffer = indexBuffer.As<MetalGPUBuffer>();

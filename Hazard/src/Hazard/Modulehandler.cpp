@@ -60,7 +60,7 @@ namespace Hazard {
 	}
 	void ModuleHandler::Close()
 	{
-		for (size_t i = m_Modules.size() - 1; i > 0; i--)
+		for (uint64_t i = m_Modules.size() - 1; i > 0; i--)
 		{
 			auto* mod = m_Modules[i];
 			mod->Close();

@@ -48,33 +48,35 @@ namespace Hazard
 		map->Invalidate();
 
 		map->IncRefCount();
-		job->GetStage()->SetResult(map);
+		job->SetResult(&map, sizeof(Ref<EnvironmentMap>));
 	}
 
 	Ref<JobGraph> EnvironmentAssetLoader::Load(AssetMetadata& metadata)
 	{
-		Ref<Job> job = Ref<Job>::Create(LoadEnvironmentMapJob, metadata.Handle);
+		Ref<Job> job = Ref<Job>::Create(fmt::format("EnvironmentMapLoad load {}", metadata.Handle), LoadEnvironmentMapJob, metadata.Handle);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("EnvironmentMapLoad load {}", metadata.Handle), 1);
 		graph->GetStage(0)->QueueJobs({ job });
 
 		return graph;
 	}
+
 	Ref<JobGraph> EnvironmentAssetLoader::Save(Ref<Asset>& asset)
 	{
 		const AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 
-		Ref<Job> saveJob = Ref<Job>::Create(SaveEnvironmentMapJob, asset, metadata.Key);
+		Ref<Job> saveJob = Ref<Job>::Create("EnvironmentAsset Create", SaveEnvironmentMapJob, asset, metadata.Key);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("EnvironmentAsset Create", 1);
 		graph->GetStage(0)->QueueJobs({ saveJob });
 
 		return graph;
 	}
+
 	Ref<JobGraph> EnvironmentAssetLoader::Create(const std::filesystem::path& path)
 	{
 		Ref<EnvironmentMap> environmentMap = Ref<EnvironmentMap>::Create();
 		environmentMap->m_Handle = AssetHandle();
-		Ref<Job> createJob = Ref<Job>::Create(SaveEnvironmentMapJob, environmentMap, path);
+		Ref<Job> createJob = Ref<Job>::Create("EnvironmentAsset Create", SaveEnvironmentMapJob, environmentMap, path);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("EnvironmentAsset Create", 1);
 		graph->GetStage(0)->QueueJobs({ createJob });
 

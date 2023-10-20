@@ -15,7 +15,7 @@ namespace HazardRenderer::Vulkan
 		VulkanBottomLevelAS(AccelerationStructureCreateInfo* info);
 		~VulkanBottomLevelAS() = default;
 
-		size_t GetCount() const { return 0; };
+		uint64_t GetCount() const { return 0; };
 		void PushTransforms(const BufferCopyRegion& copyRegion) override;
 
 		void Invalidate() override;

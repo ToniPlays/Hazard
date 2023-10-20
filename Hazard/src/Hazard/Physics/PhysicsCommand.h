@@ -15,7 +15,8 @@ namespace Hazard::Physics
 	};
 
 
-	class PhysicsCommand {
+	class PhysicsCommand 
+	{
 	public:
 		static void Init();
 
@@ -31,7 +32,8 @@ namespace Hazard::Physics
 
 		static void SetGravity(float gravity) {};
 		static void Step(double delta);
+
 	private:
-		static Physics2D* s_Physics2D;
+		inline static Physics2D* s_Physics2D;
 	};
 }

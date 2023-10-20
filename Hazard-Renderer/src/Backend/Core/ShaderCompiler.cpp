@@ -378,9 +378,9 @@ namespace HazardRenderer
 		}
 		return result;
 	}
-	size_t ShaderCompiler::GetBinaryLength(const std::vector<ShaderStageCode>& binaries)
+	uint64_t ShaderCompiler::GetBinaryLength(const std::vector<ShaderStageCode>& binaries)
 	{
-		size_t size = 0;
+		uint64_t size = 0;
 		for (auto& stage : binaries)
 		{
 			size += sizeof(ShaderCode);
@@ -398,14 +398,14 @@ namespace HazardRenderer
 		std::unordered_map<uint32_t, std::string> result;
 
 		const char* typeToken = "#type";
-		size_t endPos = 0;
+		uint64_t endPos = 0;
 
 		while (endPos != std::string::npos)
 		{
 			std::string type = StringUtil::GetPreprocessor(typeToken, sourceFile, endPos, &endPos);
 			if (endPos == std::string::npos) continue;
 
-			size_t nextTokenPos = sourceFile.find(typeToken, endPos);
+			uint64_t nextTokenPos = sourceFile.find(typeToken, endPos);
 			std::string src = nextTokenPos == std::string::npos ? sourceFile.substr(endPos) : sourceFile.substr(endPos, nextTokenPos - endPos);
 
 			if (!PreprocessSource(path, src)) 

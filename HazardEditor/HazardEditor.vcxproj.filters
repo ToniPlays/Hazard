@@ -43,6 +43,9 @@
     <Filter Include="src\GUI\ProjectPanel">
       <UniqueIdentifier>{D7E415F1-C373-9FBA-6C92-B3B55800B060}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\ProjectPanel\ProjectSettings">
+      <UniqueIdentifier>{0E332638-FA19-E82F-A36A-4E4D8F306196}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI\Properties">
       <UniqueIdentifier>{DD0CBAD9-C9F0-7A2F-3251-75821E5465B1}</UniqueIdentifier>
     </Filter>
@@ -180,6 +183,12 @@
     <ClInclude Include="src\GUI\ProjectPanel\AssetPanelItem.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\InputSettings.h">
+      <Filter>src\GUI\ProjectPanel\ProjectSettings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\ScriptPreprocessorSettings.h">
+      <Filter>src\GUI\ProjectPanel\ProjectSettings</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\ProjectPanel\ProjectSettingsPanel.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
@@ -231,9 +240,9 @@
     <ClInclude Include="src\Project\ProjectManager.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\InputSettings.h" />
-    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\ScriptPreprocessorSettings.h" />
-    <ClInclude Include="src\Project\ProjectSettingsSchema.h" />
+    <ClInclude Include="src\Project\ProjectSettingsSchema.h">
+      <Filter>src\Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">

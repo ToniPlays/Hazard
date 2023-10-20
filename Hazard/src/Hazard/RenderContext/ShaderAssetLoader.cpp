@@ -35,7 +35,7 @@ namespace Hazard
 		}
 		
 		shaderAsset->IncRefCount();
-		job->GetStage()->SetResult(shaderAsset);
+		job->SetResult(&shaderAsset, sizeof(Ref<ShaderAsset>));
 
 		buffer.Release();
 	}
@@ -44,17 +44,19 @@ namespace Hazard
 	{
 		using namespace HazardRenderer;
 
-		Ref<Job> job = Ref<Job>::Create(LoadShader, metadata.Handle);
+		Ref<Job> job = Ref<Job>::Create(fmt::format("Shader load {}", metadata.Handle), LoadShader, metadata.Handle);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Shader load {}", metadata.Handle), 1);
 		graph->GetStage(0)->QueueJobs({ job });
 
 		return graph;
 	}
+
 	Ref<JobGraph> ShaderAssetLoader::Save(Ref<Asset>& asset)
 	{
 		return nullptr;
 	}
+
 	Ref<JobGraph> ShaderAssetLoader::Create(const std::filesystem::path& path)
 	{
 		HZR_CORE_ASSERT(false, "");

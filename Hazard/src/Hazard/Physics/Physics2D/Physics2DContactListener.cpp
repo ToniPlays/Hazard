@@ -34,6 +34,7 @@ namespace Hazard::Physics
 		m_Physics->OnContact(dataA);
 		m_Physics->OnContact(dataB);
 	}
+
 	void Physics2DContactListener::EndContact(b2Contact* contact)
 	{
 		b2Fixture* a = contact->GetFixtureA();

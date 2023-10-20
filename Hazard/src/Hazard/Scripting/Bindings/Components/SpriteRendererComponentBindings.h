@@ -12,21 +12,24 @@ namespace Hazard
 
 	static void SpriteRendererComponent_GetColor_Native(uint64_t id, glm::vec4* color)
 	{
-		*color = GET_ENTITY(id).GetComponent<SpriteRendererComponent>().Color;
+		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
+		*color = entity.GetComponent<SpriteRendererComponent>().Color;
 	}
 
 	static void SpriteRendererComponent_SetColor_Native(uint64_t id, glm::vec4 color)
 	{
-		GET_ENTITY(id).GetComponent<SpriteRendererComponent>().Color = Color::FromGLM(color);
+		ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).GetComponent<SpriteRendererComponent>().Color = Color::FromGLM(color);
 	}
 	static uint64_t SpriteRendererComponent_GetSprite_Native(uint64_t id)
 	{
-		auto& src = GET_ENTITY(id).GetComponent<SpriteRendererComponent>();
+		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
+		auto& src = entity.GetComponent<SpriteRendererComponent>();
 		return src.TextureHandle;
 	}
 	static void SpriteRendererComponent_SetSprite_Native(uint64_t id, uint64_t handle)
 	{
-		auto& src = GET_ENTITY(id).GetComponent<SpriteRendererComponent>();
+		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
+		auto& src = entity.GetComponent<SpriteRendererComponent>();
 		src.TextureHandle = handle;
 	}
 }

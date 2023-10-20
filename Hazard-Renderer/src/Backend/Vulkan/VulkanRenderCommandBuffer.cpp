@@ -66,7 +66,7 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkAllocateCommandBuffers(device->GetVulkanDevice(), &allocInfo, m_CommandBuffers.data()), "Failed to allocate Command Buffers");
 
-		for (size_t i = 0; i < m_CommandBuffers.size(); i++)
+		for (uint64_t i = 0; i < m_CommandBuffers.size(); i++)
 			VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_COMMAND_BUFFER, fmt::format("CommandBuffer {}", m_DebugName), m_CommandBuffers[i]);
 
 		VkFenceCreateInfo fenceInfo = {};
@@ -74,7 +74,7 @@ namespace HazardRenderer::Vulkan
 		fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
 		m_WaitFences.resize(m_CommandBuffers.size());
-		for (size_t i = 0; i < m_WaitFences.size(); i++)
+		for (uint64_t i = 0; i < m_WaitFences.size(); i++)
 		{
 			VK_CHECK_RESULT(vkCreateFence(device->GetVulkanDevice(), &fenceInfo, nullptr, &m_WaitFences[i]), "Failed to create VkFence");
 			VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_FENCE, fmt::format("{} (Frame In Flight: {}) VkFence", m_DebugName, i), m_WaitFences[i]);
@@ -442,11 +442,11 @@ namespace HazardRenderer::Vulkan
 			pipeline->Bind(instance->m_ActiveCommandBuffer);
 		});
 	}
-	void VulkanRenderCommandBuffer::Draw(size_t count, Ref<GPUBuffer> indexBuffer)
+	void VulkanRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer)
 	{
 		DrawInstanced(count, 1, indexBuffer);
 	}
-	void VulkanRenderCommandBuffer::DrawInstanced(size_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
+	void VulkanRenderCommandBuffer::DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanGPUBuffer> buffer = indexBuffer ? indexBuffer.As<VulkanGPUBuffer>() : nullptr;

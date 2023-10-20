@@ -20,7 +20,7 @@ namespace HazardRenderer::Metal
         MetalTopLevelAS(AccelerationStructureCreateInfo* info);
         ~MetalTopLevelAS() = default;
         
-        size_t GetCount() const override { return 0; };
+        uint64_t GetCount() const override { return 0; };
         void PushInstances(const glm::mat4& transform, Ref<AccelerationStructure> accelerationStructure) override {};
         
         void Build(const BuildType& type) override {};

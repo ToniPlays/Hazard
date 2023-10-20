@@ -61,7 +61,7 @@ namespace Hazard
 		if (!mesh) return;
 		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), mesh->GetMaterial(), id);
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> material, size_t count, int id)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> material, uint64_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
 		SubmitMesh(transform, vertexBuffer, nullptr, material, count, id);
@@ -71,7 +71,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		SubmitMesh(transform, vertexBuffer, indexBuffer, material, indexBuffer->GetSize() / sizeof(uint32_t), id);
 	}
-	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count, int id)
+	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
@@ -135,11 +135,11 @@ namespace Hazard
 		}
 	}
 
-	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, size_t count)
+	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 	}
-	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, size_t count)
+	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, uint64_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 	}

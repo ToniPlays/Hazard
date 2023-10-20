@@ -15,9 +15,9 @@ namespace Hazard
 {
 	struct CircleRendererData
 	{
-		size_t MaxCircleCount;
-		size_t MaxVertices;
-		size_t MaxIndices;
+		uint64_t MaxCircleCount;
+		uint64_t MaxVertices;
+		uint64_t MaxIndices;
 		glm::vec4 CircleVertexPos[4];
 	};
 
@@ -39,12 +39,7 @@ namespace Hazard
 		void SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, float thickness, float fade);
 		bool IsVisible(const glm::mat4& transform);
 
-		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass)
-		{
-			if (renderPass == m_RenderPass) return;
-			m_RenderPass = renderPass;
-			CreateResources(renderPass);
-		};
+		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass);
 		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
 
 	private:

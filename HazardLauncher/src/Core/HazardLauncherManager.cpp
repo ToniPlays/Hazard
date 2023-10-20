@@ -29,9 +29,9 @@ bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 	HazardProject project = {};
 	YAML::Node root = YAML::LoadFile(path.string());
 
-	if (root["General"]) 
+	if (root["Project"]) 
 	{
-		YAML::Node node = root["General"];
+		YAML::Node node = root["Project"];
 		YamlUtils::Deserialize<std::string>(node, "Project name", project.Name, "Unknown");
 		project.Path = parent;
 
@@ -48,7 +48,7 @@ bool HazardLauncherManager::LoadFromConfigFile(const std::filesystem::path& path
 	YAML::Node root = YAML::LoadFile(path.string());
 	YAML::Node projectNode = root["Projects"];
 
-	for (size_t i = 0; i < projectNode.size(); i++) {
+	for (uint64_t i = 0; i < projectNode.size(); i++) {
 		auto node = projectNode[i]["Project"];
 		std::string projectPath = node["Path"].as<std::string>();
 		ImportProject(projectPath + "\\" + "Project.hzrproj");
@@ -116,9 +116,9 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 
 		std::string csProj = project.Path.string() + "\\" + (project.Name + ".csproj");
 		std::ofstream out(project.Path / "Project" / "BuildSolution.bat");
-		out << StringUtil::Replace(ss.str(), "%CSPROJ%", csProj);
+		std::string res = StringUtil::Replace(ss.str(), "%CSPROJ_PATH%", project.Path.string() + "/" + project.Name);
+		out << StringUtil::Replace(res, "%CSPROJ%", csProj);
 	}
-
 	{
 		Directory::Create(project.Path / "Assets" / "Scripts");
 		Directory::Create(project.Path / "Assets" / "Materials");

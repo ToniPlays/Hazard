@@ -15,6 +15,7 @@ namespace Hazard
 		uint32_t Channels;
 		uint64_t DataSize;
 	};
+
 	uint32_t TextureFactory::PixelSize(const HazardRenderer::ImageFormat& format)
 	{
 		using namespace HazardRenderer;
@@ -42,7 +43,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(File::Exists(path), "Source file does not exist");
-		TextureHeader header = {};
+
 
 		int w, h, channels;
 		constexpr int desired = 4;
@@ -50,12 +51,14 @@ namespace Hazard
 
 		stbi_uc* data = stbi_load(path.string().c_str(), &w, &h, &channels, desired);
 		HZR_CORE_ASSERT(data, "Data not loaded correctly");
-		header.ImageData = Buffer::Copy(data, w * h * desired);
-		stbi_image_free(data);
 
+		TextureHeader header = {};
+		header.ImageData = Buffer::Copy(data, w * h * desired);
 		header.Width = w;
 		header.Height = h;
 		header.Channels = desired;
+
+		stbi_image_free(data);
 
 		return header;
 	}

@@ -9,11 +9,7 @@ using namespace Hazard;
 
 HazardProject::HazardProject(const std::filesystem::path& path)
 {
-	if (!File::Exists(path))
-	{
-		HZR_FATAL(path.string());
-		HZR_ASSERT(false, "This needs to be fixed");
-	}
+	HZR_ASSERT(File::Exists(path), "Project file does not exist");
 	m_Info.ProjectPath = path;
 }
 

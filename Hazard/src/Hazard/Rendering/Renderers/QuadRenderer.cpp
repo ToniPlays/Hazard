@@ -12,7 +12,7 @@ namespace Hazard
 	void QuadRenderer::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		constexpr size_t quadCount = 5000;
+		constexpr uint64_t quadCount = 5000;
 		m_Data.MaxQuadCount = quadCount;
 		m_Data.MaxVertices = quadCount * 4;
 		m_Data.MaxIndices = quadCount * 6;
@@ -29,11 +29,13 @@ namespace Hazard
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)
 			m_Data.TextureSlots[i] = whiteTexture;
 	}
+
 	void QuadRenderer::BeginScene()
 	{
 		HZR_PROFILE_FUNCTION();
 		BeginBatch();
 	}
+
 	void QuadRenderer::EndScene()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -42,12 +44,14 @@ namespace Hazard
 		for (uint32_t i = m_Data.TextureIndex - 1; i < m_Data.TextureSlots.size(); i++)
 			m_Data.TextureSlots[i] = m_Data.TextureSlots[0];
 	}
+
 	void QuadRenderer::BeginBatch()
 	{
 		HZR_PROFILE_FUNCTION();
 		m_Data.TextureIndex = 1.0f;
 		m_QuadBatch->Reset();
 	}
+
 	void QuadRenderer::Flush()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -69,6 +73,7 @@ namespace Hazard
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount(), 0);
 	}
+
 	void QuadRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -137,10 +142,12 @@ namespace Hazard
 		}
 		m_QuadBatch->AddIndices(6);
 	}
+
 	bool QuadRenderer::IsVisible(const glm::mat4& transform)
 	{
 		return true;
 	}
+
 	void QuadRenderer::CreateResources(Ref<RenderPass> renderPass)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -157,7 +164,7 @@ namespace Hazard
 
 			uint32_t* indices = hnew uint32_t[m_Data.MaxIndices];
 
-			for (size_t i = 0; i < m_Data.MaxIndices; i += 6)
+			for (uint64_t i = 0; i < m_Data.MaxIndices; i += 6)
 			{
 				indices[i + 0] = offset + 0;
 				indices[i + 1] = offset + 1;
@@ -200,6 +207,7 @@ namespace Hazard
 
 		m_RenderPass = renderPass;
 	}
+
 	float QuadRenderer::GetImageIndex(const Ref<Image2D>& texture)
 	{
 		if (!texture) return 0.0f;
@@ -211,7 +219,7 @@ namespace Hazard
 				return (float)i;
 			}
 		}
-		m_Data.TextureSlots[(size_t)m_Data.TextureIndex] = texture;
+		m_Data.TextureSlots[(uint32_t)m_Data.TextureIndex] = texture;
 		return m_Data.TextureIndex++;
 	}
 }

@@ -5,20 +5,34 @@
 
 Job::~Job()
 {
+	m_ResultBuffer.Release();
+}
+Ref<JobGraph> Job::GetJobGraph()
+{
+	return m_Stage->GetGraph();
+}
+
+void Job::SetResult(void* data, uint64_t size, uint64_t offset)
+{
+	m_ResultBuffer.Allocate(size);
+	m_ResultBuffer.Write(data, size);
 }
 
 void Job::Execute()
 {
+	m_Status = JobStatus::Executing;
 	Timer timer;
 	if (m_JobCallback)
 	{
 		try
 		{
 			m_JobCallback(this);
+			m_Status = JobStatus::Success;
 		}
 		catch (JobException e)
 		{
 			std::cout << fmt::format("JobException: {}\n", e.what());
+			m_Status = JobStatus::Failure;
 		}
 	}
 
@@ -26,7 +40,7 @@ void Job::Execute()
 	m_Progress = 1.0f;
     
 	if (m_Stage)
-		m_Stage->OnJobFinished();
+		m_Stage->OnJobFinished(this);
 }
 
 float Job::WaitForUpdate()

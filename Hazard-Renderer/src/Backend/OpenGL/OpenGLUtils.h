@@ -159,7 +159,7 @@ namespace HazardRenderer::OpenGLUtils
 	{
 		glBindTexture(TextureTarget(multisampled), id);
 	}
-	static void AttachColorTexture(size_t target, uint32_t samples, uint32_t format, uint32_t internalFormat, uint32_t width, uint32_t height, uint32_t iter)
+	static void AttachColorTexture(uint64_t target, uint32_t samples, uint32_t format, uint32_t internalFormat, uint32_t width, uint32_t height, uint32_t iter)
 	{
 		//Change to DSA
 		bool multisampled = samples > 1;

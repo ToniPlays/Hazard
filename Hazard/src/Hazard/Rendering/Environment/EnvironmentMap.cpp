@@ -19,16 +19,19 @@ namespace Hazard
 
 		BRDFLut = AssetManager::GetAsset<Texture2DAsset>("res/Textures/BRDF_LUT.tga");
 	}
+
 	EnvironmentMap::~EnvironmentMap()
 	{
 
 	}
+
 	void EnvironmentMap::Update(uint32_t samples, uint32_t resolution, AssetHandle sourceImage)
 	{
 		m_SourceImageHandle = sourceImage;
 		m_Spec.Samples = samples;
 		m_Spec.Resolution = resolution;
 	}
+
 	void EnvironmentMap::Invalidate() 
 	{
 		if (m_SourceImageHandle != INVALID_ASSET_HANDLE)
@@ -83,6 +86,7 @@ namespace Hazard
 		RadianceMap = AssetPointer::Create(radianceMap, AssetType::EnvironmentMap);
 		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, RadianceMap);
 	}
+
 	void EnvironmentMap::GenerateIrradiance(Ref<AssetPointer> radianceMap)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -121,6 +125,7 @@ namespace Hazard
 		IrradianceMap = AssetPointer::Create(irradianceMap, AssetType::EnvironmentMap);
 		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, IrradianceMap);
 	}
+
 	void EnvironmentMap::GeneratePreFilter(Ref<AssetPointer> radiance)
 	{
 		HZR_PROFILE_FUNCTION();

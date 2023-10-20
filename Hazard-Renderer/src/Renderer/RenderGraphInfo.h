@@ -111,22 +111,22 @@ namespace HazardRenderer
 	struct InputResource
 	{
 		std::string Name;
-		uint32_t UsageFlags;
+		uint64_t UsageFlags;
 	};
 	struct StageDescriptor
 	{
 		std::string DebugName;
-		uint32_t Set = 0;
+		uint64_t Set = 0;
 		Ref<DescriptorSet> DescriptorSet;
 	};
 
 	struct RenderGraphStage
 	{
-		uint32_t DependencyCount = 0;
+		uint64_t DependencyCount = 0;
 		RenderGraphStage* pDependencies = nullptr;
-		uint32_t InputCount = 0;
+		uint64_t InputCount = 0;
 		InputResource* pInputs = nullptr;
-		uint32_t DescriptorCount = 0;
+		uint64_t DescriptorCount = 0;
 		StageDescriptor* pStageDescriptors = nullptr;
 	};
 

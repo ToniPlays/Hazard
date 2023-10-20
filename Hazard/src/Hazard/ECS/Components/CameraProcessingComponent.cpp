@@ -9,26 +9,37 @@ namespace Hazard {
 	{
 		m_Type = t;
 	}
+
 	void CameraComponent::SetFov(float fov)
 	{
 		m_Dirty |= m_Fov == fov;
 		m_Fov = fov;
 	}
+
 	void CameraComponent::SetSize(float size)
 	{
 		m_Dirty |= m_Size == size;
 		m_Size = size;
 	}
+
 	void CameraComponent::SetZNear(float plane)
 	{
 		m_Dirty |= m_ZNear == plane;
 		m_ZNear = plane;
 	}
+
 	void CameraComponent::SetZFar(float plane)
 	{
 		m_Dirty |= m_ZFar == plane;
 		m_ZFar = plane;
 	}
+
+	void CameraComponent::SetClipping(const glm::vec2 clipping)
+	{
+		SetZNear(clipping.x);
+		SetZFar(clipping.y);
+	}
+
 	void CameraComponent::RecalculateProjection(float w, float h)
 	{
 		if (!m_Dirty) return;
@@ -50,5 +61,11 @@ namespace Hazard {
 		float orthoTop = m_Size * 0.5f;
 
 		m_Projection = glm::ortho(orthoLeft, orthoRight, orthoBottom, orthoTop, m_ZNear, m_ZFar);
+	}
+
+	glm::mat4 CameraComponent::GetProjection()
+	{
+		if (m_Dirty) RecalculateProjection(m_Width, m_Height);
+		return m_Projection;
 	}
 }

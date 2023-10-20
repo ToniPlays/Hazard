@@ -54,7 +54,7 @@ namespace Hazard
 		}
 
 		world->IncRefCount();
-		job->GetStage()->SetResult(world);
+		job->SetResult(&world, sizeof(Ref<World>));
 	}
 
 	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata)
@@ -63,8 +63,7 @@ namespace Hazard
 
 		WorldDeserializer deserializer(metadata.Handle);
 
-		Ref<Job> preprocessJob = Ref<Job>::Create(WorldPreprocessJob, deserializer);
-		preprocessJob->SetJobName("World preprocessor");
+		Ref<Job> preprocessJob = Ref<Job>::Create("Preprocessing world", WorldPreprocessJob, deserializer);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World load", 1);
 		graph->GetStage(0)->QueueJobs({ preprocessJob });
@@ -77,7 +76,7 @@ namespace Hazard
 		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 		auto world = asset.As<World>();
 
-		Ref<Job> job = Ref<Job>::Create(SaveWorld, world, metadata.Key);
+		Ref<Job> job = Ref<Job>::Create("Save world", SaveWorld, world, metadata.Key);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World save", 1);
 		graph->GetStage(0)->QueueJobs({ job });
 
@@ -89,7 +88,7 @@ namespace Hazard
 		Ref<World> world = Ref<World>::Create(std::to_string(handle));
 		world->m_Handle = handle;
 
-		Ref<Job> job = Ref<Job>::Create(SaveWorld, world, path);
+		Ref<Job> job = Ref<Job>::Create("Save world", SaveWorld, world, path);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World save", 1);
 		graph->GetStage(0)->QueueJobs({ job });
 

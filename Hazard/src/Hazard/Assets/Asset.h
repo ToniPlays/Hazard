@@ -35,7 +35,6 @@ namespace Hazard
 		AssetType Type = AssetType::Undefined;
 		LoadState LoadState = LoadState::None;
 		std::string Key = "";
-
 		bool MemoryOnly = false;
 
 		bool IsValid() { return Handle && Type != AssetType::Undefined; }
@@ -68,6 +67,8 @@ namespace Hazard
 	class AssetPointer : public Asset
 	{
 	public:
+		AssetPointer() = default;
+
 		Ref<RefCount> Value = nullptr;
 
 		static Ref<AssetPointer> Create(Ref<RefCount> value, AssetType type)
@@ -78,5 +79,6 @@ namespace Hazard
 
 			return pointer;
 		}
+
 	};
 }

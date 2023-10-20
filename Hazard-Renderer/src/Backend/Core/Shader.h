@@ -64,7 +64,7 @@ namespace HazardRenderer
 	{
 		std::string Name;
 		uint32_t Binding = 0;
-		size_t Size = 0;
+		uint64_t Size = 0;
 		uint32_t UsageFlags = 0;
 		uint32_t DescritorSet = UINT32_MAX;
         
@@ -93,7 +93,7 @@ namespace HazardRenderer
         std::string Name;
         uint32_t Set = 0;
         uint32_t Binding = 0;
-        size_t Size = 0;
+		uint64_t Size = 0;
         uint32_t UsageFlags = 0;
         
         std::vector<ShaderMemberType> Members;

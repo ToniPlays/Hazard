@@ -42,25 +42,27 @@ namespace Hazard
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer, sampler);
 		asset->IncRefCount();
-		job->GetStage()->SetResult(asset);
+		job->SetResult(&asset, sizeof(Ref<Texture2DAsset>));
 
 		buffer.Release();
 	}
 
 	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata)
 	{
-		Ref<Job> job = Ref<Job>::Create(LoadImageJob, metadata.Handle);
+		Ref<Job> job = Ref<Job>::Create(fmt::format("Image load {}", metadata.Key), LoadImageJob, metadata.Handle);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Image load {}", metadata.Handle), 1);
 		graph->GetStage(0)->QueueJobs({ job });
 
 		return graph;
 	}
+
 	Ref<JobGraph> ImageAssetLoader::Save(Ref<Asset>& asset)
 	{
 		HZR_PROFILE_FUNCTION();
 		return nullptr;
 	}
+
 	Ref<JobGraph> ImageAssetLoader::Create(const std::filesystem::path& path)
 	{
 		HZR_ASSERT(false, "");

@@ -11,45 +11,52 @@
 
 namespace Hazard::ImUI
 {
-	struct MenuItemElement {
+	struct MenuItemElement
+	{
 		std::string Name;
 		std::function<void()> OnClicked;
 
 		std::vector<MenuItemElement> m_SubMenus;
 
-		MenuItemElement& GetSubMenu(const std::string& name) {
-			for (auto& item : m_SubMenus) {
+		MenuItemElement& GetSubMenu(const std::string& name)
+		{
+			for (auto& item : m_SubMenus)
 				if (item.Name == name) return item;
-			}
+
 			//Does not exist yet
 			MenuItemElement& item = m_SubMenus.emplace_back();
 			item.Name = name;
 			item.OnClicked = nullptr;
 			return item;
 		}
-		MenuItemElement& GetSubMenuFromPath(std::vector<std::string> path) {
-			for (auto& item : m_SubMenus) {
-				if (item.Name == path[0]) {
-					if (path.size() <= 1) return item;
-					else return item.GetSubMenuFromPath({ path.begin() + 1, path.end() });
+		MenuItemElement& GetSubMenuFromPath(std::vector<std::string> path)
+		{
+			for (auto& item : m_SubMenus)
+			{
+				if (item.Name == path[0])
+				{
+					if (path.size() <= 1)
+						return item;
+					else
+						return item.GetSubMenuFromPath({ path.begin() + 1, path.end() });
 				}
 			}
 			MenuItemElement& item = m_SubMenus.emplace_back();
 			item.Name = path[0];
 
-			if (path.size() <= 1) return item;
-			else return item.GetSubMenuFromPath({ path.begin() + 1, path.end() });
+			if (path.size() <= 1)
+				return item;
+			else
+				return item.GetSubMenuFromPath({ path.begin() + 1, path.end() });
 		}
 	};
 
 
-	class MenuBar : public GUIRenderable {
+	class MenuBar : public GUIRenderable
+	{
 	public:
 
-		MenuBar()
-		{
-			m_MenuItems = std::vector<MenuItemElement>();
-		}
+		MenuBar() = default;
 
 		virtual void Init() = 0;
 
@@ -61,11 +68,10 @@ namespace Hazard::ImUI
 
 				for (auto& item : m_MenuItems)
 				{
-					if (ImGui::BeginMenu(item.Name.c_str(), true))
-					{
-						RenderSubMenu(item);
-						ImGui::EndMenu();
-					}
+					if (!ImGui::BeginMenu(item.Name.c_str(), true)) continue;
+
+					RenderSubMenu(item);
+					ImGui::EndMenu();
 				}
 			}
 			ImGui::Separator();
@@ -75,7 +81,7 @@ namespace Hazard::ImUI
 		{
 			if (onClick == nullptr) return;
 
-			std::vector<std::string> path = StringUtil::SplitString(name, '/');
+			auto path = StringUtil::SplitString(name, '/');
 			MenuItemElement& target = GetMenu(name);
 			target.OnClicked = onClick;
 		}
@@ -92,8 +98,7 @@ namespace Hazard::ImUI
 
 		MenuItemElement& GetMenu(const std::string& name)
 		{
-
-			std::vector<std::string> path = StringUtil::SplitString(name, '/');
+			auto path = StringUtil::SplitString(name, '/');
 
 			MenuItemElement& heading = FindMenu(path[0]);
 			if (path.size() <= 1) return heading;
@@ -141,6 +146,5 @@ namespace Hazard::ImUI
 
 	private:
 		std::vector<MenuItemElement> m_MenuItems;
-
 	};
 }

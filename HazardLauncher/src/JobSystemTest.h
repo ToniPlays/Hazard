@@ -6,14 +6,15 @@
 #include <spdlog/fmt/fmt.h>
 #include <Profiling/Timer.h>
 #include <Random.h>
+#include <Jobs/JobSystem.h>
 
 namespace JobSystemTest
 {
 	static void AssetLoad(Ref<Job> job)
 	{
-		int result = job->GetInput<int>();
+		//int result = job->GetInput<int>();
 
-		uint32_t count = result;
+		uint32_t count = 0;// result;
 		for (uint32_t i = 0; i < count; i++)
 		{
 			job->Progress((float)i / (float)count);
@@ -33,7 +34,7 @@ namespace JobSystemTest
 			std::this_thread::sleep_for(2ms);
 		}
 
-		job->GetStage()->SetResult(50);
+		job->SetResult(50);
 
 		//Initialize next stage jobs
 		Ref<GraphStage> stage = job->GetJobGraph()->GetNextStage();
@@ -42,8 +43,7 @@ namespace JobSystemTest
 
 		for (uint32_t i = 0; i < jobs.size(); i++)
 		{
-			jobs[i] = Ref<Job>::Create(AssetLoad);
-			jobs[i]->SetJobName(fmt::format("Asset load {}", i));
+			jobs[i] = Ref<Job>::Create("Asset load", AssetLoad);
 		}
 		stage->QueueJobs(jobs);
 	}
@@ -67,9 +67,7 @@ namespace JobSystemTest
 #endif
 		JobSystem jobSystem;
 
-		Ref<Job> loadingJob = hnew Job(WorldLoad, 250);
-
-		loadingJob->SetJobName("World loading");
+		Ref<Job> loadingJob = hnew Job("World loading", WorldLoad, 250);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World loader", 2);
 

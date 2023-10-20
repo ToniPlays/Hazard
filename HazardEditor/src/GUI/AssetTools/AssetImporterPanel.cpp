@@ -174,10 +174,10 @@ namespace UI
 
 		ImGui::Text("Samples");
 		ImGui::NextColumn();
-		ImUI::Group("samples", [&]() {
-			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-			ImUI::InputUInt(samples, 128, 1, 0);
-		});
+		ImGui::PushID("samples");
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+		ImUI::InputUInt(samples, 128, 1, 0);
+		ImGui::PopID();
 
 		ImGui::NextColumn();
 		ImGui::Columns();
@@ -265,9 +265,10 @@ namespace UI
 		Ref<JobGraph> packGraph = EditorAssetPackBuilder::CreatePackElement(filePath, info, settings);
 		graph->CombineStages(packGraph);
 
-		Ref<Job> saveJob = Ref<Job>::Create(EditorAssetPackBuilder::GenerateAndSaveAssetPack, packPath);
+		Ref<Job> saveJob = Ref<Job>::Create(fmt::format("{0}", filePath.string()), EditorAssetPackBuilder::GenerateAndSaveAssetPack, packPath);
 		graph->GetStage(1)->QueueJobs({ saveJob });
-		Application::Get().GetJobSystem().QueueGraph<bool>(graph);
+
+		Application::Get().GetJobSystem().QueueGraph(graph);
 	}
 
 	void AssetImporterPanel::ImportMesh(std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings)
@@ -282,11 +283,11 @@ namespace UI
 		firstStage->SetWeight(0.95);
 		graph->CombineStages(packGraph, 0);
 
-		Ref<Job> saveJob = Ref<Job>::Create(EditorAssetPackBuilder::GenerateAndSaveAssetPack, packPath);
+		Ref<Job> saveJob = Ref<Job>::Create(fmt::format("{0}", filePath.string()), EditorAssetPackBuilder::GenerateAndSaveAssetPack, packPath);
 		Ref<GraphStage> saveStage = graph->GetStage(1);
 		saveStage->SetWeight(0.05);
 		saveStage->QueueJobs({ saveJob });
 
-		Application::Get().GetJobSystem().QueueGraph<bool>(graph);
+		Application::Get().GetJobSystem().QueueGraph(graph);
 	}
 }

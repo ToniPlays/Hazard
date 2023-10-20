@@ -17,9 +17,7 @@ namespace Hazard
 	{
 	public:
 
-		WorldSerializer(Ref<World> world) : m_World(world)
-		{
-		}
+		WorldSerializer(Ref<World> world) : m_World(world) {}
 
 		template<typename T>
 		void TrySerialize(Entity& entity, YAML::Emitter& out)
@@ -30,7 +28,7 @@ namespace Hazard
 		Buffer Serialize();
 		void SerializeEntity(Entity& entity, YAML::Emitter& out);
 		template<typename T>
-		void SerializeComponent(Entity& entity, T& component, YAML::Emitter& out);
+		void SerializeComponent(Entity& entity, T& component, YAML::Emitter& out) {};
 
 		bool SerializeRuntime(const std::string& file);
 

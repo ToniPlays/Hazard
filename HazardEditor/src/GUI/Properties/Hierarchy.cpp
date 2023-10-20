@@ -165,7 +165,9 @@ namespace UI
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 		ImUI::ContextMenu([&]() {
 			ImUI::MenuItem("Create empty", [&]() {
-				world->CreateEntity("New entity");
+				auto entity = world->CreateEntity("New entity");
+				Events::SelectionContextChange e({ entity });
+				Hazard::HazardLoop::GetCurrent().OnEvent(e);
 			});
 
 			ImUI::Separator({ ImGui::GetContentRegionAvail().x, 2.0f }, style.Window.HeaderActive);

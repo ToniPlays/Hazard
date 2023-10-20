@@ -8,7 +8,7 @@ namespace std
 	template <>
 	struct hash<std::filesystem::path>
 	{
-		std::size_t operator()(const std::filesystem::path& path) const
+		std::uint64_t operator()(const std::filesystem::path& path) const
 		{
 			return hash_value(path);
 		}
@@ -25,7 +25,7 @@ namespace Hazard
 		~AssetRegistry() = default;
 
 		bool Contains(const std::filesystem::path& key) const;
-		size_t Remove(const std::filesystem::path& key);
+		uint64_t Remove(const std::filesystem::path& key);
 
 		AssetMetadata& Get(const std::filesystem::path& key);
 		const AssetMetadata& Get(const std::filesystem::path& key) const;

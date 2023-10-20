@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Coral.Managed.Interop;
 
 namespace Hazard
 {
@@ -11,22 +12,22 @@ namespace Hazard
     {
         #region Entity
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, bool> Entity_IsUpdated_Native;
+        internal static delegate*<ulong, Bool32> Entity_IsUpdated_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, bool, void> Entity_SetUpdate_Native;
+        internal static delegate*<ulong, Bool32, void> Entity_SetUpdate_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, bool> Entity_IsVisible_Native;
+        internal static delegate*<ulong, Bool32> Entity_IsVisible_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, bool, void> Entity_SetVisible_Native;
+        internal static delegate*<ulong, Bool32, void> Entity_SetVisible_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, Type, bool> Entity_HasComponent_Native;
+        internal static delegate*<ulong, Type, Bool32> Entity_HasComponent_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, Type, bool> Entity_CreateComponent_Native;
+        internal static delegate*<ulong, Type, Bool32> Entity_CreateComponent_Native;
 
         [Todo("Binding", Status.Awaiting)]
         internal static delegate*<string, ulong> Entity_InstantiateOrigin_Native;
@@ -35,15 +36,15 @@ namespace Hazard
         internal static delegate*<string, Vector3, Vector3, Vector3, ulong> Entity_InstantiateAt_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, bool> Entity_Destroy_Native;
+        internal static delegate*<ulong, Bool32> Entity_Destroy_Native;
         #endregion
         #region BaseComponent
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, Type, bool> Component_IsActive_Native;
+        internal static delegate*<ulong, Type, Bool32> Component_IsActive_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, bool, Type, void> Component_SetActive_Native;
+        internal static delegate*<ulong, Bool32, Type, void> Component_SetActive_Native;
         #endregion
         #region World
         [Todo("Binding", Status.Awaiting)]
@@ -51,10 +52,10 @@ namespace Hazard
         #endregion
         #region WorldManager
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, bool> WorldManager_LoadWorld_Native;
+        internal static delegate*<ulong, Bool32> WorldManager_LoadWorld_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<string, bool> WorldManager_LoadWorldFromString_Native;
+        internal static delegate*<string, Bool32> WorldManager_LoadWorldFromString_Native;
 
         [Todo("Binding", Status.Awaiting)]
         internal static delegate*<ulong> WorldManager_GetCurrentWorld_Native;

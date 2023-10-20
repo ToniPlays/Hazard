@@ -31,6 +31,7 @@ namespace Hazard::ImUI
 					m_DidChange = true;
 					isSelected = true;
 				}
+
 				if (isSelected)
 					ImGui::SetItemDefaultFocus();
 			}

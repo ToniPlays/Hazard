@@ -18,6 +18,7 @@ namespace Hazard
 		Rigidbody2DComponent() = default;
 		Rigidbody2DComponent(const Rigidbody2DComponent&) = default;
 	};
+
 	struct BoxCollider2DComponent : ComponentBase
 	{
 		glm::vec2 Offset = { 0.0f, 0.0f };
@@ -34,6 +35,7 @@ namespace Hazard
 		BoxCollider2DComponent() = default;
 		BoxCollider2DComponent(const BoxCollider2DComponent&) = default;
 	};
+
 	struct CircleCollider2DComponent : ComponentBase
 	{
 		glm::vec2 Offset = { 0.0f, 0.0f };
@@ -50,16 +52,19 @@ namespace Hazard
 		CircleCollider2DComponent() = default;
 		CircleCollider2DComponent(const CircleCollider2DComponent&) = default;
 	};
+
 	struct RigidbodyComponent : ComponentBase 
 	{
 		Physics::BodyType Type = Physics::BodyType::Static;
 		float Weight = 0.0f;
 		bool Simulated = true;
 	};
+
 	struct BoxColliderComponent : ComponentBase 
 	{
 		float Width = 1.0f;
 	};
+
 	struct SphereColliderComponent : ComponentBase
 	{
 		float Radius = 1.0f;

@@ -10,12 +10,12 @@ public:
 
 	CachedBuffer() = default;
 
-	CachedBuffer(size_t size)
+	CachedBuffer(uint64_t size)
 	{
 		m_DataBuffer.Allocate(size);
 		m_DataBuffer.ZeroInitialize();
 	}
-	CachedBuffer(void* data, size_t size)
+	CachedBuffer(void* data, uint64_t size)
 	{
 		m_DataBuffer = Buffer(data, size);
 		m_OwnsData = false;
@@ -52,6 +52,7 @@ public:
 		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
 		return *this;
 	}
+
 	CachedBuffer& operator=(CachedBuffer&& other) noexcept
 	{
 		m_DataBuffer = other.m_DataBuffer;
@@ -70,6 +71,7 @@ public:
 		m_CurrentBufferOffset += sizeof(T);
 		return value;
 	}
+
 	template<>
 	std::string Read()
 	{
@@ -79,7 +81,7 @@ public:
 	}
 
 	template<typename T>
-	T Read(size_t size)
+	T Read(uint64_t size)
 	{
 		uint32_t* start = (uint32_t*)m_DataBuffer.Data + m_CurrentBufferOffset;
 		m_CurrentBufferOffset += size;
@@ -87,7 +89,7 @@ public:
 	}
 
 	template<>
-	Buffer Read(size_t size)
+	Buffer Read(uint64_t size)
 	{
 		Buffer value((uint8_t*)m_DataBuffer.Data + m_CurrentBufferOffset, size);
 		m_CurrentBufferOffset += size;
@@ -96,21 +98,23 @@ public:
 	
 
 	template<typename T>
-	size_t Write(T value)
+	uint64_t Write(T value)
 	{
 		m_DataBuffer.Write(&value, sizeof(T), m_CurrentBufferOffset);
 		m_CurrentBufferOffset += sizeof(T);
 		return sizeof(T);
 	}
+
 	template<>
-	size_t Write(Buffer value)
+	uint64_t Write(Buffer value)
 	{
 		m_DataBuffer.Write(value.Data, value.Size, m_CurrentBufferOffset);
 		m_CurrentBufferOffset += value.Size;
 		return value.Size;
 	}
+
 	template<>
-	size_t Write(std::string value)
+	uint64_t Write(std::string value)
 	{
 		uint64_t length = value.length();
 		m_DataBuffer.Write(&length, sizeof(uint64_t), m_CurrentBufferOffset);
@@ -123,7 +127,7 @@ public:
 	}
 
 	template<typename T>
-	size_t Write(T* data, size_t dataLength)
+	uint64_t Write(T* data, uint64_t dataLength)
 	{
 		m_DataBuffer.Write((const void*)data, dataLength, m_CurrentBufferOffset);
 		m_CurrentBufferOffset += dataLength;
@@ -132,12 +136,12 @@ public:
 
 	bool Available() const { return m_CurrentBufferOffset < m_DataBuffer.Size; }
 	void* GetData() const { return m_DataBuffer.Data; }
-	size_t GetSize() { return m_DataBuffer.Size; }
-	size_t GetCursor() { return m_CurrentBufferOffset; }
-	void AddBufferOffset(size_t offset) { m_CurrentBufferOffset = offset; }
+	uint64_t GetSize() { return m_DataBuffer.Size; }
+	uint64_t GetCursor() { return m_CurrentBufferOffset; }
+	void AddBufferOffset(uint64_t offset) { m_CurrentBufferOffset = offset; }
 	void ResetCursor() { m_CurrentBufferOffset = 0; }
 
-	void Resize(size_t size)
+	void Resize(uint64_t size)
 	{
 		Buffer oldBuffer = m_DataBuffer;
 
@@ -148,8 +152,9 @@ public:
 	}
 
 private:
+
 	Buffer m_DataBuffer;
-	size_t m_CurrentBufferOffset = 0;
+	uint64_t m_CurrentBufferOffset = 0;
 	uint32_t m_RefCount = 0;
 	bool m_OwnsData = true;
 };

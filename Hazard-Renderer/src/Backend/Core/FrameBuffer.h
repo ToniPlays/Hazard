@@ -48,7 +48,7 @@ namespace HazardRenderer
 	{
 		uint32_t Width, Height;
 		uint32_t Samples;
-		size_t AttachmentCount;
+		uint64_t AttachmentCount;
 		glm::vec4 ClearColor;
 		std::vector<FrameBufferAttachment> Attachments;
 		Ref<FrameBuffer> pFrameBuffer = nullptr;
@@ -70,7 +70,7 @@ namespace HazardRenderer
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual size_t GetColorAttachmentCount() = 0;
+		virtual uint64_t GetColorAttachmentCount() = 0;
 
 		virtual Ref<Image2D> GetImage(uint32_t index = 0) const = 0;
 		virtual Ref<Image2D> GetDepthImage() const = 0;

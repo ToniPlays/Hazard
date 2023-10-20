@@ -438,7 +438,7 @@ namespace UI
 				{
 					Application::Get().SubmitMainThread([e = entities[0]]() {
 						ScriptEngine& scriptEngine = Application::Get().GetModule<ScriptEngine>();
-						scriptEngine.InitializeComponent(e, e.GetComponent<ScriptComponent>());
+						scriptEngine.InitializeComponent(&e.GetWorld(), e);
 					});
 				}
 			}

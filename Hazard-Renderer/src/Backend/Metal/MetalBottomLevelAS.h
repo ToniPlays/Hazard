@@ -18,7 +18,7 @@ namespace HazardRenderer::Metal
         MetalBottomLevelAS(AccelerationStructureCreateInfo* info);
         ~MetalBottomLevelAS() = default;
 
-        size_t GetCount() const override { return 0; };
+        uint64_t GetCount() const override { return 0; };
         void PushTransforms(const BufferCopyRegion& copyRegion) override;
 
         void Invalidate() override;

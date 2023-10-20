@@ -15,7 +15,7 @@ namespace UI
 	private:
 		void DrawPerformanceTimers();
 		void DrawMemoryView();
-		ImVec4 GetMemoryColor(size_t bytes);
+		ImVec4 GetMemoryColor(uint64_t bytes);
 
 	private:
 		Hazard::ImUI::TextField m_SearchField;

@@ -15,7 +15,6 @@ IncludeDir["yaml_cpp"] = "%{wks.location}/Hazard/vendor/yaml-cpp/include"
 IncludeDir["glm"] = "%{wks.location}/Hazard/vendor/glm"
 
 IncludeDir["Mono"] = "%{wks.location}/Hazard/vendor/mono/include"
-IncludeDir["Optick"] = "%{wks.location}/Hazard/vendor/Optick/src"
 
 IncludeDir["Vorbis"] = "%{wks.location}/Hazard/vendor/Vorbis/include"
 IncludeDir["AudioFile"] = "%{wks.location}/Hazard/vendor/AudioFile"
@@ -60,7 +59,6 @@ Library = {}
     IncludeDir["SPIRV_Cross"] = "%{VulkanSDK}/Include"
 
     Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
-    Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK}/VkLayer_utils.lib"
 
     Library["ShaderC_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/shaderc_sharedd.lib"
     Library["SPIRV_Cross_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-cored.lib"
@@ -100,8 +98,6 @@ if os.host() == "macosx" then
     Library["Assimp_Lib"] =  CELLAR .. "assimp/5.2.5/lib/libassimp.5.2.4.dylib"
     
 end
-
-
 
 premake.override(_G, "project", function(base, ...)
 	local rval = base(...)

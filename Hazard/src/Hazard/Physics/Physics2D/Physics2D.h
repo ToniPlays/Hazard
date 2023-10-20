@@ -48,12 +48,14 @@ namespace Hazard::Physics
 
 	using ContactCallback = std::function<void(Contact2DData)>;
 
-	class Physics2D {
+	class Physics2D
+	{
 	public:
 		Physics2D() = default;
 		~Physics2D() = default;
 
-		void SetIterations(int32_t velocity, int32_t position) {
+		void SetIterations(int32_t velocity, int32_t position)
+		{
 			velocityIterations = velocity;
 			positionIterations = position;
 		}
@@ -69,12 +71,12 @@ namespace Hazard::Physics
 
 		void OnContact(Contact2DData data)
 		{
-			for (auto& callback : m_Callbacks) {
+			for (auto& callback : m_Callbacks)
 				callback(data);
-			}
 		}
 
-		glm::vec2 GetPosition(void* handle) {
+		glm::vec2 GetPosition(void* handle)
+		{
 			b2Vec2 pos = ((b2Body*)handle)->GetPosition();
 			return { pos.x, pos.y };
 		};

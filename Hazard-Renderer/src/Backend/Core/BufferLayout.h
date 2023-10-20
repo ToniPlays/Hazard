@@ -17,7 +17,7 @@ namespace HazardRenderer {
 		ShaderDataType Type;
 		uint32_t Size;
 		uint32_t ElementDivisor = 0;
-		size_t Offset;
+		uint64_t Offset;
 
 		BufferElement() = default;
 
@@ -74,7 +74,7 @@ namespace HazardRenderer {
 
 		uint32_t GetStride() const { return m_Stride; }
 		const std::vector<BufferElement>& GetElements() const { return m_Elements; }
-		size_t GetElementCount() { return m_Elements.size(); }
+		uint64_t GetElementCount() { return m_Elements.size(); }
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }

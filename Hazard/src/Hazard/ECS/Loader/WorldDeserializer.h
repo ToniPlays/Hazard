@@ -12,20 +12,16 @@
 
 namespace Hazard
 {
-	using DeserializerProgressHandler = std::function<void(Entity&, size_t, size_t)>;
+	using DeserializerProgressHandler = std::function<void(Entity&, uint64_t, uint64_t)>;
 
 	class WorldDeserializer
 	{
 	public:
-
 		WorldDeserializer(AssetHandle handle) : m_Handle(handle) {}
 
 		Ref<World> Deserialize();
 
-		void SetProgressHandler(DeserializerProgressHandler handler)
-		{
-			m_Handler = handler;
-		}
+		void SetProgressHandler(DeserializerProgressHandler handler) { m_Handler = handler; }
 
 	private:
 		template<typename T>
@@ -56,6 +52,7 @@ namespace Hazard
 			c.SetRotation(glm::radians(rotation));
 			c.SetScale(scale);
 		};
+
 		template<>
 		static void Deserialize<CameraComponent>(Entity entity, YAML::Node comp)
 		{
@@ -72,6 +69,7 @@ namespace Hazard
 			c.SetZNear(clipping.x);
 			c.SetZFar(clipping.y);
 		};
+
 		template<>
 		static void Deserialize<ScriptComponent>(Entity entity, YAML::Node comp)
 		{
@@ -95,6 +93,7 @@ namespace Hazard
 				ScriptSerializer::DeserializeFieldEditor(c.m_Handle, name, node.second);
 			}
 		};
+
 		template<>
 		static void Deserialize<SkyLightComponent>(Entity entity, YAML::Node comp)
 		{
@@ -113,6 +112,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Color", c.LightColor, Color::White);
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 		}
+
 		template<>
 		static void Deserialize<PointLightComponent>(Entity entity, YAML::Node comp)
 		{
@@ -122,6 +122,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Intensity", c.Intensity, 1.0f);
 			YamlUtils::Deserialize(comp, "Radius", c.Radius, 1.0f);
 		}
+
 		template<>
 		static void Deserialize<MeshComponent>(Entity entity, YAML::Node comp)
 		{
@@ -131,6 +132,7 @@ namespace Hazard
 			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", c.MeshHandle, INVALID_ASSET_HANDLE);
 			YamlUtils::Deserialize<AssetHandle>(comp, "Material", c.MaterialHandle, INVALID_ASSET_HANDLE);
 		};
+
 		template<>
 		static void Deserialize<SpriteRendererComponent>(Entity entity, YAML::Node comp)
 		{
@@ -140,6 +142,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Color", component.Color, Color::White);
 			YamlUtils::Deserialize<AssetHandle>(comp, "Sprite", component.TextureHandle, INVALID_ASSET_HANDLE);
 		};
+
 		template<>
 		static void Deserialize<Rigidbody2DComponent>(Entity entity, YAML::Node comp)
 		{
@@ -151,6 +154,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "FixedRotation", component.FixedRotation, false);
 			YamlUtils::Deserialize(comp, "UseGravity", component.UseGravity, true);
 		}
+
 		template<>
 		static void Deserialize<BoxCollider2DComponent>(Entity entity, YAML::Node comp)
 		{
@@ -164,6 +168,7 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "RestitutionThreshold", component.RestitutionThreshold, 0.1f);
 			YamlUtils::Deserialize(comp, "IsSensor", component.IsSensor, false);
 		}
+
 		template<>
 		static void Deserialize<CircleCollider2DComponent>(Entity entity, YAML::Node comp)
 		{
@@ -179,6 +184,7 @@ namespace Hazard
 		}
 
 	private:
+
 		AssetHandle m_Handle;
 		DeserializerProgressHandler m_Handler;
 	};

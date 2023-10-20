@@ -9,6 +9,7 @@ namespace Hazard
 	{
 		SetPipeline(AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack"));
 	}
+
 	Material::Material(AssetHandle pipelineHandle) : m_PipelineHandle(pipelineHandle)
 	{
 		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();

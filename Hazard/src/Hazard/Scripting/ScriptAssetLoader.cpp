@@ -16,7 +16,7 @@ namespace Hazard
 
 		Ref<HScript> script = Ref<HScript>::Create(sourceFile, File::GetNameNoExt(sourceFile));
 		script->IncRefCount();
-		job->GetStage()->SetResult(script);
+		job->SetResult(&script, sizeof(Ref<HScript>));
 
 		buffer.Release();
 	}
@@ -63,7 +63,7 @@ namespace Hazard
 		Ref<HScript> script = Ref<HScript>::Create();
 		script->m_Handle = AssetHandle();
 
-		Ref<Job> loadJob = Ref<Job>::Create(LoadScriptAsset, metadata.Handle);
+		Ref<Job> loadJob = Ref<Job>::Create("Script load", LoadScriptAsset, metadata.Handle);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("Script load", 1);
 		Ref<GraphStage> createStage = graph->AddStage();
@@ -80,7 +80,7 @@ namespace Hazard
 		Ref<HScript> script = Ref<HScript>::Create();
 		script->m_Handle = AssetHandle();
 
-		Ref<Job> createJob = Ref<Job>::Create(SaveScriptAsset, script, path);
+		Ref<Job> createJob = Ref<Job>::Create("Script create", SaveScriptAsset, script, path);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("Script create", 1);
 		Ref<GraphStage> createStage = graph->AddStage();

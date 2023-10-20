@@ -5,7 +5,7 @@
 
 GraphStage::~GraphStage()
 {
-	m_ResultBuffer.Release();
+
 }
 Ref<GraphStage> GraphStage::GetGraphStage(uint32_t index)
 {
@@ -15,11 +15,8 @@ Ref<GraphStage> GraphStage::GetGraphStage(uint32_t index)
 	return m_JobGraph->GetStage(index);
 }
 
-void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs, const std::string& name)
+void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs)
 {
-	if (!name.empty())
-		m_Name = name;
-
 	std::lock_guard lock(m_JobMutex);
 	m_Jobs.insert(m_Jobs.begin(), jobs.begin(), jobs.end());
 
@@ -30,13 +27,37 @@ void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs, const std::string&
 		job->m_Stage = this;
 }
 
-void GraphStage::OnJobFinished()
+Ref<JobGraph> GraphStage::GetGraph()
+{
+	return m_JobGraph;
+}
+
+Buffer GraphStage::GetJobResult(uint32_t index)
+{
+	return m_Jobs[index]->GetResult();
+}
+
+std::vector<Buffer> GraphStage::GetJobResults()
+{
+	std::vector<Buffer> results;
+	results.reserve(m_Jobs.size());
+
+	for (auto& job : m_Jobs)
+		results.push_back(job->GetResult());
+
+	return results;
+}
+
+void GraphStage::OnJobFinished(Ref<Job> job)
 {
 	m_JobCount--;
 	m_JobCount.notify_all();
 
+	if (job->GetStatus() == JobStatus::Failure)
+		m_Flags = 0;
+
 	if (m_JobCount == 0)
-		m_JobGraph->OnStageFinished();
+		m_JobGraph->OnStageFinished(this);
 }
 
 float GraphStage::GetProgress()

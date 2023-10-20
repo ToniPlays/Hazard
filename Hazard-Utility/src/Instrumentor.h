@@ -150,20 +150,20 @@ private:
 };
 namespace InstrumentorUtils {
 
-	template<size_t N>
+	template<uint64_t N>
 	struct ChangeResult {
 		char Data[N];
 	};
 
-	template<size_t N, size_t K>
+	template<uint64_t N, uint64_t K>
 	constexpr auto CleanupOutputString(const char(&expr)[N], const char(&remove)[K]) {
 		ChangeResult<N> result = {};
 
-		size_t srcIndex = 0;
-		size_t dstIndex = 0;
+		uint64_t srcIndex = 0;
+		uint64_t dstIndex = 0;
 
 		while (srcIndex < N) {
-			size_t matchIndex = 0;
+			uint64_t matchIndex = 0;
 
 			while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && expr[srcIndex + matchIndex] == remove[matchIndex]) {
 				matchIndex++;

@@ -30,9 +30,5 @@ workspace "%{ProjectName}"
       "Assets/**.cs"
     }
     links {
-      "%{HazardDirectory}/HazardScripting/bin/debug/net7.0.7/HazardScripting.dll"
+      "%{HazardDirectory}/HazardScripting/bin/debug/net7.0/HazardScripting.dll"
     }
-
-    for k,v in pairs(_OPTIONS) do
-        print(k.." = "..v)
-    end

@@ -11,18 +11,6 @@ public:
 
 	void* Allocate(CommandFn func, uint32_t size);
 
-	//Requires mutable
-	template<typename FuncT>
-	void Submit(FuncT&& fn)
-	{
-		auto renderCmd = [](void* ptr) {
-			auto pFunc = (FuncT*)ptr;
-			(*pFunc)();
-		};
-
-		auto storageBuffer = Allocate(renderCmd, sizeof(fn));
-		//hnew (storageBuffer) FuncT(std::forward<FuncT>(fn));
-	}
 	void Excecute();
 	void Clear()
 	{

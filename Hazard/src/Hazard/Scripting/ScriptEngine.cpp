@@ -5,7 +5,6 @@
 #include "ScriptAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Attributes/AttributeConstructor.h"
-#include "MonoUtilities.h"
 
 #define TYPEDEF(x, y) if (strcmp(##name, x) == 0) return y;
 
@@ -94,7 +93,32 @@ namespace Hazard
 	}
 	void ScriptEngine::ReloadAssemblies()
 	{
-		m_Engine->Reload();
+		Application::Get().SubmitMainThread([=]() {
+
+			for (auto& [uid, ctx] : m_WorldContext)
+			{
+				//Destroy all instances
+				auto view = ctx->GetEntitiesWith<ScriptComponent>();
+				for (auto& e : view)
+				{
+					Entity entity(e, ctx.Raw());
+					entity.GetComponent<ScriptComponent>().m_Handle = nullptr;
+				}
+			}
+
+			m_Engine->Reload();
+
+			for (auto& [uid, ctx] : m_WorldContext)
+			{
+				//Destroy all instances
+				auto view = ctx->GetEntitiesWith<ScriptComponent>();
+				for (auto& e : view)
+				{
+					Entity entity(e, ctx.Raw());
+					InitializeComponent(ctx, entity);
+				}
+			}
+		});
 	}
 	void ScriptEngine::SetDebugCallback(ScriptMessageCallback callback)
 	{
@@ -105,14 +129,23 @@ namespace Hazard
 
 		m_QueuedMessages.clear();
 	}
-	void ScriptEngine::InitializeComponent(const Entity& entity, ScriptComponent& component)
+	void ScriptEngine::InitializeComponent(Ref<World> targetWorld, const Entity& entity)
 	{
 		HZR_PROFILE_FUNCTION();
+		auto& component = entity.GetComponent<ScriptComponent>();
+
 		if (component.ModuleName == "") return;
 		if (!FindModule(component.ModuleName)) return;
 
 		ScriptMetadata script = GetScript(component.ModuleName);
 		component.m_Handle = script.CreateObject<uint64_t>((uint64_t)entity.GetUID());
+
+		m_Instances[entity.GetUID()] = targetWorld->GetHandle();
+		m_WorldContext[targetWorld->GetHandle()] = targetWorld;
+	}
+	void ScriptEngine::RemoveComponent(Ref<World> targetWorld, const Entity& entity)
+	{
+		m_Instances.erase(entity.GetUID());
 	}
 	const std::vector<Ref<ScriptAssembly>>& ScriptEngine::GetAssemblies()
 	{

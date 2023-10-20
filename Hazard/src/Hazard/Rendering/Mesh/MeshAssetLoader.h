@@ -9,8 +9,8 @@ namespace Hazard
 	{
 		//Metadata
 		uint32_t Flags;
-		size_t VertexCount;
-		size_t IndexCount;
+		uint64_t VertexCount;
+		uint64_t IndexCount;
 		BoundingBox BoundingBox;
 	};
 

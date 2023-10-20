@@ -3,7 +3,7 @@ include "Dependencies.lua"
 workspace "Hazard"
 
 	startproject "HazardEditor"
-    cppdialect "C++20"
+    	cppdialect "C++20"
 
 	configurations
 	{
@@ -82,11 +82,6 @@ group "Dependencies"
 	filter ""
 
 	include "Hazard/vendor/Box2D"
-
-	if os.host() == "windows" then
-		include "Hazard/vendor/Optick"
-	end
-
 	include "Hazard/vendor/yaml-cpp"
 	include "Hazard/vendor/imgui"
 

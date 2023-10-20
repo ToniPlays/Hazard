@@ -48,7 +48,7 @@ namespace HazardRenderer
 		}
 
 		const std::vector<DescriptorSetElement>& GetElements() const { return m_Elements; }
-		size_t GetElementCount() { return m_Elements.size(); }
+		uint64_t GetElementCount() { return m_Elements.size(); }
 
 		std::vector<DescriptorSetElement>::iterator begin() { return m_Elements.begin(); }
 		std::vector<DescriptorSetElement>::iterator end() { return m_Elements.end(); }

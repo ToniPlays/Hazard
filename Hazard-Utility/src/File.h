@@ -39,7 +39,7 @@ public:
 	static CachedBuffer ReadBinaryFile(const std::filesystem::path& path);
 	static std::string ReadFile(const std::filesystem::path& file);
 
-	static bool WriteBinaryFile(const std::filesystem::path& path, void* data, size_t size);
+	static bool WriteBinaryFile(const std::filesystem::path& path, void* data, uint64_t size);
 	static bool CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest);
 	static bool IsNewerThan(const std::filesystem::path& file, const std::filesystem::path& compareTo);
 

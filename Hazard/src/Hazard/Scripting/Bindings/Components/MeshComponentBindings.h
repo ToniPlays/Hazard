@@ -12,12 +12,14 @@ namespace Hazard
 
 	static uint64_t MeshComponent_GetMesh_Native(uint64_t id)
 	{
-		auto& mc = GET_ENTITY(id).GetComponent<MeshComponent>();
+		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
+		auto& mc = entity.GetComponent<MeshComponent>();
 		return mc.MeshHandle;
 	}
 
 	static void MeshComponent_SetMesh_Native(uint64_t id, uint64_t handle)
 	{
-		GET_ENTITY(id).GetComponent<MeshComponent>().MeshHandle = handle;
+		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
+		entity.GetComponent<MeshComponent>().MeshHandle = handle;
 	}
 }

@@ -28,6 +28,9 @@
     <Filter Include="src\Hazard\ImGUI\UIElements">
       <UniqueIdentifier>{CA0D99FA-361B-C7E0-BF01-C3CB2B0E9397}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Input">
+      <UniqueIdentifier>{958EA082-8187-BFD4-AAB9-A45996119FE0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Logging">
       <UniqueIdentifier>{ACBC9795-98A0-58EB-0101-533EED03436D}</UniqueIdentifier>
     </Filter>
@@ -234,6 +237,24 @@
     <ClInclude Include="src\Hazard\ImGUI\UILibrary.h">
       <Filter>src\Hazard\ImGUI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Input\GamepadInputDevice.h">
+      <Filter>src\Hazard\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Input\InputDevice.h">
+      <Filter>src\Hazard\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Input\InputManager.h">
+      <Filter>src\Hazard\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Input\InputSchema.h">
+      <Filter>src\Hazard\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Input\KeyboardInputDevice.h">
+      <Filter>src\Hazard\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Input\MouseInputDevice.h">
+      <Filter>src\Hazard\Input</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Logging\Logger.h">
       <Filter>src\Hazard\Logging</Filter>
     </ClInclude>
@@ -397,9 +418,6 @@
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\InternalCalls.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\MonoUtilities.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptAssetLoader.h">
@@ -1677,12 +1695,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Input\InputManager.h" />
-    <ClInclude Include="src\Hazard\Input\InputSchema.h" />
-    <ClInclude Include="src\Hazard\Input\KeyboardInputDevice.h" />
-    <ClInclude Include="src\Hazard\Input\InputDevice.h" />
-    <ClInclude Include="src\Hazard\Input\MouseInputDevice.h" />
-    <ClInclude Include="src\Hazard\Input\GamepadInputDevice.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1757,11 +1769,20 @@
     <ClCompile Include="src\Hazard\ImGUI\UIElements\Treenode.cpp">
       <Filter>src\Hazard\ImGUI\UIElements</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Input\GamepadInputDevice.cpp">
+      <Filter>src\Hazard\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Input\InputManager.cpp">
+      <Filter>src\Hazard\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Input\KeyboardInputDevice.cpp">
+      <Filter>src\Hazard\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Input\MouseInputDevice.cpp">
+      <Filter>src\Hazard\Input</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Logging\Logger.cpp">
       <Filter>src\Hazard\Logging</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Math\Time.cpp">
-      <Filter>src\Hazard\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Modulehandler.cpp">
       <Filter>src\Hazard</Filter>
@@ -1788,9 +1809,6 @@
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\ShaderLibrary.cpp">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\TextureFactory.cpp">
@@ -1838,9 +1856,6 @@
     <ClCompile Include="src\Hazard\Scripting\HScript.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\MonoUtils.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptAssetLoader.cpp">
       <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
@@ -1865,9 +1880,5 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Input\InputManager.cpp" />
-    <ClCompile Include="src\Hazard\Input\MouseInputDevice.cpp" />
-    <ClCompile Include="src\Hazard\Input\KeyboardInputDevice.cpp" />
-    <ClCompile Include="src\Hazard\Input\GamepadInputDevice.cpp" />
   </ItemGroup>
 </Project>

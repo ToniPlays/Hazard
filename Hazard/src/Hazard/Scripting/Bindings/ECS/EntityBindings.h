@@ -1,18 +1,19 @@
 #pragma once
 
-#define GET_ENTITY(id) Application::GetModule<WorldHandler>().GetCurrentWorld()->GetEntityFromUID(id)
-
 #include "UtilityCore.h"
-#include "Hazard/ECS/WorldHandler.h"
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/ECS/Entity.h"
 
 #define RegisterComponent(T, Assembly) {																				\
-		Coral::Type* coralType = &Assembly->GetTypeByName("Hazard." #T);													\
+		Coral::TypeId coralType = Assembly->GetTypeByName("Hazard." #T).GetTypeId();									\
 		if (coralType)																									\
 		{																												\
-			hasComponentFuncs[coralType] = [](uint64_t entityID) { return GET_ENTITY(entityID).HasComponent<T>(); };	\
-			createComponentFuncs[coralType] = [](uint64_t entityID) { GET_ENTITY(entityID).AddComponent<T>(); };		\
+			hasComponentFuncs[coralType] = [](uint64_t id) {															\
+				return ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).HasComponent<T>();				\
+			};																											\
+			createComponentFuncs[coralType] = [](uint64_t id) {															\
+				return ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).GetComponent<T>();				\
+			};																											\
 		}																												\
 	}																													\
 
@@ -26,18 +27,21 @@ namespace Hazard
 
 	static uint64_t Entity_InstantiateOrigin_Native(Coral::NativeString name)
 	{
-		return Application::GetModule<WorldHandler>().GetCurrentWorld()->CreateEntity(name.ToString()).GetUID();
+		//TODO
+		return ScriptEngine::GetTargetWorldForEntity(0)->CreateEntity(name.ToString()).GetUID();
 	}
 	static uint64_t Entity_InstantiateAt_Native(Coral::NativeString name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 	{
-		Entity e = Application::GetModule<WorldHandler>().GetCurrentWorld()->CreateEntity(name.ToString());
+		//TODO
+		//Entity e = CreateEntity(name.ToString());
 
-		auto& tc = e.GetTransform();
-		tc.SetTranslation(position);
-		tc.SetRotation(rotation);
-		tc.SetScale(scale);
+		//auto& tc = e.GetTransform();
+		//tc.SetTranslation(position);
+		//tc.SetRotation(rotation);
+		//tc.SetScale(scale);
 
-		return e.GetUID();
+		return 0;
+		//return e.GetUID();
 	}
 	static bool Entity_HasComponent_Native(uint64_t id, Coral::TypeId type)
 	{
@@ -50,7 +54,7 @@ namespace Hazard
 	
 	static void Entity_Destroy_Native(uint64_t id)
 	{
-		Entity e = GET_ENTITY(id);
+		Entity e = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
 		if (e.HasComponent<ScriptComponent>()) 
 		{
 			auto& sc = e.GetComponent<ScriptComponent>();
@@ -61,19 +65,19 @@ namespace Hazard
 	}
 	static bool Entity_IsUpdated_Native(uint64_t id)
 	{
-		return GET_ENTITY(id).ReceivesUpdate();
+		return ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).ReceivesUpdate();
 	}
 	static void Entity_SetUpdate_Native(uint64_t id, bool visible)
 	{
-		GET_ENTITY(id).SetReceiveUpdate(visible);
+		ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).SetReceiveUpdate(visible);
 	}
 	static bool Entity_IsVisible_Native(uint64_t id) 
 	{
-		return GET_ENTITY(id).IsVisible();
+		return ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).IsVisible();
 	}
 	static void Entity_SetVisible_Native(uint64_t id, bool visible)
 	{
-		GET_ENTITY(id).SetVisible(visible);
+		ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).SetVisible(visible);
 	}
 	static bool Component_IsActive_Native(uint64_t id, Coral::TypeId type)
 	{

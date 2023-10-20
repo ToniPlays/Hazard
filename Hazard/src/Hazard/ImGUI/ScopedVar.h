@@ -14,31 +14,39 @@ namespace Hazard::ImUI
 	}
 
 	template<typename Value>
-	class ScopedStyleVar {
+	class ScopedStyleVar 
+	{
 	public:
-		ScopedStyleVar(ImGuiStyleVar var, Value value) {
+		ScopedStyleVar(ImGuiStyleVar var, Value value) 
+		{
 			ImGui::PushStyleVar(var, value);
 		}
-		~ScopedStyleVar() {
+		~ScopedStyleVar() 
+		{
 			ImGui::PopStyleVar();
 		}
 	};
 	template<typename T>
-	class ScopedStyleColor {
+	class ScopedStyleColor 
+	{
 	public:
-		ScopedStyleColor(ImGuiStyleVar var, T value) {
+		ScopedStyleColor(ImGuiStyleVar var, T value) 
+		{
 			ImGui::PushStyleColor(var, value);
 		}
-		~ScopedStyleColor() {
+		~ScopedStyleColor() 
+		{
 			ImGui::PopStyleColor();
 		}
 	};
 	class ScopedFont {
 	public:
-		ScopedFont(ImFont* font) {
+		ScopedFont(ImFont* font) 
+		{
 			ImGui::PushFont(font);
 		}
-		~ScopedFont() {
+		~ScopedFont() 
+		{
 			ImGui::PopFont();
 		}
 	};

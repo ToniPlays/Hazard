@@ -18,19 +18,19 @@ namespace Hazard
 	{
         std::string DebugName;
 		BoundingBox BoundingBox;
-		size_t VertexCount;
+		uint64_t VertexCount;
 		Vertex3D* pVertices;
-		size_t IndexCount;
+		uint64_t IndexCount;
 		uint32_t* pIndices;
 	};
 
 	struct SubMesh 
 	{
-		size_t BaseVertex;
-		size_t BaseIndex;
-		size_t MaterialIndex;
-		size_t IndexCount;
-		size_t VertexCount;
+		uint64_t BaseVertex;
+		uint64_t BaseIndex;
+		uint64_t MaterialIndex;
+		uint64_t IndexCount;
+		uint64_t VertexCount;
 
 		glm::mat4 Transform;
 		glm::mat4 LocalTransform;
@@ -47,7 +47,7 @@ namespace Hazard
 		~Mesh() = default;
 
 		bool IsValid() { return m_VertexBuffer && m_IndexBuffer; }
-		size_t GetIndexCount() { return m_IndexBuffer->GetSize() / 3; }
+		uint64_t GetIndexCount() { return m_IndexBuffer->GetSize() / 3; }
 
 		Ref<HazardRenderer::GPUBuffer> GetVertexBuffer() { return m_VertexBuffer; }
 		Ref<HazardRenderer::GPUBuffer> GetIndexBuffer() { return m_IndexBuffer; }

@@ -75,7 +75,7 @@ std::filesystem::path File::FindAvailableName(const std::filesystem::path& direc
 	return path;
 }
 
-bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, size_t size)
+bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, uint64_t size)
 {
 	if (size == 0) return false;
 
@@ -133,7 +133,7 @@ std::string File::ReadFile(const std::filesystem::path& file)
 	std::ifstream ifs(File::GetFileAbsolutePath(file), std::ios::in | std::ios::binary | std::ios::ate);
 	HZR_ASSERT(ifs.is_open(), "Cannot open file: " + GetFileAbsolutePath(file).string());
 
-	size_t size = ifs.tellg();
+	uint64_t size = ifs.tellg();
 	result.resize(size);
 	ifs.seekg(0, std::ios::beg);
 	ifs.read(&result[0], size);

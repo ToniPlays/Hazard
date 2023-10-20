@@ -29,6 +29,7 @@ namespace Hazard
 		result.Write(out.c_str(), result.Size);
 		return result;
 	}
+
 	void WorldSerializer::SerializeEntity(Entity& entity, YAML::Emitter& out)
 	{
 		out << YAML::BeginMap;

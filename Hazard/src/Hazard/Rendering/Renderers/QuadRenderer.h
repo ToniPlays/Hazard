@@ -15,10 +15,11 @@ namespace Hazard
 {
 	struct QuadRendererData
 	{
-		size_t MaxQuadCount;
-		size_t MaxVertices;
-		size_t MaxIndices;
+		uint64_t MaxQuadCount;
+		uint64_t MaxVertices;
+		uint64_t MaxIndices;
 		uint32_t Samplers;
+
 		std::vector<Ref<HazardRenderer::Image2D>> TextureSlots;
 		float TextureIndex = 0.0f;
 		glm::vec4 QuadVertexPos[4];

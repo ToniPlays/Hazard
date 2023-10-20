@@ -14,7 +14,7 @@ namespace Events
 
 		inline std::vector<Entity> GetEntitites() { return m_Entities; }
 		inline Entity GetEntity(uint32_t index = 0) { return m_Entities[index]; }
-		inline size_t GetEntityCount() { return m_Entities.size(); }
+		inline uint64_t GetEntityCount() { return m_Entities.size(); }
 
 		EVENT_CLASS_TYPE(AppEvent)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)

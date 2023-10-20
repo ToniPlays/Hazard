@@ -168,7 +168,7 @@ namespace HazardRenderer::Vulkan
 		//Select present mode
 		if (!enableVSync)
 		{
-			for (size_t i = 0; i < presentModeCount; i++)
+			for (uint64_t i = 0; i < presentModeCount; i++)
 			{
 				if (presentModes[i] == VK_PRESENT_MODE_MAILBOX_KHR)
 				{

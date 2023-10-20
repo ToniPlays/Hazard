@@ -11,7 +11,7 @@ namespace Hazard
 	void LineRenderer::Init()
 	{
 		HZR_PROFILE_FUNCTION();
-		constexpr size_t lineCount = 5000;
+		constexpr uint64_t lineCount = 5000;
 		m_Data.MaxLineCount = lineCount;
 		m_Data.MaxVertices = lineCount * 2;
 
@@ -19,21 +19,25 @@ namespace Hazard
 			hdelete m_LineBatch;
 		m_LineBatch = hnew Batch<LineVertex>(m_Data.MaxVertices);
 	}
+
 	void LineRenderer::BeginScene()
 	{
 		HZR_PROFILE_FUNCTION();
 		BeginBatch();
 	}
+
 	void LineRenderer::EndScene()
 	{
 		HZR_PROFILE_FUNCTION();
 		Flush();
 	}
+
 	void LineRenderer::BeginBatch()
 	{
 		HZR_PROFILE_FUNCTION();
 		m_LineBatch->Reset();
 	}
+
 	void LineRenderer::Flush()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -52,6 +56,7 @@ namespace Hazard
 		
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Material, m_LineBatch->GetCount());
 	}
+
 	void LineRenderer::SubmitLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color)
 	{
 		HZR_PROFILE_FUNCTION();

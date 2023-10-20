@@ -7,7 +7,7 @@
 
 namespace HazardRenderer::Utils
 {
-    void Deserialize(YAML::Node node, size_t index, Buffer buffer, ShaderDataType type)
+    void Deserialize(YAML::Node node, uint64_t index, Buffer buffer, ShaderDataType type)
     {
         switch(type)
         {

@@ -14,7 +14,7 @@ namespace HazardRenderer::Vulkan
 		~VulkanGPUBuffer();
 
 		const std::string& GetDebugName() const override { return m_DebugName; };
-		const size_t GetSize() const { return m_Size; };
+		const uint64_t GetSize() const { return m_Size; };
 
 		Buffer ReadData(const BufferCopyRegion& copyRegion) override;
 		void SetData(const BufferCopyRegion& copyRegion);

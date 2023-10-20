@@ -12,7 +12,7 @@ namespace HazardRenderer
 	struct ShaderCode
 	{
 		uint32_t Stage;
-		size_t Length;
+		uint64_t Length;
 	};
 
 	struct ShaderDefine
@@ -31,7 +31,7 @@ namespace HazardRenderer
 		uint32_t Stage;
 		std::string Source;
 		std::string Name;
-		size_t DefineCount = 0;
+		uint64_t DefineCount = 0;
 		ShaderDefine* pDefines = nullptr;
 	};
 
@@ -40,7 +40,7 @@ namespace HazardRenderer
 	public:
 		static ShaderData GetShaderResources(const std::unordered_map<uint32_t, Buffer>& binaries);
 		static std::vector<ShaderStageCode> GetShaderBinariesFromSource(const std::filesystem::path& sourceFile, const RenderAPI& api);
-		static size_t GetBinaryLength(const std::vector<ShaderStageCode>& binaries);
+		static uint64_t GetBinaryLength(const std::vector<ShaderStageCode>& binaries);
 
 	private:
 		static std::unordered_map<uint32_t, std::string> GetShaderSources(const std::filesystem::path& path);

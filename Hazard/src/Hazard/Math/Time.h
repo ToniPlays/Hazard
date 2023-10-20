@@ -1,13 +1,15 @@
 #pragma once
 #include "Hazard/Core/Core.h"
 
-namespace Hazard {
-	class Time {
+namespace Hazard 
+{
+	class Time 
+	{
 	public:
-		static double s_DeltaTime;
-		static long double s_Time;
-		static double s_UnscaledDeltaTime;
-		static float s_TimeScale;
+		inline static double s_DeltaTime = 0.0f;
+		inline static long double s_Time = 0.0f;
+		inline static double s_UnscaledDeltaTime = 0.0f;
+		inline static float s_TimeScale = 1.0f;
 
 		static void Update(double time) 
 		{
@@ -16,7 +18,9 @@ namespace Hazard {
 			s_Time = time;
 			s_LastTime = time;
 		}
+
 	private:
 		inline static double s_LastTime = 0;
+
 	};
 }

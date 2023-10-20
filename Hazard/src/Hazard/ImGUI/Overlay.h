@@ -47,9 +47,8 @@ namespace Hazard::ImUI
 
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, style.Window.TitleBgColor);
 			if (ImGui::Begin(m_Title.c_str(), &m_Open, window_flags))
-			{
 				OnPanelRender();
-			}
+
 			ImGui::PopStyleColor();
 			ImGui::End();
 

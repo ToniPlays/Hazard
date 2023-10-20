@@ -18,15 +18,18 @@ namespace Hazard::Physics
 		m_World2D->SetContactListener(listener);
 
 	}
+
 	void Physics2D::Step(float timeStep)
 	{
 		m_World2D->Step(timeStep, velocityIterations, positionIterations);
 	}
+
 	void Physics2D::End()
 	{
 		hdelete m_World2D;
 		m_World2D = nullptr;
 	}
+
 	void* Physics2D::CreatePhysicsObject(Physics2DObjectCreateInfo* createInfo)
 	{
 		uint32_t* data = (uint32_t*)&createInfo->Handle;
@@ -45,6 +48,7 @@ namespace Hazard::Physics
 		body->SetFixedRotation(createInfo->FixedRotation);
 		return body;
 	}
+
 	void* Physics2D::CreateCollider(PhysicsCollider2DCreateInfo* createInfo)
 	{
 		if (createInfo->Body == nullptr)

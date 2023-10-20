@@ -86,7 +86,7 @@ namespace UI
 		struct MemoryItem
 		{
 			const char* Category;
-			size_t Size;
+			uint64_t Size;
 		};
 
 		const auto& allocStatsMap = Memory::Allocator::GetAllocationStats();
@@ -124,7 +124,7 @@ namespace UI
 		ImGui::Text("Memory debug not enabled");
 	#endif
 	}
-	ImVec4 PerformanceDebugPanel::GetMemoryColor(size_t bytes)
+	ImVec4 PerformanceDebugPanel::GetMemoryColor(uint64_t bytes)
 	{
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 

@@ -19,6 +19,10 @@ namespace Hazard
             get => Get<TransformComponent>();
         }
 
+        public virtual void OnCreate() { }
+        public virtual void OnUpdate(float deltaTime) { }
+        public virtual void OnDestroy() { }
+
         public bool IsUpdated() { unsafe { return InternalCalls.Entity_IsUpdated_Native(ID); } }
         public void SetUpdate(bool update) { unsafe { InternalCalls.Entity_SetUpdate_Native(ID, update); } }
         public bool IsVisible() { unsafe { return InternalCalls.Entity_IsVisible_Native(ID); } }

@@ -16,7 +16,7 @@ namespace UI
 {
 	using namespace Hazard;
 
-	ProjectSettingsPanel::ProjectSettingsPanel() : Hazard::ImUI::Panel("Project Settings", true)
+	ProjectSettingsPanel::ProjectSettingsPanel() : Hazard::ImUI::Panel("Project Settings", false)
 	{
 		m_SearchField = ImUI::TextField("");
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
@@ -49,6 +49,18 @@ namespace UI
 				RenderPageHeader("Runtime - Build settings", "This is for build settings");
 				DrawRuntimeBuildSettings();
 				break;
+			case UI::ProjectSettingsPanel::SCRIPTING_PREPROCESSORS:
+				RenderPageHeader("Scripting - Preprocessors", "Ths is for preprocessors");
+				DrawScriptingPreprocessors();
+				break;
+			case UI::ProjectSettingsPanel::SCRIPTING_DEPENDENCIES:
+				RenderPageHeader("Scripting - Dependencies", "Ths is for dependencies");
+				DrawScriptingDependencies();
+				break;
+			case UI::ProjectSettingsPanel::SCRIPTING_EXECUTION_ORDER:
+				RenderPageHeader("Scripting - Execution order", "Ths is for execution order");
+				DrawScriptingExecutionOrder();
+				break;
 			case UI::ProjectSettingsPanel::RENDERING_QUALITY_SETTINGS:
 				RenderPageHeader("Graphics - Quality", "This is for quality settings");
 				DrawGraphicsQualitySettings();
@@ -68,18 +80,6 @@ namespace UI
 			case UI::ProjectSettingsPanel::PHYSICS_COLLISION_LAYERS:
 				RenderPageHeader("Physics - Collision layers", "Ths is for collision settings");
 				DrawPhysicsCollisionLayers();
-				break;
-			case UI::ProjectSettingsPanel::SCRIPTING_PREPROCESSORS:
-				RenderPageHeader("Scripting - Preprocessors", "Ths is for preprocessors");
-				DrawScriptingPreprocessors();
-				break;
-			case UI::ProjectSettingsPanel::SCRIPTING_DEPENDENCIES:
-				RenderPageHeader("Scripting - Dependencies", "Ths is for dependencies");
-				DrawScriptingDependencies();
-				break;
-			case UI::ProjectSettingsPanel::SCRIPTING_EXECUTION_ORDER:
-				RenderPageHeader("Scripting - Execution order", "Ths is for execution order");
-				DrawScriptingExecutionOrder();
 				break;
 			default:
 				break;
@@ -180,13 +180,24 @@ namespace UI
 			if (ImGui::Button("Input settings", { width, 32 }))
 				m_CurrentPage = GENERAL_INPUT_SETTINGS;
 
-
 			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 			ImUI::MenuHeader("Runtime");
 			ImGui::PopFont();
 
 			if (ImGui::Button("Build settings", { width, 32 }))
 				m_CurrentPage = RUNTIME_BUILD_SETTINGS;
+
+			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
+			ImUI::MenuHeader("Scripting");
+			ImGui::PopFont();
+
+			if (ImGui::Button("Preprocessor defines", { width, 32 }))
+				m_CurrentPage = SCRIPTING_PREPROCESSORS;
+			if (ImGui::Button("Dependencies", { width, 32 }))
+				m_CurrentPage = SCRIPTING_DEPENDENCIES;
+			if (ImGui::Button("Execution order", { width, 32 }))
+				m_CurrentPage = SCRIPTING_EXECUTION_ORDER;
+
 
 			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 			ImUI::MenuHeader("Rendering");
@@ -208,17 +219,6 @@ namespace UI
 
 			if (ImGui::Button("Collision layers", { width, 32 }))
 				m_CurrentPage = PHYSICS_COLLISION_LAYERS;
-
-			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
-			ImUI::MenuHeader("Scripting");
-			ImGui::PopFont();
-
-			if (ImGui::Button("Preprocessor defines", { width, 32 }))
-				m_CurrentPage = SCRIPTING_PREPROCESSORS;
-			if (ImGui::Button("Dependencies", { width, 32 }))
-				m_CurrentPage = SCRIPTING_DEPENDENCIES;
-			if (ImGui::Button("Execution order", { width, 32 }))
-				m_CurrentPage = SCRIPTING_EXECUTION_ORDER;
 		}
 		ImGui::EndChild();
 	}

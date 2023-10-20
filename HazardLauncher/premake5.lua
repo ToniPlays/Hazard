@@ -61,7 +61,6 @@ project "HazardLauncher"
 	filter "system:windows"
 		defines {
 			"_CRT_SECURE_NO_WARNINGS",
-			"HZR_INCLUDE_MONO"
 		}
 		links {
 			"%{Library.Vulkan}",

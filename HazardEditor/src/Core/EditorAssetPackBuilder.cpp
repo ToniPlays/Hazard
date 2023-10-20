@@ -10,6 +10,7 @@ AssetPack EditorAssetPackBuilder::CreateAssetPack(const std::vector<AssetPackEle
 	pack.Handle = AssetHandle();
 	pack.ElementCount = element.size();
 	pack.Elements = element;
+
 	for (auto& e : pack.Elements)
 		e.AssetPackHandle = pack.Handle;
 
@@ -18,9 +19,16 @@ AssetPack EditorAssetPackBuilder::CreateAssetPack(const std::vector<AssetPackEle
 
 void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::filesystem::path& path)
 {
-	AssetPackElement element = job->GetInput<AssetPackElement>();
+	Ref<GraphStage> previousStage = job->GetJobGraph()->GetPreviousStage();
 
-	std::vector<AssetPackElement> elements = { element };
+	auto results = previousStage->GetJobResults();
+
+	std::vector<AssetPackElement> elements;
+	elements.reserve(results.size());
+
+	for (auto& result : results)
+		elements.push_back(result.Read<AssetPackElement>());
+
 	AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
 	CachedBuffer buffer = AssetPack::ToBuffer(pack);
 
@@ -64,14 +72,13 @@ void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesyst
 	element.AddressableName = File::GetName(file);
 	element.Data = data;
 
-	job->GetStage()->SetResult(element);
-
+	job->SetResult(&element, sizeof(AssetPackElement));
 	textureHeader.ImageData.Release();
 }
 
 void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesystem::path& file, MeshCreateInfo info, UI::MeshImportSettings settings)
 {
-	job->SetJobName(File::GetName(file));
+	//job->SetJobName(File::GetName(file)); TODO
 
 	MeshFactory factory;
 	factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
@@ -95,7 +102,7 @@ void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesyste
 	data.Write(&header, sizeof(MeshFileHeader));
 	writeOffset += sizeof(MeshFileHeader);
 
-	for (size_t i = 0; i < meshData.Vertices.size(); i++)
+	for (uint64_t i = 0; i < meshData.Vertices.size(); i++)
 	{
 		Vertex3D& v = meshData.Vertices[i];
 
@@ -139,7 +146,7 @@ void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesyste
 	result.Data = data;
 	result.AddressableName = File::GetName(file);
 
-	job->GetStage()->SetResult(result);
+	job->SetResult(&result, sizeof(AssetPackElement));
 }
 
 void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::RenderAPI api)
@@ -147,7 +154,7 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 	using namespace HazardRenderer;
 	std::vector<ShaderStageCode> binaries = ShaderCompiler::GetShaderBinariesFromSource(file, api);
 
-	size_t codeSize = 0;
+	uint64_t codeSize = 0;
 	for (auto& stage : binaries)
 		codeSize += sizeof(ShaderStageFlags) + sizeof(uint32_t) + stage.ShaderCode.Size;
 
@@ -155,7 +162,7 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 	//Header and combined binary size
 	data.Allocate(codeSize);
 
-	size_t offset = 0;
+	uint64_t offset = 0;
 
 	for (auto& stage : binaries)
 	{
@@ -173,7 +180,7 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 	result.Handle = AssetHandle();
 	result.AddressableName = File::GetName(file);
 
-	job->GetStage()->SetResult(result);
+	job->SetResult(&result, sizeof(AssetPackElement));
 }
 
 void EditorAssetPackBuilder::MaterialAssetPackJob(Ref<Job> job, const std::filesystem::path& file, UI::MaterialImportSettings settings)
@@ -194,5 +201,5 @@ void EditorAssetPackBuilder::MaterialAssetPackJob(Ref<Job> job, const std::files
 	result.Handle = settings.Handle;
 	result.AddressableName = File::GetName(file);
 
-	job->GetStage()->SetResult(result);
+	job->SetResult(&result, sizeof(AssetPackElement));
 }

@@ -40,14 +40,24 @@ namespace Hazard
 
 		void ReloadAssemblies();
 		void SetDebugCallback(ScriptMessageCallback callback);
-		void InitializeComponent(const Entity& entity, ScriptComponent& component);
+		void InitializeComponent(Ref<World> targetWorld, const Entity& entity);
+		void RemoveComponent(Ref<World> targetWorld, const Entity& entity);
+
+		static Ref<World> GetTargetWorldForEntity(UID entity)
+		{
+			auto& engine = Application::GetModule<ScriptEngine>();
+			HZR_ASSERT(engine.m_Instances.contains(entity), "Entity not found");
+			return engine.m_WorldContext[engine.m_Instances[entity]];
+		}
 
 		const std::vector<Ref<HazardScript::ScriptAssembly>>& GetAssemblies();
-
 	private:
+
 		ScriptEngineCreateInfo m_Info;
 		HazardScript::HazardScriptEngine* m_Engine;
 		std::vector<HazardScript::ScriptMessage> m_QueuedMessages;
+		std::unordered_map<UID, UID> m_Instances;
+		std::unordered_map<UID, Ref<World>> m_WorldContext;
 
 		std::unordered_map<HazardScript::ScriptAssembly*, std::vector<IScriptGlue*>> m_ScriptGlue;
 		ScriptMessageCallback m_MessageCallback;

@@ -13,7 +13,7 @@ namespace Exporter
 		out << YAML::BeginMap;
 
 		YamlUtils::Sequence(out, "World", [&]() {
-			size_t buildIndex = 0;
+			uint64_t buildIndex = 0;
 			for (auto world : settings.m_Worlds) 
 			{
 				out << YAML::BeginMap;

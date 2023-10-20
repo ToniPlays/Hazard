@@ -45,12 +45,14 @@ namespace Hazard
 		//AssetManager::RegisterLoader<PipelineAssetLoader>(AssetType::Pipeline);
 		AssetManager::RegisterLoader<ShaderAssetLoader>(AssetType::Shader);
 	}
+
 	void RenderContextManager::PreRender()
 	{
 		HZR_PROFILE_FUNCTION();
 		//Prepare to render frame
 		Input::Update();
 	}
+
 	void RenderContextManager::PostRender()
 	{
 		HZR_PROFILE_FUNCTION();

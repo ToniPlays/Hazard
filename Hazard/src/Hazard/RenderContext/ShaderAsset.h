@@ -8,6 +8,7 @@ namespace Hazard
 	class ShaderAsset : public Asset
 	{
 		friend class ShaderAssetLoader;
+
 	public:
 		std::vector<HazardRenderer::ShaderStageCode> ShaderCode;
 	};

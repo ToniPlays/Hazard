@@ -19,14 +19,17 @@ namespace Hazard {
 		//OPTICK_THREAD("MainThread");
 		HazardLoop::s_Instance = this;
 		m_ModuleHandler = CreateScope<ModuleHandler>();
+
 #ifndef HZR_RELEASE
 		m_ModuleHandler->AddModule<Logging::Logger>();
 #endif // HZR_RELEASE
 	}
+
 	HazardLoop::~HazardLoop()
 	{
 		
 	}
+
 	void HazardLoop::Start()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Start.json");
@@ -48,27 +51,30 @@ namespace Hazard {
 		}
 		HZR_PROFILE_SESSION_END();
 	}
+
 	void HazardLoop::Close()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
+        AssetManager::Shutdown();
         
 		m_Application->Close();
 		m_ModuleHandler->Close();
         
-        AssetManager::Shutdown();
 		HZR_PROFILE_SESSION_END();
 		//OPTICK_SHUTDOWN();
-		
 	}
+
 	bool HazardLoop::Quit(WindowCloseEvent& e)
 	{
 		s_Instance->m_ShouldClose = true;
 		return true;
 	}
+
 	void HazardLoop::Process(Event& e) 
 	{
 		s_Instance->OnEvent(e);
 	}
+
 	void HazardLoop::Run()
 {
         HZR_PROFILE_FRAME("MainThread");
@@ -79,6 +85,7 @@ namespace Hazard {
         
         for(auto& fn : m_Application->m_MainJobs)
             fn();
+
         m_Application->m_MainJobs.clear();
         
 		//Update
@@ -91,8 +98,10 @@ namespace Hazard {
 		m_ModuleHandler->PreRender();
 		m_ModuleHandler->Render();
 		m_ModuleHandler->PostRender();
+
 		m_FrameCount++;
 	}
+
 	void HazardLoop::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
