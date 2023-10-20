@@ -1,5 +1,5 @@
 #pragma once
-#if 1
+#if 0
 #include "Hazard.h"
 #include "Hazard/Core/EntryPoint.h"
 

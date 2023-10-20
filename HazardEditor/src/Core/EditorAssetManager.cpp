@@ -153,12 +153,15 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 		case AssetType::Shader:
 		{
 			Ref<JobGraph> graph = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan);
+            
 			if (!graph) break;
 
 			Buffer result = graph->Execute()->GetResult();
 			AssetPackElement element = result.Read<AssetPackElement>();
 			element.Handle = AssetHandle();
+            std::cout << element.AddressableName << std::endl;
 			elements.push_back(element);
+            
 			break;
 		}
 		case AssetType::Image:
@@ -191,8 +194,11 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 			elements.push_back(element);
 		}
 	}
-
+    if(elements.size() == 0) 
+        return CachedBuffer();
+    
 	AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
 	CachedBuffer buffer = AssetPack::ToBuffer(pack);
+    HZR_ASSERT(pack.ElementCount > 2000, "Too many elements");
 	return buffer;
 }

@@ -82,8 +82,7 @@ Buffer JobGraph::GetResult()
 
 std::vector<Buffer> JobGraph::GetResults()
 {
-	return std::vector<Buffer>();
-	//return m_Stages[m_Stages.size() - 1]->GetJobResult(0);
+    return m_Stages[m_Stages.size() - 1]->GetJobResults();
 }
 
 void JobGraph::OnStageFinished(Ref<GraphStage> stage)

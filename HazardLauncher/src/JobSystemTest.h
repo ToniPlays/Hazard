@@ -33,8 +33,8 @@ namespace JobSystemTest
 			job->Progress((float)i / (float)count);
 			std::this_thread::sleep_for(2ms);
 		}
-
-		job->SetResult(50);
+        
+		job->SetResult(&count, sizeof(uint32_t));
 
 		//Initialize next stage jobs
 		Ref<GraphStage> stage = job->GetJobGraph()->GetNextStage();
@@ -77,7 +77,7 @@ namespace JobSystemTest
 
 		graph->GetStage(1)->SetWeight(0.60f);
 
-        jobSystem.QueueGraph<bool>(graph);
+        jobSystem.QueueGraph(graph);
 
 		static float progress = 0.0f;
 

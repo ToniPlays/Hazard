@@ -68,10 +68,6 @@ project "Hazard"
 
 	filter "system:windows"
 		pchheader "hzrpch.h"
-		defines 
-		{
-			"HZR_INCLUDE_MONO"
-		}
 
 		links {
 			"%{Library.Vulkan}",

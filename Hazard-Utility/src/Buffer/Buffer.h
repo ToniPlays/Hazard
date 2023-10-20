@@ -13,7 +13,7 @@ struct Buffer
 
 	void Allocate(uint64_t size)
 	{
-		hdelete[] Data;
+		hdelete Data;
 		Data = nullptr;
 
 		if (size == 0)
@@ -25,7 +25,8 @@ struct Buffer
 
 	void Release()
 	{
-        hdelete[] Data;
+        if(Data)
+            hdelete Data;
 		Data = nullptr;
 		Size = 0;
 	}

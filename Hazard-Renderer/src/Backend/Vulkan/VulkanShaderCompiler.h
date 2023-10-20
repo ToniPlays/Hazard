@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Backend/Core/Core.h"
-#ifdef HZR_INCLUDE_VULKAN
 #include "File.h"
 
 #include "Backend/Core/ShaderCompiler.h"
@@ -27,4 +26,3 @@ namespace HazardRenderer::Vulkan
 		double m_CompilationTime = 0.0;
 	};
 }
-#endif

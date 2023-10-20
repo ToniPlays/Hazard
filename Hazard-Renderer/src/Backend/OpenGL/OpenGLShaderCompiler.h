@@ -2,7 +2,6 @@
 
 #include "Backend/Core/Core.h"
 
-#ifdef HZR_INCLUDE_OPENGL
 #include "File.h"
 #include "Backend/Core/ShaderCompiler.h"
 
@@ -26,4 +25,3 @@ namespace HazardRenderer::OpenGL
 		double m_CompilationTime = 0.0;
 	};
 }
-#endif

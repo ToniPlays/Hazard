@@ -15,23 +15,11 @@ public:
 	JobPromise(Ref<Job> job) : m_Job(job) {};
 	JobPromise(Ref<JobGraph> graph) : m_JobGraph(graph) {};
 
-	bool Succeeded() { return m_JobGraph->GetFlags() & JOB_FLAGS_SUCCEEDED; }
+    bool Succeeded();
+    void Wait();
 
-	void Wait()
-	{
-		if (m_JobGraph)
-			m_JobGraph->Wait();
-	}
-
-	Buffer GetResult() 
-	{
-		return m_JobGraph->GetResult();
-	}
-
-	std::vector<Buffer> GetResults()
-	{
-		return m_JobGraph->GetResults();
-	}
+    Buffer GetResult();
+    std::vector<Buffer> GetResults();
 
 private:
 

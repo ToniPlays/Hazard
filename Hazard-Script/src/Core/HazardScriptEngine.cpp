@@ -40,7 +40,7 @@ namespace HazardScript
 		m_DebugCallback = info->DebugCallback;
 		SendDebugMessage({ Severity::Info, "Debug enabled" });
 
-		InitializeCoralHost();
+		//InitializeCoralHost();
 
 		m_Assemblies.clear();
 		m_Assemblies.push_back(m_CoralData.CoreAssembly);

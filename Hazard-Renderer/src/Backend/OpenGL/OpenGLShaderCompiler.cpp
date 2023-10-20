@@ -1,5 +1,4 @@
 #include "OpenGLShaderCompiler.h"
-#ifdef HZR_INCLUDE_OPENGL
 
 #include "MathCore.h"
 #include "Profiling/Timer.h"
@@ -10,14 +9,14 @@
 
 namespace HazardRenderer::OpenGL
 {
-	static shaderc_shader_kind ShaderStageToShaderC(const ShaderStage& type) {
+	static shaderc_shader_kind ShaderStageToShaderC(uint32_t type) {
 		switch (type)
 		{
-		case ShaderStage::Vertex:	return shaderc_glsl_vertex_shader;
-		case ShaderStage::Fragment:	return shaderc_glsl_fragment_shader;
-		case ShaderStage::Compute:	return shaderc_glsl_compute_shader;
-		case ShaderStage::Geometry:	return shaderc_glsl_geometry_shader;
-		case ShaderStage::None:      return (shaderc_shader_kind)0;
+		case SHADER_STAGE_VERTEX_BIT:	return shaderc_glsl_vertex_shader;
+		case SHADER_STAGE_FRAGMENT_BIT:	return shaderc_glsl_fragment_shader;
+		case SHADER_STAGE_COMPUTE_BIT:	return shaderc_glsl_compute_shader;
+		case SHADER_STAGE_GEOMETRY_BIT:	return shaderc_glsl_geometry_shader;
+		case SHADER_STAGE_NONE:      return (shaderc_shader_kind)0;
 		}
 		return (shaderc_shader_kind)0;
 	}
@@ -76,4 +75,3 @@ namespace HazardRenderer::OpenGL
 		return !result.empty();
 	}
 }
-#endif

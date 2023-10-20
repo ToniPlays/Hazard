@@ -51,7 +51,7 @@ namespace HazardRenderer
         }
 
         if (info->Renderer == RenderAPI::Auto)
-            info->Renderer = RenderAPI::Vulkan;
+            info->Renderer = RenderAPI::Metal;
 
         SendDebugMessage({ Severity::Info, "Selected API: " + RenderAPIToString(info->Renderer) });
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Asset.h"
+#include <spdlog/fmt/fmt.h>
 
 namespace Hazard
 {
@@ -12,17 +13,17 @@ namespace Hazard
 
 	struct AssetPackElementHeader
 	{
-		uint64_t Handle;
+		uint64_t Handle = 0;
 		uint64_t AssetDataSize = 0;
 		uint64_t AssetDataOffset = 0;
-		uint32_t Type;
+		uint32_t Type = 0;
 		//Store addressable name here
 	};
 	struct AssetPackElement
 	{
-		AssetHandle AssetPackHandle;
-		AssetHandle Handle;
-		AssetType Type;
+		AssetHandle AssetPackHandle = 0;
+		AssetHandle Handle = 0;
+        AssetType Type;
 		Buffer Data;
 		std::string AddressableName;
 	};
@@ -43,7 +44,7 @@ namespace Hazard
 		{
 			buffer.ResetCursor();
 			
-			AssetPack pack;
+            AssetPack pack = {};
 			AssetPackHeader header = buffer.Read<AssetPackHeader>();
 
 			pack.Handle = header.Handle;
@@ -66,7 +67,9 @@ namespace Hazard
 			{
 				AssetPackElement& element = pack.Elements[i];
 				element.AssetPackHandle = pack.Handle;
-				element.Data = buffer.Read<Buffer>(headers[i].AssetDataSize);
+				element.Data = Buffer::Copy( buffer.Read<Buffer>(headers[i].AssetDataSize));
+                
+                HZR_ASSERT(element.Data.Data, fmt::format("Element {0} has no data", element.AddressableName));
 			}
 			
 			return pack;

@@ -20,8 +20,12 @@ namespace Hazard
 		Buffer buffer = AssetManager::GetAssetData(handle);
 
 		if (buffer.Size == 0)
-			throw JobException(fmt::format("Failed to load Shader {0}", handle));
-
+        {
+            AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+            
+			throw JobException(fmt::format("Failed to load Shader {0} ({1})", metadata.Key, metadata.Handle));
+        }
+            
 		CachedBuffer readBuffer(buffer.Data, buffer.Size);
 
 

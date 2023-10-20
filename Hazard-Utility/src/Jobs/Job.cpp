@@ -1,4 +1,5 @@
 #include "Job.h"
+#include "JobGraph.h"
 #include <Profiling/Timer.h>
 
 #include "spdlog/fmt/fmt.h"

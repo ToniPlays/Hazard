@@ -240,11 +240,10 @@ namespace HazardRenderer
 
 		switch (api)
 		{
-#ifdef HZR_INCLUDE_OPENGL
 		case RenderAPI::OpenGL:
 		{
 			OpenGL::OpenGLShaderCompiler compiler;
-			std::unordered_map<ShaderStage, Buffer> vulkanBinaries;
+			std::unordered_map<uint32_t, Buffer> vulkanBinaries;
 
 			for (auto& [stage, source] : sourceCode)
 			{
@@ -317,8 +316,6 @@ namespace HazardRenderer
 			break;
             
 		}
-#endif
-#ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan:
 		{
 			Vulkan::VulkanShaderCompiler compiler;
@@ -344,8 +341,6 @@ namespace HazardRenderer
 			}
 			break;
 		}
-#endif
-#ifdef HZR_INCLUDE_METAL
         case RenderAPI::Metal:
         {
             Metal::MetalShaderCompiler compiler = {};
@@ -372,7 +367,6 @@ namespace HazardRenderer
             }
             break;
         }
-#endif
         default:
             break;
 		}
@@ -424,7 +418,7 @@ namespace HazardRenderer
 	{
 		HZR_PROFILE_FUNCTION();
 		std::string token = "#include";
-		size_t offset = 0;
+		uint64_t offset = 0;
 
 		bool success = true;
 

@@ -153,7 +153,7 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 {
 	using namespace HazardRenderer;
 	std::vector<ShaderStageCode> binaries = ShaderCompiler::GetShaderBinariesFromSource(file, api);
-
+    
 	uint64_t codeSize = 0;
 	for (auto& stage : binaries)
 		codeSize += sizeof(ShaderStageFlags) + sizeof(uint32_t) + stage.ShaderCode.Size;
@@ -178,7 +178,7 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 	result.Type = AssetType::Shader;
 	result.Data = data;
 	result.Handle = AssetHandle();
-	result.AddressableName = File::GetName(file);
+	//result.AddressableName = File::GetName(file);
 
 	job->SetResult(&result, sizeof(AssetPackElement));
 }

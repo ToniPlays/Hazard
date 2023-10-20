@@ -2,7 +2,6 @@
 
 #include <Ref.h>
 #include <functional>
-#include "JobGraph.h"
 #include "JobException.h"
 #include "JobFlags.h"
 
