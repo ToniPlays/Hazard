@@ -53,5 +53,6 @@ namespace Hazard
 		JobSystem m_JobSystem = JobSystem(1);
         std::vector<std::function<void()>> m_MainJobs;
 	};
+
 	Hazard::Application* CreateApplication();
 }
