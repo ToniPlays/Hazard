@@ -81,7 +81,7 @@ namespace Hazard {
         HZR_TIMED_FUNCTION();
         
         //Update Time
-        Time::Update(glfwGetTime());
+        Time::Update(0.1f);
         
         for(auto& fn : m_Application->m_MainJobs)
             fn();

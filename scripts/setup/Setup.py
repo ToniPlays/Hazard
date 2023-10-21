@@ -75,7 +75,7 @@ def main(argv):
         if len(argv) > 0:
             platformOverride = "--os=" + argv[0]
             
-        subprocess.check_call(["vendor/premake/bin/premake5", platformOverride, "xcode4"])
+        subprocess.check_call(["vendor/premake/bin/premake5", "xcode4", platformOverride])
 
     print("\nSetup completed")
 

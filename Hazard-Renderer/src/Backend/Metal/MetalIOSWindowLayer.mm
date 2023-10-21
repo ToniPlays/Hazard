@@ -19,7 +19,6 @@
             
             CGColorRef color = CGColorCreateSRGB(1.0f, 1.0f, 1.0f, 1.0f);
             
-            UIApplicationMain(0, nil, nil, [NSString stringWithUTF8String: "MTKViewController"]);
             
             id<MTLDevice> dev = (__bridge id<MTLDevice>)device;
             
