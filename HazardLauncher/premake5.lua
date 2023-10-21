@@ -93,6 +93,8 @@ project "HazardLauncher"
 		links 
 		{
 			"IOKit.framework",
+			"UIKit.framework",
+			"CoreGraphics.framework",
 			"CoreFoundation.framework",
 			"QuartzCore.framework",
 			"Metal.framework",

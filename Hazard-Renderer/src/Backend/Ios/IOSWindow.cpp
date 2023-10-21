@@ -59,8 +59,8 @@ namespace HazardRenderer
             m_WindowData.Platform = "MacOS";
             m_WindowData.SelectedAPI = info->Renderer;
             m_WindowData.HasTitleBar = windowInfo.HasTitlebar;
-            m_WindowData.Width = windowInfo.Width;
-            m_WindowData.Height = windowInfo.Height;
+            m_WindowData.Width = windowInfo.Extent.Width;
+            m_WindowData.Height = windowInfo.Extent.Height;
             m_WindowData.VSync = info->VSync;
             m_WindowData.ImagesInFlight = info->ImagesInFlight;
             m_WindowData.Window = this;
@@ -75,17 +75,9 @@ namespace HazardRenderer
                     
                 }
             }
-            HZR_ASSERT(m_WindowData.Width > 0, "Window width cannot be less than 0");
-            HZR_ASSERT(m_WindowData.Height > 0, "Window height cannot be less than 0");
                 
             //Create window
-            
-            //Correct for retina displays
-            //float x, y;
-            //glfwGetWindowContentScale(m_Window, &x, &y);
-            //m_WindowData.Width = (float)windowInfo.Width * x;
-            //m_WindowData.Height = (float)windowInfo.Height * y;
-            
+        
 
             if (info->pAppInfo->IconCount > 0)
                 SetWindowIcon(info->pAppInfo->IconCount, info->pAppInfo->pIcons);
@@ -126,6 +118,9 @@ namespace HazardRenderer
     void IOSWindow::Close()
     {
         hdelete m_Context;
+    }
+    std::vector<Resolution> IOSWindow::GetAvailableResolutions() const {
+        return { { 1920, 1080 } };
     }
 }
 #endif

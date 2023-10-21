@@ -59,9 +59,9 @@ bool Input::IsButtonDown(int device, const Gamepad::GamepadCode& code)
     return false;
 }
 
-Axis2D Input::GetAxis(int device, const Gamepad::GamepadCode& code)
+float Input::GetAxis(int device, const Gamepad::GamepadCode& code)
 {
-    return Axis2D();
+    return 0.0f;
 }
 bool Input::IsAxis(int device, const Gamepad::GamepadCode& code)
 {

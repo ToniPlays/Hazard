@@ -1,3 +1,3 @@
 #pragma once
-#include "WindowsEntryPoint.h"
-#include "MacOSEntryPoint.h"
+#include "EntryPoints/WindowsEntryPoint.h"
+#include "EntryPoints/MacOSEntryPoint.h"

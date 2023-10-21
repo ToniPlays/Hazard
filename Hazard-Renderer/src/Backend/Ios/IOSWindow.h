@@ -46,6 +46,10 @@ namespace HazardRenderer
         bool IsFullscreen() const override { return m_WindowData.Fullscreen; }
         bool IsMaximized() const override { return m_WindowData.Maximized; }
         glm::vec2 GetPosition() override { return { 0, 0 }; };
+        
+        std::vector<Resolution> GetAvailableResolutions() const override;
+        
+        void SetResolution(const Resolution& resolution) override {};
 
         WindowProps& GetWindowInfo() override { return m_WindowData; }
         GraphicsContext* GetContext() const override { return m_Context; };

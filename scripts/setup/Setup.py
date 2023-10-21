@@ -72,9 +72,10 @@ def main(argv):
         
     elif Utils.IsMacos():
         platformOverride = ""
-        if len(argv) > 1:
-            platformOverride = "--os=" + argv[1]
-        subprocess.check_call(["vendor/premake/bin/premake5", argv[0], platformOverride])
+        if len(argv) > 0:
+            platformOverride = "--os=" + argv[0]
+            
+        subprocess.check_call(["vendor/premake/bin/premake5", platformOverride, "xcode4"])
 
     print("\nSetup completed")
 

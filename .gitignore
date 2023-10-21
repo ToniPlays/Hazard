@@ -56,3 +56,5 @@ Hazard/vendor/yaml-cpp
 Hazard/vendor/Metal-CPP
 Hazard/vendor/glfw
 Hazard/vendor/box2d
+
+!HazardLauncher/*.plist
