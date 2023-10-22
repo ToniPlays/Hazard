@@ -71,8 +71,8 @@ namespace IndirectDrawGPUTest {
             transforms[3].MRow2 = { t[0][2], t[1][2], t[2][2], t[3][2] };
         }
 
-        std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/instancing.glsl", api);
-        std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/drawcommandgen.glsl", api);
+        std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/instancing.glsl", api);
+        std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/drawcommandgen.glsl", api);
 
         std::vector<DrawIndirectIndexedCommand> drawCommands(4);
         drawCommands[0].FirstInstance = 0;

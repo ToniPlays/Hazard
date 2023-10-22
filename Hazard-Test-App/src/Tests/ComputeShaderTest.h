@@ -47,7 +47,7 @@ namespace ComputeShaderTest {
 		vbo.Data = &vertices;
 		vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/texturedQuad.glsl", api);
+		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", api);
 
 		PipelineSpecification spec = {};
 		spec.DebugName = "Rasterized";
@@ -60,7 +60,7 @@ namespace ComputeShaderTest {
 		spec.ShaderCodeCount = code.size();
 		spec.pShaderCode = code.data();
 
-		std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/compute.glsl", api);
+		std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/compute.glsl", api);
 
 		PipelineSpecification computeSpec = {};
 		computeSpec.DebugName = "Compute";

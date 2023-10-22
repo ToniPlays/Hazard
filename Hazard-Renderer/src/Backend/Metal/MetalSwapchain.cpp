@@ -10,7 +10,7 @@
 
 namespace HazardRenderer::Metal {
     
-    MetalSwapchain::MetalSwapchain(MetalContext* context, FrameBufferCreateInfo* targetInfo)
+    MetalSwapchain::MetalSwapchain()
     {
         
     }
@@ -81,10 +81,6 @@ namespace HazardRenderer::Metal {
         mtlCommandBuffer->presentDrawable(m_Drawable);
         mtlCommandBuffer->commit();
         mtlCommandBuffer->waitUntilCompleted();
-        
-        cmdBuffer->GetRenderEncoder()->release();
-        mtlCommandBuffer->release();
-        m_Drawable->release();
     }
 }
 #endif

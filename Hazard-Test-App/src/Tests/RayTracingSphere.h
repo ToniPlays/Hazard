@@ -116,8 +116,8 @@ namespace RayTracingSphere
 		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
 #pragma endregion
 #pragma region Raygen
-		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/raygen.glsl", api);
-		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/composite.glsl", api);
+		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/raygen.glsl", api);
+		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/composite.glsl", api);
 
 		PipelineSpecification pipelineSpec = {};
 		pipelineSpec.DebugName = "RaygenPipeline";
@@ -177,7 +177,7 @@ namespace RayTracingSphere
 		generalTransition.SourceLayout = ImageLayout_ShaderReadOnly;
 		generalTransition.DestLayout = ImageLayout_General;
 
-		std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/EquirectangularToCubeMap.glsl", api);
+		std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/EquirectangularToCubeMap.glsl", api);
 
 		PipelineSpecification computeSpec = {};
 		computeSpec.DebugName = "EquirectangularToCubemap";

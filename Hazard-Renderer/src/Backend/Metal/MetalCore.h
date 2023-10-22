@@ -13,5 +13,6 @@
 #include "MetalGPUBuffer.h"
 
 #include "MetalCubemapTexture.h"
+#include "MetalSampler.h"
 
 #endif

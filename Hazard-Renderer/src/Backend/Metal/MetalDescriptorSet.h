@@ -51,12 +51,24 @@ namespace HazardRenderer::Metal
         void Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll = false) override;
         void Write(uint32_t binding, Ref<GPUBuffer> buffer, bool updateAll = false) override;
         
+        void Invalidate();
+        void Invalidate_RT();
+        
         //Metal specific
         void BindGraphicsResources(MTL::RenderCommandEncoder* encoder);
         void BindComputeResources(MTL::ComputeCommandEncoder* encoder);
 
     private:
         
+        struct DescriptorValue {
+            Ref<RefCount> Value;
+            Ref<RefCount> Secondary;
+        };
+        
+        std::string m_DebugName;
+        uint32_t m_Set;
+        DescriptorSetLayout m_Layout;
+        std::unordered_map<uint32_t, DescriptorValue> m_DescriptorValues;
     };
 }
 #endif

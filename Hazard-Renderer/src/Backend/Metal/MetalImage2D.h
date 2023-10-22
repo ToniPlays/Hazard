@@ -36,17 +36,13 @@ namespace HazardRenderer::Metal
         virtual Buffer GetBuffer() const override { return m_LocalBuffer; };
         virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
         
-        
-        
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }
-        MTL::SamplerState* GetMetalSamplerState() const { return m_MetalSampler; }
         
         uint32_t GetLayerCount() { return 1; }
         
     private:
         void Invalidate_RT();
-        void CreateImageSampler();
         void UploadImageData_RT();
 
     private:
@@ -59,7 +55,6 @@ namespace HazardRenderer::Metal
         Buffer m_LocalBuffer;
         
         MTL::Texture* m_MetalTexture;
-        MTL::SamplerState* m_MetalSampler;
     };
 }
 #endif

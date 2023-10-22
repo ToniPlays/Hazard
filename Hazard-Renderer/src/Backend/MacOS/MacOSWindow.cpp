@@ -207,7 +207,6 @@ namespace HazardRenderer
     {
         m_WindowData.Fullscreen = fullscreen;
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
         glfwSetWindowMonitor(m_Window, monitor, 0, 0, m_WindowData.Width, m_WindowData.Height, m_WindowData.RefreshRate);
     }
     void MacOSWindow::SetCallbacks()

@@ -23,6 +23,9 @@ namespace HazardRenderer::Metal
         m_Specs.ClearColor = info->ClearColor;
         m_Specs.Samples = info->Samples;
         
+        
+        m_RenderPassDescriptor = MTL::RenderPassDescriptor::renderPassDescriptor();
+        
         if(info->Width == 0)
         {
             //Swapchain size
@@ -35,8 +38,6 @@ namespace HazardRenderer::Metal
             m_Specs.Width = info->Width;
             m_Specs.Height = info->Height;
         }
-        
-        m_RenderPassDescriptor = MTL::RenderPassDescriptor::renderPassDescriptor();
         
         if(!m_Specs.pFrameBuffer)
         {
@@ -110,7 +111,6 @@ namespace HazardRenderer::Metal
             auto swapchain = MetalContext::GetInstance()->GetSwapchain();
             
             m_ClearValues.clear();
-            m_ClearValues.push_back(MetalContext::GetInstance()->GetClearColorValue());
         }
     }
     void MetalFrameBuffer::Release()
@@ -175,6 +175,8 @@ namespace HazardRenderer::Metal
                 depthDescriptor->setLoadAction(m_Specs.ClearOnLoad ? MTL::LoadActionClear : MTL::LoadActionLoad);
                 depthDescriptor->setStoreAction(MTL::StoreActionStore);
                 depthDescriptor->setTexture(m_DepthAttachmentImage->GetMetalTexture());
+                
+                //m_RenderPassDescriptor->setDepthAttachment(depthDescriptor);
             }
             else //Color attachment
             {

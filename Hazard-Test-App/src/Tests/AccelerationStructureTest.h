@@ -103,8 +103,8 @@ namespace AccelerationStructureTest
 
 		Ref<TopLevelAS> topLevelAccelerationStructure = TopLevelAS::Create(&topAccelInfo);
 
-		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/raygenBasic.glsl", api);
-		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/composite.glsl", api);
+		std::vector<ShaderStageCode> shaderCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/raygenBasic.glsl", api);
+		std::vector<ShaderStageCode> screenPassCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/composite.glsl", api);
 
 		PipelineSpecification pipelineSpec = {};
 		pipelineSpec.DebugName = "RaygenPipeline";

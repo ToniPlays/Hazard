@@ -16,6 +16,7 @@ namespace HazardRenderer::Metal
         m_Capabilities.Discrete = m_Device->removable();
         m_Capabilities.LowPower = m_Device->lowPower();
 #endif
+        
         m_Capabilities.Swapchain = true;
         m_Capabilities.DiagnosticCheckpoint = false;
         m_Capabilities.DiagnosticConfig = false;

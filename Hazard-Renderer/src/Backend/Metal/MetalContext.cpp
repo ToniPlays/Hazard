@@ -3,10 +3,6 @@
 #ifdef HZR_INCLUDE_METAL
 #include <GLFW/glfw3.h>
 
-
-//#include <Metal/Metal.hpp>
-//#include <QuartzCore/QuartzCore.hpp>
-
 #include "MetalWindowLayer.h"
 #include "Backend/Core/Window.h"
 #include "Backend/Core/Renderer.h"
@@ -36,7 +32,7 @@ namespace HazardRenderer::Metal
         m_PhysicalDevice = hnew MetalPhysicalDevice();
         m_MetalLayer = hnew MetalWindowLayer(*window, m_PhysicalDevice->GetMetalDevice());
         
-        m_Swapchain = Ref<MetalSwapchain>::Create(this, info->pTargetFrameBuffer);
+        m_Swapchain = Ref<MetalSwapchain>::Create();
         
         uint32_t w = window->GetWidth();
         uint32_t h = window->GetHeight();
@@ -70,7 +66,7 @@ namespace HazardRenderer::Metal
     }
     void MetalContext::SetClearColor(const glm::vec4 &color)
     {
-        m_ClearColor = color;
+        m_Swapchain->GetRenderTarget()->GetSpecification().ClearColor = color;
     }
 }
 

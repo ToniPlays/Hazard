@@ -15,7 +15,7 @@ namespace HazardRenderer::Metal {
     class MetalSwapchain : public Swapchain {
     public:
         
-        MetalSwapchain(MetalContext* context, FrameBufferCreateInfo* targetInfo);
+        MetalSwapchain();
         ~MetalSwapchain() = default;
         
         void Resize(uint32_t width, uint32_t height) override;

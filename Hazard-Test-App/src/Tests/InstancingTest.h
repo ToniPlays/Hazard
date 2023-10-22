@@ -52,7 +52,7 @@ namespace InstancingTest {
 								{ "a_MRow3",	ShaderDataType::Float4, PerInstance },
 		};
 
-		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/instancing.glsl", api);
+		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/instancing.glsl", api);
 
 		std::vector<InstanceTransform> transforms(4);
 		{

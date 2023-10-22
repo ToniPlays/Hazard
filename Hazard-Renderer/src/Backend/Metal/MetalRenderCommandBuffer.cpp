@@ -34,20 +34,23 @@ namespace HazardRenderer::Metal
     }
     void MetalRenderCommandBuffer::Begin()
     {
+        if(m_OwnedBySwapchain)
+        {
+            auto device = MetalContext::GetMetalDevice();
+                m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
+            return;
+        }
+        
         Ref<MetalRenderCommandBuffer> instance = this;
         Renderer::Submit([instance]() mutable {
             auto device = MetalContext::GetMetalDevice();
-            instance->m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
-            
-            /*MTL::IndirectCommandBufferDescriptor* descriptor = MTL::IndirectCommandBufferDescriptor::alloc()->init();
-            
-            instance->m_IndirectCommandBuffer = device->GetMetalDevice()->newIndirectCommandBuffer(descriptor, 512, MTL::ResourceStorageModeManaged);
-                */
-            //descriptor->release();
+            if(instance->m_Queue == DeviceQueue::GraphicsBit)
+            {
+                instance->m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
+            }
+
             if(instance->m_Queue == DeviceQueue::ComputeBit)
                 instance->m_ComputeEncoder = instance->m_CommandBuffer->computeCommandEncoder();
-            
-            
         });
     }
     void MetalRenderCommandBuffer::End()
@@ -99,11 +102,11 @@ namespace HazardRenderer::Metal
             descriptor->setRenderTargetHeight(swapchain->GetHeight());
             descriptor->setDefaultRasterSampleCount(1);
             
-            auto clearColor = MetalContext::GetInstance()->GetClearColorValue();
+            auto color = MTL::ClearColor(specs.ClearColor.r, specs.ClearColor.g, specs.ClearColor.b, specs.ClearColor.a);
             
             auto c1 = descriptor->colorAttachments()->object(0);
             c1->init();
-            c1->setClearColor(clearColor);
+            c1->setClearColor(color);
             c1->setTexture(swapchain->GetDrawable()->texture());
             c1->setLoadAction(MTL::LoadActionClear);
             c1->setStoreAction(MTL::StoreActionStore);
@@ -149,13 +152,14 @@ namespace HazardRenderer::Metal
             viewport.height = -height;
         }
         
-        m_RenderEncoder = m_CommandBuffer->renderCommandEncoder(descriptor);
-        
         MTL::ScissorRect scissors;
         scissors.width = width;
         scissors.height = height;
         scissors.x = 0.0;
         scissors.y = 0.0;
+        
+        
+        m_RenderEncoder = m_CommandBuffer->renderCommandEncoder(descriptor);
         
         m_RenderEncoder->setViewport(viewport);
         m_RenderEncoder->setScissorRect(scissors);
@@ -175,6 +179,19 @@ namespace HazardRenderer::Metal
             instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, 28 + binding);
         });
     }
+    void MetalRenderCommandBuffer::SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set)
+    {
+        Ref<MetalRenderCommandBuffer> instance = this;
+        Ref<MetalDescriptorSet> mtlSet = descriptorSet.As<MetalDescriptorSet>();
+        
+        Renderer::Submit([instance, mtlSet, set]() mutable {
+            if(instance->m_Queue == DeviceQueue::GraphicsBit)
+                mtlSet->BindGraphicsResources(instance->m_RenderEncoder);
+            if(instance->m_Queue == DeviceQueue::ComputeBit)
+                mtlSet->BindComputeResources(instance->m_ComputeEncoder);
+        });
+    }
+
     void MetalRenderCommandBuffer::SetPipeline(Ref<Pipeline> pipeline)
     {
         Ref<MetalRenderCommandBuffer> instance = this;

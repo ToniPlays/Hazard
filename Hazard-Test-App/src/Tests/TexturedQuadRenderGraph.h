@@ -43,7 +43,7 @@ namespace TexturedQuadRenderGraph
 								{ "a_TextureCoords",	ShaderDataType::Float2 }
 		};
 
-		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/texturedQuad.glsl", api);
+		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", api);
 		Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
 		BufferCreateInfo vbo = {};

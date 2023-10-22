@@ -72,7 +72,7 @@ namespace IndirectSceneTest
 
 		//Compute environment map
 		{
-			std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/EquirectangularToCubeMap.glsl", api);
+			std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/EquirectangularToCubeMap.glsl", api);
 
 			PipelineSpecification computeSpec = {};
 			computeSpec.DebugName = "EquirectangularToCubemap";

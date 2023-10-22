@@ -53,10 +53,6 @@ void JobGraphTest::Reset()
 
 void JobGraphTest::Init()
 {
-#ifdef HZR_PLATFORM_MACOS
-	std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardLauncher");
-#endif
-
 	Hazard::Application::Get().GetModule<Hazard::RenderContextManager>().GetWindow().SetWindowTitle(GetName());
 
 	m_JobSystem = new JobSystem();

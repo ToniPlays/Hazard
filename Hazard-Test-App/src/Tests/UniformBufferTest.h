@@ -44,7 +44,7 @@ namespace UniformBufferTest
 								{ "a_TextureCoords",	ShaderDataType::Float2 }
 		};
 
-		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/UboTest.glsl", api);
+		std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/UboTest.glsl", api);
 		Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
 		BufferCreateInfo vbo = {};

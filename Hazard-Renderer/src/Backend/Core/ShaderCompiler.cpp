@@ -388,7 +388,7 @@ namespace HazardRenderer
 	std::unordered_map<uint32_t, std::string> ShaderCompiler::GetShaderSources(const std::filesystem::path& path)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(File::Exists(path), "Shader source file does not exist");
+ 		HZR_ASSERT(File::Exists(path), fmt::format("Shader source file does not exist {}", File::GetFileAbsolutePath(path).string()));
 
 		std::string sourceFile = File::ReadFile(path);
 		std::unordered_map<uint32_t, std::string> result;

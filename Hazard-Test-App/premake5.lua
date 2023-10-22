@@ -48,12 +48,6 @@ project "Hazard-Test-App"
 		"yaml-cpp"
 	}
 
-	postbuildcommands 
-	{
-		"{COPYDIR} \"%{wks.location}/HazardEditor/res\" \"%{cfg.targetdir}/res\""
-	}
-
-
 	filter "system:windows"
 		kind "ConsoleApp"
 		defines {
@@ -72,6 +66,7 @@ project "Hazard-Test-App"
 		}
 
 	filter "system:macosx"
+		kind "ConsoleApp"
 		links
 		{
 			"Cocoa.framework"

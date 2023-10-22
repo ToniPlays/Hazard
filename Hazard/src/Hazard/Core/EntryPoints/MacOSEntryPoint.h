@@ -5,7 +5,7 @@
 #include "Profiling/MemoryDiagnostic.h"
 
 #include "Hazard/Core/HazardLoop.h"
-#include "Application.h"
+#include "Hazard/Core/Application.h"
 #include "Hazard/Core/CommandLineArgs.h"
 
 extern Hazard::Application* Hazard::CreateApplication();

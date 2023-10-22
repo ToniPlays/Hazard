@@ -17,7 +17,7 @@ namespace HazardRenderer
 #ifdef HZR_INCLUDE_VULKAN
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanSampler>::Create(createInfo);
 #endif
-#ifdef HZR_INCLUDE_METAL1
+#ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal:  return Ref<Metal::MetalSampler>::Create(createInfo);
 #endif
 		default:

@@ -9,7 +9,6 @@ using namespace Hazard;
 
 void TestFramework::PreInit()
 {
-
 	ApplicationCreateInfo appInfo = {};
 	appInfo.AppName = "Hazard Test";
 	appInfo.Logging = true;

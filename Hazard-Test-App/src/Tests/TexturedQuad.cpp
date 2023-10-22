@@ -35,7 +35,7 @@ void TexturedQuadTest::Init()
 							{ "a_TextureCoords",	ShaderDataType::Float2 }
 	};
 
-	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
 	Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
 	BufferCreateInfo vbo = {};

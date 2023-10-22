@@ -34,7 +34,7 @@ namespace HazardRenderer::Metal
         void EndRenderPass() override;
         
         void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding) override;
-        void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set = 0) override {}
+        void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set = 0) override;
         void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) override {}
         
         void SetPipeline(Ref<Pipeline> pipeline) override;
@@ -63,8 +63,8 @@ namespace HazardRenderer::Metal
         Ref<MetalPipeline> m_CurrentPipeline = nullptr;
         State m_State = State::Waiting;
             
-        MTL::CommandBuffer* m_CommandBuffer;
-        MTL::IndirectCommandBuffer* m_IndirectCommandBuffer;
+        MTL::CommandBuffer* m_CommandBuffer = nullptr;
+        MTL::IndirectCommandBuffer* m_IndirectCommandBuffer = nullptr;
         MTL::RenderCommandEncoder* m_RenderEncoder = nullptr;
         MTL::ComputeCommandEncoder* m_ComputeEncoder = nullptr;
         MTL::AccelerationStructureCommandEncoder* m_AccelerationEcoder;

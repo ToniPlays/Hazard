@@ -29,7 +29,7 @@ void TriangleTest::Init()
 							{ "a_Color",	ShaderDataType::Float4 }
 	};
 
-	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/Shaders/triangle.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/triangle.glsl", m_Window->GetWindowInfo().SelectedAPI);
 
 	BufferCreateInfo vbo = {};
 	vbo.Name = "TriangleVBO";
@@ -68,5 +68,5 @@ void TriangleTest::Run()
 
 void TriangleTest::Terminate()
 {
-
+    
 }

@@ -125,9 +125,8 @@ namespace HazardRenderer::Metal
         m_MetalTexture = device->GetMetalDevice()->newTexture(descriptor);
         
         SetDebugLabel(m_MetalTexture, m_DebugName);
-        
-        CreateImageSampler();
     }
+/*
     void MetalImage2D::CreateImageSampler()
     {
         auto device = MetalContext::GetMetalDevice();
@@ -148,7 +147,7 @@ namespace HazardRenderer::Metal
         
         m_MetalSampler = device->GetMetalDevice()->newSamplerState(descriptor);
     }
-
+    */
     void MetalImage2D::UploadImageData_RT()
     {
         MTL::Region region;

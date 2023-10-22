@@ -10,7 +10,7 @@ public:
 	void Run() override;
 	void Terminate() override;
 
-	const char* GetName() { return "Triangle test"; }
+	const char* GetName() override { return "Triangle test"; }
 
 private:
 	HazardRenderer::Window* m_Window;
