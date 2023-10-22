@@ -13,6 +13,9 @@
     <Filter Include="src\Hazard\Core">
       <UniqueIdentifier>{2E88C349-9A13-310E-A324-B4020F2F8D0E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\Core\EntryPoints">
+      <UniqueIdentifier>{EC194494-5827-727A-E10D-6E654D1A3E31}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\ECS">
       <UniqueIdentifier>{60351D86-4C03-118C-3597-81B22104EDF0}</UniqueIdentifier>
     </Filter>
@@ -141,8 +144,23 @@
     <ClInclude Include="src\Hazard\Core\Core.h">
       <Filter>src\Hazard\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\MacOSEntryPoint.h">
+    <ClInclude Include="src\Hazard\Core\EntryPoint.h">
       <Filter>src\Hazard\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Core\EntryPoints\AppDelegate.h">
+      <Filter>src\Hazard\Core\EntryPoints</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Core\EntryPoints\DefaultViewController.h">
+      <Filter>src\Hazard\Core\EntryPoints</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Core\EntryPoints\IOSEntryPoint.h">
+      <Filter>src\Hazard\Core\EntryPoints</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Core\EntryPoints\MacOSEntryPoint.h">
+      <Filter>src\Hazard\Core\EntryPoints</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Core\EntryPoints\WindowsEntryPoint.h">
+      <Filter>src\Hazard\Core\EntryPoints</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Core\HazardLoop.h">
       <Filter>src\Hazard\Core</Filter>
@@ -1695,8 +1713,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\WindowsEntryPoint.h" />
-    <ClInclude Include="src\Hazard\Core\EntryPoint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

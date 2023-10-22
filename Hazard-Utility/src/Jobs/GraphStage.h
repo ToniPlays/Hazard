@@ -13,7 +13,7 @@ class GraphStage : public RefCount
 	friend class Job;
 
 public:
-	GraphStage(uint32_t index, float weight, const std::string& name = "") : m_StageIndex(index), m_Weight(weight), m_Name(name) {}
+	GraphStage(uint32_t index, float weight, uint32_t flags = 0, const std::string& name = "") : m_StageIndex(index), m_Weight(weight), m_Flags(flags), m_Name(name) {}
 	~GraphStage();
 
 	float GetWeight() const { return m_Weight; }

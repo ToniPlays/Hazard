@@ -23,6 +23,7 @@ workspace "Hazard"
 
 	filter "system:windows"
         systemversion "latest"
+		architecture "x86_64"
         defines
         {
             "HZR_PLATFORM_WINDOWS"
@@ -39,11 +40,11 @@ workspace "Hazard"
         {
             "HZR_PLATFORM_IOS"
         }
-	architecture "ARM"
-	xcodebuildsettings 
-	{
-		["SDKROOT"] = "iphoneos"
-	}
+	    architecture "ARM"
+	    xcodebuildsettings 
+	    {
+	    	["SDKROOT"] = "iphoneos"
+	    }
  
     filter "system:ios or system:macosx"
         architecture "universal"
@@ -55,9 +56,9 @@ workspace "Hazard"
             ["CLANG_ENABLE_OBJC_WEAK"] = "YES",
             ["DEAD_CODE_STRIPPING"] = "YES",
             ["CLANG_CXX_LANGUAGE_STANDARD"] = "c++20",
-	    ["ONLY_ACTIVE_ARCH"] = "YES",
-	    ["PRODUCT_BUNDLE_IDENTIFIER"] = "com.hazard",
-	    ["INFOPLIST_FILE"] = "info.plist"
+	        ["ONLY_ACTIVE_ARCH"] = "YES",
+	        ["PRODUCT_BUNDLE_IDENTIFIER"] = "com.hazard",
+	        ["INFOPLIST_FILE"] = "info.plist"
         }
         
     filter "configurations:Debug"
@@ -106,5 +107,4 @@ if os.host() == "windows" then
 end
 
 include "HazardLauncher"
-include "Hazard-Test-App"
 include "Hazard-Script"

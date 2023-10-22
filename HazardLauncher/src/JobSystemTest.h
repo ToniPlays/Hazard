@@ -10,42 +10,33 @@
 
 namespace JobSystemTest
 {
-	static void AssetLoad(Ref<Job> job)
+	static void AssetLoad(JobInfo& info)
 	{
-		//int result = job->GetInput<int>();
-
-		uint32_t count = 0;// result;
+		uint32_t count = info.ExecutionID;
 		for (uint32_t i = 0; i < count; i++)
 		{
-			job->Progress((float)i / (float)count);
-			std::this_thread::sleep_for(5ms);
+			info.Job->Progress((float)i / (float)count);
+			std::this_thread::sleep_for(1ms);
 		}
-
-		//Initialize next stage jobs
-		Ref<GraphStage> stage = job->GetJobGraph()->GetNextStage();
 	}
 
-	static void WorldLoad(Ref<Job> job, int num)
+	static void Preprocess(JobInfo& info, int num)
 	{
 		uint32_t count = num;
 		for (uint32_t i = 0; i < count; i++)
 		{
-			job->Progress((float)i / (float)count);
-			std::this_thread::sleep_for(2ms);
+			info.Job->Progress((float)i / (float)count);
+			std::this_thread::sleep_for(5ms);
 		}
-        
-		job->SetResult(&count, sizeof(uint32_t));
 
-		//Initialize next stage jobs
-		Ref<GraphStage> stage = job->GetJobGraph()->GetNextStage();
-		
-		std::vector<Ref<Job>> jobs(64);
-
+		std::vector<Ref<Job>> jobs;
+		jobs.resize(1000);
 		for (uint32_t i = 0; i < jobs.size(); i++)
 		{
-			jobs[i] = Ref<Job>::Create("Asset load", AssetLoad);
+			jobs[i] = Ref<Job>::Create("Job", AssetLoad);
 		}
-		stage->QueueJobs(jobs);
+
+		info.NextStage->QueueJobs(jobs);
 	}
 
 	static std::string GetStatus(const ThreadStatus& status)
@@ -66,15 +57,12 @@ namespace JobSystemTest
 		std::filesystem::current_path("/users/ToniSimoska/Hazard/HazardLauncher");
 #endif
 		JobSystem jobSystem;
-
-		Ref<Job> loadingJob = hnew Job("World loading", WorldLoad, 250);
-
+		Ref<Job> loadingJob = hnew Job("World loading", Preprocess, 100);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World loader", 2);
 
 		Ref<GraphStage> loading = graph->GetStage(0);
 		loading->SetWeight(0.40f);
 		loading->QueueJobs({ loadingJob });
-
 		graph->GetStage(1)->SetWeight(0.60f);
 
         jobSystem.QueueGraph(graph);
@@ -84,22 +72,12 @@ namespace JobSystemTest
 		Timer timer;
 		while (!graph->HasFinished())
 		{
-			if (progress == graph->GetProgress()) continue;
 			progress = graph->GetProgress();
-			std::cout << fmt::format("{} progress: {}%", graph->GetName(), graph->GetProgress() * 100.0f) << std::endl;
+			std::cout << fmt::format("{} progress: {}%", graph->GetName(), progress * 100.0f) << std::endl;
 
-			continue;
-
-			std::stringstream ss;
-			for (const auto& thread : jobSystem.GetThreads())
-			{
-				ss << fmt::format("Thread {}: {}", thread->GetThreadID(), GetStatus(thread->GetStatus())) << "\n";
-				if (thread->GetCurrentJob())
-					ss << fmt::format(" - Job {}: {}% ", thread->GetCurrentJob()->GetName(), thread->GetCurrentJob()->GetProgress() * 100.0f) << "\n";
-			}
-			std::cout << ss.str() << std::endl;
+			std::this_thread::sleep_for(100ms);
 		}
-		graph->Wait();
+
 		std::cout << fmt::format("Total time {} ms", timer.ElapsedMillis()) << std::endl;
 
 		jobSystem.Terminate();

@@ -32,6 +32,11 @@ namespace UI
 				DrawMemoryView();
 				ImGui::EndTabItem();
 			}
+			if (ImGui::BeginTabItem("Threading"))
+			{
+				DrawJobSystemView();
+				ImGui::EndTabItem();
+			}
 
 			ImGui::EndTabBar();
 		}
@@ -124,6 +129,36 @@ namespace UI
 		ImGui::Text("Memory debug not enabled");
 	#endif
 	}
+	void PerformanceDebugPanel::DrawJobSystemView()
+	{
+		auto& threads = Application::Get().GetJobSystem().GetThreads();
+		ImUI::Table<Ref<Thread>> table("Job status", ImGui::GetContentRegionAvail(), false);
+		table.SetColumns({ "Thread", "Status", "Current job" });
+		table.Reserve(threads.size());
+		table.RowHeight(28.0f);
+		table.RowContent([&](Ref<Thread> thread) {
+			ImUI::Shift(4.0f, 4.0f);
+			ImGui::Text("Thread %u", thread->GetThreadID());
+			ImGui::TableNextColumn();
+
+			ImUI::Shift(4.0f, 4.0f);
+			ImGui::Text("%s", ThreadStatusToString(thread->GetStatus()).c_str());
+			ImGui::TableNextColumn();
+
+			Ref<Job> job = thread->GetCurrentJob();
+
+			if (job)
+			{
+				ImUI::Shift(4.0f, 4.0f);
+				ImGui::Text("%s", job->GetName().c_str());
+			}
+		});
+
+		for (Ref<Thread> thread : threads)
+			table.AddRow(thread);
+
+		table.Render();
+	}
 	ImVec4 PerformanceDebugPanel::GetMemoryColor(uint64_t bytes)
 	{
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
@@ -133,5 +168,16 @@ namespace UI
 		if (bytes < 1048576 * 50)	return style.Colors.AxisX;
 
 		return style.Colors.AxisX;
+	}
+	std::string PerformanceDebugPanel::ThreadStatusToString(ThreadStatus status)
+	{
+		switch (status)
+		{
+			case ThreadStatus::None:		return "None";
+			case ThreadStatus::Terminated:	return "Terminated";
+			case ThreadStatus::Waiting:		return "Waiting";
+			case ThreadStatus::Executing:	return "Executing";
+		}
+		return "";
 	}
 }

@@ -3,6 +3,8 @@
 #include "Buffer/Buffer.h"
 #include "Backend/Core/ShaderCompiler.h"
 
+#ifdef HZR_INCLUDE_METAL
+
 namespace HazardRenderer::Metal
 {
     struct MSLBinding {
@@ -30,3 +32,4 @@ namespace HazardRenderer::Metal
         double m_CompilationTime = 0.0;
     };
 }
+#endif

@@ -19,15 +19,19 @@ void Job::SetResult(void* data, uint64_t size, uint64_t offset)
 	m_ResultBuffer.Write(data, size);
 }
 
-void Job::Execute()
+void Job::Execute(JobInfo& info)
 {
+	info.Job = this;
+	info.ExecutionID = m_InvocationId;
+
 	m_Status = JobStatus::Executing;
 	Timer timer;
+
 	if (m_JobCallback)
 	{
 		try
 		{
-			m_JobCallback(this);
+			m_JobCallback(info);
 			m_Status = JobStatus::Success;
 		}
 		catch (JobException e)
@@ -39,7 +43,7 @@ void Job::Execute()
 
 	m_ExecutionTime = timer.ElapsedMillis();
 	m_Progress = 1.0f;
-    
+
 	if (m_Stage)
 		m_Stage->OnJobFinished(this);
 }

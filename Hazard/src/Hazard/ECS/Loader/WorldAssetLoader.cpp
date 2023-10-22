@@ -8,7 +8,7 @@
 
 namespace Hazard
 {
-	void SaveWorld(Ref<Job> job, Ref<World> world, std::filesystem::path path)
+	void SaveWorld(JobInfo& info, Ref<World> world, std::filesystem::path path)
 	{
 		WorldSerializer serializer(world);
 		Buffer buffer = serializer.Serialize();
@@ -42,7 +42,7 @@ namespace Hazard
 			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath));
 	}
 
-	static void WorldPreprocessJob(Ref<Job> job, WorldDeserializer deserializer)
+	static void WorldPreprocessJob(JobInfo& info, WorldDeserializer deserializer)
 	{
 		Ref<World> world = deserializer.Deserialize();
 
@@ -54,7 +54,7 @@ namespace Hazard
 		}
 
 		world->IncRefCount();
-		job->SetResult(&world, sizeof(Ref<World>));
+		info.Job->SetResult(&world, sizeof(Ref<World>));
 	}
 
 	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata)

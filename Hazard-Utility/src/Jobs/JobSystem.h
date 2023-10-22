@@ -13,7 +13,12 @@ class Thread : public RefCount
 	friend class JobSystem;
 public:
 
-	Thread(uint32_t threadID) : m_ThreadID(threadID) {};
+	Thread(uint32_t threadID) : m_ThreadID(threadID)
+	{
+		m_Status = ThreadStatus::Waiting;
+		m_Status.notify_all();
+	};
+
 	~Thread() {};
 
 	uint32_t GetThreadID() const { return m_ThreadID; }
@@ -26,6 +31,9 @@ public:
 	void WaitForIdle() { m_Status.wait(ThreadStatus::Executing); }
 
 private:
+	void Execute(Ref<Job> job, JobSystem* system);
+
+private:
 	std::thread m_Thread;
 	uint32_t m_ThreadID = 0;
 	Ref<Job> m_CurrentJob;
@@ -34,13 +42,14 @@ private:
 
 class JobSystem
 {
+	friend class Thread;
 public:
+
 	JobSystem(uint32_t threads = std::thread::hardware_concurrency());
 	~JobSystem();
 
 	const std::vector<Ref<Thread>>& GetThreads() { return m_Threads; }
 	std::vector<Ref<Job>> GetQueuedJobs() { return m_Jobs; }
-	std::vector<Ref<Job>> GetRunningJobs() { return m_RunningJobs; }
 	std::vector<Ref<JobGraph>> GetQueuedGraphs() { return m_QueuedGraphs; }
 
 	JobPromise QueueJob(Ref<Job> job);
@@ -62,7 +71,6 @@ private:
 
 	std::vector<Ref<Thread>> m_Threads;
 	std::vector<Ref<Job>> m_Jobs;
-	std::vector<Ref<Job>> m_RunningJobs;
 	std::atomic_bool m_Running = false;
 
 	std::atomic_uint64_t m_JobCount = 0;

@@ -32,7 +32,7 @@ public:
 private:
 	static void ImportEngineAssets();
 	static CachedBuffer GenerateEngineAssetPack(const std::filesystem::path& path);
-	static void GenerateAndSavePack(Ref<Job> job, std::filesystem::path& path);
+	static void GenerateAndSavePack(JobInfo& info, std::filesystem::path& path);
 
 private:
 	inline static std::unordered_map<std::string, AssetHandle> s_Icons;

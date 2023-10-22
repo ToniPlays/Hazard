@@ -22,6 +22,7 @@ JobSystem::~JobSystem()
 	for (auto& thread : m_Threads)
 		thread->Join();
 }
+
 void JobSystem::ThreadFunc(Ref<Thread> thread)
 {
 	//Initialize thread state
@@ -39,21 +40,13 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 
 		if (job)
 		{
-			m_RunningJobMutex.lock();
-			m_RunningJobs.push_back(job);
-			m_RunningJobMutex.unlock();
-
 			m_RunningJobCount++;
 			m_RunningJobCount.notify_all();
-
-			thread->m_Status = ThreadStatus::Executing;
-			thread->m_Status.notify_all();
 			{
 				auto it = std::find(m_Jobs.begin(), m_Jobs.end(), job);
 
 				if (it != m_Jobs.end())
 					m_Jobs.erase(it);
-
 			}
 
 			m_JobMutex.unlock();
@@ -61,28 +54,7 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 			m_JobCount = m_Jobs.size();
 			m_JobCount.notify_one();
 
-			thread->m_CurrentJob = job;
-			{
-				job->Execute();
-				if (job->GetJobGraph())
-				{
-					//Check if this was the last job to run on graph
-					if (job->GetJobGraph()->HasFinished())
-					{
-						std::scoped_lock lock(m_GraphMutex);
-						auto it = std::find(m_QueuedGraphs.begin(), m_QueuedGraphs.end(), job->GetJobGraph());
-						if (it != m_QueuedGraphs.end())
-							m_QueuedGraphs.erase(it);
-					}
-				}
-			}
-			{
-				thread->m_CurrentJob = nullptr;
-
-				m_RunningJobMutex.lock();
-				m_RunningJobs.erase(std::find(m_RunningJobs.begin(), m_RunningJobs.end(), job));
-				m_RunningJobMutex.unlock();
-			}
+			thread->Execute(job, this);
 
 			m_RunningJobCount--;
 			m_RunningJobCount.notify_all();
@@ -158,6 +130,7 @@ void JobSystem::QueueGraphJobs(Ref<JobGraph> graph)
 
 	graph->m_JobSystem = this;
 	Ref<GraphStage> stage = graph->GetStage(0);
+	HZR_ASSERT(stage->m_JobCount > 0, "Stage has no jobs");
 	QueueJobs(stage->m_Jobs);
 }
 
@@ -165,5 +138,42 @@ Ref<Job> JobSystem::FindAvailableJob()
 {
 	for (auto& job : m_Jobs)
 		return job;
+
 	return nullptr;
+}
+
+void Thread::Execute(Ref<Job> job, JobSystem* system)
+{
+	m_CurrentJob = job;
+	if (job == nullptr) return;
+
+	m_Status = ThreadStatus::Executing;
+	m_Status.notify_all();
+
+	JobInfo info = {};
+	info.Thread = this;
+	if (job->GetJobGraph())
+	{
+		info.PreviousStage = job->GetJobGraph()->GetPreviousStage();
+		info.NextStage = job->GetJobGraph()->GetNextStage();
+		info.ParentGraph = job->GetJobGraph();
+	}
+
+	job->Execute(info);
+
+	if (job->GetJobGraph())
+	{
+		//Check if this was the last job to run on graph
+		if (job->GetJobGraph()->HasFinished())
+		{
+			std::scoped_lock lock(system->m_GraphMutex);
+			auto it = std::find(system->m_QueuedGraphs.begin(), system->m_QueuedGraphs.end(), job->GetJobGraph());
+			if (it != system->m_QueuedGraphs.end())
+				system->m_QueuedGraphs.erase(it);
+		}
+	}
+
+	m_CurrentJob = nullptr;
+	m_Status = ThreadStatus::Waiting;
+	m_Status.notify_all();
 }

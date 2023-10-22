@@ -11,7 +11,7 @@
 
 namespace Hazard
 {
-	static void LoadImageJob(Ref<Job> job, AssetHandle handle)
+	static void LoadImageJob(JobInfo& info, AssetHandle handle)
 	{
 		using namespace HazardRenderer;
 
@@ -26,23 +26,23 @@ namespace Hazard
 
 		TextureFileHeader header = readBuffer.Read<TextureFileHeader>();
 
-		Image2DCreateInfo info = {};
-		info.DebugName = fmt::format("Image {}", handle);
-		info.Extent.Width = header.Width;
-		info.Extent.Height = header.Height;
-		info.Data = readBuffer.Read<Buffer>(header.Width * header.Height * header.Channels);
-		info.Format = ImageFormat::RGBA;
-		info.Usage = ImageUsage::Texture;
-		info.ClearLocalBuffer = true;
-		info.GenerateMips = false;
+		Image2DCreateInfo imageInfo = {};
+		imageInfo.DebugName = fmt::format("Image {}", handle);
+		imageInfo.Extent.Width = header.Width;
+		imageInfo.Extent.Height = header.Height;
+		imageInfo.Data = readBuffer.Read<Buffer>(header.Width * header.Height * header.Channels);
+		imageInfo.Format = ImageFormat::RGBA;
+		imageInfo.Usage = ImageUsage::Texture;
+		imageInfo.ClearLocalBuffer = true;
+		imageInfo.GenerateMips = false;
 
-		Ref<Image2D> image = Image2D::Create(&info);
+		Ref<Image2D> image = Image2D::Create(&imageInfo);
 		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
 		Ref<Sampler> sampler = RenderEngine::GetResources().DefaultImageSampler;
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer, sampler);
 		asset->IncRefCount();
-		job->SetResult(&asset, sizeof(Ref<Texture2DAsset>));
+		info.Job->SetResult(&asset, sizeof(Ref<Texture2DAsset>));
 
 		buffer.Release();
 	}

@@ -12,15 +12,15 @@
 
 namespace Editor
 {
-	static void GenerateProjectFilesJob(Ref<Job> job, EditorScriptManager* manager)
+	static void GenerateProjectFilesJob(JobInfo& info, EditorScriptManager* manager)
 	{
 		manager->GenerateProjectFiles();
 	}
-	static void CompileSourcesJob(Ref<Job> job, EditorScriptManager* manager)
+	static void CompileSourcesJob(JobInfo& info, EditorScriptManager* manager)
 	{
 		manager->CompileSource();
 	}
-	static void ReloadAssembliesJob(Ref<Job> job, EditorScriptManager* manager)
+	static void ReloadAssembliesJob(JobInfo& info, EditorScriptManager* manager)
 	{
 		manager->ReloadAssembly();
 	}

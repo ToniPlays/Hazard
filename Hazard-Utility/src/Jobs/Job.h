@@ -7,13 +7,25 @@
 
 class JobGraph;
 class GraphStage;
+class Thread;
+class Job;
+
+struct JobInfo 
+{
+	Ref<Job> Job;
+	Ref<Thread> Thread;
+	Ref<JobGraph> ParentGraph;
+	Ref<GraphStage> PreviousStage;
+	Ref<GraphStage> NextStage;
+	uint32_t ExecutionID;
+};
 
 class Job : public RefCount
 {
 	friend class JobSystem;
 	friend class GraphStage;
 
-	using JobCallback = std::function<void(Ref<Job>)>;
+	using JobCallback = std::function<void(JobInfo&)>;
 
 public:
 
@@ -32,7 +44,7 @@ public:
 
 	void SetJobTag(const std::string& name) { m_JobTag = name; }
 
-	void Execute();
+	void Execute(JobInfo& info);
 	void Progress(float progress);
 
 	float GetExecutionTime() { return m_ExecutionTime; }
@@ -50,12 +62,12 @@ private:
 
 	std::atomic<float> m_Progress = 0.0f;
 	std::atomic<float> m_ExecutionTime = 0.0f;
+	uint32_t m_InvocationId = 0;
 	
 	std::string m_JobTag;
 	std::string m_JobName;
-	JobStatus m_Status;
+	JobStatus m_Status = JobStatus::None;
 
 	Buffer m_ResultBuffer;
-
 	Ref<GraphStage> m_Stage = nullptr;
 };

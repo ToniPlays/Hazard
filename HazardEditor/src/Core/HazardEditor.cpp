@@ -12,9 +12,6 @@
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "EditorScripting/EditorScriptGlue.h"
-#include "Backend/Core/ShaderCompiler.h"
-#include "Hazard/RenderContext/TextureFactory.h"
-#include "Hazard/Rendering/Mesh/MeshFactory.h"
 
 #include "EditorAssetManager.h"
 #include "spdlog/fmt/fmt.h"

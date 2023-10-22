@@ -17,9 +17,9 @@ AssetPack EditorAssetPackBuilder::CreateAssetPack(const std::vector<AssetPackEle
 	return pack;
 }
 
-void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::filesystem::path& path)
+void EditorAssetPackBuilder::GenerateAndSaveAssetPack(JobInfo& info, const std::filesystem::path& path)
 {
-	Ref<GraphStage> previousStage = job->GetJobGraph()->GetPreviousStage();
+	Ref<GraphStage> previousStage = info.Job->GetJobGraph()->GetPreviousStage();
 
 	auto results = previousStage->GetJobResults();
 
@@ -40,7 +40,7 @@ void EditorAssetPackBuilder::GenerateAndSaveAssetPack(Ref<Job> job, const std::f
 }
 
 
-void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings)
+void EditorAssetPackBuilder::ImageAssetPackJob(JobInfo& info, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo imageInfo, UI::ImageImportSettings settings)
 {
 	using namespace HazardRenderer;
 
@@ -72,19 +72,17 @@ void EditorAssetPackBuilder::ImageAssetPackJob(Ref<Job> job, const std::filesyst
 	element.AddressableName = File::GetName(file);
 	element.Data = data;
 
-	job->SetResult(&element, sizeof(AssetPackElement));
+	info.Job->SetResult(&element, sizeof(AssetPackElement));
 	textureHeader.ImageData.Release();
 }
 
-void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesystem::path& file, MeshCreateInfo info, UI::MeshImportSettings settings)
+void EditorAssetPackBuilder::MeshAssetPackJob(JobInfo& info, const std::filesystem::path& file, MeshCreateInfo meshInfo, UI::MeshImportSettings settings)
 {
-	//job->SetJobName(File::GetName(file)); TODO
-
 	MeshFactory factory;
 	factory.SetOptimization(MeshLoaderFlags_DefaultFlags);
 	factory.SetScalar(settings.Scale);
 	factory.SetProgressHandler([&](float progress) {
-		job->Progress(progress * 0.9f);
+		info.Job->Progress(progress * 0.9f);
 	});
 
 	MeshData meshData = factory.LoadMeshFromSource(file);
@@ -136,7 +134,7 @@ void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesyste
 			data.Write(&v.Position, sizeof(glm::vec2), writeOffset);
 			writeOffset += sizeof(glm::vec2);
 		}
-		job->Progress(0.9f + ((float)i / (float)meshData.Vertices.size()) * 0.1f);
+		info.Job->Progress(0.9f + ((float)i / (float)meshData.Vertices.size()) * 0.1f);
 	}
 	data.Write(meshData.Indices.data(), meshData.Indices.size() * sizeof(uint32_t), writeOffset);
 
@@ -146,10 +144,10 @@ void EditorAssetPackBuilder::MeshAssetPackJob(Ref<Job> job, const std::filesyste
 	result.Data = data;
 	result.AddressableName = File::GetName(file);
 
-	job->SetResult(&result, sizeof(AssetPackElement));
+	info.Job->SetResult(&result, sizeof(AssetPackElement));
 }
 
-void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::RenderAPI api)
+void EditorAssetPackBuilder::ShaderAssetPackJob(JobInfo& info, const std::filesystem::path& file, HazardRenderer::RenderAPI api)
 {
 	using namespace HazardRenderer;
 	std::vector<ShaderStageCode> binaries = ShaderCompiler::GetShaderBinariesFromSource(file, api);
@@ -178,12 +176,12 @@ void EditorAssetPackBuilder::ShaderAssetPackJob(Ref<Job> job, const std::filesys
 	result.Type = AssetType::Shader;
 	result.Data = data;
 	result.Handle = AssetHandle();
-	//result.AddressableName = File::GetName(file);
+	result.AddressableName = File::GetName(file);
 
-	job->SetResult(&result, sizeof(AssetPackElement));
+	info.Job->SetResult(&result, sizeof(AssetPackElement));
 }
 
-void EditorAssetPackBuilder::MaterialAssetPackJob(Ref<Job> job, const std::filesystem::path& file, UI::MaterialImportSettings settings)
+void EditorAssetPackBuilder::MaterialAssetPackJob(JobInfo& info, const std::filesystem::path& file, UI::MaterialImportSettings settings)
 {
 	MaterialAssetHeader header = {};
 
@@ -201,5 +199,5 @@ void EditorAssetPackBuilder::MaterialAssetPackJob(Ref<Job> job, const std::files
 	result.Handle = settings.Handle;
 	result.AddressableName = File::GetName(file);
 
-	job->SetResult(&result, sizeof(AssetPackElement));
+	info.Job->SetResult(&result, sizeof(AssetPackElement));
 }

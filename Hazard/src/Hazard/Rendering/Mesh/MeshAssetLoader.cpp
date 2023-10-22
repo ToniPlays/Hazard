@@ -10,7 +10,7 @@
 
 namespace Hazard
 {
-	static void LoadMesh(Ref<Job> job, AssetHandle handle)
+	static void LoadMesh(JobInfo& info, AssetHandle handle)
 	{
 		Buffer buffer = AssetManager::GetAssetData(handle);
 		CachedBuffer data(buffer.Data, buffer.Size);
@@ -48,20 +48,20 @@ namespace Hazard
 
 		buffer.Release();
 
-		MeshCreateInfo info = {};
-		info.DebugName = fmt::format("Mesh {}", handle);
-		info.BoundingBox = header.BoundingBox;
-		info.VertexCount = vertices.size();
-		info.pVertices = vertices.data();
-		info.IndexCount = indices.size();
-		info.pIndices = indices.data();
+		MeshCreateInfo meshInfo = {};
+		meshInfo.DebugName = fmt::format("Mesh {}", handle);
+		meshInfo.BoundingBox = header.BoundingBox;
+		meshInfo.VertexCount = vertices.size();
+		meshInfo.pVertices = vertices.data();
+		meshInfo.IndexCount = indices.size();
+		meshInfo.pIndices = indices.data();
 
-		if (info.IndexCount == 0 || info.VertexCount == 0)
+		if (meshInfo.IndexCount == 0 || meshInfo.VertexCount == 0)
 			throw JobException("Unable to create mesh");
 
-		Ref<Mesh> asset = Ref<Mesh>::Create(&info);
+		Ref<Mesh> asset = Ref<Mesh>::Create(&meshInfo);
 		asset->IncRefCount();
-		job->SetResult(&asset, sizeof(Ref<Mesh>));
+		info.Job->SetResult(&asset, sizeof(Ref<Mesh>));
 	}
 
 	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)

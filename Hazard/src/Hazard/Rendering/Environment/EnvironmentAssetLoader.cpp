@@ -6,7 +6,7 @@
 
 namespace Hazard
 {
-	static void SaveEnvironmentMapJob(Ref<Job> job, Ref<EnvironmentMap> asset, const std::filesystem::path& path)
+	static void SaveEnvironmentMapJob(JobInfo& info, Ref<EnvironmentMap> asset, const std::filesystem::path& path)
 	{
 		EnvironmentAssetHeader header = {};
 		header.ImageHandle = asset->GetSourceImageHandle();
@@ -37,7 +37,7 @@ namespace Hazard
 			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath));
 	}
 
-	static void LoadEnvironmentMapJob(Ref<Job> job, AssetHandle handle)
+	static void LoadEnvironmentMapJob(JobInfo& info, AssetHandle handle)
 	{
 		Buffer assetData = AssetManager::GetAssetData(handle);
 		EnvironmentAssetHeader header = assetData.Read<EnvironmentAssetHeader>();
@@ -48,7 +48,7 @@ namespace Hazard
 		map->Invalidate();
 
 		map->IncRefCount();
-		job->SetResult(&map, sizeof(Ref<EnvironmentMap>));
+		info.Job->SetResult(&map, sizeof(Ref<EnvironmentMap>));
 	}
 
 	Ref<JobGraph> EnvironmentAssetLoader::Load(AssetMetadata& metadata)

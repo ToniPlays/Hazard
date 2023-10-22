@@ -6,7 +6,7 @@
 
 namespace Hazard 
 {
-	static void LoadScriptAsset(Ref<Job> job, AssetHandle handle)
+	static void LoadScriptAsset(JobInfo& info, AssetHandle handle)
 	{
 		Buffer buffer = AssetManager::GetAssetData(handle);
 		if (!buffer.Data)
@@ -16,12 +16,12 @@ namespace Hazard
 
 		Ref<HScript> script = Ref<HScript>::Create(sourceFile, File::GetNameNoExt(sourceFile));
 		script->IncRefCount();
-		job->SetResult(&script, sizeof(Ref<HScript>));
+		info.Job->SetResult(&script, sizeof(Ref<HScript>));
 
 		buffer.Release();
 	}
 
-	static void SaveScriptAsset(Ref<Job> job, Ref<HScript> asset, std::filesystem::path path)
+	static void SaveScriptAsset(JobInfo& info, Ref<HScript> asset, std::filesystem::path path)
 	{
 		if (!File::WriteFile(path, ""))
 			throw JobException("Failed to create source for script: " + path.string());

@@ -72,7 +72,7 @@ AssetHandle EditorAssetManager::GetDefaultMesh(const std::string& name)
 	return INVALID_ASSET_HANDLE;
 }
 
-void EditorAssetManager::GenerateAndSavePack(Ref<Job> job, std::filesystem::path& path)
+void EditorAssetManager::GenerateAndSavePack(JobInfo& info, std::filesystem::path& path)
 {
 	FileCache cache("Library");
 
@@ -110,21 +110,23 @@ void EditorAssetManager::ImportEngineAssets()
 		if (extension == ".mtl") continue;
 		if (extension == ".txt") continue;
 		if (extension == ".ico") continue;
-		if (extension == ".DS_Store") continue;
+		if (extension == ".cs") continue;
 
-		Ref<Job> job = Ref<Job>::Create("Generate", GenerateAndSavePack, file);
+		Ref<Job> job = Ref<Job>::Create(fmt::format("Generate pack: {0}", file.string()), GenerateAndSavePack, file);
 		jobs.push_back(job);
 	}
 
-	Ref<JobGraph> loadingGraph = Ref<JobGraph>::Create("EngineLoad", 1);
+	Ref<JobGraph> loadingGraph = Ref<JobGraph>::Create("EngineLoad", 1, JOB_FLAGS_SILENT_FAILURE);
 	loadingGraph->GetStage(0)->QueueJobs(jobs);
 
 
 	JobSystem& system = Application::Get().GetJobSystem();
-	JobPromise promise = system.QueueGraph(loadingGraph);
-
-	promise.Wait();
-	HZR_CORE_ASSERT(promise.Succeeded(), "Loading engine assets has failed");
+	if (jobs.size() > 0)
+	{
+		JobPromise promise = system.QueueGraph(loadingGraph);
+		promise.Wait();
+		HZR_CORE_ASSERT(promise.Succeeded(), "Loading engine assets has failed");
+	}
 
 	auto files = Directory::GetAllInDirectory(cache.GetCachePath(), true);
 	for (auto& file : files)
@@ -153,15 +155,14 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 		case AssetType::Shader:
 		{
 			Ref<JobGraph> graph = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan);
-            
+
 			if (!graph) break;
 
 			Buffer result = graph->Execute()->GetResult();
 			AssetPackElement element = result.Read<AssetPackElement>();
 			element.Handle = AssetHandle();
-            std::cout << element.AddressableName << std::endl;
 			elements.push_back(element);
-            
+
 			break;
 		}
 		case AssetType::Image:
@@ -179,6 +180,7 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 			AssetPackElement element = result.Read<AssetPackElement>();
 			element.Handle = AssetHandle();
 			elements.push_back(element);
+
 			break;
 		}
 		case AssetType::Mesh:
@@ -194,11 +196,12 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 			elements.push_back(element);
 		}
 	}
-    if(elements.size() == 0) 
-        return CachedBuffer();
-    
+	if (elements.size() == 0)
+		return CachedBuffer();
+
 	AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
 	CachedBuffer buffer = AssetPack::ToBuffer(pack);
-    HZR_ASSERT(pack.ElementCount > 2000, "Too many elements");
+
+	HZR_ASSERT(pack.ElementCount < 2000, "Too many elements");
 	return buffer;
 }

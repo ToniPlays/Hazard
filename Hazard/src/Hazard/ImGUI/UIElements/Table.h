@@ -97,7 +97,7 @@ namespace Hazard::ImUI
 				}
 				else
 				{
-					ImGui::TableNextRow();
+					ImGui::TableNextRow(0, m_RowHeight);
 					ImGui::TableNextColumn();
 				}
 

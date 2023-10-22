@@ -138,9 +138,9 @@ namespace Hazard
 		static AssetHandle CreateNewAsset(AssetType type, const std::filesystem::path& path);
 
 	private:
-		static void AddLoadedAssetJob(Ref<Job> job, AssetHandle handle)
+		static void AddLoadedAssetJob(JobInfo& info, AssetHandle handle)
 		{
-			Buffer assetBuffer = job->GetJobGraph()->GetPreviousStage()->GetJobResult(0);
+			Buffer assetBuffer = info.PreviousStage->GetJobResult(0);
 			if (!assetBuffer.Data) return;
 
 			Ref<Asset> asset = assetBuffer.Read<Ref<Asset>>();

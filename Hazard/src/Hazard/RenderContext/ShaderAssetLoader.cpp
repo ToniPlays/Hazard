@@ -12,7 +12,7 @@
 
 namespace Hazard
 {
-	static void LoadShader(Ref<Job> job, AssetHandle handle)
+	static void LoadShader(JobInfo& info, AssetHandle handle)
 	{
 		using namespace HazardRenderer;
 
@@ -39,7 +39,7 @@ namespace Hazard
 		}
 		
 		shaderAsset->IncRefCount();
-		job->SetResult(&shaderAsset, sizeof(Ref<ShaderAsset>));
+		info.Job->SetResult(&shaderAsset, sizeof(Ref<ShaderAsset>));
 
 		buffer.Release();
 	}

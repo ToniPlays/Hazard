@@ -13,7 +13,7 @@ class JobGraph : public RefCount
 	friend class GraphStage;
 	friend class JobSystem;
 public:
-	JobGraph(const std::string& name, uint32_t stageCount);
+	JobGraph(const std::string& name, uint32_t stageCount, uint32_t flags = 0);
 
 	const std::string& GetName() const { return m_Name; }
 	uint32_t GetCurrentStageIndex() const { return m_CurrentStage; }

@@ -17,14 +17,20 @@ Ref<GraphStage> GraphStage::GetGraphStage(uint32_t index)
 
 void GraphStage::QueueJobs(const std::vector<Ref<Job>>& jobs)
 {
-	std::lock_guard lock(m_JobMutex);
+	m_JobMutex.lock();
 	m_Jobs.insert(m_Jobs.begin(), jobs.begin(), jobs.end());
+
+	for (uint32_t i = 0; i < jobs.size(); i++)
+	{
+		Ref<Job> job = jobs[i];
+		job->m_InvocationId = i;
+		job->m_Stage = this;
+	}
+
+	m_JobMutex.unlock();
 
 	m_JobCount = m_Jobs.size();
 	m_JobCount.notify_all();
-
-	for (auto& job : m_Jobs)
-		job->m_Stage = this;
 }
 
 Ref<JobGraph> GraphStage::GetGraph()
@@ -53,8 +59,8 @@ void GraphStage::OnJobFinished(Ref<Job> job)
 	m_JobCount--;
 	m_JobCount.notify_all();
 
-	if (job->GetStatus() == JobStatus::Failure)
-		m_Flags = 0;
+	if (job->GetStatus() == JobStatus::Failure && !(m_Flags & JOB_FLAGS_SILENT_FAILURE))
+		m_Flags &= ~JOB_FLAGS_SUCCEEDED;
 
 	if (m_JobCount == 0)
 		m_JobGraph->OnStageFinished(this);

@@ -12,7 +12,7 @@ namespace UI
 	{
 		JobSystem& system = Hazard::Application::Get().GetJobSystem();
 
-		if (system.GetQueuedGraphs().size() > 0 || system.GetQueuedJobs().size() > 0 || system.GetRunningJobs().size() > 0)
+		if (system.GetQueuedGraphs().size() > 0 || system.GetQueuedJobs().size() > 0)
 		{
 			Open();
 			return;
@@ -30,10 +30,14 @@ namespace UI
 		}
 
 		ImGui::Separator();
-		auto jobs = system.GetRunningJobs();
-		for (auto& job : jobs)
+		auto threads = system.GetThreads();
+		for (auto& thread : threads)
 		{
+			if (!thread->GetCurrentJob()) continue;
+			auto job = thread->GetCurrentJob();
+
 			if (job->GetJobGraph()) continue;
+
 			DrawProgressCard(job->GetName().c_str(), ",", job->GetProgress());
 		}
 

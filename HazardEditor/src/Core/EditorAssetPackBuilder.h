@@ -15,12 +15,12 @@ class EditorAssetPackBuilder
 {
 public:
 	static AssetPack CreateAssetPack(const std::vector<AssetPackElement> element);
-	static void GenerateAndSaveAssetPack(Ref<Job> job, const std::filesystem::path& path);
+	static void GenerateAndSaveAssetPack(JobInfo& info, const std::filesystem::path& path);
 
-	static void ImageAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo info, UI::ImageImportSettings settings);
-	static void MeshAssetPackJob(Ref<Job> job, const std::filesystem::path& file, MeshCreateInfo info, UI::MeshImportSettings settings);
-	static void ShaderAssetPackJob(Ref<Job> job, const std::filesystem::path& file, HazardRenderer::RenderAPI api);
-	static void MaterialAssetPackJob(Ref<Job> job, const std::filesystem::path& file, UI::MaterialImportSettings settings);
+	static void ImageAssetPackJob(JobInfo& info, const std::filesystem::path& file, HazardRenderer::Image2DCreateInfo imageInfo, UI::ImageImportSettings settings);
+	static void MeshAssetPackJob(JobInfo& info, const std::filesystem::path& file, MeshCreateInfo meshInfo, UI::MeshImportSettings settings);
+	static void ShaderAssetPackJob(JobInfo& info, const std::filesystem::path& file, HazardRenderer::RenderAPI api);
+	static void MaterialAssetPackJob(JobInfo& info, const std::filesystem::path& file, UI::MaterialImportSettings settings);
 
 	template<typename T>
 	static Ref<JobGraph> CreatePackElement(const std::filesystem::path& file, T info)
