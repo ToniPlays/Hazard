@@ -107,4 +107,5 @@ if os.host() == "windows" then
 end
 
 include "HazardLauncher"
+include "Hazard-Test-App"
 include "Hazard-Script"

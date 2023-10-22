@@ -55,6 +55,7 @@ project "Hazard-Test-App"
 
 
 	filter "system:windows"
+		kind "ConsoleApp"
 		defines {
 			"_CRT_SECURE_NO_WARNINGS",
 		}

@@ -7,6 +7,7 @@
 #include "VkUtils.h"
 #include "VulkanRenderCommandBuffer.h"
 #include "spdlog/fmt/fmt.h"
+#include "VulkanFramebuffer.h"
 
 #define VK_KHR_WIN32_SURFACE_EXTENSION_NAME "VK_KHR_win32_surface"
 
@@ -216,6 +217,11 @@ namespace HazardRenderer::Vulkan
 		whiteTexture.Usage = ImageUsage::Texture;
 
 		m_DefaultResources.WhiteTexture = Image2D::Create(&whiteTexture);
+	}
+	void VulkanContext::SetClearColor(const glm::vec4& color)
+	{
+		Ref<VulkanFrameBuffer> target = m_Swapchain->GetRenderTarget().As<VulkanFrameBuffer>();
+		target->GetSpecification().ClearColor = color;
 	}
 	void VulkanContext::BeginFrame()
 	{

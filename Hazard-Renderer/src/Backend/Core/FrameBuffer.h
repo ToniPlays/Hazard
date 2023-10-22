@@ -47,7 +47,7 @@ namespace HazardRenderer
 	struct FrameBufferSpecification 
 	{
 		uint32_t Width, Height;
-		uint32_t Samples;
+		uint32_t Samples = 1;
 		uint64_t AttachmentCount;
 		glm::vec4 ClearColor;
 		std::vector<FrameBufferAttachment> Attachments;

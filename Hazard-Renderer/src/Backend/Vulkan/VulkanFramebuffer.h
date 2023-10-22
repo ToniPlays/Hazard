@@ -10,7 +10,8 @@
 
 namespace HazardRenderer::Vulkan
 {
-	class VulkanFrameBuffer : public FrameBuffer {
+	class VulkanFrameBuffer : public FrameBuffer
+	{
 	public:
 		VulkanFrameBuffer(FrameBufferCreateInfo* info);
 		~VulkanFrameBuffer();
@@ -35,11 +36,11 @@ namespace HazardRenderer::Vulkan
 		VkFramebuffer GetVulkanFramebuffer() const { return m_Framebuffer; }
 		VkRenderPass GetRenderPass() const { return m_RenderPass; }
 
-		std::vector<VkClearValue> GetClearValues() { return m_ClearValues; }
+		std::vector<VkClearValue> GetClearValues();
 
 		bool HasDepthAttachment() { return m_DepthAttachmentImage; }
 
-		void AddResizeCallback(const std::function<void(Ref<VulkanFrameBuffer>)> callback) 
+		void AddResizeCallback(const std::function<void(Ref<VulkanFrameBuffer>)> callback)
 		{
 			m_ResizeCallbacks.push_back(callback);
 		}
@@ -52,10 +53,10 @@ namespace HazardRenderer::Vulkan
 
 		Ref<VulkanImage2D> m_DepthAttachmentImage;
 		Ref<VulkanImage2D> m_ExistingImage;
-        
+
 		std::map<uint32_t, Ref<VulkanImage2D>> m_ExistingImages;
 		std::vector<uint32_t> m_ExistingImageLayers;
-		std::vector<VkClearValue> m_ClearValues;
+		VkClearValue m_DepthClearColor;
 
 		VkFramebuffer m_Framebuffer = VK_NULL_HANDLE;
 		VkRenderPass m_RenderPass = VK_NULL_HANDLE;

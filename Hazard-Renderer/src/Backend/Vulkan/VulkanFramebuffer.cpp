@@ -85,7 +85,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanFrameBuffer> instance = this;
 		Renderer::SubmitResourceCreate([instance, width, height, force]() mutable {
 			instance->Resize_RT(width, height, force);
-			});
+		});
 	}
 	void VulkanFrameBuffer::Resize_RT(uint32_t width, uint32_t height, bool force)
 	{
@@ -103,9 +103,6 @@ namespace HazardRenderer::Vulkan
 		{
 			auto swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 			m_RenderPass = swapchain->GetVulkanRenderPass();
-
-			m_ClearValues.clear();
-			m_ClearValues.emplace_back().color = VulkanContext::GetInstance()->GetClearColorValue();
 		}
 
 		for (auto& cb : m_ResizeCallbacks)
@@ -120,7 +117,7 @@ namespace HazardRenderer::Vulkan
 		Renderer::SubmitResourceFree([instance]() mutable {
 			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 			vkDestroyFramebuffer(device, instance, nullptr);
-			});
+		});
 
 		if (m_Specs.pFrameBuffer) return;
 
@@ -173,7 +170,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanFrameBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
 			instance->Invalidate_RT();
-			});
+		});
 	}
 	void VulkanFrameBuffer::Invalidate_RT()
 	{
@@ -189,8 +186,6 @@ namespace HazardRenderer::Vulkan
 
 		std::vector<VkAttachmentReference> colorReferences;
 		VkAttachmentReference depthReference;
-
-		m_ClearValues.resize(m_Specs.AttachmentCount);
 
 		bool createImages = m_ColorAttachments.empty();
 
@@ -243,7 +238,7 @@ namespace HazardRenderer::Vulkan
 					attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
 					depthReference = { attachmentImageIndex, VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL };
 				}
-				m_ClearValues[attachmentImageIndex].depthStencil = { 1.0f, 0 };
+				m_DepthClearColor.depthStencil = { 1.0f, 0 };
 			}
 			else
 			{
@@ -300,7 +295,6 @@ namespace HazardRenderer::Vulkan
 					attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
 					const auto& color = m_Specs.ClearColor;
-					m_ClearValues[attachmentImageIndex].color = { color.r, color.g, color.b, color.a };
 					colorReferences.emplace_back(VkAttachmentReference{ attachmentImageIndex, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL });
 				}
 			}
@@ -384,7 +378,7 @@ namespace HazardRenderer::Vulkan
 		}
 		if (m_DepthAttachmentImage)
 		{
-			if (m_ExistingImage) 
+			if (m_ExistingImage)
 			{
 				HZR_ASSERT(false, "TODO");
 			}
@@ -403,6 +397,11 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkCreateFramebuffer(device, &frameBufferInfo, nullptr, &m_Framebuffer), "Failed to create Vulkan Framebuffer");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_FRAMEBUFFER, fmt::format("VkFramebuffer {}", m_Specs.DebugName), m_Framebuffer);
+	}
+	std::vector<VkClearValue> VulkanFrameBuffer::GetClearValues()
+	{
+		VkClearValue value = { { m_Specs.ClearColor.r, m_Specs.ClearColor.g, m_Specs.ClearColor.b, m_Specs.ClearColor.a } };
+		return { value, m_DepthClearColor };
 	}
 }
 #endif

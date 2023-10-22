@@ -118,3 +118,4 @@ project "HazardLauncher"
 			"GLFW",
 			"GLAD"
 		}
+	filter ""

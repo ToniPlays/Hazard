@@ -58,6 +58,7 @@ namespace Hazard
 					binding.AxisMask |= (uint32_t)axis.Direction;
 			}
 		}
+		s_InputSchema = schema;
 	}
 	Ref<InputDevice> InputManager::GetGamepad(uint32_t binding)
 	{
