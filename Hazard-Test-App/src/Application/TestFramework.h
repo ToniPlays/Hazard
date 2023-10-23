@@ -19,7 +19,7 @@ private:
     void RestartTest();
 
 private:
-    uint32_t m_TestIndex = 0;
+    uint32_t m_TestIndex = 4;
     std::vector<Test*> m_Tests;
     Test* m_CurrentTest = nullptr;
 };

@@ -70,9 +70,9 @@ void TestFramework::RestartTest()
 	if (m_CurrentTest)
 		m_CurrentTest->Terminate();
 
-
 	m_CurrentTest = m_Tests[m_TestIndex % m_Tests.size()];
 	std::cout << fmt::format("Running test: {0}", m_CurrentTest->GetName()) << std::endl;
+
 	m_CurrentTest->Reset();
 	m_CurrentTest->Init();
 
