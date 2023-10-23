@@ -4,6 +4,7 @@
 #include "Tests/JobSystemTest.h"
 #include "Tests/TriangleTest.h"
 #include "Tests/TexturedQuad.h"
+#include "Tests/UniformBufferTest.h"
 
 using namespace Hazard;
 
@@ -51,6 +52,7 @@ void TestFramework::Init()
 	m_Tests.push_back(new JobGraphTest());
 	m_Tests.push_back(new TriangleTest());
 	m_Tests.push_back(new TexturedQuadTest());
+	m_Tests.push_back(new UniformBufferTest());
 
 	RestartTest();
 }

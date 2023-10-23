@@ -225,7 +225,6 @@ namespace HazardRenderer::Vulkan
 			instance->m_ActiveCommandBuffer = buffer;
 
 			//instance->BeginPerformanceQuery_RT();
-
 			return;
 		}
 
