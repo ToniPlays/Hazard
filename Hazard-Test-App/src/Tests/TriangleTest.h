@@ -1,6 +1,6 @@
 
 #include "HazardRenderer.h"
-#include "Test.h"
+#include "Application/Test.h"
 
 class TriangleTest : public Test
 {

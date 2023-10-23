@@ -82,23 +82,6 @@ namespace HazardRenderer::Metal
         }
         Reflect();
     }
-    
-    void MetalShader::BindResources(MTL::RenderCommandEncoder* encoder)
-    {
-        for(auto& [set, descriptor] : m_DescriptorSet)
-            descriptor.BindGraphicsResources(encoder);
-        
-        for(auto& [index, buffer] : m_InputBuffers)
-        {
-            encoder->setVertexBuffer(buffer.Buffer->GetMetalBuffer(), 0, index + 28);
-            encoder->setVertexBufferOffset(buffer.Offset, index + 28);
-        }
-    }
-    void MetalShader::BindResources(MTL::ComputeCommandEncoder* encoder)
-    {
-        for(auto& [set, descriptor] : m_DescriptorSet)
-            descriptor.BindComputeResources(encoder);
-    }
     void MetalShader::Reflect()
     {
         m_ShaderData = ShaderCompiler::GetShaderResources(m_ShaderCode);

@@ -34,8 +34,6 @@ namespace HazardRenderer::Metal
         
         //Metal specific
         MTL::Function* GetFunction(uint32_t stage) { return m_Functions[stage]; }
-        void BindResources(MTL::RenderCommandEncoder* encoder);
-        void BindResources(MTL::ComputeCommandEncoder* encoder);
         
     private:
         void Reflect();

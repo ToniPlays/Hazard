@@ -3,7 +3,7 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Core/EntryPoint.h"
 
-#include "Tests/Test.h"
+#include "Test.h"
 
 class TestFramework : public Hazard::Application
 {

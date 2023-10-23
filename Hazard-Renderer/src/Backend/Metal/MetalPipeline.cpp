@@ -188,7 +188,7 @@ namespace HazardRenderer::Metal
         
         NS::Error* error;
         
-        //m_ComputePipeline = device->GetMetalDevice()->newComputePipelineState(m_Shader->GetFunction(ShaderStage::Compute), &error);
+        m_ComputePipeline = device->GetMetalDevice()->newComputePipelineState(m_Shader->GetFunction(SHADER_STAGE_COMPUTE_BIT), &error);
         
         if(error->code() != 0)
             std::cout << error->description()->utf8String() << std::endl;
@@ -202,12 +202,10 @@ namespace HazardRenderer::Metal
         if(m_DepthState)
             encoder->setDepthStencilState(m_DepthState);
         
-        m_Shader->BindResources(encoder);
     }
     void MetalPipeline::BindCompute(MTL::ComputeCommandEncoder* encoder)
     {
         encoder->setComputePipelineState(m_ComputePipeline);
-        m_Shader->BindResources(encoder);
     }
 }
 #endif

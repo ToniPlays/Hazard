@@ -16,10 +16,6 @@ namespace HazardRenderer::Metal
         m_DebugName = info->Name;
         m_Size = info->Size;
         
-        m_LocalBuffer.Allocate(m_Size);
-        
-        HZR_ASSERT(m_Size, "Buffer size cannot be 0");
-        
         if(info->Data)
         {
             m_LocalBuffer = Buffer::Copy(info->Data, info->Size);
@@ -52,6 +48,7 @@ namespace HazardRenderer::Metal
     void MetalGPUBuffer::SetData(const BufferCopyRegion& copyRegion)
     {
         Ref<MetalGPUBuffer> instance = this;
+        m_LocalBuffer.Allocate(copyRegion.Size);
         m_LocalBuffer.Write(copyRegion.Data, copyRegion.Size, copyRegion.Offset);
         Renderer::Submit([instance, copyRegion]() mutable {
             instance->SetData_RT(copyRegion);

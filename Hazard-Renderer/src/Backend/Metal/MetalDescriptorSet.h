@@ -69,6 +69,7 @@ namespace HazardRenderer::Metal
         uint32_t m_Set;
         DescriptorSetLayout m_Layout;
         std::unordered_map<uint32_t, DescriptorValue> m_DescriptorValues;
+        std::unordered_map<uint32_t, uint32_t> m_Offsets;
     };
 }
 #endif

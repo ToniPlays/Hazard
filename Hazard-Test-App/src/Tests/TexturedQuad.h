@@ -1,6 +1,6 @@
 
 #include "HazardRenderer.h"
-#include "Test.h"
+#include "Application/Test.h"
 
 class TexturedQuadTest : public Test
 {
@@ -10,7 +10,7 @@ public:
 	void Run() override;
 	void Terminate() override;
 
-	const char* GetName() { return "Textured quad test"; }
+	const char* GetName() override { return "Textured quad test"; }
 
 private:
 	HazardRenderer::Window* m_Window;

@@ -2,7 +2,7 @@
 #include "HazardRenderer.h"
 #include "Event.h"
 #include "Color.h"
-#include "Test.h"
+#include "Application/Test.h"
 
 #include "vendor/stb_image.h"
 #include <glm/glm/ext/matrix_clip_space.hpp>

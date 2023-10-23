@@ -37,7 +37,18 @@ namespace HazardRenderer::Metal
     {
         for(auto& element : m_Layout)
         {
+            m_Offsets[element.Type] = UINT32_MAX;
+        }
+        
+        for(auto& element : m_Layout)
+        {
             uint32_t baseIndex = element.Binding;
+            auto& baseOffset = m_Offsets[element.Type];
+            if(baseIndex < baseOffset)
+            {
+                m_Offsets[element.Type] = baseIndex;
+            }
+            
             for(uint32_t i = 0; i < element.Length; i++)
             {
                 m_DescriptorValues[baseIndex + i] = { nullptr, nullptr };
@@ -57,8 +68,10 @@ namespace HazardRenderer::Metal
     }
     void MetalDescriptorSet::Write(uint32_t binding, Ref<GPUBuffer> buffer, bool updateAll)
     {
-        Renderer::Submit([]() mutable {
-            
+        Ref<MetalDescriptorSet> instance = this;
+        Ref<MetalGPUBuffer> mtlBuffer = buffer.As<MetalGPUBuffer>();
+        Renderer::Submit([instance, mtlBuffer, binding]() mutable {
+            instance->m_DescriptorValues[binding] = { mtlBuffer, nullptr };
         });
     }
 
@@ -69,12 +82,13 @@ namespace HazardRenderer::Metal
         for(auto& element : m_Layout)
         {
             auto& b = m_DescriptorValues[element.Binding];
+            auto& offset = m_Offsets[element.Type];
             
             switch(element.Type)
             {
                 case DESCRIPTOR_TYPE_SAMPLER_2D:
-                    encoder->setFragmentTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding);
-                    encoder->setFragmentSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding);
+                    encoder->setFragmentTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding - offset);
+                    encoder->setFragmentSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_SAMPLER_CUBE:
                     
@@ -83,7 +97,7 @@ namespace HazardRenderer::Metal
                     
                     break;
                 case DESCRIPTOR_TYPE_UNIFORM_BUFFER:
-                    
+                    encoder->setVertexBuffer(b.Value.As<MetalGPUBuffer>()->GetMetalBuffer(), 0, element.Binding);
                     break;
                 case DESCRIPTOR_TYPE_STORAGE_BUFFER:
                     

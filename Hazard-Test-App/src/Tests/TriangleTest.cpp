@@ -15,7 +15,6 @@ void TriangleTest::Init()
 	m_Window->GetContext()->SetClearColor(Color(255, 128, 0, 255));
 	m_Window->SetWindowTitle(GetName());
 
-
 	std::cout << "Selected device: " << m_Window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
 
 	float vertices[] =
