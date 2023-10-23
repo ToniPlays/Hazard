@@ -4,6 +4,7 @@
 
 #include "Backend/Core/Renderer.h"
 #include "MetalContext.h"
+#include "MTLUtils.h"
 #include "spdlog/fmt/fmt.h"
 
 namespace HazardRenderer::Metal
@@ -33,11 +34,11 @@ namespace HazardRenderer::Metal
         auto device = MetalContext::GetMetalDevice();
         MTL::SamplerDescriptor* descriptor = MTL::SamplerDescriptor::alloc()->init();
         descriptor->setMaxAnisotropy(1.0);
-        descriptor->setMagFilter(MTL::SamplerMinMagFilterLinear);
-        descriptor->setMinFilter(MTL::SamplerMinMagFilterLinear);
-        descriptor->setRAddressMode(MTL::SamplerAddressModeRepeat);
-        descriptor->setSAddressMode(MTL::SamplerAddressModeRepeat);
-        descriptor->setTAddressMode(MTL::SamplerAddressModeRepeat);
+        descriptor->setMagFilter(FilterModeToMTLFilter(m_Info.MagFilter));
+        descriptor->setMinFilter(FilterModeToMTLFilter(m_Info.MinFilter));
+        descriptor->setRAddressMode(ImageWrapToSamplerAddressMode(m_Info.Wrapping));
+        descriptor->setSAddressMode(ImageWrapToSamplerAddressMode(m_Info.Wrapping));
+        descriptor->setTAddressMode(ImageWrapToSamplerAddressMode(m_Info.Wrapping));
         
         descriptor->setLodMinClamp(0.0);
         descriptor->setLodMaxClamp(100.0);

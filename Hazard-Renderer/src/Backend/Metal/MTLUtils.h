@@ -111,6 +111,26 @@ namespace HazardRenderer::Metal
             case CullMode::None:        return MTL::CullModeNone;
         }
     }
+    static MTL::SamplerMinMagFilter FilterModeToMTLFilter(FilterMode mode)
+    {
+        switch(mode)
+        {
+            case FilterMode::Nearest: return MTL::SamplerMinMagFilterNearest;
+            case FilterMode::Linear: return MTL::SamplerMinMagFilterLinear;
+        }
+    }
+    static MTL::SamplerAddressMode ImageWrapToSamplerAddressMode(ImageWrap mode)
+    {
+        switch(mode)
+        {
+            case ImageWrap::Repeat: return MTL::SamplerAddressModeRepeat;
+            case ImageWrap::RepeatMirror: return MTL::SamplerAddressModeMirrorRepeat;
+            case ImageWrap::ClampBorder:
+                return MTL::SamplerAddressModeClampToBorderColor;
+            case ImageWrap::ClampEdge:
+                return MTL::SamplerAddressModeClampToEdge;
+        }
+    }
 
     template<typename T>
     static void SetDebugLabel(T* object, const std::string& label)
