@@ -117,7 +117,12 @@ namespace HazardRenderer::Metal
         {
             case FilterMode::Nearest: return MTL::SamplerMinMagFilterNearest;
             case FilterMode::Linear: return MTL::SamplerMinMagFilterLinear;
+            case FilterMode::LinearMip:
+                break;
+            case FilterMode::NearestMip:
+                break;
         }
+        return MTL::SamplerMinMagFilterLinear;
     }
     static MTL::SamplerAddressMode ImageWrapToSamplerAddressMode(ImageWrap mode)
     {
@@ -130,6 +135,7 @@ namespace HazardRenderer::Metal
             case ImageWrap::ClampEdge:
                 return MTL::SamplerAddressModeClampToEdge;
         }
+        return MTL::SamplerAddressModeRepeat;
     }
 
     template<typename T>

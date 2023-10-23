@@ -112,7 +112,34 @@ namespace HazardRenderer::Metal
     {
         HZR_PROFILE_FUNCTION();
         
-        
+        for(auto& element : m_Layout)
+        {
+            auto& b = m_DescriptorValues[element.Binding];
+            auto& offset = m_Offsets[element.Type];
+            
+            switch(element.Type)
+            {
+                case DESCRIPTOR_TYPE_SAMPLER_2D:
+                    encoder->setTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding - offset);
+                    encoder->setSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
+                    break;
+                case DESCRIPTOR_TYPE_SAMPLER_CUBE:
+                    
+                    break;
+                case DESCRIPTOR_TYPE_STORAGE_IMAGE:
+                    encoder->setTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding - offset);
+                    break;
+                case DESCRIPTOR_TYPE_UNIFORM_BUFFER:
+                    encoder->setBuffer(b.Value.As<MetalGPUBuffer>()->GetMetalBuffer(), 0, element.Binding);
+                    break;
+                case DESCRIPTOR_TYPE_STORAGE_BUFFER:
+                    
+                    break;
+                case DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE:
+                    
+                    break;
+            }
+        }
     }
 }
 #endif

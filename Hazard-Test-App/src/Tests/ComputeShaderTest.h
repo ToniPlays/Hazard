@@ -22,26 +22,3 @@ private:
     Ref<HazardRenderer::Image2D> m_OutputImage;
     Ref<HazardRenderer::Sampler> m_Sampler;
 };
-
-/*
-
-		{
-			Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("Compute", DeviceQueue::ComputeBit, 1);
-
-			//Compute step
-			{
-				computeDescriptorSet->Write(0, outputImage, sampler);
-
-				computeBuffer->Begin();
-				computeBuffer->SetPipeline(compute);
-				computeBuffer->SetDescriptorSet(computeDescriptorSet, 0);
-				computeBuffer->DispatchCompute({ 512, 512, 1 });
-				computeBuffer->End();
-				computeBuffer->Submit();
-			}
-
-			descriptorSet->Write(0, 0, outputImage, sampler, true);
-		}
-	}
-}*/
-

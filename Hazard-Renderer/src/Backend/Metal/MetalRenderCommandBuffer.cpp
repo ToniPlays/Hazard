@@ -24,13 +24,15 @@ namespace HazardRenderer::Metal
     }
     MetalRenderCommandBuffer::~MetalRenderCommandBuffer()
     {
-        if(m_CommandBuffer)
-            m_CommandBuffer->release();
-        if(m_IndirectCommandBuffer)
-            m_IndirectCommandBuffer->release();
-        
-        if(m_ComputeEncoder)
-            m_ComputeEncoder->release();
+        //Renderer::SubmitResourceFree([commandBuffer = m_CommandBuffer, indirectCommandBuffer = m_IndirectCommandBuffer, computeEncoder = m_ComputeEncoder]() mutable {
+        /*
+        if(commandBuffer)
+            commandBuffer->release();
+        if(indirectCommandBuffer)
+            indirectCommandBuffer->release();
+        if(computeEncoder)
+            computeEncoder->release();
+        //});*/
     }
     void MetalRenderCommandBuffer::Begin()
     {
@@ -50,7 +52,12 @@ namespace HazardRenderer::Metal
             }
 
             if(instance->m_Queue == DeviceQueue::ComputeBit)
+            {
+                instance->m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
+                
                 instance->m_ComputeEncoder = instance->m_CommandBuffer->computeCommandEncoder();
+                std::cout << "Made encoder: " << instance->m_ComputeEncoder << std::endl;
+            }
         });
     }
     void MetalRenderCommandBuffer::End()
@@ -199,12 +206,15 @@ namespace HazardRenderer::Metal
         
         Renderer::Submit([instance, metalPipeline]() mutable {
             instance->m_CurrentPipeline = metalPipeline;
-            
             PipelineUsage usage = metalPipeline->GetSpecifications().Usage;
+            
             if(usage == PipelineUsage::GraphicsBit)
                 metalPipeline->BindGraphics(instance->m_RenderEncoder);
-            else
+            else if(usage == PipelineUsage::ComputeBit)
+            {
+                std::cout << instance->m_ComputeEncoder << std::endl;
                 metalPipeline->BindCompute(instance->m_ComputeEncoder);
+            }
         });
     }
     void MetalRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer)
@@ -259,11 +269,8 @@ namespace HazardRenderer::Metal
         m_WaitOnSubmit = true;
         Ref<MetalRenderCommandBuffer> instance = this;
         
-        if(!m_ComputeEncoder)
-            m_ComputeEncoder = m_CommandBuffer->computeCommandEncoder();
-        
         Renderer::Submit([instance, size = GlobalGroupSize]() mutable {
-        
+            
             MTL::Size localGroup = { 32, 32, 1 };
             MTL::Size groupSize = {
                 static_cast<NS::UInteger>(size.x),
