@@ -12,6 +12,7 @@
 
 #include "imgui.h"
 #include <Directory.h>
+#include <Platform/OS.h>
 
 namespace UI
 {
@@ -308,7 +309,7 @@ namespace UI
 
 			ImUI::MenuHeader("Other");
 			ImUI::MenuItem(LBL_SHOW_IN_EXPLORER, [&]() {
-				File::OpenDirectoryInExplorer(m_CurrentPath);
+				OS::OpenDirectory(m_CurrentPath);
 			});
 		});
 

@@ -200,9 +200,6 @@ namespace HazardRenderer::Vulkan
 
 		m_Swapchain->Create(&w, &h, m_Window->IsVSync());
 
-		window->GetWindowInfo().Width = w;
-		window->GetWindowInfo().Height = h;
-
 		CreateDescriptorPools();
 
 		uint32_t data = 0xFFFFFFFF;

@@ -14,6 +14,8 @@
 
 #include "imgui_internal.h"
 
+#include "Platform/OS.h"
+
 using namespace Hazard;
 
 namespace UI
@@ -150,7 +152,7 @@ namespace UI
 		});
 
 		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && !IsFolder() && Input::IsKeyDown(Key::LeftControl))
-			File::OpenInDefaultApp(GetMetadata().Key);
+			OS::OpenInDefault(GetMetadata().Key);
 
 		if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() && m_Flags == 0)
 		{

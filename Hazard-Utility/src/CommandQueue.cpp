@@ -45,7 +45,8 @@ void CommandQueue::Excecute()
 {
 	uint8_t* buffer = m_CommandBuffer;
 
-	for (uint32_t i = 0; i < m_CommandCount; i++) {
+	for (uint32_t i = 0; i < m_CommandCount; i++) 
+	{
 		CommandFn func = *(CommandFn*)buffer;
 		buffer += sizeof(CommandFn);
 

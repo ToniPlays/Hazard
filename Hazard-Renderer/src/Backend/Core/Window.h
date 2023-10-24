@@ -8,7 +8,6 @@
 #include <iostream>
 #include "glm/glm.hpp"
 
-
 namespace HazardRenderer
 {
 	class GraphicsContext;

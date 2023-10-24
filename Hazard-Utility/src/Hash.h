@@ -23,8 +23,4 @@ public:
 	{
 		return GenerateFNVHash(string.data());
 	}
-
-	static uint32_t CRC32(const char* str);
-	static uint32_t CRC32(const std::string& string);
-
 };

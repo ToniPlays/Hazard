@@ -10,6 +10,8 @@
 
 #include "Core/HazardEditor.h"
 
+#include "Platform/OS.h"
+
 namespace Editor
 {
 	static void GenerateProjectFilesJob(JobInfo& info, EditorScriptManager* manager)
@@ -61,7 +63,7 @@ namespace Editor
 
 		command = fmt::format("{0} --define=\"{1}\"", command, ss.str());
 		HZR_INFO("Executing: {0}", command);
-		File::SystemCall(command);
+		OS::SysCall(command.c_str());
 	}
 	void EditorScriptManager::CompileSource()
 	{
@@ -69,7 +71,7 @@ namespace Editor
 		std::filesystem::path scriptPath = project.ProjectPath / "Project";
 		std::filesystem::path buildPath = project.ProjectPath / "Library";
 		std::string command = (scriptPath / "BuildSolution.bat").string() + " > " + buildPath.string() + "/build.hlog";
-		File::SystemCall(command);
+		OS::SysCall(command.c_str());
 		HZR_INFO("Compiled source files");
 
 		auto& manager = Hazard::Application::GetModule<GUIManager>();

@@ -2,9 +2,17 @@
 
 #include <random>
 
-class Random {
+class Random 
+{
 public:
-	static float Range(float min, float max);
+
+	static float Range(float min, float max)
+	{
+		std::uniform_real_distribution<float> distrib(min, max);
+		auto& mt = Engine();
+		return distrib(mt);
+	}
+
 private:
 	static std::mt19937_64& Engine() 
 	{

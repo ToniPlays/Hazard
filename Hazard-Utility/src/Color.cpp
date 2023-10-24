@@ -11,7 +11,6 @@ Color Color::Yellow = { 1.0f, 1.0f, 0.0f, 1.0f };
 Color Color::Purple = { 1.0f, 0.0f, 1.0f, 1.0f };
 Color Color::Turqoise = { 0.0f, 1.0f, 1.0f, 1.0f };
 
-
 Color::Color()
 {
 	this->r = 0;

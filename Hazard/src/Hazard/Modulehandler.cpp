@@ -2,7 +2,6 @@
 #include <hzrpch.h>
 #include "ModuleHandler.h"
 #include "Hazard/Logging/Logger.h"
-#include "Platform/PlatformUtils.h"
 
 namespace Hazard {
 
@@ -10,10 +9,7 @@ namespace Hazard {
 	{
 		m_Modules = std::vector<Module*>();
 	}
-	ModuleHandler::~ModuleHandler()
-	{
-
-	}
+	ModuleHandler::~ModuleHandler() {}
 
 	void ModuleHandler::InitializeAll()
 	{

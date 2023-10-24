@@ -5,18 +5,7 @@
 #include "portable-file-dialogs.h"
 #include <format>
 
-#include "Platform/PlatformUtils.h"
 #include "spdlog/fmt/fmt.h"
-
-#ifdef HZR_PLATFORM_WINDOWS
-#include <shlobj.h>
-#include <cstdlib>
-#include <Windows.h>
-#endif
-
-#ifdef HZR_PLATFORM_IOS
-#include <CoreFoundation/CFBundle.h>
-#endif
 #include <Directory.h>
 
 std::string File::OpenFileDialog()
@@ -206,94 +195,9 @@ void File::Copy(const std::filesystem::path& source, const std::filesystem::path
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
 }
 
-bool File::OpenInExplorer(const std::filesystem::path& path)
-{
-	auto abs = GetFileAbsolutePath(path);
-	if (!Exists(abs)) return false;
-
-	std::string cmd = "explorer.exe /select,\"" + abs.string() + "\"";
-	return SystemCall(cmd) == 0;
-}
-bool File::OpenDirectoryInExplorer(const std::filesystem::path& path)
-{
-	auto abs = GetFileAbsolutePath(path);
-	if (!Exists(path)) return false;
 #ifdef HZR_PLATFORM_WINDOWS
 
-	ShellExecute(NULL, L"explore", abs.c_str(), NULL, NULL, SW_SHOWNORMAL);
-	return true;
 #else
 	SystemCall((std::string("open ") + abs.string()).c_str());
 	return true;
 #endif
-}
-
-bool File::OpenInDefaultApp(const std::filesystem::path& file)
-{
-	auto abs = GetFileAbsolutePath(file);
-	if (!Exists(file)) return false;
-
-#ifdef HZR_PLATFORM_WINDOWS
-	SystemCall((std::string("explorer.exe ") + abs.string()).c_str());
-	return true;
-#else
-	SystemCall((std::string("open ") + abs.string()).c_str());
-	return true;
-#endif
-}
-
-int File::SystemCall(const std::string& command)
-{
-	return PlatformUtils::SystemCall(command);
-}
-
-int File::CreateSubprocess(const std::string& path, const std::string& arguments, bool background)
-{
-#ifdef HZR_PLATFORM_WINDOWS
-	STARTUPINFOA si;
-	PROCESS_INFORMATION pi;
-
-	// set the size of the structures
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
-	ZeroMemory(&pi, sizeof(pi));
-
-	int id = CreateProcessA(
-		path.c_str(),
-		(LPSTR)arguments.c_str(),
-		NULL,
-		NULL,
-		FALSE,
-		background ? CREATE_NO_WINDOW : CREATE_NEW_CONSOLE,
-		NULL,
-		NULL,
-		&si,
-		&pi
-	);
-
-	return id;
-#else
-	return 0;
-#endif
-}
-void File::WaitForSubprocess(void* id)
-{
-#ifdef HZR_PLATFORM_WINDOWS
-	WaitForSingleObject(id, 0);
-#else
-
-#endif
-}
-
-bool File::HasEnvinronmentVar(const std::string& key)
-{
-	return PlatformUtils::HasEnvVariable(key);
-}
-std::string File::GetEnvironmentVar(const std::string& key)
-{
-	return PlatformUtils::GetEnvVariable(key);
-}
-bool File::SetEnvironmentVar(const std::string& key, const std::string& value)
-{
-	return PlatformUtils::SetEnvVariable(key, value);
-}

@@ -401,7 +401,9 @@ namespace HazardRenderer::Vulkan
 	std::vector<VkClearValue> VulkanFrameBuffer::GetClearValues()
 	{
 		VkClearValue value = { { m_Specs.ClearColor.r, m_Specs.ClearColor.g, m_Specs.ClearColor.b, m_Specs.ClearColor.a } };
-		return { value, m_DepthClearColor };
+		std::vector<VkClearValue> result(m_ColorAttachments.size(), value);
+		result.push_back(m_DepthClearColor);
+		return result;
 	}
 }
 #endif

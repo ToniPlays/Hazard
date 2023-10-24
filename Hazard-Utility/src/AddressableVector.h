@@ -14,6 +14,7 @@ public:
 		m_Keys.reserve(size);
 		m_Values.reserve(size);
 	};
+
 	~AddressableVector() = default;
 
 	uint64_t Push(K key, V value)

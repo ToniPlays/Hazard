@@ -13,6 +13,7 @@
 
 #include "imgui.h"
 #include <Directory.h>
+#include "Platform/OS.h"
 
 using namespace Hazard;
 using namespace HazardRenderer;
@@ -32,7 +33,7 @@ void GUIManager::Init()
 
 	ImFontConfig config;
 	config.MergeMode = true;
-    
+
 	static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
 	io.Fonts->AddFontFromFileTTF("res/Fonts/fontawesome-webfont.ttf", 16.0f, &config, icon_ranges);
 	io.Fonts->AddFontFromFileTTF("res/Fonts/roboto/Roboto-Black.ttf", 16.0f);
@@ -54,7 +55,7 @@ void GUIManager::Init()
 
 	m_Manager.LoadFromConfigFile(CONFIG_PATH);
 
-	m_EnvVarExists = File::HasEnvinronmentVar("HAZARD_DIR");
+	m_EnvVarExists = OS::HasEnv("HAZARD_DIR");
 
 	m_SearchField = ImUI::TextField("");
 	m_SearchField.SetHint("Search...");
@@ -162,7 +163,7 @@ void GUIManager::Render()
 			{
 				std::filesystem::path hazardDir = Directory::OpenFolderDialog();
 				if (!hazardDir.empty())
-					if (File::SetEnvironmentVar("HAZARD_DIR", hazardDir.string()))
+					if (OS::SetEnv("HAZARD_DIR", hazardDir.string().c_str()))
 					{
 						m_EnvVarExists = true;
 						ImGui::CloseCurrentPopup();
@@ -205,7 +206,7 @@ void GUIManager::InitImGuiPlatform(HazardRenderer::Window& window)
 		default:
 			HZR_ASSERT(false, "No suitable rendering backend included for ImGui");
 			break;
-}
+	}
 }
 
 void GUIManager::DrawSideBar()

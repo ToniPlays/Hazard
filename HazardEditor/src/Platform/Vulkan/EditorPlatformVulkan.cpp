@@ -74,9 +74,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 
 	for (uint32_t i = 0; i < framesInFlight; i++)
 		s_ImGuiCommandBuffers[i] = device->CreateSecondaryCommandBuffer("EditorPlatformVulkan secondary CommandBuffer");
-	//});
 }
-
 
 EditorPlatformVulkan::~EditorPlatformVulkan()
 {
@@ -99,8 +97,6 @@ void EditorPlatformVulkan::EndFrame()
 
 	auto swapchain = context->GetSwapchain().As<VulkanSwapchain>();
 	ImGuiIO& io = ImGui::GetIO();
-
-
 
 	glm::vec4 color = swapchain->GetRenderTarget()->GetSpecification().ClearColor;
 
@@ -177,6 +173,6 @@ void EditorPlatformVulkan::EndFrame()
 
 void EditorPlatformVulkan::Close()
 {
-
+	ImGui_ImplGlfw_Shutdown();
 }
 #endif

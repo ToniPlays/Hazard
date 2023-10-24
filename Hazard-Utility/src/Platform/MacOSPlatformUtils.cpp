@@ -1,5 +1,4 @@
 
-#include "PlatformUtils.h"
 #include "UtilityCore.h"
 #ifdef HZR_PLATFORM_MACOS
 

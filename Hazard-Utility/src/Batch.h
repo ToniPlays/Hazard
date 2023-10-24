@@ -41,7 +41,9 @@ public:
 	uint64_t GetDataSize() { return m_WriteBufferOffset; }
 	uint64_t GetIndexCount() { return m_IndexCount; }
 	operator bool() const { return m_IndexCount != 0; }
+
 private:
+
 	uint64_t m_IndexCount = 0;
 	uint64_t m_WriteBufferOffset = 0;
 	Buffer m_DataBuffer;

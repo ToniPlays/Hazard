@@ -2,6 +2,7 @@
 #include "Hazard.h"
 
 #include "Directory.h"
+#include "Platform/OS.h"
 
 HazardLauncherManager::HazardLauncherManager()
 {
@@ -13,7 +14,7 @@ bool HazardLauncherManager::OpenProject(const HazardProject& project)
 	std::stringstream ss;
 	ss << "-wdir C:/dev/Hazard/HazardEditor";
 	ss << " -hprj " << StringUtil::Replace((project.Path / "Project.hzrproj").string(), "\\", "/");
-	return File::CreateSubprocess("C:/dev/Hazard/bin/Debug-windows-x86_64/HazardEditor/HazardEditor.exe", ss.str());
+	return OS::BackgroundProcess("C:/dev/Hazard/bin/Debug-windows-x86_64/HazardEditor/HazardEditor.exe", ss.str().c_str());
 }
 
 bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
@@ -106,7 +107,7 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		stream.close();
 
 		std::ofstream out(project.Path / "Project" / "Win-CreateScriptProject.bat");
-		out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", File::GetEnvironmentVar("HAZARD_DIR"));
+		out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", OS::GetEnv("HAZARD_DIR"));
 	}
 	{
 		std::ifstream stream(project.Path / "Project" / "BuildSolution.bat");
@@ -129,13 +130,13 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 	}
 
 	std::filesystem::path genProjectPath = project.Path / "Project" / "Win-CreateScriptProject.bat";
-	int id = File::CreateSubprocess(genProjectPath.string(), "");
-	File::WaitForSubprocess(&id);
+	void* id = OS::BackgroundProcess(genProjectPath.string().c_str(), "");
+	OS::WaitForProcess(id);
 	
 	HZR_THREAD_DELAY(500ms);
 	{
 		std::filesystem::path buildPath = project.Path / "Project" / "BuildSolution.bat";
-		File::SystemCall(buildPath.string());
+		OS::SysCall(buildPath.string().c_str());
 	}
 
 	m_LoadedProjects.push_back(project);
