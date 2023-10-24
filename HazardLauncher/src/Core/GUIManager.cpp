@@ -28,15 +28,15 @@ void GUIManager::Init()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-	io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/Fonts/roboto/Roboto-Regular.ttf", 16.0f);
-	io.DisplaySize = { (float)m_Window->GetWidth(), (float)m_Window->GetHeight() };
+	io.FontDefault = io.Fonts->AddFontFromFileTTF("res/Fonts/roboto/Roboto-Regular.ttf", 16.0f);
 
 	ImFontConfig config;
 	config.MergeMode = true;
+    
 	static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
-	io.Fonts->AddFontFromFileTTF("assets/Fonts/fontawesome-webfont.ttf", 16.0f, &config, icon_ranges);
-	io.Fonts->AddFontFromFileTTF("assets/Fonts/roboto/Roboto-Black.ttf", 16.0f);
-	io.Fonts->AddFontFromFileTTF("assets/Fonts/roboto/Roboto-Black.ttf", 22.0f);
+	io.Fonts->AddFontFromFileTTF("res/Fonts/fontawesome-webfont.ttf", 16.0f, &config, icon_ranges);
+	io.Fonts->AddFontFromFileTTF("res/Fonts/roboto/Roboto-Black.ttf", 16.0f);
+	io.Fonts->AddFontFromFileTTF("res/Fonts/roboto/Roboto-Black.ttf", 22.0f);
 
 	//Initialize style
 

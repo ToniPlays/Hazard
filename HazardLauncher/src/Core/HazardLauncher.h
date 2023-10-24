@@ -1,5 +1,4 @@
 #pragma once
-#if 0
 #include "Hazard.h"
 #include "Hazard/Core/EntryPoint.h"
 
@@ -16,4 +15,3 @@ Hazard::Application* Hazard::CreateApplication()
 {
 	return hnew HazardLauncher();
 }
-#endif

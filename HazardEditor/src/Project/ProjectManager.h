@@ -12,7 +12,7 @@ public:
 
 	void Close() override;
 	
-	HazardProject& LoadProjectFromFile(const std::filesystem::path& path);
+	HazardProject LoadProjectFromFile(const std::filesystem::path& path);
 
 	static bool IsProjectLoaded() { return s_Instance->m_Project.IsValid(); }
 	static HazardProject& GetProject() { return s_Instance->m_Project; }

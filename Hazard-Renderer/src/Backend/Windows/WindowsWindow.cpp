@@ -79,6 +79,9 @@ namespace HazardRenderer
 			glfwWindowHint(GLFW_RESIZABLE, windowInfo.Resizable);
 			glfwWindowHint(GLFW_MAXIMIZED, windowInfo.Maximized);
 			glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+            
+            if(info->Renderer != RenderAPI::OpenGL)
+                glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 			GLFWmonitor* monitor = NULL;
 
@@ -116,7 +119,8 @@ namespace HazardRenderer
 			monitor = glfwGetPrimaryMonitor();
 			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 			glfwSetWindowPos(m_Window, mode->width / 2.0f - m_WindowData.Width / 2.0f, mode->height / 2.0f - m_WindowData.Height / 2.0f);
-
+            
+            glfwGetWindowContentScale(m_Window, &m_WindowData.FramebufferScale.x, &m_WindowData.FramebufferScale.y);
 
 			glfwSetWindowUserPointer(m_Window, &m_WindowData);
 			for (uint32_t i = 0; i < GLFW_JOYSTICK_LAST; i++)

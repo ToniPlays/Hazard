@@ -11,11 +11,15 @@ void ProjectManager::Close()
 	m_Project.SerializeSetting<ScriptingSettings>();
 }
 
-HazardProject& ProjectManager::LoadProjectFromFile(const std::filesystem::path& path)
+HazardProject ProjectManager::LoadProjectFromFile(const std::filesystem::path& path)
 {
 	HazardProject project(path);
+    if(project.IsValid())
+    {
+        return project;
+    }
+    
 	project.DeserializeSetting<HazardProjectInfo>();
-	HZR_ASSERT(project.IsValid(), "We have no project");
 	project.DeserializeSetting<ProjectInputSettings>();
 	project.DeserializeSetting<ScriptingSettings>();
 	project.ProcessAssets();

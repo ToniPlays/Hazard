@@ -61,8 +61,6 @@ namespace HazardRenderer::Vulkan
 
 	VulkanContext::VulkanContext(WindowProps* props)
 	{
-		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
 		if (!glfwVulkanSupported()) {
 			HZR_ASSERT(false, "Vulkan not supported");
 		}

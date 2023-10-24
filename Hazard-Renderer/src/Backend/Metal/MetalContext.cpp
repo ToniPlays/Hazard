@@ -15,9 +15,6 @@ namespace HazardRenderer::Metal
 {
     MetalContext::MetalContext(WindowProps* props)
     {
-#ifdef HZR_PLATFORM_MACOS
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-#endif
         Renderer::Init(this);
         s_Instance = this;
     }
@@ -29,19 +26,15 @@ namespace HazardRenderer::Metal
     {
         m_Window = window;
         
-        m_PhysicalDevice = hnew MetalPhysicalDevice();
-        m_MetalLayer = hnew MetalWindowLayer(*window, m_PhysicalDevice->GetMetalDevice());
-        
-        m_Swapchain = Ref<MetalSwapchain>::Create();
-        
         uint32_t w = window->GetWidth();
         uint32_t h = window->GetHeight();
-
-        m_Swapchain->Create(&w, &h, m_Window->IsVSync());
-
-        window->GetWindowInfo().Width = w;
-        window->GetWindowInfo().Height = w;
         
+        m_PhysicalDevice = hnew MetalPhysicalDevice();
+        m_MetalLayer = hnew MetalWindowLayer(*window, m_PhysicalDevice->GetMetalDevice());
+        m_MetalLayer->Resize(w, h);
+        
+        m_Swapchain = Ref<MetalSwapchain>::Create(window);
+        m_Swapchain->Create(&w, &h, m_Window->IsVSync());
         
         uint32_t data = 0xFFFFFFFF;
         Image2DCreateInfo whiteTexture = {};

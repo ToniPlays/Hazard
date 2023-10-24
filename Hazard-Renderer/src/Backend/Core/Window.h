@@ -35,6 +35,7 @@ namespace HazardRenderer
 		int Height = 0;
 		float RefreshRate = 0.0f;
 		uint32_t ImagesInFlight = 0;
+        glm::vec2 FramebufferScale = { 1.0f, 1.0f };
 		Window* Window;
 
 		std::function<void(Event&)> EventCallback;
@@ -84,7 +85,7 @@ namespace HazardRenderer
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual WindowProps& GetWindowInfo() = 0;
+		virtual const WindowProps& GetWindowInfo() = 0;
 		virtual GraphicsContext* GetContext() const = 0;
 		virtual Ref<Swapchain> GetSwapchain() = 0;
 		virtual void SetDebugCallback(const RendererMessageCallback& callback) = 0;

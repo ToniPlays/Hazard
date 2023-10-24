@@ -63,7 +63,7 @@ namespace HazardRenderer {
         std::vector<Resolution> GetAvailableResolutions() const override;
         void SetResolution(const Resolution& resolution) override;
 
-        WindowProps& GetWindowInfo() override { return m_WindowData; }
+        const WindowProps& GetWindowInfo() override { return m_WindowData; }
         GraphicsContext* GetContext() const override { return m_Context; };
         Ref<Swapchain> GetSwapchain() override { return m_Context->GetSwapchain(); }
         virtual void SetDebugCallback(const RendererMessageCallback& callback) override

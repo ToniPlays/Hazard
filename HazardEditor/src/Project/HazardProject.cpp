@@ -24,8 +24,6 @@ void HazardProject::ProcessAssets()
 
 void HazardProject::ProcessAsset(const std::filesystem::path& path)
 {
-	AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(path));
-
 	if (File::GetFileExtension(path) != ".hpack") return;
 
 	CachedBuffer buffer = File::ReadBinaryFile(path);

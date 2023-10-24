@@ -22,6 +22,6 @@ public:
 private:
     HazardRenderer::Window* m_Window;
     HazardRenderer::Metal::MetalContext* m_Context;
-    //MTL::RenderPassDescriptor* m_Descriptor;
+    MTL::RenderPassDescriptor* m_Descriptor;
 };
 #endif

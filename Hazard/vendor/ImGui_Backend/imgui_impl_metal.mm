@@ -564,6 +564,7 @@ void ImGui_ImplMetal_DestroyDeviceObjects()
                     .x = NSUInteger(clip_min.x),
                     .y = NSUInteger(clip_min.y),
                     .width = NSUInteger(clip_max.x - clip_min.x),
+                    .width = NSUInteger(clip_max.x - clip_min.x),
                     .height = NSUInteger(clip_max.y - clip_min.y)
                 };
                 [commandEncoder setScissorRect:scissorRect];

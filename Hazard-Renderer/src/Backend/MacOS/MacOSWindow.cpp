@@ -68,13 +68,12 @@ namespace HazardRenderer
             m_WindowData.ImagesInFlight = info->ImagesInFlight;
             m_WindowData.Window = this;
 
-            m_Context = GraphicsContext::Create(&m_WindowData);
-
             glfwWindowHint(GLFW_DECORATED, windowInfo.HasTitlebar);
             //glfwWindowHint(GLFW_TITLEBAR, windowInfo.HasTitlebar);
             glfwWindowHint(GLFW_RESIZABLE, windowInfo.Resizable);
             glfwWindowHint(GLFW_MAXIMIZED, windowInfo.Maximized);
             glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
             GLFWmonitor* monitor = NULL;
 
@@ -102,10 +101,14 @@ namespace HazardRenderer
             if (monitor == nullptr)
                 monitor = glfwGetPrimaryMonitor();
 
+            glfwGetWindowContentScale(m_Window, &m_WindowData.FramebufferScale.x, &m_WindowData.FramebufferScale.y);
+
+            m_Context = GraphicsContext::Create(&m_WindowData);
             m_Context->Init(this, info);
             m_Context->SetClearColor(windowInfo.Color);
-            m_WindowData.Width = m_Context->GetSwapchain()->GetWidth();
-            m_WindowData.Height = m_Context->GetSwapchain()->GetHeight();
+            
+            m_WindowData.Width = m_Context->GetSwapchain()->GetWidth() * m_WindowData.FramebufferScale.x;
+            m_WindowData.Height = m_Context->GetSwapchain()->GetHeight() * m_WindowData.FramebufferScale.y;
             m_WindowData.RefreshRate = glfwGetVideoMode(monitor)->refreshRate;
 
             //Center window
@@ -113,11 +116,13 @@ namespace HazardRenderer
             const GLFWvidmode* mode = glfwGetVideoMode(monitor);
             glfwSetWindowPos(m_Window, mode->width / 2.0f - m_WindowData.Width / 2.0f, mode->height / 2.0f - m_WindowData.Height / 2.0f);
 
-
             glfwSetWindowUserPointer(m_Window, &m_WindowData);
             for (uint32_t i = 0; i < GLFW_JOYSTICK_LAST; i++)
                 glfwSetJoystickUserPointer(i, &m_WindowData);
 
+            m_WindowData.Width = m_Context->GetSwapchain()->GetWidth();
+            m_WindowData.Height = m_Context->GetSwapchain()->GetHeight();
+            
             SetCallbacks();
             SetVSync(info->VSync);
 
@@ -214,9 +219,9 @@ namespace HazardRenderer
         glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
 
             WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-            data.Height = h;
-            data.Width = w;
-
+            data.Width = w * data.FramebufferScale.x;
+            data.Height = h * data.FramebufferScale.y;
+            
             data.Window->GetContext()->GetSwapchain()->Resize(data.Width, data.Height);
 
             WindowResizeEvent event(w, h);

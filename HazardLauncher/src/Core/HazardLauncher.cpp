@@ -1,4 +1,4 @@
-#if 0
+
 #include "HazardLauncher.h"
 #include "HazardRendererCore.h"
 
@@ -10,12 +10,6 @@ using namespace HazardScript;
 
 void HazardLauncher::PreInit()
 {
-#ifdef HZR_PLATFORM_WINDOWS
-    RenderAPI renderAPI = RenderAPI::Vulkan;
-#elif defined HZR_PLATFORM_MACOS
-    RenderAPI renderAPI = RenderAPI::Metal;
-#endif
-	
 	ApplicationCreateInfo appInfo = {};
 	appInfo.AppName = "Hazard Launcher";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
@@ -23,9 +17,9 @@ void HazardLauncher::PreInit()
 	appInfo.ThreadCount = 1;
 
 	RenderContextCreateInfo renderContextInfo = {};
-	renderContextInfo.Renderer = renderAPI;
+	renderContextInfo.Renderer = RenderAPI::Auto;
 	renderContextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI);
+	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderContextInfo.Renderer);
 	renderContextInfo.Width = 1280;
 	renderContextInfo.Height = 720;
 
@@ -40,4 +34,3 @@ void HazardLauncher::Init()
 {
 	PushModule<GUIManager>();
 }
-#endif

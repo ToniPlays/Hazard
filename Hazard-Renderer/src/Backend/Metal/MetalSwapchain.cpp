@@ -10,15 +10,17 @@
 
 namespace HazardRenderer::Metal {
     
-    MetalSwapchain::MetalSwapchain()
+    MetalSwapchain::MetalSwapchain(Window* window)
     {
-        
+        m_Window = window;
     }
 
     void MetalSwapchain::Create(uint32_t* width, uint32_t* height, bool vsync)
     {
-        m_Width = *width;
-        m_Height = *height;
+        glm::vec2 scale = m_Window->GetWindowInfo().FramebufferScale;
+        
+        m_Width = *width * scale.x;
+        m_Height = *height * scale.y;
         
         m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("Swapchain");
         
@@ -56,6 +58,7 @@ namespace HazardRenderer::Metal {
 
             m_DefaultRenderPass = RenderPass::Create(&renderPassInfo);
         }
+        Resize(m_Width, m_Height);
     }
 
     void MetalSwapchain::Resize(uint32_t width, uint32_t height)
