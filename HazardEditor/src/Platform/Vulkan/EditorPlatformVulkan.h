@@ -5,7 +5,7 @@
 
 #include "../EditorGuiPlatform.h"
 #include "../ImGui_Backend/imgui_impl_vulkan.h"
-#include "Backend/Vulkan/VulkanContext.h"
+#include "Vulkan/VulkanContext.h"
 
 using namespace HazardRenderer::Vulkan;
 

@@ -2,9 +2,9 @@
 
 #include "UtilityCore.h"
 #include "HazardRendererCore.h"
-#include "Backend/Core/Renderer.h"
-#include "Backend/Core/ShaderCompiler.h"
+#include "Core/Renderer.h"
+#include "Core/ShaderCompiler.h"
 
 #include "Renderer/Camera.h"
-#include "Backend/Input.h"
+#include "Input.h"
 #include "Renderer/RenderGraph.h"

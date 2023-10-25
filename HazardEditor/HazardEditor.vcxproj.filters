@@ -81,6 +81,9 @@
     <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_glfw.h">
       <Filter>Hazard\vendor\ImGui_Backend</Filter>
     </ClInclude>
+    <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_metal.h">
+      <Filter>Hazard\vendor\ImGui_Backend</Filter>
+    </ClInclude>
     <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_opengl3.h">
       <Filter>Hazard\vendor\ImGui_Backend</Filter>
     </ClInclude>

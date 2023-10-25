@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard.h"
-#include "Backend/Core/Window.h"
+#include "Core/Window.h"
 #include "Platform/EditorGuiPlatform.h"
 #include "GUI/MainMenuBar.h"
 

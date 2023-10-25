@@ -1,5 +1,5 @@
 #include "KeyboardInputDevice.h"
-#include "Backend/Input.h"
+#include "Input.h"
 
 namespace Hazard
 {

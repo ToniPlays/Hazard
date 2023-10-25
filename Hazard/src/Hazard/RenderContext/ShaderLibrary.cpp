@@ -2,8 +2,8 @@
 #include <hzrpch.h>
 #include "ShaderLibrary.h"
 
-#include "Backend/Core/ShaderCompiler.h"
-#include "Backend/Core/GraphicsContext.h"
+#include "Core/ShaderCompiler.h"
+#include "Core/GraphicsContext.h"
 
 #include "Hazard/Rendering/Vertices.h"
 #include "Hazard/RenderContext/ShaderAsset.h"

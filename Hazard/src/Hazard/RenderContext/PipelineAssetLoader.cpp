@@ -3,10 +3,10 @@
 #include "Hazard/Core/Application.h"
 #include "PipelineAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
-#include "Backend/Core/RenderPass.h"
+#include "Core/Rendering/RenderPass.h"
 
-#include "Backend/Core/GraphicsContext.h"
-#include "Backend/Core/ShaderCompiler.h"
+#include "Core/GraphicsContext.h"
+#include "Core/ShaderCompiler.h"
 #include "ShaderAsset.h"
 
 namespace Hazard

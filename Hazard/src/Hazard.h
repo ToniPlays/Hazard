@@ -23,13 +23,12 @@
 #include "Hazard/Rendering/RendererDrawList.h"
 
 //Hazard Physics
-#include "Backend/Core/Core.h"
+#include "Core/Core.h"
 
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/Scripting/ScriptUtilities.h"
 
 #include <hzrpch.h>
-
 
 //Hazard ImGui library
 #include "Hazard/ImGUI/Panel.h"

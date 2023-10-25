@@ -21,12 +21,14 @@ public:
 		m_DataBuffer.Write(&data, sizeof(Type), m_WriteBufferOffset);
 		m_WriteBufferOffset += sizeof(Type);
 	};
+
 	inline void AddIndices(uint64_t count) { m_IndexCount += count; }
 	void Reset() 
 	{
 		m_WriteBufferOffset = 0;
 		m_IndexCount = 0;
 	};
+
 	void Resize(uint64_t size)
 	{
 		m_DataBuffer.Release();

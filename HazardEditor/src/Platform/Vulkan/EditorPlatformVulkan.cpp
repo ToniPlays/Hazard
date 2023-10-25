@@ -2,9 +2,11 @@
 #include "Hazard.h"
 
 #include "EditorPlatformVulkan.h"
+
 #ifdef HZR_INCLUDE_VULKAN
-#include "Backend/Core/Renderer.h"
-#include "Backend/Vulkan/VKUtils.h"
+
+#include "Core/Renderer.h"
+#include "Vulkan/VKUtils.h"
 #include "imgui.h"
 #include <../ImGui_Backend/imgui_impl_glfw.h>
 

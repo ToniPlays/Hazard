@@ -1,5 +1,6 @@
 
 #include "CommandQueue.h"
+#include "Profiling/Instrumentor.h"
 
 CommandQueue::CommandQueue(uint32_t size)
 {

@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Hazard/Assets/Asset.h"
-#include "Backend/Core/Pipeline.h"
+#include "Core/Rendering/Pipeline.h"
 #include "Hazard/RenderContext/Texture2D.h"
 
 #include "UtilityCore.h"
 
-#include "Backend/Core/Shader.h"
+#include "Core/Rendering/Shader.h"
 
 namespace Hazard
 {

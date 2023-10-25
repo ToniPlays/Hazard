@@ -1,12 +1,11 @@
 
 #include <hzrpch.h>
 #include "ShaderAssetLoader.h"
-#include "Backend/Core/ShaderCompiler.h"
-#include <Hazard/RenderContext/ShaderAsset.h>
-
-#include "Backend/Core/GraphicsContext.h"
+#include "Core/ShaderCompiler.h"
+#include "Core/GraphicsContext.h"
 #include "Hazard/Assets/AssetPack.h"
 
+#include <Hazard/RenderContext/ShaderAsset.h>
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Core/Application.h"
 

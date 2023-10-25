@@ -11,9 +11,9 @@
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Hazard/Core/Application.h"
 
-#include "Backend/OpenGL/OpenGLCore.h"
-#include "Backend/Vulkan/VulkanCore.h"
-#include "Backend/Metal/MetalCore.h"
+#include "OpenGL/OpenGLCore.h"
+#include "Vulkan/VulkanCore.h"
+#include "Metal/MetalCore.h"
 
 #include "UIElements/InputFloat.h"
 

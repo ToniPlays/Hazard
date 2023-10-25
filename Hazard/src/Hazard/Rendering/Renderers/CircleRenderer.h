@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 #include "Batch.h"
 
-#include "Backend/Core/GPUBuffer.h"
-#include "Backend/Core/Pipeline.h"
+#include "Core/Rendering/GPUBuffer.h"
+#include "Core/Rendering/Pipeline.h"
 #include "Hazard/RenderContext/Texture2D.h"
 
 #include "Hazard/Rendering/Mesh/Material.h"

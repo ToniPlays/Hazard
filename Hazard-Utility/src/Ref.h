@@ -164,11 +164,13 @@ private:
 };
 
 template<class T, class RT = void>
-struct IsRef {
+struct IsRef 
+{
 	static constexpr bool value = false;
 };
 
 template<class RT>
-struct IsRef<Ref<RT>> {
+struct IsRef<Ref<RT>> 
+{
 	static constexpr bool value = true;
 };

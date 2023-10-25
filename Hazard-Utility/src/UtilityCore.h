@@ -8,7 +8,7 @@
 #include <utility>
 #include <chrono>
 #include "HazardRuntimeError.h"
-#include "Instrumentor.h"
+#include "Profiling/Instrumentor.h"
 
 //#define HZR_PROFILE
 //#define HZR_OPTICK

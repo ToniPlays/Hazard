@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "Backend/Input.h"
+#include "Input.h"
 #include "InputDevice.h"
 
 #include <functional>

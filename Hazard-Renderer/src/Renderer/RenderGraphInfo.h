@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Backend/Core/Image2D.h"
-#include "Backend/Core/Sampler.h"
-#include "Backend/Core/GPUBuffer.h"
-#include "Backend/Core/Pipeline.h"
-#include "Backend/Core/DescriptorSet.h"
+#include "Core/Rendering/Image2D.h"
+#include "Core/Rendering/Sampler.h"
+#include "Core/Rendering/GPUBuffer.h"
+#include "Core/Rendering/Pipeline.h"
+#include "Core/Rendering/DescriptorSet.h"
 #include <span>
 
 namespace HazardRenderer

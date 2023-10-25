@@ -3,14 +3,15 @@
 #include "Core.h"
 #include "UtilityCore.h"
 #include "ApplicationEvent.h"
-#include "Backend/Core/Events/Events.h"
+#include "Core/Events/Events.h"
 #include "Hazard/ModuleHandler.h"
 
 namespace Hazard 
 {
 	class Application;
 
-	class HazardLoop {
+	class HazardLoop 
+	{
 		friend class Application;
         
 	public:

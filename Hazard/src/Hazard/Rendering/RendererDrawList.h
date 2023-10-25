@@ -3,9 +3,9 @@
 #include "UtilityCore.h"
 #include "RenderResources.h"
 #include "Renderers/WorldRenderer.h"
-#include "Backend/Core/RenderPass.h"
-#include "Backend/Core/Pipeline.h"
-#include "Backend/Core/GPUBuffer.h"
+#include "Core/Rendering/RenderPass.h"
+#include "Core/Rendering/Pipeline.h"
+#include "Core/Rendering/GPUBuffer.h"
 #include "Environment/EnvironmentMap.h"
 
 #include "AddressableVector.h"

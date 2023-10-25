@@ -1,6 +1,6 @@
 
 #include "MouseInputDevice.h"
-#include "Backend/Input.h"
+#include "Input.h"
 
 namespace Hazard
 {

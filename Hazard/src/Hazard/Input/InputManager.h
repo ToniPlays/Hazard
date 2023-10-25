@@ -2,9 +2,9 @@
 
 #include "InputSchema.h"
 #include "Hazard/Module.h"
-#include "Backend/Input.h"
+#include "Input.h"
 #include "InputDevice.h"
-#include "Backend/Core/Events/Events.h"
+#include "Core/Events/Events.h"
 
 namespace Hazard
 {

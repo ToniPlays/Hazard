@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/Assets/Asset.h"
-#include "Backend/Core/ShaderCompiler.h"
+#include "Core/ShaderCompiler.h"
 
 namespace Hazard
 {

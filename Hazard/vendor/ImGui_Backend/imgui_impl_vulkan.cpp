@@ -47,7 +47,7 @@
 
 #include <hzrpch.h>
 
-#include "Backend/Vulkan/VulkanCore.h"
+#include "Vulkan/VulkanCore.h"
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "imgui.h"

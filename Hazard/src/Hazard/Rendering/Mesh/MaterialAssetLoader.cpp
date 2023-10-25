@@ -2,9 +2,6 @@
 #include "MaterialAssetLoader.h"
 
 #include "Hazard/Assets/AssetManager.h"
-
-#include "Backend/Core/Utils.h"
-
 #include "Material.h"
 
 namespace Hazard

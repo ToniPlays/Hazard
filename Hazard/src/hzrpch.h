@@ -16,7 +16,7 @@
 #include "HazardRuntimeError.h"
 #include "Hazard/Logging/Logger.h"
 
-#include "Backend/Core/Core.h"
+#include "Core/Core.h"
 #include "File.h"
 
 #include "Event.h"
