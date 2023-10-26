@@ -161,6 +161,7 @@ CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::
 			Buffer result = graph->Execute()->GetResult();
 			AssetPackElement element = result.Read<AssetPackElement>();
 			element.Handle = AssetHandle();
+            std::cout << element.AddressableName;
 			elements.push_back(element);
 
 			break;

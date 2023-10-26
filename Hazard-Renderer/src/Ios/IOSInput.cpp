@@ -1,6 +1,6 @@
 #ifdef HZR_PLATFORM_IOS
 
-#include "Backend/Input.h"
+#include "Input.h"
 
 void Input::Init(HazardRenderer::Window& window)
 {

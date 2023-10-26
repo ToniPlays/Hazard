@@ -25,7 +25,6 @@
 //  2019-02-11: Metal: Projecting clipping rectangles correctly using draw_data->FramebufferScale to allow multi-viewports for retina display.
 //  2018-11-30: Misc: Setting up io.BackendRendererName so it can be displayed in the About Window.
 //  2018-07-05: Metal: Added new Metal backend implementation.
-
 #include "imgui.h"
 #include "imgui_impl_metal.h"
 

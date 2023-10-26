@@ -4,7 +4,7 @@
 
 #import "DefaultViewController.h"
 #import "MetalKit/MetalKit.h"
-#import "IOSEntryPoint.h"
+#import "IOSEntryPoint.mm"
 
 @implementation DefaultViewController
 {

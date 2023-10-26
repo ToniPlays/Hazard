@@ -3,7 +3,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "MTLUtils.h"
-#include "Backend/Core/Renderer.h"
+#include "Core/Renderer.h"
 
 namespace HazardRenderer::Metal
 {

@@ -3,8 +3,8 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#include "Backend/Core/Window.h"
-#include "Backend/Core/Renderer.h"
+#include "Core/Window.h"
+#include "Core/Renderer.h"
 
 #include "MetalCore.h"
 

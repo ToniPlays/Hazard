@@ -5,7 +5,7 @@
 
 #include "MetalRenderCommandBuffer.h"
 #include "MetalWindowLayer.h"
-#include "Backend/Core/RenderPass.h"
+#include "Core/Rendering/RenderPass.h"
 
 
 namespace HazardRenderer::Metal {

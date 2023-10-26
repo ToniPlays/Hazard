@@ -40,14 +40,15 @@ workspace "Hazard"
         {
             "HZR_PLATFORM_IOS"
         }
-	    architecture "ARM"
-	    xcodebuildsettings 
-	    {
-	    	["SDKROOT"] = "iphoneos"
-	    }
+	xcodebuildsettings 
+	{
+    	    ["SDKROOT"] = "iphoneos",
+	    ["VALIDATE_WORKSPACE"] = "NO"
+	}
  
     filter "system:ios or system:macosx"
         architecture "universal"
+
         xcodebuildsettings
         {
             ["MACOSX_DEPLOYMENT_TARGET"] = "13.0",

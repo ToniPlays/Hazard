@@ -1,10 +1,11 @@
 
 #include "EditorPlatformMetal.h"
+
 #ifdef HZR_INCLUDE_METAL
-#include "Backend/Core/Renderer.h"
-#include "Backend/Metal/MetalFrameBuffer.h"
-#include "Backend/Metal/MetalRenderCommandBuffer.h"
-#include "Backend/Metal/MetalSwapchain.h"
+#include "Core/Renderer.h"
+#include "Metal/MetalFrameBuffer.h"
+#include "Metal/MetalRenderCommandBuffer.h"
+#include "Metal/MetalSwapchain.h"
 
 #include "ImGui_Backend/imgui_impl_glfw.h"
 #include "ImGui_Backend/imgui_impl_metal.h"
@@ -22,8 +23,6 @@ EditorPlatformMetal::EditorPlatformMetal(HazardRenderer::Window& window)
     m_Window = &window;
     m_Context = (MetalContext*)window.GetContext();
     
-    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), true);
-    
     Ref<MetalPhysicalDevice> device = m_Context->GetDevice();
     
     m_Descriptor = MTL::RenderPassDescriptor::alloc()->init();
@@ -35,14 +34,14 @@ EditorPlatformMetal::EditorPlatformMetal(HazardRenderer::Window& window)
     attachment->setLoadAction(MTL::LoadActionClear);
     attachment->setStoreAction(MTL::StoreActionStore);
     
-    ImGuiIO& io = ImGui::GetIO();
-    
     ImGui_ImplMetal_Init((__bridge id<MTLDevice>)(device->GetMetalDevice()));
 }
 
 EditorPlatformMetal::~EditorPlatformMetal()
 {
+#ifdef HZR_PLATFORM_MACOS
     ImGui_ImplGlfw_Shutdown();
+#endif
     ImGui_ImplMetal_Shutdown();
 }
 
@@ -56,7 +55,9 @@ void EditorPlatformMetal::BeginFrame()
     colorAttachment->setTexture(drawable->texture());
     
     ImGui_ImplMetal_NewFrame((__bridge MTLRenderPassDescriptor*)(m_Descriptor));
+#ifdef HZR_PLATFORM_MACOS
     ImGui_ImplGlfw_NewFrame();
+#endif
     ImGui::NewFrame();
 }
 
@@ -65,7 +66,6 @@ void EditorPlatformMetal::EndFrame()
     using namespace HazardRenderer::Metal;
     auto swapchain = MetalContext::GetInstance()->GetSwapchain();
     auto cmdBuffer = swapchain->GetSwapchainBuffer().As<MetalRenderCommandBuffer>();
-    
     
     uint32_t w = m_Context->GetSwapchain()->GetWidth();
     uint32_t h = m_Context->GetSwapchain()->GetHeight();
@@ -84,4 +84,5 @@ void EditorPlatformMetal::Close()
 {
     ImGui::DestroyContext();
 }
+
 #endif

@@ -4,8 +4,8 @@
 #include <GLFW/glfw3.h>
 
 #include "MetalWindowLayer.h"
-#include "Backend/Core/Window.h"
-#include "Backend/Core/Renderer.h"
+#include "Core/Window.h"
+#include "Core/Renderer.h"
 
 #include "MetalSwapchain.h"
 #include "MetalFrameBuffer.h"

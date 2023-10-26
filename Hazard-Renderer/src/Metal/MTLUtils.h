@@ -4,8 +4,8 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#include "Core/Pipeline.h"
-#include "Core/Shader.h"
+#include "Core/Rendering/Pipeline.h"
+#include "Core/Rendering/Shader.h"
 
 #include "MetalContext.h"
 #include "MetalPhysicalDevice.h"

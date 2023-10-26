@@ -30,7 +30,7 @@ std::string File::SaveFile(const std::vector<std::string>& filters, const std::f
 bool File::Exists(const std::filesystem::path& path)
 {
 #ifdef HZR_PLATFORM_IOS
-	CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+	/*CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
 	char resourcePath[PATH_MAX];
 	if (CFURLGetFileSystemRepresentation(resourceURL, true, (UInt8*)resourcePath,
 										 PATH_MAX))
@@ -41,7 +41,8 @@ bool File::Exists(const std::filesystem::path& path)
 			CFRelease(resourceURL);
 		}
 		return exists;
-	}
+	}*/
+    return false;
 #else
 	return std::filesystem::exists(path);
 #endif
@@ -151,7 +152,7 @@ CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
 std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& file)
 {
 #ifdef HZR_PLATFORM_IOS
-	CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+	/*CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
 	char resourcePath[PATH_MAX];
 	if (CFURLGetFileSystemRepresentation(resourceURL, true, (UInt8*)resourcePath,
 										 PATH_MAX))
@@ -162,7 +163,8 @@ std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& fil
 			CFRelease(resourceURL);
 		}
 		return resourcePath;
-	}
+	}*/
+    return "";
 #else
 	return std::filesystem::absolute(file);
 #endif
@@ -194,10 +196,3 @@ void File::Copy(const std::filesystem::path& source, const std::filesystem::path
 {
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
 }
-
-#ifdef HZR_PLATFORM_WINDOWS
-
-#else
-	SystemCall((std::string("open ") + abs.string()).c_str());
-	return true;
-#endif

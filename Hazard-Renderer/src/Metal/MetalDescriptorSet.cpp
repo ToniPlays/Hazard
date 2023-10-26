@@ -6,7 +6,7 @@
 #include "MetalImage2D.h"
 #include "MetalCubemapTexture.h"
 #include "MetalTopLevelAS.h"
-#include "Backend/Core/Renderer.h"
+#include "Core/Renderer.h"
 
 #include "MetalShader.h"
 #include "MetalSampler.h"

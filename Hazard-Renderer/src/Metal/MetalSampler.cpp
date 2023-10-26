@@ -2,7 +2,7 @@
 #include "MetalSampler.h"
 #ifdef HZR_INCLUDE_METAL
 
-#include "Backend/Core/Renderer.h"
+#include "Core/Renderer.h"
 #include "MetalContext.h"
 #include "MTLUtils.h"
 #include "spdlog/fmt/fmt.h"

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Backend/Core/Core.h"
+#include "Core/Core.h"
 #ifdef HZR_INCLUDE_METAL
 
-#include "Backend/Core/Window.h"
+#include "Core/Window.h"
 
 struct GLFWwindow;
 

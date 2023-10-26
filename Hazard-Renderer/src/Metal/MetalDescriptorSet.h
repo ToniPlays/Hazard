@@ -6,7 +6,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "MetalShaderCompiler.h"
-#include "Core/DescriptorSet.h"
+#include "Core/Rendering/DescriptorSet.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>

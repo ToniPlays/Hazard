@@ -19,7 +19,7 @@ public:
 	void Run() override;
 	void Terminate() override;
 
-	const char* GetName() { return "Uniform buffer test"; }
+	const char* GetName() override { return "Uniform buffer test"; }
 
 private:
 	HazardRenderer::Window* m_Window;

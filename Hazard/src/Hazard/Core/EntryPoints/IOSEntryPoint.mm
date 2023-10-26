@@ -1,13 +1,15 @@
 #ifdef HZR_PLATFORM_IOS
 
-#import "AppDelegate.h"
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
 #import "../CommandLineArgs.h"
 #import "Hazard/Core/Application.h"
+
 extern Hazard::Application* Hazard::CreateApplication();
 
-int main(int argc, char * argv[]) {
+int main(int argc, char * argv[]) 
+{
     
     Hazard::CommandLineArgs::Init(argc, argv);
     

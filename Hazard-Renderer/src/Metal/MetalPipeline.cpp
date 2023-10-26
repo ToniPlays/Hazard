@@ -6,7 +6,7 @@
 #include "MetalContext.h"
 #include "MetalFrameBuffer.h"
 #include "MTLUtils.h"
-#include "Backend/Core/Renderer.h"
+#include "Core/Renderer.h"
 
 
 namespace HazardRenderer::Metal

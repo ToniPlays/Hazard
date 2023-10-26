@@ -8,7 +8,7 @@
 
 #include "spdlog/fmt/fmt.h"
 
-#include "Backend/Core/Renderer.h"
+#include "Core/Renderer.h"
 
 namespace HazardRenderer::Metal
 {

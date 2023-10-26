@@ -3,8 +3,7 @@
 #include "Core/Core.h"
 #ifdef HZR_INCLUDE_METAL
 
-#include "Core/Shader.h"
-#include "Core/GPUBuffer.h"
+#include "Core/Rendering/Shader.h"
 #include "MetalDescriptorSet.h"
 #include "MetalGPUBuffer.h"
 

@@ -9,7 +9,9 @@ project "Hazard-Test-App"
 	files
 	{
 		"src/**.h",
-		"src/**.cpp"
+		"src/**.cpp",
+		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.h",
+		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.cpp"
 	}
 
 	includedirs
@@ -28,6 +30,7 @@ project "Hazard-Test-App"
         	"%{IncludeDir.Metal}",
 		"%{IncludeDir.shaderc}",
 		"%{IncludeDir.Assimp}",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.SPIRV_Cross}",
 		"%{IncludeDir.Hazard_Utility}",
 		"%{IncludeDir.Hazard_Renderer}",

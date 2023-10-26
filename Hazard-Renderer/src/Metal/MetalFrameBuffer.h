@@ -4,7 +4,7 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#include "Core/FrameBuffer.h"
+#include "Core/Rendering/FrameBuffer.h"
 #include "MetalImage2D.h"
 
 #include <Foundation/Foundation.hpp>

@@ -3,7 +3,7 @@
 #include "Core/Core.h"
 #ifdef HZR_INCLUDE_METAL
 
-#include "Core/Image2D.h"
+#include "Core/Rendering/Image2D.h"
 
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>

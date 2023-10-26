@@ -3,10 +3,10 @@
 
 #include "MetalShaderCompiler.h"
 #include "MetalContext.h"
-#include "Backend/Core/Renderer.h"
+#include "Core/Renderer.h"
 #include "MetalGPUBuffer.h"
 
-#include "Backend/Core/Window.h"
+#include "Core/Window.h"
 
 namespace HazardRenderer::Metal
 {

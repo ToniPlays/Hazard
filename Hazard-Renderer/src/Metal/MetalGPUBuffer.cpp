@@ -4,7 +4,7 @@
 
 #include "MetalContext.h"
 #include "MetalRenderCommandBuffer.h"
-#include "Backend/Core/Renderer.h"
+#include "Core/Renderer.h"
 #include "MTLUtils.h"
 
 #include "MathCore.h"

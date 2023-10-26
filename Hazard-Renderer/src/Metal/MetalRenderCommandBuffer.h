@@ -3,7 +3,7 @@
 #include "Core/Core.h"
 #ifdef HZR_INCLUDE_METAL
 
-#include "Core/RenderCommandBuffer.h"
+#include "Core/Rendering/RenderCommandBuffer.h"
 #include "MetalPipeline.h"
 #include "MetalSwapchain.h"
 #include "MetalTopLevelAS.h"
