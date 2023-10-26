@@ -1,7 +1,10 @@
 #include "ShaderCompiler.h"
 
+#ifdef HZR_DESKTOP
+
 #include "MathCore.h"
 #include "Utility/StringUtil.h"
+
 
 #include "OpenGL/OpenGLShaderCompiler.h"
 #include "Vulkan/VulkanShaderCompiler.h"
@@ -462,3 +465,4 @@ namespace HazardRenderer
 		return result;
 	}
 }
+#endif

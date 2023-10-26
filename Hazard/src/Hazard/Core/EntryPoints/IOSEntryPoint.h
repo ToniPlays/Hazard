@@ -10,7 +10,6 @@ extern Hazard::Application* Hazard::CreateApplication();
 
 int main(int argc, char * argv[]) 
 {
-    
     Hazard::CommandLineArgs::Init(argc, argv);
     
     @autoreleasepool {

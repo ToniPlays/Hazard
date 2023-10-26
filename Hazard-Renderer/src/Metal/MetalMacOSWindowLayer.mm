@@ -18,6 +18,9 @@
     {
         MetalWindowLayer::MetalWindowLayer(Window& window, MTL::Device* device)
         {
+            m_Width = window.GetWidth();
+            m_Height = window.GetHeight();
+            
             id<MTLDevice> dev = (__bridge id<MTLDevice>)device;
             
             NSWindow* nswin = glfwGetCocoaWindow((GLFWwindow*)window.GetNativeWindow());
@@ -26,9 +29,10 @@
             layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
             nswin.contentView.layer = layer;
             nswin.contentView.wantsLayer = YES;
+            layer.frame.size = { (CGFloat)m_Width, (CGFloat)m_Height} ;
+            layer.drawableSize = { (CGFloat)m_Width, (CGFloat)m_Height };
             
             m_Layer = (__bridge CA::MetalLayer*)layer;
-             
         }
         void MetalWindowLayer::Resize(uint32_t width, uint32_t height)
         {

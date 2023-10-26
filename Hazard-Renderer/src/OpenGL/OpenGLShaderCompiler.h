@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Core/Core.h"
+
+#ifdef HZR_DESKTOP
+
 #include "Core/ShaderCompiler.h"
 
 #include "File.h"
@@ -25,3 +28,4 @@ namespace HazardRenderer::OpenGL
 		double m_CompilationTime = 0.0;
 	};
 }
+#endif

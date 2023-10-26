@@ -42,6 +42,8 @@ namespace HazardRenderer::Metal
     void MetalImage2D::Invalidate()
     {
         HZR_PROFILE_FUNCTION();
+        HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
+        
         Ref<MetalImage2D> instance = this;
         Renderer::SubmitResourceCreate([instance]() mutable {
             instance->Invalidate_RT();

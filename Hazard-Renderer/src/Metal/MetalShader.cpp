@@ -25,7 +25,7 @@ namespace HazardRenderer::Metal
         HZR_PROFILE_FUNCTION();
         
         auto device = MetalContext::GetMetalDevice();
-        
+        /*
         MetalShaderCompiler compiler;
         
         for(auto& [stage, spirv] : m_ShaderCode)
@@ -80,11 +80,12 @@ namespace HazardRenderer::Metal
             }
             m_Functions[stage] = func;
         }
+         */
         Reflect();
     }
     void MetalShader::Reflect()
     {
-        m_ShaderData = ShaderCompiler::GetShaderResources(m_ShaderCode);
+        //m_ShaderData = ShaderCompiler::GetShaderResources(m_ShaderCode);
     }
 }
 #endif

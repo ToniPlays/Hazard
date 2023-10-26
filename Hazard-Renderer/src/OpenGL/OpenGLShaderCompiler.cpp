@@ -1,5 +1,7 @@
 #include "OpenGLShaderCompiler.h"
 
+#ifdef HZR_DESKTOP
+
 #include "MathCore.h"
 #include "Profiling/Timer.h"
 
@@ -75,3 +77,4 @@ namespace HazardRenderer::OpenGL
 		return !result.empty();
 	}
 }
+#endif

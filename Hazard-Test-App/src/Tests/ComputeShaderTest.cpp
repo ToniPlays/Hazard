@@ -37,7 +37,7 @@ void ComputeShaderTest::Init()
 	vbo.Data = &vertices;
 	vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
 
 	PipelineSpecification spec = {};
 	spec.DebugName = "Rasterized";
@@ -47,16 +47,16 @@ void ComputeShaderTest::Init()
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
 	spec.DepthTest = false;
 	spec.pBufferLayout = &layout;
-	spec.ShaderCodeCount = code.size();
-	spec.pShaderCode = code.data();
+	//spec.ShaderCodeCount = code.size();
+	//spec.pShaderCode = code.data();
 
-	std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/compute.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	//std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/compute.glsl", m_Window->GetWindowInfo().SelectedAPI);
 
 	PipelineSpecification computeSpec = {};
 	computeSpec.DebugName = "Compute";
 	computeSpec.Usage = PipelineUsage::ComputeBit;
-	computeSpec.ShaderCodeCount = computeCode.size();
-	computeSpec.pShaderCode = computeCode.data();
+	//computeSpec.ShaderCodeCount = computeCode.size();
+	//computeSpec.pShaderCode = computeCode.data();
 
 	Image2DCreateInfo outputImageSpec = {};
 	outputImageSpec.DebugName = "ComputeOutput";
@@ -116,10 +116,10 @@ void ComputeShaderTest::Run()
 	auto renderPass = swapchain->GetRenderPass();
 
 	commandBuffer->BeginRenderPass(renderPass);
-	commandBuffer->SetPipeline(m_Pipeline);
-	commandBuffer->SetVertexBuffer(m_VertexBuffer);
-	commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
-	commandBuffer->Draw(6);
+	//commandBuffer->SetPipeline(m_Pipeline);
+	//commandBuffer->SetVertexBuffer(m_VertexBuffer);
+	//commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
+	//commandBuffer->Draw(6);
 	commandBuffer->EndRenderPass();
 }
 void ComputeShaderTest::Terminate()

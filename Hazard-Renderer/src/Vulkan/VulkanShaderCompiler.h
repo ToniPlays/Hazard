@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "File.h"
+#ifdef HZR_DESKTOP
 
+#include "File.h"
 #include "Core/ShaderCompiler.h"
 
 namespace HazardRenderer::Vulkan
@@ -26,3 +27,4 @@ namespace HazardRenderer::Vulkan
 		double m_CompilationTime = 0.0;
 	};
 }
+#endif

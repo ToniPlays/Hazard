@@ -2,7 +2,7 @@
 #include "MacOSWindow.h"
 #ifdef HZR_PLATFORM_MACOS
 
-#include "Backend/Core/Events/Events.h"
+#include "Core/Events/Events.h"
 #include "vendor/stb_image.h"
 #include "File.h"
 

@@ -5,13 +5,14 @@
 
 #ifdef HZR_INCLUDE_METAL
 
+
 namespace HazardRenderer::Metal
 {
     struct MSLBinding {
         uint32_t Binding;
         uint32_t SamplerBinding;
     };
-
+    #ifdef HZR_DESKTOP
     class MetalShaderCompiler
     {
     public:
@@ -31,5 +32,6 @@ namespace HazardRenderer::Metal
         std::string m_ErrorMessage;
         double m_CompilationTime = 0.0;
     };
+    #endif
 }
 #endif

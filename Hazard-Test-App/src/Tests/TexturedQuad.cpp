@@ -35,7 +35,7 @@ void TexturedQuadTest::Init()
 							{ "a_TextureCoords",	ShaderDataType::Float2 }
 	};
 
-	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
 	Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
 	BufferCreateInfo vbo = {};
@@ -58,8 +58,8 @@ void TexturedQuadTest::Init()
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
 	spec.DepthTest = false;
 	spec.pBufferLayout = &layout;
-	spec.ShaderCodeCount = code.size();
-	spec.pShaderCode = code.data();
+	//spec.ShaderCodeCount = code.size();
+	//spec.pShaderCode = code.data();
 
 	Image2DCreateInfo imageInfo = {};
 	imageInfo.DebugName = "Image2D";
@@ -101,10 +101,10 @@ void TexturedQuadTest::Run()
 	auto commandBuffer = swapchain->GetSwapchainBuffer();
 
 	commandBuffer->BeginRenderPass(swapchain->GetRenderPass());
-	commandBuffer->SetPipeline(m_Pipeline);
-	commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
-	commandBuffer->SetVertexBuffer(m_VertexBuffer);
-	commandBuffer->Draw(m_IndexBuffer->GetSize() / sizeof(uint32_t), m_IndexBuffer);
+	//commandBuffer->SetPipeline(m_Pipeline);
+	//commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
+	//commandBuffer->SetVertexBuffer(m_VertexBuffer);
+	//commandBuffer->Draw(m_IndexBuffer->GetSize() / sizeof(uint32_t), m_IndexBuffer);
 	commandBuffer->EndRenderPass();
 }
 

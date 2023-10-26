@@ -28,7 +28,7 @@ void TriangleTest::Init()
 							{ "a_Color",	ShaderDataType::Float4 }
 	};
 
-	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/triangle.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/triangle.glsl", m_Window->GetWindowInfo().SelectedAPI);
 
 	BufferCreateInfo vbo = {};
 	vbo.Name = "TriangleVBO";
@@ -44,12 +44,12 @@ void TriangleTest::Init()
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
 	spec.DepthTest = false;
 	spec.pBufferLayout = &layout;
-	spec.ShaderCodeCount = code.size();
-	spec.pShaderCode = code.data();
+	//spec.ShaderCodeCount = code.size();
+	//spec.pShaderCode = code.data();
 
 	{
 		m_VertexBuffer = GPUBuffer::Create(&vbo);
-		m_Pipeline = Pipeline::Create(&spec);
+		//m_Pipeline = Pipeline::Create(&spec);
 	}
 }
 
@@ -59,9 +59,9 @@ void TriangleTest::Run()
 	auto commandBuffer = swapchain->GetSwapchainBuffer();
 
 	commandBuffer->BeginRenderPass(swapchain->GetRenderPass());
-	commandBuffer->SetPipeline(m_Pipeline);
-	commandBuffer->SetVertexBuffer(m_VertexBuffer);
-	commandBuffer->Draw(6);
+	//commandBuffer->SetPipeline(m_Pipeline);
+	//commandBuffer->SetVertexBuffer(m_VertexBuffer);
+	//commandBuffer->Draw(6);
 	commandBuffer->EndRenderPass();
 }
 

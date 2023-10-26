@@ -43,7 +43,8 @@ workspace "Hazard"
 	xcodebuildsettings 
 	{
     	    ["SDKROOT"] = "iphoneos",
-	    ["VALIDATE_WORKSPACE"] = "NO"
+	    ["VALIDATE_WORKSPACE"] = "YES",
+	    ["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] =" arm64"
 	}
  
     filter "system:ios or system:macosx"

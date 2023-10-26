@@ -1,7 +1,12 @@
 #pragma once
 
+#include "Core/Core.h"
+#ifdef HZR_DESKTOP
+
 #include "Core/Rendering/Shader.h"
 #include "Core/RenderContextCreateInfo.h"
+
+#include <spirv_cross/spirv_reflect.hpp>
 
 namespace HazardRenderer
 {
@@ -34,7 +39,7 @@ namespace HazardRenderer
 		uint64_t DefineCount = 0;
 		ShaderDefine* pDefines = nullptr;
 	};
-
+    
 	class ShaderCompiler
 	{
 	public:
@@ -50,3 +55,4 @@ namespace HazardRenderer
         static std::vector<ShaderMemberType> GetTypeMembers(spirv_cross::Compiler& compiler, spirv_cross::Resource resource);
 	};
 }
+#endif

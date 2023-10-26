@@ -1,6 +1,6 @@
 #ifdef HZR_PLATFORM_IOS
 #import "AppDelegate.h"
-#import "DefaultViewController.h"
+#import "IOSViewController.h"
 
 @interface AppDelegate ()
 
@@ -11,7 +11,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    printf("Using: %s", NSStringFromClass([DefaultViewController class]).UTF8String);
+    
+    printf("Using: %s \n", NSStringFromClass([IOSViewController class]).UTF8String);
     
     return YES;
 }

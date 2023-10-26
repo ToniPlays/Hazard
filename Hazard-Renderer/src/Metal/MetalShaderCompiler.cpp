@@ -2,6 +2,7 @@
 #include "MetalShaderCompiler.h"
 
 #ifdef HZR_INCLUDE_METAL
+#ifdef HZR_DESKTOP
 
 #include "Profiling/Timer.h"
 
@@ -154,4 +155,5 @@ namespace HazardRenderer::Metal
         return result;
     }
 }
+#endif
 #endif

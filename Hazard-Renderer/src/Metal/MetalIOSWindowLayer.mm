@@ -3,6 +3,7 @@
 
 #ifdef HZR_PLATFORM_IOS
 
+    #import "Ios/HazardViewController.h"
     #import <Metal/Metal.h>
     #import <QuartzCore/CAMetalLayer.h>
     #import <CoreGraphics/CGColor.h>
@@ -17,26 +18,32 @@
             w = window.GetWidth();
             h = window.GetHeight();
             
-            CGColorRef color = CGColorCreateSRGB(1.0f, 1.0f, 1.0f, 1.0f);
-            
-            
             id<MTLDevice> dev = (__bridge id<MTLDevice>)device;
             
-            CAMetalLayer* metalLayer = [CAMetalLayer layer];
-            metalLayer.device = dev;
-            metalLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-            metalLayer.drawableSize = { (CGFloat)w, (CGFloat)h };
-            metalLayer.frame.size = { (CGFloat)w, (CGFloat)h };
-            metalLayer.backgroundColor = color;
-                        
-            m_Width = w;
-            m_Height = h;
+            UIApplication* app = [UIApplication sharedApplication];
+            HazardViewController* controller = (HazardViewController*)[[[app delegate] window] rootViewController];
             
-            m_Layer = (__bridge CA::MetalLayer*)metalLayer;
+            MTKView* view = [controller GetMTKView];
+            view.drawableSize = { (CGFloat)w, (CGFloat)h};
+            view.backgroundColor = [UIColor whiteColor];
+            view.device = dev;
+            view.layer.frame.size = view.drawableSize;
+            
+            m_Width = view.frame.size.width;
+            m_Height = view.frame.size.height;
+            
+            m_Layer = (__bridge CA::MetalLayer*)view.layer;
+            std::cout << "BIG OUCH" << std::endl;
         }
         void MetalWindowLayer::Resize(uint32_t width, uint32_t height)
         {
+            m_Width = width;
+            m_Height = height;
             
+            CAMetalLayer* metalLayer = (__bridge CAMetalLayer*)m_Layer;
+            
+            metalLayer.frame.size = { (CGFloat)m_Width, (CGFloat)m_Height};
+            metalLayer.drawableSize = metalLayer.frame.size;
         }
 
         CA::MetalDrawable* MetalWindowLayer::GetNextDrawable()

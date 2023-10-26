@@ -13,20 +13,21 @@ namespace HazardRenderer::Metal {
     MetalSwapchain::MetalSwapchain(Window* window)
     {
         m_Window = window;
+        
+        auto device = MetalContext::GetInstance()->GetDevice().As<MetalPhysicalDevice>();
+        
+        m_MetalLayer = hnew MetalWindowLayer(*window, device->GetMetalDevice());
     }
 
     void MetalSwapchain::Create(uint32_t* width, uint32_t* height, bool vsync)
     {
         glm::vec2 scale = m_Window->GetWindowInfo().FramebufferScale;
         
-        m_Width = *width * scale.x;
-        m_Height = *height * scale.y;
-        
         m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("Swapchain");
         
         if (m_DefaultFramebuffer)
         {
-            m_DefaultFramebuffer->Resize_RT(m_Width, m_Height);
+            m_DefaultFramebuffer->Resize_RT(m_MetalLayer->GetWidth(), m_MetalLayer->GetHeight());
             return;
         }
 
@@ -58,15 +59,12 @@ namespace HazardRenderer::Metal {
 
             m_DefaultRenderPass = RenderPass::Create(&renderPassInfo);
         }
-        Resize(m_Width, m_Height);
+        Resize(m_MetalLayer->GetWidth(), m_MetalLayer->GetHeight());
     }
 
     void MetalSwapchain::Resize(uint32_t width, uint32_t height)
     {
-        m_Width = width;
-        m_Height = height;
-        
-        MetalContext::GetWindowLayer()->Resize(m_Width, m_Height);
+        m_MetalLayer->Resize(width, height);
     }
 
     void MetalSwapchain::BeginFrame()
@@ -84,6 +82,9 @@ namespace HazardRenderer::Metal {
         mtlCommandBuffer->presentDrawable(m_Drawable);
         mtlCommandBuffer->commit();
         mtlCommandBuffer->waitUntilCompleted();
+        
+        mtlCommandBuffer->release();
+        m_Drawable->release();
     }
 }
 #endif

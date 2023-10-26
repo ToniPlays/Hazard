@@ -43,6 +43,7 @@ namespace HazardRenderer
 
         s_DebugCallback = info->pAppInfo->MessageCallback;
         m_WindowData.EventCallback = info->pAppInfo->EventCallback;
+        m_WindowData.FramebufferScale = { 2.0f, 2.0f };
 
         if (!m_WindowData.EventCallback)
             m_WindowData.EventCallback = [](Event& e) {};
@@ -56,7 +57,7 @@ namespace HazardRenderer
         {
             HazardWindowCreateInfo windowInfo = info->pWindows[0];
             m_WindowData.Title = windowInfo.Title;
-            m_WindowData.Platform = "MacOS";
+            m_WindowData.Platform = "iOS";
             m_WindowData.SelectedAPI = info->Renderer;
             m_WindowData.HasTitleBar = windowInfo.HasTitlebar;
             m_WindowData.Width = windowInfo.Extent.Width;
@@ -66,18 +67,7 @@ namespace HazardRenderer
             m_WindowData.Window = this;
 
             m_Context = GraphicsContext::Create(&m_WindowData);
-
-            if (windowInfo.FullScreen)
-            {
                 
-                if (m_WindowData.Width <= 0 || m_WindowData.Height <= 0)
-                {
-                    
-                }
-            }
-                
-            //Create window
-        
 
             if (info->pAppInfo->IconCount > 0)
                 SetWindowIcon(info->pAppInfo->IconCount, info->pAppInfo->pIcons);

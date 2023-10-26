@@ -1,5 +1,6 @@
 #include "VulkanShaderCompiler.h"
 
+#ifdef HZR_DESKTOP
 
 #include "MathCore.h"
 #include "Profiling/Timer.h"
@@ -73,3 +74,4 @@ namespace HazardRenderer::Vulkan
         return succeeded;
     }
 }
+#endif

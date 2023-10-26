@@ -4,6 +4,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "MetalContext.h"
+#include "MetalWindowLayer.h"
 
 namespace CA
 {
@@ -23,8 +24,8 @@ namespace HazardRenderer::Metal {
         void BeginFrame() override;
         void Present() override;
 
-        uint32_t GetWidth() const override { return m_Width; };
-        uint32_t GetHeight() const override { return m_Height; };
+        uint32_t GetWidth() const override { return m_MetalLayer->GetWidth(); };
+        uint32_t GetHeight() const override { return m_MetalLayer->GetHeight(); };
 
         Ref<RenderCommandBuffer> GetSwapchainBuffer() override { return m_RenderCommandBuffer; }
 
@@ -33,13 +34,14 @@ namespace HazardRenderer::Metal {
         
         //Metal specific
         CA::MetalDrawable* GetDrawable() { return m_Drawable; }
+        MetalWindowLayer* GetWindowLayer() { return m_MetalLayer; };
+        
         void Create(uint32_t* width, uint32_t* height, bool vsync = true);
         
     private:
-        uint32_t m_Width;
-        uint32_t m_Height;
-        
         Window* m_Window = nullptr;
+        MetalWindowLayer* m_MetalLayer;
+        
         Ref<RenderPass> m_RenderPass;
         Ref<RenderCommandBuffer> m_RenderCommandBuffer;
         Ref<FrameBuffer> m_DefaultFramebuffer;

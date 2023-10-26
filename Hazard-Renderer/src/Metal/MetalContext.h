@@ -30,7 +30,7 @@ namespace HazardRenderer::Metal
         //Metal specific
         static Ref<MetalPhysicalDevice> GetMetalDevice() { return s_Instance->m_PhysicalDevice; }
         static MetalContext* GetInstance() { return s_Instance; }
-        static MetalWindowLayer* GetWindowLayer() { return s_Instance->m_MetalLayer; }
+        static MetalWindowLayer* GetWindowLayer();
     
     private:
         Window* m_Window;
@@ -38,8 +38,6 @@ namespace HazardRenderer::Metal
         static ErrorCallback s_Callback;
         
         inline static MetalContext* s_Instance;
-        
-        MetalWindowLayer* m_MetalLayer;
         Ref<MetalPhysicalDevice> m_PhysicalDevice;
         Ref<MetalSwapchain> m_Swapchain;
     

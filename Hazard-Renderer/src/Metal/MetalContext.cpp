@@ -26,12 +26,11 @@ namespace HazardRenderer::Metal
     {
         m_Window = window;
         
+        //Get preferred size
         uint32_t w = window->GetWidth();
         uint32_t h = window->GetHeight();
         
         m_PhysicalDevice = hnew MetalPhysicalDevice();
-        m_MetalLayer = hnew MetalWindowLayer(*window, m_PhysicalDevice->GetMetalDevice());
-        m_MetalLayer->Resize(w, h);
         
         m_Swapchain = Ref<MetalSwapchain>::Create(window);
         m_Swapchain->Create(&w, &h, m_Window->IsVSync());
@@ -45,7 +44,7 @@ namespace HazardRenderer::Metal
         whiteTexture.Data = Buffer(&data, sizeof(uint32_t));
         whiteTexture.Format = ImageFormat::RGBA;
         whiteTexture.Usage = ImageUsage::Texture;
-
+        
         m_DefaultResources.WhiteTexture = Image2D::Create(&whiteTexture);
     }
 
@@ -61,6 +60,7 @@ namespace HazardRenderer::Metal
     {
         m_Swapchain->GetRenderTarget()->GetSpecification().ClearColor = color;
     }
+    MetalWindowLayer* MetalContext::GetWindowLayer() { return s_Instance->m_Swapchain->GetWindowLayer();
+    }
 }
-
 #endif
