@@ -4,8 +4,16 @@
 #include "Core/Events/MouseCode.h"
 #include "Core/Events/GamepadCodes.h"
 #include "Core/Window.h"
+#include "Core/Events/Events.h"
 #include <glm/glm.hpp>
 
+enum class InputState
+{
+	Released = 0,
+	Press = 1,
+	Down = 2,
+	Up = 3
+};
 
 struct Joystick
 {
@@ -21,6 +29,7 @@ class Input
 public:
 	static void Init(HazardRenderer::Window& window);
 	static void Update();
+	static void OnEvent(Event& e);
 	static bool AnyKey();
 	static bool IsKeyDown(const Key::KeyCode& key);
 	static bool IsKeyPressed(const Key::KeyCode& key);
@@ -41,7 +50,20 @@ public:
 	static const std::vector<Joystick>& GetGamepads() { return s_Gamepads; }
 
 private:
+	static bool OnKeyPressed(KeyPressedEvent& e);
+	static bool OnKeyReleased(KeyReleasedEvent& e);
+
+	static bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+	static bool OnMouseButtonReleased(MouseButtonReleasedEvent& e);
+
+	static bool OnMouseMoved(MouseMovedEvent& e);
+	static bool OnMouseScrolled(MouseScrolledEvent& e);
+
+private:
     inline static glm::vec2 s_MousePos;
-	inline static int s_KeyStates[384];
+	inline static glm::vec2 s_PreviosMousePos;
+	inline static uint8_t s_MouseButtons[128];
+	inline static uint64_t s_KeysPressed = 0;
+	inline static uint8_t s_KeyStates[384];
 	inline static std::vector<Joystick> s_Gamepads;
 };

@@ -7,72 +7,64 @@
 #include "spdlog/fmt/fmt.h"
 #include <Windows/WindowsWindow.h>
 
-#ifdef HZR_PLATFORM_WINDOWS
-
-GLFWwindow* s_Window = nullptr;
-bool anyKey = false;
-
 void Input::Init(HazardRenderer::Window& window)
 {
-	s_Window = (GLFWwindow*)window.GetNativeWindow();
-	s_Gamepads.resize(GLFW_JOYSTICK_LAST);
+	s_Gamepads.resize(16);
 
 	for (uint32_t i = 0; i < s_Gamepads.size(); i++)
 	{
 		if (glfwJoystickPresent(i))
 			ConnectGamepad(i);
 	}
-
 }
 bool Input::AnyKey()
 {
-	return anyKey;
+	return s_KeysPressed > 0;
 }
 bool Input::IsKeyDown(const Key::KeyCode& key)
 {
+	if (key >= 385) return false;
 	auto state = s_KeyStates[key];
-	return state == GLFW_PRESS || state == GLFW_REPEAT;
+	return state != (uint8_t)InputState::Released;
 }
 bool Input::IsKeyPressed(const Key::KeyCode& key)
 {
+	if (key >= 385) return false;
 	auto state = s_KeyStates[key];
-	return state == GLFW_PRESS;
+	return state == (uint8_t)InputState::Press;
 }
 bool Input::IsKeyReleased(const Key::KeyCode& key)
 {
+	if (key >= 385) return false;
 	auto state = s_KeyStates[key];
-	return state == GLFW_RELEASE;
+	return state == (uint8_t)InputState::Released;
 }
 bool Input::IsMouseButtonDown(const Mouse::MouseCode& code)
 {
-	auto state = glfwGetMouseButton(s_Window, static_cast<int32_t>(code));
-	return state == GLFW_PRESS || state == GLFW_REPEAT;
+	if (code >= 128) return false;
+	auto state = s_MouseButtons[code];
+	return state == (uint8_t)InputState::Press || state == (uint8_t)InputState::Down;
 }
 bool Input::IsMouseButtonPressed(const Mouse::MouseCode& code)
 {
-	auto state = glfwGetMouseButton(s_Window, static_cast<int32_t>(code));
-	return state == GLFW_PRESS;
+	if (code >= 128) return false;
+	auto state = s_MouseButtons[code];
+	return state == (uint8_t)InputState::Press;
 }
 
 glm::vec2 Input::GetMousePos()
 {
-	double xpos, ypos;
-	glfwGetCursorPos(s_Window, &xpos, &ypos);
-
-	return { (float)xpos, (float)ypos };
+	return s_MousePos;
 }
 
 void Input::Update()
 {
 	HZR_PROFILE_FUNCTION();
-	anyKey = false;
+
 	for (uint32_t i = 0; i < 384; i++)
 	{
 		if (s_KeyStates[i] == GLFW_PRESS)
-		{
-			anyKey |= true;
 			UpdateKey(i, GLFW_REPEAT);
-		}
 	}
 
 	for (uint32_t g = 0; g < s_Gamepads.size(); g++)
@@ -170,4 +162,53 @@ bool Input::IsAxis(int device, const Gamepad::GamepadCode& code)
 	auto& axis = s_Gamepads[device].Axis[code - Gamepad::AxisFirst];
 	return axis != 0.0f;
 }
-#endif
+
+void Input::OnEvent(Event& e)
+{
+	EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<KeyPressedEvent>(OnKeyPressed);
+	dispatcher.Dispatch<KeyReleasedEvent>(OnKeyReleased);
+	dispatcher.Dispatch<MouseButtonPressedEvent>(OnMouseButtonPressed);
+	dispatcher.Dispatch<MouseButtonReleasedEvent>(OnMouseButtonReleased);
+	dispatcher.Dispatch<MouseMovedEvent>(OnMouseMoved);
+	dispatcher.Dispatch<MouseScrolledEvent>(OnMouseScrolled);
+}
+
+bool Input::OnKeyPressed(KeyPressedEvent& e)
+{
+	s_KeysPressed++;
+	s_KeyStates[e.GetKeyCode()] = (uint8_t)InputState::Press;
+	return false;
+}
+
+bool Input::OnKeyReleased(KeyReleasedEvent& e)
+{
+	s_KeysPressed--;
+	s_KeyStates[e.GetKeyCode()] = (uint8_t)InputState::Released;
+	return false;
+}
+
+bool Input::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+{
+	s_KeysPressed++;
+	s_MouseButtons[e.GetMouseButton()] = (uint8_t)InputState::Press;
+	return false;
+}
+
+bool Input::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
+{
+	s_KeysPressed--;
+	s_MouseButtons[e.GetMouseButton()] = (uint8_t)InputState::Released;
+	return false;
+}
+
+bool Input::OnMouseMoved(MouseMovedEvent& e)
+{
+	s_MousePos = { e.GetX(), e.GetY() };
+	return false;
+}
+
+bool Input::OnMouseScrolled(MouseScrolledEvent& e)
+{
+	return false;
+}

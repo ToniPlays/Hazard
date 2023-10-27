@@ -246,23 +246,26 @@ namespace HazardRenderer
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent e(key, 0);
+					Input::OnEvent(e);
 					data.EventCallback(e);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					KeyReleasedEvent e(key);
+					Input::OnEvent(e);
 					data.EventCallback(e);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
 					KeyPressedEvent e(key, 1);
+					Input::OnEvent(e);
 					data.EventCallback(e);
 					break;
 				}
 			}
-			Input::UpdateKey(key, action);
+			
 		});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
@@ -272,12 +275,14 @@ namespace HazardRenderer
 				case GLFW_PRESS:
 				{
 					MouseButtonPressedEvent e(button);
+					Input::OnEvent(e);
 					data.EventCallback(e);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseButtonReleasedEvent e(button);
+					Input::OnEvent(e);
 					data.EventCallback(e);
 					break;
 				}
@@ -286,11 +291,13 @@ namespace HazardRenderer
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseScrolledEvent e((float)xOffset, (float)yOffset);
+			Input::OnEvent(e);
 			data.EventCallback(e);
 		});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			MouseMovedEvent e((float)xPos, (float)yPos);
+			Input::OnEvent(e);
 			data.EventCallback(e);
 		});
 		glfwSetJoystickCallback([](int device, int status) {
@@ -321,13 +328,6 @@ namespace HazardRenderer
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
 			data.Minimized = minimized;
 		});
-		/*
-		glfwSetTitlebarHitTestCallback(m_Window, [](GLFWwindow* window, int x, int y, int* hit) {
-			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			WindowTitleBarHitTestEvent e(x, y, *hit);
-			data.EventCallback(e);
-			});
-			*/
 	}
 	WindowsWindow::~WindowsWindow()
 	{

@@ -42,7 +42,6 @@ void TestFramework::Init()
 	binding.AxisMask = InputAxisDirection_Button;
 	binding.Groups = { kbGroup, mouseGroup };
 	binding.Callback = [&](const InputBinding& binding, uint32_t key) {
-        std::cout << key << std::endl;
 		if (binding.IsPressed()) return;
 		
 		m_TestIndex++;

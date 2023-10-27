@@ -150,10 +150,10 @@
     <ClInclude Include="src\Hazard\Core\EntryPoints\AppDelegate.h">
       <Filter>src\Hazard\Core\EntryPoints</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\EntryPoints\DefaultViewController.h">
+    <ClInclude Include="src\Hazard\Core\EntryPoints\IOSEntryPoint.h">
       <Filter>src\Hazard\Core\EntryPoints</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Core\EntryPoints\IOSEntryPoint.h">
+    <ClInclude Include="src\Hazard\Core\EntryPoints\IOSViewController.h">
       <Filter>src\Hazard\Core\EntryPoints</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Core\EntryPoints\MacOSEntryPoint.h">

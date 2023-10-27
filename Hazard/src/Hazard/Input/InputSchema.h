@@ -36,8 +36,8 @@ namespace Hazard
 		bool Inverted = false;
 
 		InputAxisDirection Direction;
-		uint32_t KeyCode;
-		uint32_t InverseKeyCode;
+		uint32_t KeyCode = UINT32_MAX;
+		uint32_t InverseKeyCode = UINT32_MAX;
 
 		float GetValueWithMultiplier() const
 		{
