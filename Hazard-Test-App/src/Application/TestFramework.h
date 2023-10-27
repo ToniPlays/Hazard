@@ -16,6 +16,7 @@ public:
     void Update() override;
 
 private: 
+    void GenerateShaders();
     void RestartTest();
 
 private:

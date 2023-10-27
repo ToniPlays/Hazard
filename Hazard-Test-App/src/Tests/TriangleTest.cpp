@@ -2,6 +2,8 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 
+#include <spdlog/fmt/fmt.h>
+
 void TriangleTest::Reset()
 {
 
@@ -28,29 +30,25 @@ void TriangleTest::Init()
 							{ "a_Color",	ShaderDataType::Float4 }
 	};
 
-	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/triangle.glsl", m_Window->GetWindowInfo().SelectedAPI);
-
 	BufferCreateInfo vbo = {};
 	vbo.Name = "TriangleVBO";
 	vbo.Size = sizeof(vertices);
 	vbo.Data = vertices;
 	vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
+	DescriptorSetLayout descriptorLayout = {};
+
 	PipelineSpecification spec = {};
 	spec.DebugName = "Pipeline";
 	spec.Usage = PipelineUsage::GraphicsBit;
-	spec.DrawType = DrawType::Fill;
-	spec.CullMode = CullMode::None;
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
-	spec.DepthTest = false;
 	spec.pBufferLayout = &layout;
-	spec.ShaderCodeCount = code.size();
-	spec.pShaderCode = code.data();
+	spec.Flags = PIPELINE_DRAW_FILL | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	spec.Shaders = { { SHADER_STAGE_VERTEX_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/triangle.Vertex.{}", "vk")) },
+				     { SHADER_STAGE_FRAGMENT_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/triangle.Fragment.{}", "vk")) } };
 
-	{
-		m_VertexBuffer = GPUBuffer::Create(&vbo);
-		m_Pipeline = Pipeline::Create(&spec);
-	}
+	m_VertexBuffer = GPUBuffer::Create(&vbo);
+	m_Pipeline = Pipeline::Create(&spec);
 }
 
 void TriangleTest::Run()
@@ -67,5 +65,5 @@ void TriangleTest::Run()
 
 void TriangleTest::Terminate()
 {
-    
+
 }

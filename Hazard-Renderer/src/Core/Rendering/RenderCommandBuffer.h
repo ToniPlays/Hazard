@@ -96,6 +96,7 @@ namespace HazardRenderer
 		virtual void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set) = 0;
 		virtual void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) = 0;
 		virtual void SetPipeline(Ref<Pipeline> pipeline) = 0;
+		virtual void SetLineWidth(float width) = 0;
 
         //Draw
 		virtual void Draw(uint64_t count, Ref<GPUBuffer> indexBuffer = nullptr) = 0;

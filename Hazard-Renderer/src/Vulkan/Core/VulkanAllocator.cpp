@@ -2,6 +2,7 @@
 #include "VulkanAllocator.h"
 #ifdef HZR_INCLUDE_VULKAN
 #include "../VulkanContext.h"
+#include "../VKUtils.h"
 
 #include "Utility/StringUtil.h"
 #include <MathCore.h>

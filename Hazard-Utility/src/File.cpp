@@ -69,7 +69,7 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, uint64
 {
 	if (size == 0) return false;
 
-	std::ofstream out(path, std::ios::out | std::ios::binary);
+	std::ofstream out(path, std::ios::binary);
 
 	if (out.is_open())
 	{
@@ -79,6 +79,16 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, uint64
 		return true;
 	}
 	return false;
+}
+bool File::WriteFile(const std::filesystem::path& file, const std::string& content)
+{
+	std::ofstream out(file);
+
+	if (!out.is_open()) return false;
+
+	out << content;
+	out.close();
+	return true;
 }
 bool File::CopyFileTo(const std::filesystem::path& source, const std::filesystem::path& dest)
 {
@@ -100,13 +110,6 @@ bool File::IsNewerThan(const std::filesystem::path& file, const std::filesystem:
 	return fTime > sTime;
 }
 
-bool File::WriteFile(const std::filesystem::path& file, const std::string& content)
-{
-	std::ofstream f(file);
-	f << content;
-	f.close();
-	return true;
-}
 
 bool File::Move(const std::filesystem::path& src, const std::filesystem::path& dst)
 {

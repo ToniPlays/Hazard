@@ -3,9 +3,6 @@
 #include "Buffer/Buffer.h"
 #include "Core/ShaderCompiler.h"
 
-#ifdef HZR_INCLUDE_METAL
-
-
 namespace HazardRenderer::Metal
 {
     struct MSLBinding {
@@ -13,6 +10,7 @@ namespace HazardRenderer::Metal
         uint32_t SamplerBinding;
     };
     #ifdef HZR_DESKTOP
+
     class MetalShaderCompiler
     {
     public:
@@ -34,4 +32,3 @@ namespace HazardRenderer::Metal
     };
     #endif
 }
-#endif

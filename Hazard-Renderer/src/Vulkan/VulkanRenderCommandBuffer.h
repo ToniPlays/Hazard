@@ -43,6 +43,7 @@ namespace HazardRenderer::Vulkan
 		void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set) override;
 		void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) override;
 		void SetPipeline(Ref<Pipeline> pipeline) override;
+		void SetLineWidth(float width) override;
 
 		void Draw(uint64_t count, Ref<GPUBuffer> indexBuffer = nullptr) override;
 		void DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;

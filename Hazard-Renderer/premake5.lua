@@ -40,7 +40,6 @@ project "Hazard-Renderer"
 	filter "system:windows"
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.VulkanUtils}",
 			"opengl32.lib"
 		}
 	filter "system:macosx or system:ios"
@@ -59,6 +58,7 @@ project "Hazard-Renderer"
 				"%{Library.ShaderC_Debug}",
 				"%{Library.SPIRV_Cross_Debug}",
 				"%{Library.SPIRV_Cross_GLSL_Debug}",
+				"%{Library.SPIRV_MSL_Debug}"
 			}
 		end
 	filter "configurations:Release"
@@ -67,6 +67,7 @@ project "Hazard-Renderer"
 				"%{Library.ShaderC_Release}",
 				"%{Library.SPIRV_Cross_Release}",
 				"%{Library.SPIRV_Cross_GLSL_Release}",
+				"%{Library.SPIRV_MSL_Release}"
 			}
 		end
 
@@ -76,5 +77,6 @@ project "Hazard-Renderer"
 				"%{Library.ShaderC_Release}",
 				"%{Library.SPIRV_Cross_Release}",
 				"%{Library.SPIRV_Cross_GLSL_Release}",
+				"%{Library.SPIRV_MSL_Release}"
 			}
 		end

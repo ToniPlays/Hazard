@@ -13,8 +13,7 @@ namespace Hazard
 	Material::Material(AssetHandle pipelineHandle) : m_PipelineHandle(pipelineHandle)
 	{
 		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
-		DescriptorSetLayout layout = pipeline->GetDescriptorSetLayout(1);
-
+		/*
 		if (layout.GetElementCount() > 0)
 		{
 			DescriptorSetCreateInfo setInfo = {};
@@ -23,5 +22,6 @@ namespace Hazard
 			setInfo.pLayout = &layout;
 			m_DescriptorSet = DescriptorSet::Create(&setInfo);
 		}
+		*/
 	}
 }

@@ -35,7 +35,7 @@ void TexturedQuadTest::Init()
 							{ "a_TextureCoords",	ShaderDataType::Float2 }
 	};
 
-	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
 	Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
 	BufferCreateInfo vbo = {};
@@ -53,13 +53,8 @@ void TexturedQuadTest::Init()
 	PipelineSpecification spec = {};
 	spec.DebugName = "Pipeline";
 	spec.Usage = PipelineUsage::GraphicsBit;
-	spec.DrawType = DrawType::Fill;
-	spec.CullMode = CullMode::None;
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
-	spec.DepthTest = false;
 	spec.pBufferLayout = &layout;
-	spec.ShaderCodeCount = code.size();
-	spec.pShaderCode = code.data();
 
 	Image2DCreateInfo imageInfo = {};
 	imageInfo.DebugName = "Image2D";
@@ -76,14 +71,14 @@ void TexturedQuadTest::Init()
 
 	m_VertexBuffer = GPUBuffer::Create(&vbo);
 	m_IndexBuffer = GPUBuffer::Create(&ibo);
-	m_Pipeline = Pipeline::Create(&spec);
+	//m_Pipeline = Pipeline::Create(&spec);
 	m_Image = Image2D::Create(&imageInfo);
 	m_Sampler = Sampler::Create(&samplerInfo);
 
 	header.ImageData.Release();
 
-	DescriptorSetLayout descriptorLayout = {
-		{ "u_Texture", 0, DESCRIPTOR_TYPE_SAMPLER_2D }
+	DescriptorSetLayout descriptorLayout = {			//VkDescriptorSetLayout
+		{ "u_Texture", 0, DESCRIPTOR_TYPE_SAMPLER_2D, }	//LayoutBinding
 	};
 
 	DescriptorSetCreateInfo descriptorInfo = {};
@@ -101,10 +96,10 @@ void TexturedQuadTest::Run()
 	auto commandBuffer = swapchain->GetSwapchainBuffer();
 
 	commandBuffer->BeginRenderPass(swapchain->GetRenderPass());
-	commandBuffer->SetPipeline(m_Pipeline);
-	commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
-	commandBuffer->SetVertexBuffer(m_VertexBuffer);
-	commandBuffer->Draw(m_IndexBuffer->GetSize() / sizeof(uint32_t), m_IndexBuffer);
+	//commandBuffer->SetPipeline(m_Pipeline);
+	//commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
+	//commandBuffer->SetVertexBuffer(m_VertexBuffer);
+	//commandBuffer->Draw(m_IndexBuffer->GetSize() / sizeof(uint32_t), m_IndexBuffer);
 	commandBuffer->EndRenderPass();
 }
 

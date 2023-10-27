@@ -37,26 +37,23 @@ void ComputeShaderTest::Init()
 	vbo.Data = &vertices;
 	vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
 
 	PipelineSpecification spec = {};
 	spec.DebugName = "Rasterized";
 	spec.Usage = PipelineUsage::GraphicsBit;
-	spec.DrawType = DrawType::Fill;
-	spec.CullMode = CullMode::None;
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
-	spec.DepthTest = false;
 	spec.pBufferLayout = &layout;
-	spec.ShaderCodeCount = code.size();
-	spec.pShaderCode = code.data();
+	//spec.ShaderCodeCount = code.size();
+	//spec.pShaderCode = code.data();
 
-	std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/compute.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	//std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/compute.glsl", m_Window->GetWindowInfo().SelectedAPI);
 
 	PipelineSpecification computeSpec = {};
 	computeSpec.DebugName = "Compute";
 	computeSpec.Usage = PipelineUsage::ComputeBit;
-	computeSpec.ShaderCodeCount = computeCode.size();
-	computeSpec.pShaderCode = computeCode.data();
+	//computeSpec.ShaderCodeCount = computeCode.size();
+	//computeSpec.pShaderCode = computeCode.data();
 
 	Image2DCreateInfo outputImageSpec = {};
 	outputImageSpec.DebugName = "ComputeOutput";
@@ -90,10 +87,10 @@ void ComputeShaderTest::Init()
 	descriptorSpec.pLayout = &descriptorLayout;
 
 	m_VertexBuffer = GPUBuffer::Create(&vbo);
-	m_Pipeline = Pipeline::Create(&spec);
+	//m_Pipeline = Pipeline::Create(&spec);
 	m_DescriptorSet = DescriptorSet::Create(&descriptorSpec);
 	m_ComputeDescriptorSet = DescriptorSet::Create(&computeDescriptorSpec);
-	m_ComputePipeline = Pipeline::Create(&computeSpec);
+	//m_ComputePipeline = Pipeline::Create(&computeSpec);
 	m_OutputImage = Image2D::Create(&outputImageSpec);
 	m_Sampler = Sampler::Create(&samplerInfo);
 
@@ -103,9 +100,9 @@ void ComputeShaderTest::Init()
 	m_ComputeDescriptorSet->Write(0, 0, m_OutputImage, nullptr);
 
 	computeBuffer->Begin();
-	computeBuffer->SetPipeline(m_ComputePipeline);
-	computeBuffer->SetDescriptorSet(m_ComputeDescriptorSet, 0);
-	computeBuffer->DispatchCompute({ m_OutputImage->GetWidth(), m_OutputImage->GetHeight(), 1 });
+	//computeBuffer->SetPipeline(m_ComputePipeline);
+	//computeBuffer->SetDescriptorSet(m_ComputeDescriptorSet, 0);
+	//computeBuffer->DispatchCompute({ m_OutputImage->GetWidth(), m_OutputImage->GetHeight(), 1 });
 	computeBuffer->End();
 	computeBuffer->Submit();
 
@@ -117,10 +114,10 @@ void ComputeShaderTest::Run()
 	auto renderPass = swapchain->GetRenderPass();
 
 	commandBuffer->BeginRenderPass(renderPass);
-	commandBuffer->SetPipeline(m_Pipeline);
-	commandBuffer->SetVertexBuffer(m_VertexBuffer);
-	commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
-	commandBuffer->Draw(6);
+	//commandBuffer->SetPipeline(m_Pipeline);
+	//commandBuffer->SetVertexBuffer(m_VertexBuffer);
+	//commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
+	//commandBuffer->Draw(6);
 	commandBuffer->EndRenderPass();
 }
 void ComputeShaderTest::Terminate()

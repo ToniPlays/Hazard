@@ -6,6 +6,7 @@
 #include <vulkan/vulkan.h>
 #include "../VulkanContext.h"
 #include "Core/Renderer.h"
+#include "../VKUtils.h"
 #include "spdlog/fmt/fmt.h"
 
 static PFN_vkCmdBuildAccelerationStructuresKHR fpCmdBuildAccelerationStructuresKHR;

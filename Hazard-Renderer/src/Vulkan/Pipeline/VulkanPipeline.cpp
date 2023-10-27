@@ -12,7 +12,6 @@ namespace HazardRenderer::Vulkan
 {
 	static PFN_vkCreateRayTracingPipelinesKHR fpCreateRayTracingPipelinesKHR;
 
-
 	VulkanPipeline::VulkanPipeline(PipelineSpecification* specs) : m_Specs(*specs)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -21,11 +20,7 @@ namespace HazardRenderer::Vulkan
 		if (device->GetPhysicalDevice()->SupportsRaytracing())
 			GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateRayTracingPipelinesKHR);
 
-		std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
-		for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)
-			code[i] = specs->pShaderCode[i];
-
-		m_Shader = Shader::Create(code).As<VulkanShader>();
+		m_Shader = Shader::Create(specs->Shaders).As<VulkanShader>();
 
 		if (specs->pBufferLayout)
 			m_Layout = BufferLayout::Copy(*specs->pBufferLayout);
@@ -68,8 +63,6 @@ namespace HazardRenderer::Vulkan
 	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
 	{
 		auto bindingPoint = GetBindingPoint();
-		if (m_Specs.LineWidth > 1.0f)
-			vkCmdSetLineWidth(commandBuffer, m_Specs.LineWidth);
 		vkCmdBindPipeline(commandBuffer, bindingPoint, m_Pipeline);
 	}
 	VkPipelineBindPoint VulkanPipeline::GetBindingPoint() const
@@ -95,26 +88,6 @@ namespace HazardRenderer::Vulkan
 		}
 	}
 
-	DescriptorSetLayout VulkanPipeline::GetDescriptorSetLayout(uint32_t set) const
-	{
-		auto& data = m_Shader->GetShaderData();
-		std::vector<DescriptorSetElement> elements;
-
-		if (data.UniformsDescriptions.contains(set))
-		{
-			for (auto& [binding, buffer] : data.UniformsDescriptions.at(set))
-				elements.push_back({ buffer.Name, binding, DESCRIPTOR_TYPE_UNIFORM_BUFFER });
-		}
-
-		if (data.ImageSamplers.contains(set))
-		{
-			for (auto& [binding, sampler] : data.ImageSamplers.at(set))
-				elements.push_back({ sampler.Name, binding, sampler.ArraySize, DESCRIPTOR_TYPE_SAMPLER_2D });
-		}
-
-		return { elements };
-	}
-
 	void VulkanPipeline::InvalidateGraphicsPipeline()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -122,11 +95,11 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Shader, "No shader");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+
 		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
+		auto setLayouts = std::vector<VkDescriptorSetLayout>(0);
 
-		auto& setLayouts = m_Shader->GetDescriptorSetLayouts();
-		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
-
+		auto pushConstantRanges = std::unordered_map<std::string, PushConstantRange>();
 		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
 		{
 			uint32_t i = 0;
@@ -141,6 +114,7 @@ namespace HazardRenderer::Vulkan
 				m_PushConstantFlags |= vkRange.stageFlags;
 			}
 		}
+
 		VkPipelineLayoutCreateInfo layoutInfo = {};
 		layoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 		layoutInfo.setLayoutCount = setLayouts.size();
@@ -158,20 +132,21 @@ namespace HazardRenderer::Vulkan
 
 		VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
 		inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-		inputAssembly.topology = VkUtils::GetVulkanTopology(m_Specs.DrawType);
+		inputAssembly.topology = VkUtils::GetVulkanTopology(m_Specs.Flags);
 
 		VkPipelineRasterizationStateCreateInfo rasterizationState = {};
 		rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-		rasterizationState.polygonMode = VkUtils::GetVulkanPolygonMode(m_Specs.DrawType);
-		rasterizationState.cullMode = VkUtils::GetVulkanCullMode(m_Specs.CullMode);
+		rasterizationState.polygonMode = VkUtils::GetVulkanPolygonMode(m_Specs.Flags);
+		rasterizationState.cullMode = VkUtils::GetVulkanCullMode(m_Specs.Flags);
 		rasterizationState.frontFace = VK_FRONT_FACE_CLOCKWISE;
 		rasterizationState.depthClampEnable = VK_FALSE;
 		rasterizationState.rasterizerDiscardEnable = VK_FALSE;
 		rasterizationState.depthBiasEnable = VK_FALSE;
-		rasterizationState.lineWidth = m_Specs.LineWidth;
+		rasterizationState.lineWidth = 1.0f;
 
 		uint64_t colorAttachmentCount = fb->GetSpecification().SwapChainTarget ? 1 : fb->GetColorAttachmentCount();
 		std::vector<VkPipelineColorBlendAttachmentState> blendStates(colorAttachmentCount);
+
 		if (fb->GetSpecification().SwapChainTarget)
 		{
 			blendStates[0].colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
@@ -215,7 +190,7 @@ namespace HazardRenderer::Vulkan
 		dynamicStates.push_back(VK_DYNAMIC_STATE_VIEWPORT);
 		dynamicStates.push_back(VK_DYNAMIC_STATE_SCISSOR);
 
-		if (m_Specs.DrawType == DrawType::Line)
+		if (m_Specs.Flags & PIPELINE_DRAW_LINE)
 			dynamicStates.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
 
 		VkPipelineDynamicStateCreateInfo dynamicState = {};
@@ -225,8 +200,8 @@ namespace HazardRenderer::Vulkan
 
 		VkPipelineDepthStencilStateCreateInfo depthStencilCreateInfo = {};
 		depthStencilCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-		depthStencilCreateInfo.depthTestEnable = m_Specs.DepthTest ? VK_TRUE : VK_FALSE;
-		depthStencilCreateInfo.depthWriteEnable = m_Specs.DepthWrite ? VK_TRUE : VK_FALSE;
+		depthStencilCreateInfo.depthTestEnable = m_Specs.Flags & PIPELINE_DEPTH_TEST ? VK_TRUE : VK_FALSE;
+		depthStencilCreateInfo.depthWriteEnable = m_Specs.Flags & PIPELINE_DEPTH_WRITE ? VK_TRUE : VK_FALSE;
 		depthStencilCreateInfo.depthCompareOp = VkUtils::GetVulkanCompareOp(m_Specs.DepthOperator);
 		depthStencilCreateInfo.depthBoundsTestEnable = VK_FALSE;
 		depthStencilCreateInfo.back.failOp = VK_STENCIL_OP_KEEP;
@@ -259,6 +234,7 @@ namespace HazardRenderer::Vulkan
 
 		std::vector<VkVertexInputAttributeDescription> inputAttrib(m_Layout.GetElementCount());
 		uint32_t location = 0;
+
 		for (auto& element : m_Layout.GetElements())
 		{
 			if (element.ElementDivisor != PerVertex) continue;
@@ -285,7 +261,7 @@ namespace HazardRenderer::Vulkan
 		inputStateInfo.vertexAttributeDescriptionCount = (uint32_t)inputAttrib.size();
 		inputStateInfo.pVertexAttributeDescriptions = inputAttrib.data();
 
-		const auto& shaderStages = m_Shader->GetPipelineShaderStageCreateInfos();
+		auto& shaderStages = m_Shader->GetShaderStageCreateInfos();
 
 		pipelineInfo.stageCount = (uint32_t)shaderStages.size();
 		pipelineInfo.pStages = shaderStages.data();
@@ -313,9 +289,9 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute pipeline");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		auto& setLayouts = m_Shader->GetDescriptorSetLayouts();
+		auto setLayouts = std::vector<VkDescriptorSetLayout>(1);// m_Shader->GetDescriptorSetLayouts();
 
-		const auto& pushConstantRanges = m_Shader->GetPushConstantRanges();
+		const auto& pushConstantRanges = std::unordered_map<std::string, PushConstantRange>();// m_Shader->GetPushConstantRanges();
 		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
 		{
 			uint32_t i = 0;
@@ -342,12 +318,12 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE_LAYOUT, fmt::format("VkPipelineLayout {}", m_Specs.DebugName), m_PipelineLayout);
 
-		VkPipelineShaderStageCreateInfo computeShaderInfo = m_Shader->GetPipelineShaderStageCreateInfos()[0];
+		auto stage = m_Shader->GetShaderStageCreateInfos()[0];
 
 		VkComputePipelineCreateInfo pipelineInfo = {};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
 		pipelineInfo.layout = m_PipelineLayout;
-		pipelineInfo.stage = computeShaderInfo;
+		pipelineInfo.stage = stage;
 
 		VkPipelineCacheCreateInfo pipelineCacheInfo = {};
 		pipelineCacheInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
@@ -360,7 +336,7 @@ namespace HazardRenderer::Vulkan
 	{
 		m_ShaderGroups.clear();
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		auto& setLayouts = m_Shader->GetDescriptorSetLayouts();
+		auto setLayouts = std::vector<VkDescriptorSetLayout>(1);// m_Shader->GetDescriptorSetLayouts();
 
 		VkPipelineLayoutCreateInfo pipelineLayout = {};
 		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -369,7 +345,7 @@ namespace HazardRenderer::Vulkan
 
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE_LAYOUT, fmt::format("VkPipelineLayout {}", m_Specs.DebugName), m_PipelineLayout);
-		auto stages = m_Shader->GetPipelineShaderStageCreateInfos();
+		auto stages = std::vector<VkPipelineShaderStageCreateInfo>(3);
 
 		//Raygen group
 		{

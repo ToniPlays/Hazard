@@ -66,7 +66,6 @@ project "HazardEditor"
 	filter "system:windows"
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.VulkanUtils}",
 			"Hazard-Script",
 			"%{Library.Assimp_Lib}",
 			"%{LibraryDir.CoralNetHost}"

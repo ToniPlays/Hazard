@@ -1,0 +1,16 @@
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+constant uint3 gl_WorkGroupSize [[maybe_unused]] = uint3(1u);
+
+kernel void main0(texture2d<float, access::write> o_OutputImage [[texture(0)]], uint3 gl_GlobalInvocationID [[thread_position_in_grid]], uint3 gl_NumWorkGroups [[threadgroups_per_grid]])
+{
+    float4 value = float4(1.0);
+    int2 texelCoord = int2(gl_GlobalInvocationID.xy);
+    value.y = 1.0;
+    value.x = float(texelCoord.x) / float(gl_NumWorkGroups.x);
+    value.z = float(texelCoord.y) / float(gl_NumWorkGroups.y);
+    o_OutputImage.write(value, uint2(texelCoord));
+}

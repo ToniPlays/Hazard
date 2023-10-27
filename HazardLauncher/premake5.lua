@@ -64,10 +64,8 @@ project "HazardLauncher"
 		}
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.VulkanUtils}",
 			"Hazard-Script",
 			"Optick",
-			"%{Library.Mono_Debug_Lib}",
 			"%{Library.Assimp_Lib}",
 		}
 		includedirs {

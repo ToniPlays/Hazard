@@ -1,18 +1,19 @@
 
 #include "VulkanDescriptorSet.h"
+#ifdef HZR_INCLUDE_VULKAN
+
 #include "../VulkanContext.h"
 #include "Core/Renderer.h"
 #include "../Textures/VulkanImage2D.h"
 #include "../Textures/VulkanCubemapTexture.h"
 #include "../Textures/VulkanSampler.h"
 #include "VulkanGPUBuffer.h"
-#include "spdlog/fmt/fmt.h"
+#include "../VKUtils.h"
 
-#ifdef HZR_INCLUDE_VULKAN
+#include "spdlog/fmt/fmt.h"
 
 namespace HazardRenderer::Vulkan
 {
-
 	VulkanDescriptorSet::VulkanDescriptorSet(DescriptorSetCreateInfo* createInfo)
 	{
 		m_Set = createInfo->Set;

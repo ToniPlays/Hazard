@@ -8,7 +8,6 @@
 #include "Core/VulkanPhysicalDevice.h"
 #include "Core/VulkanDevice.h"
 #include "Core/VulkanSwapChain.h"
-#include "VkUtils.h"
 
 #include "GLFW/glfw3.h"
 #include <vulkan/vulkan.h>

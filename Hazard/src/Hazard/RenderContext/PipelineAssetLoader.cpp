@@ -29,16 +29,11 @@ namespace Hazard
 
 		PipelineAssetHeader header = {};
 		header.Usage = specs.Usage;
-		header.DrawType = specs.DrawType;
-		header.CullMode = specs.CullMode;
-		header.LineWidth = specs.LineWidth;
-		header.DepthTest = specs.DepthTest;
-		header.DepthWrite = specs.DepthWrite;
 		header.DepthOperator = specs.DepthOperator;
-		header.UseShaderLayout = specs.UseShaderLayout;
 		header.ElementCount = 0;
 		header.StageCount = pipeline->GetShader()->GetShaderCode().size();
 		header.ShaderHandle = 0;
+		header.Flags = specs.Flags;
 
 		return nullptr;
 	}

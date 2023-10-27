@@ -58,9 +58,8 @@ project "Hazard-Test-App"
 		}
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.VulkanUtils}",
 			"Hazard-Script",
-			"%{Library.Assimp_Lib}",
+			"%{Library.Assimp_Lib}"
 		}
 		postbuildcommands
 		{

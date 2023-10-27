@@ -24,13 +24,9 @@ namespace Hazard
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "LineShader.glsl";
-			specs.DrawType = DrawType::Line;
 			specs.Usage = PipelineUsage::GraphicsBit;
-			specs.CullMode = CullMode::None;
-			specs.LineWidth = 3.0f;
-			specs.ShaderCodeCount = asset->ShaderCode.size();
-			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
+			specs.Flags = PIPELINE_DRAW_LINE | PIPELINE_DEPTH_WRITE;
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["LineShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
@@ -42,12 +38,9 @@ namespace Hazard
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "CircleShader.glsl";
-			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
-			specs.CullMode = CullMode::BackFace;
-			specs.ShaderCodeCount = asset->ShaderCode.size();
-			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
+			specs.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE;
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["CircleShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
@@ -59,12 +52,9 @@ namespace Hazard
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "QuadShader.glsl";
-			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
-			specs.CullMode = CullMode::BackFace;
-			specs.ShaderCodeCount = asset->ShaderCode.size();
-			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
+			specs.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE;
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["QuadShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
@@ -76,12 +66,9 @@ namespace Hazard
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "PBR_Static.glsl";
-			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
-			specs.CullMode = CullMode::BackFace;
-			specs.ShaderCodeCount = asset->ShaderCode.size();
-			specs.pShaderCode = asset->ShaderCode.data();
 			specs.pBufferLayout = &layout;
+			specs.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE;
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["PBR_Static"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
@@ -91,13 +78,9 @@ namespace Hazard
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "Skybox.glsl";
-			specs.DrawType = DrawType::Fill;
 			specs.Usage = PipelineUsage::GraphicsBit;
-			specs.CullMode = CullMode::None;
 			specs.DepthOperator = DepthOp::LessOrEqual;
-			specs.DepthWrite = false;
-			specs.ShaderCodeCount = asset->ShaderCode.size();
-			specs.pShaderCode = asset->ShaderCode.data();
+			specs.Flags = PIPELINE_DRAW_FILL;
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["Skybox"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
@@ -108,8 +91,6 @@ namespace Hazard
 			PipelineSpecification specs = {};
 			specs.DebugName = "EquirectangularToCubemap.glsl";
 			specs.Usage = PipelineUsage::ComputeBit;
-			specs.ShaderCodeCount = asset->ShaderCode.size();
-			specs.pShaderCode = asset->ShaderCode.data();
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["EquirectangularToCubemap"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
@@ -120,8 +101,6 @@ namespace Hazard
 			PipelineSpecification specs = {};
 			specs.DebugName = "EnvironmentIrradiance.glsl";
 			specs.Usage = PipelineUsage::ComputeBit;
-			specs.ShaderCodeCount = asset->ShaderCode.size();
-			specs.pShaderCode = asset->ShaderCode.data();
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["EnvironmentIrradiance"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);

@@ -4,6 +4,7 @@
 #ifdef HZR_INCLUDE_VULKAN
 #include "Core/GraphicsContext.h"
 #include "Core/Renderer.h"
+#include "../VKUtils.h"
 
 #include "Vulkan/Core/VulkanAllocator.h"
 #include "Vulkan/VulkanContext.h"

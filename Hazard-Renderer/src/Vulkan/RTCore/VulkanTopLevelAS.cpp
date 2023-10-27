@@ -4,6 +4,7 @@
 
 #include "../VulkanContext.h"
 #include "Core/Renderer.h"
+#include "../VKUtils.h"
 #include "spdlog/fmt/fmt.h"
 
 #include "VulkanBottomLevelAS.h"

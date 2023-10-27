@@ -15,16 +15,11 @@ namespace Hazard
 	struct PipelineAssetHeader
 	{
 		HazardRenderer::PipelineUsage Usage;
-		HazardRenderer::DrawType DrawType;
-		HazardRenderer::CullMode CullMode;
-		float LineWidth;
-		bool DepthTest;
-		bool DepthWrite;
-		bool UseShaderLayout;
 		HazardRenderer::DepthOp DepthOperator;
 		uint32_t ElementCount;
 		uint64_t StageCount;
 		uint64_t ShaderHandle;
+		uint32_t Flags;
 	};
 
 	class PipelineAssetLoader : public IAssetLoader

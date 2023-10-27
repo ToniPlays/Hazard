@@ -20,6 +20,7 @@ namespace HazardRenderer
 		uint32_t Binding;
 		uint32_t Length = 1;
 		DescriptorType Type;
+		uint32_t Flags;
 
 		DescriptorSetElement() = default;
 

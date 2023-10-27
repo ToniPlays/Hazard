@@ -24,35 +24,32 @@ namespace HazardRenderer::Vulkan
 	class VulkanShader : public Shader
 	{
 	public:
-		VulkanShader(const std::vector<ShaderStageCode>& shaderCode);
+		VulkanShader(const std::unordered_map<uint32_t, std::string>& shaderModules);
 		~VulkanShader();
 
 		void Reload() override;
-		const ShaderData& GetShaderData() const { return m_ShaderData; };
+		void SetShaderCode(const std::unordered_map<uint32_t, Buffer>& shaderCode) override
+		{
+			m_ShaderCode = shaderCode;
+		};
+
 		std::unordered_map<uint32_t, Buffer> GetShaderCode() const override { return m_ShaderCode; };
 		
+
 		//Vulkan specific
+		const std::vector<VkPipelineShaderStageCreateInfo>& GetShaderStageCreateInfos() const { return m_ShaderStageCreateInfos;  }
 		void Reload_RT(bool forceCompile = false);
 
-		const std::vector<VkDescriptorSetLayout>& GetDescriptorSetLayouts() const { return m_DescriptorSetLayouts; };
-		std::unordered_map<std::string, PushConstantRange>& GetPushConstantRanges() { return m_PushConstantRanges; }
-		std::vector<VkPipelineShaderStageCreateInfo> GetPipelineShaderStageCreateInfos() { return m_ShaderStageCreateInfos; }
-
 	private:
-		void Reflect();
 		void CreateShaderModules();
-		void CreateDescriptorSetLayouts();
 
 		std::unordered_map<uint32_t, Buffer> m_ShaderCode;
-
-		ShaderData m_ShaderData;
 
 		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStageCreateInfos;
 		std::unordered_map<std::string, PushConstantRange> m_PushConstantRanges;
 
 		std::vector<VkShaderModule> m_ShaderModules;
 		std::vector<uint32_t> m_DynamicOffsets;
-		std::vector<VkDescriptorSetLayout> m_DescriptorSetLayouts;
 	};
 }
 #endif

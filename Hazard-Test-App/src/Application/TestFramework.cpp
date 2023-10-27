@@ -1,5 +1,6 @@
 #include "TestFramework.h"
 #include "Hazard/Input/InputManager.h"
+#include "Hazard/RenderContext/RenderContextManager.h"
 
 #include "Tests/JobSystemTest.h"
 #include "Tests/TriangleTest.h"
@@ -29,21 +30,26 @@ void TestFramework::PreInit()
 }
 void TestFramework::Init()
 {
+	auto& window = Application::GetModule<RenderContextManager>().GetWindow();
+	window.SetDebugCallback([](const RenderMessage& msg) {
+		std::cout << msg.Description << std::endl;
+		std::cout << msg.StackTrace << std::endl;
+	});
+
 	BindingGroup kbGroup = {};
 	kbGroup.Type = InputDeviceType::Keyboard;
 	kbGroup.Axis[0].KeyCode = Key::Space;
-    
-    BindingGroup mouseGroup = {};
-    mouseGroup.Type = InputDeviceType::Mouse;
-    mouseGroup.Axis[0].KeyCode = Mouse::ButtonLeft;
+
+	BindingGroup mouseGroup = {};
+	mouseGroup.Type = InputDeviceType::Mouse;
+	mouseGroup.Axis[0].KeyCode = Mouse::ButtonLeft;
 
 	InputBinding binding = {};
-	binding.DeviceMask = InputSource_Keyboard | InputSource_Mouse;
 	binding.AxisMask = InputAxisDirection_Button;
 	binding.Groups = { kbGroup, mouseGroup };
 	binding.Callback = [&](const InputBinding& binding, uint32_t key) {
 		if (binding.IsPressed()) return;
-		
+
 		m_TestIndex++;
 		RestartTest();
 	};
@@ -58,7 +64,11 @@ void TestFramework::Init()
 	m_Tests.push_back(new TriangleTest());
 	m_Tests.push_back(new TexturedQuadTest());
 	m_Tests.push_back(new UniformBufferTest());
-    m_Tests.push_back(new ComputeShaderTest());
+	m_Tests.push_back(new ComputeShaderTest());
+
+#ifdef HZR_PLATFORM_WINDOWS
+	//GenerateShaders();
+#endif
 
 	RestartTest();
 }
@@ -67,6 +77,47 @@ void TestFramework::Update()
 {
 	if (m_CurrentTest)
 		m_CurrentTest->Run();
+}
+
+void TestFramework::GenerateShaders()
+{
+	std::filesystem::path outputDir = "assets/compiled/shaders/";
+	std::vector<RenderAPI> compileFor = { RenderAPI::OpenGL, RenderAPI::Vulkan, RenderAPI::Metal };
+	std::unordered_map<RenderAPI, std::string> extensions = {
+																{ RenderAPI::OpenGL, "ogl" },
+																{ RenderAPI::Vulkan, "vk" },
+																{ RenderAPI::Metal, "mtl" }
+	};
+	std::vector<std::filesystem::path> sources = {
+		"assets/shaders/triangle.glsl",
+		"assets/shaders/texturedQuad.glsl",
+		"assets/shaders/UboTest.glsl",
+		"assets/shaders/compute.glsl"
+	};
+
+	for (auto& api : compileFor)
+	{
+		for (auto& source : sources)
+		{
+			for (auto& [type, shader] : HazardRenderer::ShaderCompiler::GetShaderSources(source))
+			{
+				auto shaderSourceCode = HazardRenderer::ShaderCompiler::GetShaderFromSource(type, shader, api);
+				std::string shaderType = HazardRenderer::Utils::ShaderStageToString(type);
+
+				auto path = outputDir / std::filesystem::path(fmt::format("{0}.{1}.{2}", File::GetNameNoExt(source), shaderType, extensions[api]));
+				std::cout << File::GetFileAbsolutePath(path).string() << std::endl;
+
+				if (api == RenderAPI::Vulkan)
+				{
+					HZR_ASSERT(File::WriteBinaryFile(path, (void*)shaderSourceCode.c_str(), shaderSourceCode.length()), "Failed to write file");
+				}
+				else
+				{
+					HZR_ASSERT(File::WriteFile(path, shaderSourceCode), "Failed to write file");
+				}
+			}
+		}
+	}
 }
 
 void TestFramework::RestartTest()

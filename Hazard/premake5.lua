@@ -71,7 +71,6 @@ project "Hazard"
 
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.VulkanUtils}",
 			"opengl32.lib",
 			"Hazard-Script"
 		}
@@ -108,6 +107,7 @@ project "Hazard"
 				"%{Library.ShaderC_Debug}",
 				"%{Library.SPIRV_Cross_Debug}",
 				"%{Library.SPIRV_Cross_GLSL_Debug}",
+				"%{Library.SPIRV_MSL_Debug}"
 			}
 		end
 
@@ -118,6 +118,7 @@ project "Hazard"
 				"%{Library.ShaderC_Release}",
 				"%{Library.SPIRV_Cross_Release}",
 				"%{Library.SPIRV_Cross_GLSL_Release}",
+				"%{Library.SPIRV_MSL_Release}"
 			}
 		end
 
@@ -128,5 +129,6 @@ project "Hazard"
 				"%{Library.ShaderC_Release}",
 				"%{Library.SPIRV_Cross_Release}",
 				"%{Library.SPIRV_Cross_GLSL_Release}",
+				"%{Library.SPIRV_MSL_Release}"
 			}
 		end

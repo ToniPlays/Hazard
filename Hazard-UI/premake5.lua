@@ -29,7 +29,6 @@ project "Hazard-UI"
 	filter "system:windows"
 		links {
 			"%{Library.Vulkan}",
-			"%{Library.VulkanUtils}",
 			"opengl32.lib"
 		}
 

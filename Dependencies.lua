@@ -48,7 +48,6 @@ IncludeDir["Coral"] = "%{wks.location}/Hazard/vendor/Coral/Coral.Native/Include"
 LibraryDir = {}
 
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
-LibraryDir["VulkanSDK_Debug"] = "%{VULKAN_SDK}/Lib"
 LibraryDir["VulkanSDK_DebugDLL"] = "%{VULKAN_SDK}/Bin"
 LibraryDir["CoralNetHost"] = "%{wks.location}/Hazard/vendor/Coral/NetCore/7.0.7/nethost.lib"
 
@@ -60,14 +59,16 @@ Library = {}
 
     Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"
 
-    Library["ShaderC_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/shaderc_sharedd.lib"
-    Library["SPIRV_Cross_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-cored.lib"
-    Library["SPIRV_Cross_GLSL_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-cross-glsld.lib"
-    Library["SPIRV_Tools_Debug"] = "%{LibraryDir.VulkanSDK_Debug}/spirv-Toolsd.lib"
+    Library["ShaderC_Debug"] = "%{LibraryDir.VulkanSDK}/shaderc_sharedd.lib"
+    Library["SPIRV_Cross_Debug"] = "%{LibraryDir.VulkanSDK}/spirv-cross-cored.lib"
+    Library["SPIRV_Cross_GLSL_Debug"] = "%{LibraryDir.VulkanSDK}/spirv-cross-glsld.lib"
+    Library["SPIRV_Tools_Debug"] = "%{LibraryDir.VulkanSDK}/spirv-Toolsd.lib"
+    Library["SPIRV_MSL_Debug"] = "%{LibraryDir.VulkanSDK}/spirv-cross-msld.lib"
 
     Library["ShaderC_Release"] = "%{LibraryDir.VulkanSDK}/shaderc_shared.lib"
     Library["SPIRV_Cross_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-core.lib"
     Library["SPIRV_Cross_GLSL_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-glsl.lib"
+    Library["SPIRV_MSL_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-msl.lib"
 
     Library["Assimp_Lib"] = "%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"
 
@@ -83,20 +84,6 @@ if os.host() == "macosx" then
     LibraryDir["ShaderC"] = CELLAR .. "shaderc/2022.4/lib/"
 
     Library["Vulkan"] = "vulkan"
-    Library["VulkanUtils"] = "%{LibraryDir.VulkanSDK/VkLayer_utils.lib"
-
-    Library["ShaderC_Debug"] = "shaderc/2022.4/lib/libshaderc.a"
-    Library["SPIRV_Cross_Debug"] = CELLAR .. "spirv-cross/1.3.261.1/lib/spirv-cross-core"
-    Library["SPIRV_Cross_GLSL_Debug"] = CELLAR .. "/spirv-cross/1.3.261.1/lib/spirv-cross-glsl"
-    Library["SPIRV_Tools_Debug"] = CELLAR .. "spirv-cross/1.3.261.1/lib/SPIRV-Tools"
-
-    Library["ShaderC_Release"] = CELLAR .. "shaderc"
-    Library["SPIRV_Cross_Release"] = CELLAR .. "/spirv-cross/1.3.261.1/lib/spirv-cross-core"
-    Library["SPIRV_Cross_GLSL_Release"] = CELLAR .. "spirv-cross/1.3.261.1/lib/spirv-cross-glsl"
-    Library["SPIRV_Tools_Release"] = "SPIRV-Tools"
-
-    Library["Assimp_Lib"] =  CELLAR .. "assimp/5.2.5/lib/libassimp.5.2.4.dylib"
-    
 end
 
 premake.override(_G, "project", function(base, ...)

@@ -30,7 +30,6 @@ namespace HazardRenderer::Vulkan
 
 		void Invalidate() override;
 		void Invalidate_RT();
-		DescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const;
 
 		//Vulkan specific
 		void Bind(VkCommandBuffer commandBuffer);

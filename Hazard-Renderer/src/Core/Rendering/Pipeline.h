@@ -16,18 +16,18 @@ namespace HazardRenderer
 		ComputeBit,
 		Raygen
 	};
-	enum class DrawType 
-	{ 
-		None = 0,
-		Fill,
-		Line,
-		Point 
-	};
-	enum class CullMode 
-	{ 
-		None = 0,
-		FrontFace,
-		BackFace 
+	enum PipelineFlags 
+	{
+		PIPELINE_DRAW_FILL = BIT(0),
+		PIPELINE_DRAW_LINE = BIT(1),
+		PIPELINE_DRAW_POINT = BIT(2),
+		PIPELINE_CULL_FRONT_FACE = BIT(3),
+		PIPELINE_CULL_BACK_FACE = BIT(4),
+		PIPELINE_DEPTH_TEST = BIT(5),
+		PIPELINE_DEPTH_WRITE = BIT(6),
+		PIPELINE_PRIMITIVE_TOPOLOGY_POINT_LIST = BIT(7),
+		PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST = BIT(8),
+		PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = BIT(9),
 	};
 	enum class DepthOp 
 	{
@@ -46,26 +46,21 @@ namespace HazardRenderer
 	{
 		std::string DebugName;
 		BufferLayout* pBufferLayout;
-		PipelineUsage Usage = PipelineUsage::None;
-		DrawType DrawType = DrawType::Fill;
-		CullMode CullMode = CullMode::BackFace;
-		DepthOp DepthOperator = DepthOp::LessOrEqual;
 		Ref<RenderPass> pTargetRenderPass = nullptr;
-		uint64_t ShaderCodeCount = 0;
-		ShaderStageCode* pShaderCode = nullptr;
 
+		PipelineUsage Usage = PipelineUsage::None;
+		DepthOp DepthOperator = DepthOp::LessOrEqual;
+
+		std::unordered_map<uint32_t, std::string> Shaders;
 		uint32_t MaxRayDepth = 0;
-		float LineWidth = 1.0f;
-
-		bool UseShaderLayout = false;
-		bool DepthTest = true;
-		bool DepthWrite = true;
+		uint32_t Flags = 0;
 	};
 
 	class Pipeline : public RefCount 
 	{
 	public:
 		virtual ~Pipeline() = default;
+
 		virtual PipelineSpecification GetSpecifications() = 0;
 		virtual const PipelineSpecification GetSpecifications() const = 0;
 
@@ -73,7 +68,6 @@ namespace HazardRenderer
 		virtual void SetRenderPass(Ref<RenderPass> renderPass) = 0;
 		virtual bool IsCompatibleWith(Ref<Shader> shader) const = 0;
 		virtual void SetLayout(const BufferLayout& layout) = 0;
-		virtual DescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const = 0;
 
 		virtual void Invalidate() = 0;
 		virtual bool IsValid() const = 0;

@@ -441,6 +441,13 @@ namespace HazardRenderer::Vulkan
 			pipeline->Bind(instance->m_ActiveCommandBuffer);
 		});
 	}
+	void VulkanRenderCommandBuffer::SetLineWidth(float width)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, width]() mutable {
+			vkCmdSetLineWidth(instance->m_ActiveCommandBuffer, width);
+		});
+	}
 	void VulkanRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer)
 	{
 		DrawInstanced(count, 1, indexBuffer);
