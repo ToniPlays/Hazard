@@ -44,7 +44,6 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(File::Exists(path), "Source file does not exist");
 
-
 		int w, h, channels;
 		constexpr int desired = 4;
 		stbi_set_flip_vertically_on_load(verticalFlip);

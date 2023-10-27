@@ -3,7 +3,7 @@
 
 #include <iostream>
 #import "HazardViewController.h"
-#import "Metal/MetalSwapchain.h"
+#import "GestureDelegate.h"
 
 @implementation HazardViewController
 {
@@ -15,29 +15,9 @@
     [super viewDidLoad];
     std::cout << "View appeared" << std::endl;
     m_MTKView = (MTKView*)self.view;
-    m_MTKView.multipleTouchEnabled = YES;
-    m_MTKView.autoResizeDrawable = NO;
     
+    [self SetupRecognizers];
     [self OnViewLoaded];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    UITouch* touch = [[touches allObjects] anyObject];
-    
-    CGPoint point = [touch locationInView: m_MTKView];
-    
-    std::cout << "Touches started: " << touches.count << std::endl;
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    std::cout << "Touches ended: " << touches.count << std::endl;
-}
-
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    std::cout << "Touches moved: " << touches.count << std::endl;
 }
 
 - (MTKView *)GetMTKView
@@ -49,7 +29,16 @@
 {
     printf("%s", "Must override ViewController");
 }
-
+- (void)SetupRecognizers
+{
+    GestureDelegate* delegate = [[GestureDelegate alloc] initWithTarget: self action: @selector(handleGesture:)];
+    
+    [[self view] addGestureRecognizer: delegate];
+}
+- (void)handleGesture:(GestureDelegate*)delegate
+{
+    
+}
 @end
 
 #endif

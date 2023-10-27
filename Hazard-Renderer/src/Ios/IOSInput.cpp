@@ -4,7 +4,7 @@
 
 void Input::Init(HazardRenderer::Window& window)
 {
-
+    
 }
 bool Input::AnyKey()
 {

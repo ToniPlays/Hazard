@@ -52,6 +52,8 @@ namespace HazardRenderer::Metal
             SetDebugLabel(instance->m_MetalTexture, instance->m_DebugName);
             
             instance->CreateSampler();
+            
+            descriptor->release();
         });
         
         if(createInfo->Data)
@@ -103,6 +105,8 @@ namespace HazardRenderer::Metal
         descriptor->setLodMaxClamp(100.0f);
         
         m_MetalSampler = device->GetMetalDevice()->newSamplerState(descriptor);
+        
+        descriptor->release();
     }
 }
 #endif

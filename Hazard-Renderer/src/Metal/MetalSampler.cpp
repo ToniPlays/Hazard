@@ -45,6 +45,8 @@ namespace HazardRenderer::Metal
         descriptor->setBorderColor(MTL::SamplerBorderColorOpaqueWhite);
         
         m_Sampler = device->GetMetalDevice()->newSamplerState(descriptor);
+        
+        descriptor->release();
     }
 }
 #endif

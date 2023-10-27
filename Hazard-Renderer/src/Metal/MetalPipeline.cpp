@@ -29,8 +29,11 @@ namespace HazardRenderer::Metal
     }
     MetalPipeline::~MetalPipeline()
     {
-        m_PipelineDescriptor->release();
-        m_Pipeline->release();
+        Renderer::SubmitResourceFree([descriptor = m_PipelineDescriptor, pipeline = m_Pipeline]() mutable {
+            descriptor->release();
+            pipeline->release();
+        });
+        
     }
     void MetalPipeline::SetRenderPass(Ref<RenderPass> renderPass)
     {
@@ -171,14 +174,20 @@ namespace HazardRenderer::Metal
             depth->setDepthCompareFunction(DepthOpToMTLDepthOp(m_Specs.DepthOperator));
             
             m_DepthState = device->GetMetalDevice()->newDepthStencilState(depth);
+            
+            depth->release();
         }
+        vertexDescriptor->release();
     }
 
     void MetalPipeline::InvalidateComputePipeline()
     {
         auto device = MetalContext::GetMetalDevice();
         
-        m_ComputeDescriptor = MTL::ComputePipelineDescriptor::alloc()->init();
+        if(!m_ComputeDescriptor)
+            
+            m_ComputeDescriptor = MTL::ComputePipelineDescriptor::alloc()->init();
+        
         SetDebugLabel(m_ComputeDescriptor, m_Specs.DebugName);
         
         //if(m_Specs.Usage == PipelineUsage::ComputeBit)

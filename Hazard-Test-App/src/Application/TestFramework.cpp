@@ -32,12 +32,17 @@ void TestFramework::Init()
 	BindingGroup kbGroup = {};
 	kbGroup.Type = InputDeviceType::Keyboard;
 	kbGroup.Axis[0].KeyCode = Key::Space;
+    
+    BindingGroup mouseGroup = {};
+    mouseGroup.Type = InputDeviceType::Mouse;
+    mouseGroup.Axis[0].KeyCode = Mouse::ButtonLeft;
 
 	InputBinding binding = {};
-	binding.DeviceMask = InputSource_Keyboard;
+	binding.DeviceMask = InputSource_Keyboard | InputSource_Mouse;
 	binding.AxisMask = InputAxisDirection_Button;
-	binding.Groups = { kbGroup };
+	binding.Groups = { kbGroup, mouseGroup };
 	binding.Callback = [&](const InputBinding& binding, uint32_t key) {
+        std::cout << key << std::endl;
 		if (binding.IsPressed()) return;
 		
 		m_TestIndex++;

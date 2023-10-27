@@ -153,6 +153,8 @@ namespace HazardRenderer::Metal
                 depthDescriptor->setStoreAction(MTL::StoreActionStore);
                 depthDescriptor->setTexture(fb->GetDepthImage().As<MetalImage2D>()->GetMetalTexture());
                 descriptor->setDepthAttachment(depthDescriptor);
+                
+                depthDescriptor->release();
             }
             viewport.originY = height;
             viewport.width = width;
@@ -176,6 +178,9 @@ namespace HazardRenderer::Metal
         Ref<MetalRenderCommandBuffer> instance = this;
         Renderer::Submit([instance]() mutable {
             instance->m_RenderEncoder->endEncoding();
+        });
+        Renderer::SubmitResourceFree([encoder = m_RenderEncoder]() mutable {
+            encoder->release();
         });
     }
     void MetalRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding)

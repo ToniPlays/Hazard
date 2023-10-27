@@ -127,6 +127,8 @@ namespace HazardRenderer::Metal
         m_MetalTexture = device->GetMetalDevice()->newTexture(descriptor);
         
         SetDebugLabel(m_MetalTexture, m_DebugName);
+        
+        descriptor->release();
     }
 /*
     void MetalImage2D::CreateImageSampler()

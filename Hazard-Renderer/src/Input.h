@@ -41,6 +41,7 @@ public:
 	static const std::vector<Joystick>& GetGamepads() { return s_Gamepads; }
 
 private:
+    inline static glm::vec2 s_MousePos;
 	inline static int s_KeyStates[384];
 	inline static std::vector<Joystick> s_Gamepads;
 };

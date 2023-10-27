@@ -176,6 +176,8 @@ namespace HazardRenderer::Metal
                 depthDescriptor->setStoreAction(MTL::StoreActionStore);
                 depthDescriptor->setTexture(m_DepthAttachmentImage->GetMetalTexture());
                 
+                depthDescriptor->release();
+                
                 //m_RenderPassDescriptor->setDepthAttachment(depthDescriptor);
             }
             else //Color attachment
