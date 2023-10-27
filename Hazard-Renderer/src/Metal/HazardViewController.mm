@@ -15,11 +15,10 @@
     [super viewDidLoad];
     std::cout << "View appeared" << std::endl;
     m_MTKView = (MTKView*)self.view;
-    
+
     [self SetupRecognizers];
     [self OnViewLoaded];
 }
-
 - (MTKView *)GetMTKView
 {
     return m_MTKView;

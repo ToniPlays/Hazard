@@ -14,26 +14,23 @@
     {
         MetalWindowLayer::MetalWindowLayer(Window& window, MTL::Device* device)
         {
-            int w, h;
-            w = window.GetWidth();
-            h = window.GetHeight();
-            
             id<MTLDevice> dev = (__bridge id<MTLDevice>)device;
+            
+            CGSize size = [[UIScreen mainScreen] nativeBounds].size;
             
             UIApplication* app = [UIApplication sharedApplication];
             HazardViewController* controller = (HazardViewController*)[[[app delegate] window] rootViewController];
             
             MTKView* view = [controller GetMTKView];
-            view.drawableSize = { (CGFloat)w, (CGFloat)h};
+            view.drawableSize = size;
             view.backgroundColor = [UIColor whiteColor];
             view.device = dev;
-            view.layer.frame.size = view.drawableSize;
             
-            m_Width = view.frame.size.width;
-            m_Height = view.frame.size.height;
+            
+            m_Width = size.width;
+            m_Height = size.height;
             
             m_Layer = (__bridge CA::MetalLayer*)view.layer;
-            std::cout << "BIG OUCH" << std::endl;
         }
         void MetalWindowLayer::Resize(uint32_t width, uint32_t height)
         {

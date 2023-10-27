@@ -11,8 +11,8 @@
         <!--iOS View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="Main" autoresizesArchivedViewToFullSize="NO" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="IOSViewController" sceneMemberID="viewController">
-                    <mtkView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float_Stencil8" preferredFramesPerSecond="30" autoResizeDrawable="NO" id="bBr-gf-Kyd">
+                <viewController storyboardIdentifier="Main" autoresizesArchivedViewToFullSize="NO" extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="IOSViewController" sceneMemberID="viewController">
+                    <mtkView key="view" autoresizesSubviews="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" colorPixelFormat="BGRA8Unorm" depthStencilPixelFormat="Depth32Float_Stencil8" preferredFramesPerSecond="30" autoResizeDrawable="NO" id="bBr-gf-Kyd">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" systemColor="labelColor"/>
