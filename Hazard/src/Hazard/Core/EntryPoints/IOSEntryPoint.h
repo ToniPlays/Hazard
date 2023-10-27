@@ -8,7 +8,9 @@
 
 extern Hazard::Application* Hazard::CreateApplication();
 
-int main(int argc, char * argv[]) 
+Hazard::HazardLoop loop;
+
+int main(int argc, char * argv[])
 {
     Hazard::CommandLineArgs::Init(argc, argv);
     
@@ -16,15 +18,17 @@ int main(int argc, char * argv[])
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }
 }
+static void IOSInitApplication()
+{
+    using namespace Hazard;
+    Application* app = CreateApplication();
+    loop.SetApplication(app);
+    loop.Start();
+}
 static void IOSRunApplication()
 {
     using namespace Hazard;
     {
-        Application* app = CreateApplication();
-
-        HazardLoop loop(app);
-        loop.Start();
-
         while (!loop.ShouldClose())
         {
             loop.Run();

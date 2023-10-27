@@ -15,8 +15,11 @@ namespace Hazard
 		friend class Application;
         
 	public:
+        HazardLoop();
 		HazardLoop(Application* app);
 		~HazardLoop();
+        
+        void SetApplication(Application* app);
 
 		void Start();
 		void Close();
@@ -32,7 +35,7 @@ namespace Hazard
         static ModuleHandler* GetModuleHandler() { return s_Instance->m_ModuleHandler.get(); }
 
 	private:
-		static HazardLoop* s_Instance;
+		inline static HazardLoop* s_Instance;
 
 	private:
 		Application* m_Application = nullptr;

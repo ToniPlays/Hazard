@@ -42,7 +42,8 @@ namespace Hazard
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_CORE_ASSERT(File::Exists(path), "Source file does not exist");
+        if(!File::Exists(path))
+           return TextureHeader();
 
 		int w, h, channels;
 		constexpr int desired = 4;

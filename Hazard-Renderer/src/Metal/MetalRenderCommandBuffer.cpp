@@ -46,17 +46,11 @@ namespace HazardRenderer::Metal
         Ref<MetalRenderCommandBuffer> instance = this;
         Renderer::Submit([instance]() mutable {
             auto device = MetalContext::GetMetalDevice();
-            if(instance->m_Queue == DeviceQueue::GraphicsBit)
-            {
-                instance->m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
-            }
+            instance->m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
 
             if(instance->m_Queue == DeviceQueue::ComputeBit)
             {
-                instance->m_CommandBuffer = device->GetGraphicsQueue()->commandBuffer();
-                
                 instance->m_ComputeEncoder = instance->m_CommandBuffer->computeCommandEncoder();
-                std::cout << "Made encoder: " << instance->m_ComputeEncoder << std::endl;
             }
         });
     }

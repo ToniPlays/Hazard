@@ -10,16 +10,24 @@
 
 #include "HazardRenderer.h"
 
-namespace Hazard {
-
-	HazardLoop* HazardLoop::s_Instance = nullptr;
-
+namespace Hazard
+{
+    HazardLoop::HazardLoop()
+    {
+        //OPTICK_THREAD("MainThread");
+        HazardLoop::s_Instance = this;
+        m_ModuleHandler = CreateScope<ModuleHandler>();
+        
+#ifndef HZR_RELEASE
+        m_ModuleHandler->AddModule<Logging::Logger>();
+#endif // HZR_RELEASE
+    }
 	HazardLoop::HazardLoop(Application* app) : m_Application(app)
 	{
 		//OPTICK_THREAD("MainThread");
 		HazardLoop::s_Instance = this;
 		m_ModuleHandler = CreateScope<ModuleHandler>();
-
+        
 #ifndef HZR_RELEASE
 		m_ModuleHandler->AddModule<Logging::Logger>();
 #endif // HZR_RELEASE
@@ -29,6 +37,14 @@ namespace Hazard {
 	{
 		
 	}
+    void HazardLoop::SetApplication(Application *app) {
+        if(m_Application)
+        {
+            m_Application->Close();
+            delete m_Application;
+        }
+        m_Application = app;
+    }
 
 	void HazardLoop::Start()
 	{
