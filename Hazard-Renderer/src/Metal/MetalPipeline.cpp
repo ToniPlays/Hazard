@@ -13,18 +13,14 @@ namespace HazardRenderer::Metal
 {
     MetalPipeline::MetalPipeline(PipelineSpecification* specs) : m_Specs(*specs)
     {
-        m_PrimitiveType = DrawTypeToMTLPrimitive(m_Specs.DrawType);
+        m_PrimitiveType = DrawTypeToMTLPrimitive(m_Specs.Flags);
         m_PipelineDescriptor = MTL::RenderPipelineDescriptor::alloc()->init();
         SetDebugLabel(m_PipelineDescriptor, m_Specs.DebugName);
         
         if(specs->pBufferLayout)
             m_Layout = BufferLayout(*specs->pBufferLayout);
-        
-        std::vector<ShaderStageCode> code(specs->ShaderCodeCount);
-        for (uint32_t i = 0; i < specs->ShaderCodeCount; i++)
-            code[i] = specs->pShaderCode[i];
 
-        m_Shader = Shader::Create(code).As<MetalShader>();
+        m_Shader = Shader::Create(specs->Shaders).As<MetalShader>();
         Invalidate();
     }
     MetalPipeline::~MetalPipeline()
@@ -113,7 +109,7 @@ namespace HazardRenderer::Metal
         
         m_PipelineDescriptor->setVertexFunction(m_Shader->GetFunction(SHADER_STAGE_VERTEX_BIT));
         m_PipelineDescriptor->setFragmentFunction(m_Shader->GetFunction(SHADER_STAGE_FRAGMENT_BIT));
-        m_PipelineDescriptor->setInputPrimitiveTopology(DrawTypeToMTLTopology(m_Specs.DrawType));
+        m_PipelineDescriptor->setInputPrimitiveTopology(DrawTypeToMTLTopology(m_Specs.Flags));
         m_PipelineDescriptor->setVertexDescriptor(vertexDescriptor);
         
         size_t attachmentCount = fb->GetSpecification().SwapChainTarget ? 1 : fb->GetColorAttachmentCount();
@@ -169,7 +165,7 @@ namespace HazardRenderer::Metal
         if(fb->GetDepthImage() && !fb->GetSpecification().SwapChainTarget)
         {
             MTL::DepthStencilDescriptor* depth = MTL::DepthStencilDescriptor::alloc()->init();
-            depth->setDepthWriteEnabled(m_Specs.DepthWrite);
+            depth->setDepthWriteEnabled(m_Specs.Flags);
             SetDebugLabel(depth, m_Specs.DebugName + " DepthState");
             depth->setDepthCompareFunction(DepthOpToMTLDepthOp(m_Specs.DepthOperator));
             
@@ -206,7 +202,7 @@ namespace HazardRenderer::Metal
     void MetalPipeline::BindGraphics(MTL::RenderCommandEncoder* encoder)
     {
         encoder->setRenderPipelineState(m_Pipeline);
-        encoder->setCullMode(CullModeToMTLCullMode(m_Specs.CullMode));
+        encoder->setCullMode(CullModeToMTLCullMode(m_Specs.Flags));
         
         if(m_DepthState)
             encoder->setDepthStencilState(m_DepthState);

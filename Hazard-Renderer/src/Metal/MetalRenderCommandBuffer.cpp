@@ -216,6 +216,11 @@ namespace HazardRenderer::Metal
             }
         });
     }
+    void MetalRenderCommandBuffer::SetLineWidth(float width)
+    {
+        
+    };
+
     void MetalRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer)
     {
         DrawInstanced(count, 1, indexBuffer);

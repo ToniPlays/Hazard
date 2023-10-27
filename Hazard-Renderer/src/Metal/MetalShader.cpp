@@ -10,10 +10,11 @@
 
 namespace HazardRenderer::Metal
 {
-    MetalShader::MetalShader(const std::vector<ShaderStageCode>& shaderCode)
+    MetalShader::MetalShader(const std::unordered_map<uint32_t, std::string>& shaderModules)
     {
-        for(auto& stageCode : shaderCode)
-            m_ShaderCode[stageCode.Stage] = stageCode.ShaderCode;
+        for(auto& [stage, code] : shaderModules)
+            m_ShaderCode[stage] = Buffer::Copy(code.data(), code.length());
+        
         Reload();
     }
     MetalShader::~MetalShader()
@@ -25,22 +26,13 @@ namespace HazardRenderer::Metal
         HZR_PROFILE_FUNCTION();
         
         auto device = MetalContext::GetMetalDevice();
-        /*
-        MetalShaderCompiler compiler;
         
-        for(auto& [stage, spirv] : m_ShaderCode)
+        for(auto& [stage, code] : m_ShaderCode)
         {
+            std::string msl((char*)code.Data, code.Size);
+            
             NS::Error* libError;
-            std::string result;
-            
-            if(!compiler.Decompile(spirv, result, stage == SHADER_STAGE_RAYGEN_BIT))
-            {
-                std::cout << result << std::endl;
-                std::cout << compiler.GetErrorMessage() << std::endl;
-                break;
-            }
-            
-            NS::String* source = NS::String::alloc()->string(result.c_str(), NS::UTF8StringEncoding);
+            NS::String* source = NS::String::alloc()->string(msl.c_str(), NS::UTF8StringEncoding);
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
             options->setFastMathEnabled(true);
             options->setPreserveInvariance(true);
@@ -48,12 +40,14 @@ namespace HazardRenderer::Metal
             
             MTL::Library* lib = device->GetMetalDevice()->newLibrary(source, options, &libError);
             
+            source->release();
+            
             if(libError->code() != 0)
             {
                 RenderMessage message = {};
                 message.Severity = Severity::Error;
                 message.Description = libError->description()->utf8String();
-                message.StackTrace = result;
+                message.StackTrace = msl;
                 
                 Window::SendDebugMessage(message);
                 continue;
@@ -80,12 +74,6 @@ namespace HazardRenderer::Metal
             }
             m_Functions[stage] = func;
         }
-         */
-        Reflect();
-    }
-    void MetalShader::Reflect()
-    {
-        //m_ShaderData = ShaderCompiler::GetShaderResources(m_ShaderCode);
     }
 }
 #endif

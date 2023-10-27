@@ -81,13 +81,10 @@ void TestFramework::Update()
 
 void TestFramework::GenerateShaders()
 {
+#ifdef HZR_PLATFORM_WINDOWS
 	std::filesystem::path outputDir = "assets/compiled/shaders/";
 	std::vector<RenderAPI> compileFor = { RenderAPI::OpenGL, RenderAPI::Vulkan, RenderAPI::Metal };
-	std::unordered_map<RenderAPI, std::string> extensions = {
-																{ RenderAPI::OpenGL, "ogl" },
-																{ RenderAPI::Vulkan, "vk" },
-																{ RenderAPI::Metal, "mtl" }
-	};
+    
 	std::vector<std::filesystem::path> sources = {
 		"assets/shaders/triangle.glsl",
 		"assets/shaders/texturedQuad.glsl",
@@ -118,6 +115,7 @@ void TestFramework::GenerateShaders()
 			}
 		}
 	}
+#endif
 }
 
 void TestFramework::RestartTest()

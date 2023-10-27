@@ -8,6 +8,8 @@
 #include "spdlog/fmt/fmt.h"
 #include <Directory.h>
 
+#if defined HZR_PLATFORM_WINDOWS || defined HZR_PLATFORM_MACOS
+
 std::string File::OpenFileDialog()
 {
 	auto f = pfd::open_file("Open file", "");
@@ -123,7 +125,7 @@ bool File::Move(const std::filesystem::path& src, const std::filesystem::path& d
 std::string File::ReadFile(const std::filesystem::path& file)
 {
 	std::string result;
-	std::ifstream ifs(File::GetFileAbsolutePath(file), std::ios::in | std::ios::binary | std::ios::ate);
+	std::ifstream ifs(file, std::ios::in | std::ios::binary | std::ios::ate);
 	HZR_ASSERT(ifs.is_open(), "Cannot open file: " + GetFileAbsolutePath(file).string());
 
 	uint64_t size = ifs.tellg();
@@ -154,23 +156,7 @@ CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
 
 std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& file)
 {
-#ifdef HZR_PLATFORM_IOS
-	/*CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
-	char resourcePath[PATH_MAX];
-	if (CFURLGetFileSystemRepresentation(resourceURL, true, (UInt8*)resourcePath,
-										 PATH_MAX))
-	{
-		bool exists = resourceURL != NULL;
-		if (exists)
-		{
-			CFRelease(resourceURL);
-		}
-		return resourcePath;
-	}*/
-    return "";
-#else
 	return std::filesystem::absolute(file);
-#endif
 }
 std::filesystem::path File::GetDirectoryOf(const std::filesystem::path& file)
 {
@@ -199,3 +185,4 @@ void File::Copy(const std::filesystem::path& source, const std::filesystem::path
 {
 	std::filesystem::copy(source, dest, (std::filesystem::copy_options)options);
 }
+#endif

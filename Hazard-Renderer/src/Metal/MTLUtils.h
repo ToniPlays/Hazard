@@ -16,24 +16,25 @@
 
 namespace HazardRenderer::Metal
 {
-    static MTL::PrimitiveType DrawTypeToMTLPrimitive(const DrawType& type) {
-    
-        switch(type)
-        {
-            case DrawType::Fill:    return MTL::PrimitiveTypeTriangle;
-            case DrawType::Line:    return MTL::PrimitiveTypeLine;
-            case DrawType::Point:   return MTL::PrimitiveTypePoint;
-            default:                return MTL::PrimitiveTypePoint;
-        }
-    }
-    static MTL::PrimitiveTopologyClass DrawTypeToMTLTopology(const DrawType& type)
+    static MTL::PrimitiveType DrawTypeToMTLPrimitive(uint32_t flags)
     {
-        switch (type) {
-            case DrawType::None:    return MTL::PrimitiveTopologyClassUnspecified;
-            case DrawType::Fill:    return MTL::PrimitiveTopologyClassTriangle;
-            case DrawType::Line:    return MTL::PrimitiveTopologyClassLine;
-            case DrawType::Point:   return MTL::PrimitiveTopologyClassPoint;
-        }
+        if(flags & PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)
+            return MTL::PrimitiveTypeTriangle;
+        if(flags & PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST)
+            return MTL::PrimitiveTypeLine;
+        if(flags & PIPELINE_PRIMITIVE_TOPOLOGY_POINT_LIST)
+            return MTL::PrimitiveTypePoint;
+    }
+    static MTL::PrimitiveTopologyClass DrawTypeToMTLTopology(uint32_t flags)
+    {
+        if(flags & PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)
+            return MTL::PrimitiveTopologyClassTriangle;
+        if(flags & PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST)
+            return MTL::PrimitiveTopologyClassLine;
+        if(flags & PIPELINE_PRIMITIVE_TOPOLOGY_POINT_LIST)
+            return MTL::PrimitiveTopologyClassPoint;
+        
+        return MTL::PrimitiveTopologyClassUnspecified;
     }
     static MTL::VertexFormat ShaderDataTypeToMTLVertexFormat(const ShaderDataType& type)
     {
@@ -104,14 +105,13 @@ namespace HazardRenderer::Metal
         }
         return MTL::CompareFunctionNever;
     }
-    static MTL::CullMode CullModeToMTLCullMode(const CullMode& mode)
+    static MTL::CullMode CullModeToMTLCullMode(uint32_t flags)
     {
-        switch(mode)
-        {
-            case CullMode::FrontFace:   return MTL::CullModeFront;
-            case CullMode::BackFace:    return MTL::CullModeBack;
-            case CullMode::None:        return MTL::CullModeNone;
-        }
+        if(flags & PIPELINE_CULL_FRONT_FACE)
+            return MTL::CullModeFront;
+        if(flags & PIPELINE_CULL_BACK_FACE)
+            return MTL::CullModeBack;
+        return MTL::CullModeNone;
     }
     static MTL::SamplerMinMagFilter FilterModeToMTLFilter(FilterMode mode)
     {

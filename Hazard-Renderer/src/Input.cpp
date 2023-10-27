@@ -16,8 +16,8 @@ void Input::Init(HazardRenderer::Window& window)
 
 	for (uint32_t i = 0; i < s_Gamepads.size(); i++)
 	{
-		if (glfwJoystickPresent(i))
-			ConnectGamepad(i);
+		//if (glfwJoystickPresent(i))
+		//	ConnectGamepad(i);
 	}
 }
 bool Input::AnyKey()
@@ -76,7 +76,7 @@ void Input::Update()
 		if (!gamepad.Connected) continue;
 
 		auto& info = s_Window->GetWindowInfo();
-
+        /*
 		GLFWgamepadstate state = {};
 		glfwGetGamepadState(g, &state);
 
@@ -118,6 +118,7 @@ void Input::Update()
 
 			gamepad.Buttons[i] = buttonState;
 		}
+         */
 	}
 }
 
@@ -128,6 +129,7 @@ void Input::UpdateKey(uint32_t code, int state)
 }
 void Input::ConnectGamepad(int device)
 {
+    /*
 	auto& gamepad = s_Gamepads[device];
 	gamepad.Name = glfwGetGamepadName(device);
 	gamepad.Binding = device;
@@ -142,6 +144,7 @@ void Input::ConnectGamepad(int device)
 		for (uint32_t i = Gamepad::ButtonFirst; i <= Gamepad::ButtonLast; i++)
 			gamepad.Buttons.push_back(0);
 	}
+    */
 }
 void Input::DisconnectGamepad(int device)
 {

@@ -23,22 +23,21 @@ namespace HazardRenderer::Metal
     {
     public:
       
-        MetalShader(const std::vector<ShaderStageCode>& shaderCode);
+        MetalShader(const std::unordered_map<uint32_t, std::string>& shaderModules);
         ~MetalShader();
         
         void Reload() override;
 
-        const ShaderData& GetShaderData() const override { return m_ShaderData; };
         std::unordered_map<uint32_t, Buffer> GetShaderCode() const override { return m_ShaderCode; };
+        void SetShaderCode(const std::unordered_map<uint32_t, Buffer>& shaderCode) override
+        {
+            m_ShaderCode = shaderCode;
+        };
         
         //Metal specific
         MTL::Function* GetFunction(uint32_t stage) { return m_Functions[stage]; }
-        
+    
     private:
-        void Reflect();
-        
-    private:
-        ShaderData m_ShaderData;
         std::unordered_map<uint32_t, Buffer> m_ShaderCode;
         std::unordered_map<uint32_t, MTL::Function*> m_Functions;
         

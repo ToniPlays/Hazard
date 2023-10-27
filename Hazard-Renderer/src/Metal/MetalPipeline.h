@@ -28,9 +28,7 @@ namespace HazardRenderer::Metal
         bool IsValid() const override { return m_Pipeline; }
 
         void SetLayout(const BufferLayout& layout) override { m_Layout = layout; };
-        
-        DescriptorSetLayout GetDescriptorSetLayout(uint32_t set) const override { return DescriptorSetLayout(); }
-
+    
         void Invalidate() override;
         void Invalidate_RT();
         
