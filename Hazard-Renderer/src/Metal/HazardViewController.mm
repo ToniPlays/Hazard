@@ -37,7 +37,22 @@
 }
 - (void)handleGesture:(GestureDelegate*)delegate
 {
-    
+    switch(delegate.state)
+    {
+        case UIGestureRecognizerStateBegan:
+        {
+            
+        }
+        case UIGestureRecognizerStateEnded:
+        {
+            
+        }
+        case UIGestureRecognizerStateChanged:
+        {
+            
+        }
+        default: return;
+    }
 }
 @end
 
