@@ -66,4 +66,5 @@ private:
 	inline static uint64_t s_KeysPressed = 0;
 	inline static uint8_t s_KeyStates[384];
 	inline static std::vector<Joystick> s_Gamepads;
+	inline static HazardRenderer::Window* s_Window;
 };

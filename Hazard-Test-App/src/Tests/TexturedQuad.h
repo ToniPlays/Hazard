@@ -21,38 +21,3 @@ private:
 	Ref<HazardRenderer::Sampler> m_Sampler;
 	Ref<HazardRenderer::Pipeline> m_Pipeline;
 };
-
-
-/*
-	static void Run(RenderAPI api)
-	{
-		static bool running = true;
-
-		Window* window = CreateTestWindow("Textured quad", api, &running);
-		window->Show();
-
-		//---------------
-		
-
-		while (running)
-		{
-            auto swapchain = window->GetSwapchain();
-            auto commandBuffer = swapchain->GetSwapchainBuffer();
-            auto renderPass = swapchain->GetRenderPass();
-
-			Input::Update();
-			window->BeginFrame();
-            
-			commandBuffer->BeginRenderPass(renderPass);
-			commandBuffer->SetPipeline(pipeline);
-			commandBuffer->SetDescriptorSet(descriptorSet, 0);
-			commandBuffer->SetVertexBuffer(vertexBuffer);
-			commandBuffer->Draw(indexBuffer->GetSize() / sizeof(uint32_t), indexBuffer);
-			commandBuffer->EndRenderPass();
-            
-			Renderer::WaitAndRender();
-			window->Present();
-		}
-		window->Close();
-	}
-*/

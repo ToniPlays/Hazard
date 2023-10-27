@@ -14,6 +14,7 @@ namespace HazardRenderer
 		std::string DebugName;
 		uint32_t Set;
 		DescriptorSetLayout* pLayout;
+		uint32_t Flags;
 	};
 
 	class DescriptorSet : public RefCount

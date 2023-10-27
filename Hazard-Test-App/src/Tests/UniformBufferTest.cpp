@@ -14,7 +14,7 @@ void UniformBufferTest::Init()
 	using namespace HazardRenderer;
 	m_Window = &Hazard::Application::Get().GetModule<Hazard::RenderContextManager>().GetWindow();
 
-	m_Window->GetContext()->SetClearColor(Color(255, 128, 0, 255));
+	m_Window->GetContext()->SetClearColor(Color("#14ED14"));
 	m_Window->SetWindowTitle(GetName());
 
 	float vertices[] =
@@ -34,7 +34,7 @@ void UniformBufferTest::Init()
 							{ "a_TextureCoords",	ShaderDataType::Float2 }
 	};
 
-	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/UboTest.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/UboTest.glsl", m_Window->GetWindowInfo().SelectedAPI);
 	Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
 	BufferCreateInfo vbo = {};
@@ -57,8 +57,8 @@ void UniformBufferTest::Init()
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
 	spec.DepthTest = false;
 	spec.pBufferLayout = &layout;
-	//spec.ShaderCodeCount = code.size();
-	//spec.pShaderCode = code.data();
+	spec.ShaderCodeCount = code.size();
+	spec.pShaderCode = code.data();
 
 	Image2DCreateInfo imageInfo = {};
 	imageInfo.DebugName = "Image2D";

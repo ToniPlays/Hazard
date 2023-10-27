@@ -9,6 +9,9 @@
 
 void Input::Init(HazardRenderer::Window& window)
 {
+
+	s_Window = &window;
+
 	s_Gamepads.resize(16);
 
 	for (uint32_t i = 0; i < s_Gamepads.size(); i++)
@@ -72,7 +75,7 @@ void Input::Update()
 		auto& gamepad = s_Gamepads[g];
 		if (!gamepad.Connected) continue;
 
-		auto& info = HazardRenderer::WindowsWindow::s_CurrentWindow->GetWindowInfo();
+		auto& info = s_Window->GetWindowInfo();
 
 		GLFWgamepadstate state = {};
 		glfwGetGamepadState(g, &state);
