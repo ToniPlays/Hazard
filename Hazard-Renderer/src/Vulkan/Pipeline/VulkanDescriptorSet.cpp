@@ -126,7 +126,7 @@ namespace HazardRenderer::Vulkan
 			binding.binding = element.Binding;
 			binding.descriptorType = VkUtils::GetDescriptorType(element.Type);
 			binding.descriptorCount = element.Length;
-			binding.stageFlags = VK_SHADER_STAGE_ALL;
+			binding.stageFlags = VkUtils::GetVulkanShaderStage(element.Flags);
 		}
 
 		VkDescriptorSetLayoutCreateInfo layoutInfo = {};

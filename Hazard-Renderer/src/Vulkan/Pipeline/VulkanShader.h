@@ -14,12 +14,6 @@
 namespace HazardRenderer::Vulkan
 {
 	class VulkanImage2D;
-	struct PushConstantRange 
-	{
-		VkShaderStageFlags Stages = VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
-		uint32_t Offset = 0;
-		uint32_t Size = 0;
-	};
 
 	class VulkanShader : public Shader
 	{

@@ -2,6 +2,7 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/RenderContext/TextureFactory.h"
+#include <spdlog/fmt/fmt.h>
 
 void TexturedQuadTest::Reset()
 {
@@ -18,6 +19,13 @@ void TexturedQuadTest::Init()
 	m_Window->SetWindowTitle(GetName());
 
 	std::cout << "Selected device: " << m_Window->GetContext()->GetDevice()->GetDeviceName() << std::endl;
+
+	std::unordered_map<RenderAPI, std::string> extensions = {
+		{ RenderAPI::OpenGL, "ogl" },
+		{ RenderAPI::Vulkan, "vk" },
+		{ RenderAPI::Metal, "mtl" }
+	};
+
 	float vertices[] =
 	{
 		-0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f,
@@ -35,7 +43,10 @@ void TexturedQuadTest::Init()
 							{ "a_TextureCoords",	ShaderDataType::Float2 }
 	};
 
-	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	DescriptorSetLayout descriptorLayout = {
+		{ SHADER_STAGE_FRAGMENT_BIT, "u_Texture", 0, DESCRIPTOR_TYPE_SAMPLER_2D, }
+	};
+
 	Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
 	BufferCreateInfo vbo = {};
@@ -55,6 +66,11 @@ void TexturedQuadTest::Init()
 	spec.Usage = PipelineUsage::GraphicsBit;
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
 	spec.pBufferLayout = &layout;
+	spec.SetLayouts = { descriptorLayout };
+	spec.Flags = PIPELINE_DRAW_FILL | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	spec.Shaders = {
+		{ SHADER_STAGE_VERTEX_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/texturedQuad.Vertex.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) },
+		{ SHADER_STAGE_FRAGMENT_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/texturedQuad.Fragment.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) }};
 
 	Image2DCreateInfo imageInfo = {};
 	imageInfo.DebugName = "Image2D";
@@ -71,15 +87,11 @@ void TexturedQuadTest::Init()
 
 	m_VertexBuffer = GPUBuffer::Create(&vbo);
 	m_IndexBuffer = GPUBuffer::Create(&ibo);
-	//m_Pipeline = Pipeline::Create(&spec);
+	m_Pipeline = Pipeline::Create(&spec);
 	m_Image = Image2D::Create(&imageInfo);
 	m_Sampler = Sampler::Create(&samplerInfo);
 
 	header.ImageData.Release();
-
-	DescriptorSetLayout descriptorLayout = {			//VkDescriptorSetLayout
-		{ "u_Texture", 0, DESCRIPTOR_TYPE_SAMPLER_2D, }	//LayoutBinding
-	};
 
 	DescriptorSetCreateInfo descriptorInfo = {};
 	descriptorInfo.DebugName = "Descriptor";
@@ -96,10 +108,10 @@ void TexturedQuadTest::Run()
 	auto commandBuffer = swapchain->GetSwapchainBuffer();
 
 	commandBuffer->BeginRenderPass(swapchain->GetRenderPass());
-	//commandBuffer->SetPipeline(m_Pipeline);
-	//commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
-	//commandBuffer->SetVertexBuffer(m_VertexBuffer);
-	//commandBuffer->Draw(m_IndexBuffer->GetSize() / sizeof(uint32_t), m_IndexBuffer);
+	commandBuffer->SetPipeline(m_Pipeline);
+	commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
+	commandBuffer->SetVertexBuffer(m_VertexBuffer);
+	commandBuffer->Draw(m_IndexBuffer->GetSize() / sizeof(uint32_t), m_IndexBuffer);
 	commandBuffer->EndRenderPass();
 }
 

@@ -23,7 +23,6 @@ namespace HazardRenderer::Vulkan
 		Ref<Shader> GetShader() override { return m_Shader; }
 		void SetRenderPass(Ref<RenderPass> renderPass) override;
 
-		bool IsCompatibleWith(Ref<Shader> shader) const override;
 		bool IsValid() const { return m_Pipeline != VK_NULL_HANDLE; }
 
 		void SetLayout(const BufferLayout& layout) { m_Layout = layout; }
@@ -37,7 +36,6 @@ namespace HazardRenderer::Vulkan
 		VkPipelineBindPoint GetBindingPoint() const;
 		VkPipeline GetVulkanPipeline() const { return m_Pipeline; }
 		VkPipelineLayout GetPipelineLayout() const { return m_PipelineLayout; }
-		VkShaderStageFlags GetPushConstantFlags() const { return m_PushConstantFlags; }
 
 		const std::vector<VkRayTracingShaderGroupCreateInfoKHR>& GetShaderGroups() { return m_ShaderGroups; }
 
@@ -50,7 +48,6 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanShader> m_Shader;
 
 		BufferLayout m_Layout;
-		VkShaderStageFlags m_PushConstantFlags = 0;
 
 		VkPipeline m_Pipeline = VK_NULL_HANDLE;
 		VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;

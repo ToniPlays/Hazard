@@ -14,3 +14,4 @@ kernel void main0(texture2d<float, access::write> o_OutputImage [[texture(0)]], 
     value.z = float(texelCoord.y) / float(gl_NumWorkGroups.y);
     o_OutputImage.write(value, uint2(texelCoord));
 }
+

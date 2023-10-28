@@ -51,7 +51,7 @@ void TriangleTest::Init()
     spec.pBufferLayout = &layout;
     spec.Flags = PIPELINE_DRAW_FILL | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     spec.Shaders = { { SHADER_STAGE_VERTEX_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/triangle.Vertex.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) },
-        { SHADER_STAGE_FRAGMENT_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/triangle.Fragment.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) } };
+                     { SHADER_STAGE_FRAGMENT_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/triangle.Fragment.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) } };
     
     m_VertexBuffer = GPUBuffer::Create(&vbo);
     m_Pipeline = Pipeline::Create(&spec);

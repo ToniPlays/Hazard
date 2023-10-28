@@ -20,3 +20,4 @@ fragment main0_out main0(main0_in in [[stage_in]], texture2d<float> u_Texture [[
     out.OutputColor = u_Texture.sample(u_TextureSmplr, in.TextureCoords) * in.Color;
     return out;
 }
+

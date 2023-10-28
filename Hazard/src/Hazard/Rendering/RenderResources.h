@@ -79,15 +79,16 @@ namespace Hazard
 			Ref<Material> skyboxMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("Skybox"));
 			SkyboxMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, skyboxMaterial);
 
-			DescriptorSetLayout layout = { { "Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
+			/*DescriptorSetLayout layout = {{"Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER},
 										   { "Camu_RadianceMapera", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 										   { "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 										   { "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
+										   */
 
 			DescriptorSetCreateInfo setInfo = {};
 			setInfo.DebugName = "WorldDescriptor";
 			setInfo.Set = 0;
-			setInfo.pLayout = &layout;
+			//setInfo.pLayout = &layout;
 
 			WorldDescriptor = DescriptorSet::Create(&setInfo);
 

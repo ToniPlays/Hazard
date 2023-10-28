@@ -42,6 +42,13 @@ namespace HazardRenderer
 		Always
 	};
 
+	struct PushConstantRange
+	{
+		uint32_t Flags;
+		uint32_t Size;
+		uint32_t Offset;
+	};
+
 	struct PipelineSpecification
 	{
 		std::string DebugName;
@@ -52,6 +59,8 @@ namespace HazardRenderer
 		DepthOp DepthOperator = DepthOp::LessOrEqual;
 
 		std::unordered_map<uint32_t, std::string> Shaders;
+		std::vector<DescriptorSetLayout> SetLayouts;
+		std::vector<PushConstantRange> PushConstants;
 		uint32_t MaxRayDepth = 0;
 		uint32_t Flags = 0;
 	};
@@ -66,7 +75,6 @@ namespace HazardRenderer
 
 		virtual Ref<Shader> GetShader() = 0;
 		virtual void SetRenderPass(Ref<RenderPass> renderPass) = 0;
-		virtual bool IsCompatibleWith(Ref<Shader> shader) const = 0;
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 
 		virtual void Invalidate() = 0;

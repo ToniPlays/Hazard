@@ -3,6 +3,8 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 
+#include <spdlog/fmt/fmt.h>
+
 void ComputeShaderTest::Reset()
 {
 
@@ -30,6 +32,20 @@ void ComputeShaderTest::Init()
 		-0.75f, -0.75f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f
 	};
 
+	std::unordered_map<RenderAPI, std::string> extensions = {
+		{ RenderAPI::OpenGL, "ogl" },
+		{ RenderAPI::Vulkan, "vk" },
+		{ RenderAPI::Metal, "mtl" }
+	};
+
+	DescriptorSetLayout computeDescriptorLayout = {
+		{ SHADER_STAGE_COMPUTE_BIT, "o_OutputImage", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE }
+	};
+
+	DescriptorSetLayout descriptorLayout = {
+		{ SHADER_STAGE_FRAGMENT_BIT, "u_Texture", 0, DESCRIPTOR_TYPE_SAMPLER_2D }
+	};
+
 
 	BufferCreateInfo vbo = {};
 	vbo.Name = "TriangleVBO";
@@ -37,23 +53,25 @@ void ComputeShaderTest::Init()
 	vbo.Data = &vertices;
 	vbo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/texturedQuad.glsl", m_Window->GetWindowInfo().SelectedAPI);
-
 	PipelineSpecification spec = {};
 	spec.DebugName = "Rasterized";
 	spec.Usage = PipelineUsage::GraphicsBit;
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
 	spec.pBufferLayout = &layout;
-	//spec.ShaderCodeCount = code.size();
-	//spec.pShaderCode = code.data();
-
-	//std::vector<ShaderStageCode> computeCode = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/compute.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	spec.SetLayouts = { descriptorLayout };
+	spec.Flags = PIPELINE_DRAW_FILL | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	spec.Shaders = {
+		{ SHADER_STAGE_VERTEX_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/texturedQuad.Vertex.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) },
+		{ SHADER_STAGE_FRAGMENT_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/texturedQuad.Fragment.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) } };
 
 	PipelineSpecification computeSpec = {};
 	computeSpec.DebugName = "Compute";
 	computeSpec.Usage = PipelineUsage::ComputeBit;
-	//computeSpec.ShaderCodeCount = computeCode.size();
-	//computeSpec.pShaderCode = computeCode.data();
+	computeSpec.SetLayouts = { computeDescriptorLayout };
+	computeSpec.PushConstants = { { SHADER_STAGE_COMPUTE_BIT, 16, 0 } };
+	computeSpec.Shaders = {
+		{ SHADER_STAGE_COMPUTE_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/compute.Compute.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) } };
+
 
 	Image2DCreateInfo outputImageSpec = {};
 	outputImageSpec.DebugName = "ComputeOutput";
@@ -68,18 +86,10 @@ void ComputeShaderTest::Init()
 	samplerInfo.MagFilter = FilterMode::Linear;
 	samplerInfo.Wrapping = ImageWrap::ClampBorder;
 
-	DescriptorSetLayout computeDescriptorLayout = {
-		{ "o_OutputImage", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE }
-	};
-
 	DescriptorSetCreateInfo computeDescriptorSpec = {};
 	computeDescriptorSpec.DebugName = "Compute";
 	computeDescriptorSpec.Set = 0;
 	computeDescriptorSpec.pLayout = &computeDescriptorLayout;
-
-	DescriptorSetLayout descriptorLayout = {
-		{ "u_Texture", 0, DESCRIPTOR_TYPE_SAMPLER_2D }
-	};
 
 	DescriptorSetCreateInfo descriptorSpec = {};
 	descriptorSpec.DebugName = "Graphics";
@@ -87,10 +97,10 @@ void ComputeShaderTest::Init()
 	descriptorSpec.pLayout = &descriptorLayout;
 
 	m_VertexBuffer = GPUBuffer::Create(&vbo);
-	//m_Pipeline = Pipeline::Create(&spec);
+	m_Pipeline = Pipeline::Create(&spec);
 	m_DescriptorSet = DescriptorSet::Create(&descriptorSpec);
 	m_ComputeDescriptorSet = DescriptorSet::Create(&computeDescriptorSpec);
-	//m_ComputePipeline = Pipeline::Create(&computeSpec);
+	m_ComputePipeline = Pipeline::Create(&computeSpec);
 	m_OutputImage = Image2D::Create(&outputImageSpec);
 	m_Sampler = Sampler::Create(&samplerInfo);
 
@@ -99,10 +109,13 @@ void ComputeShaderTest::Init()
 	m_DescriptorSet->Write(0, 0, m_OutputImage, m_Sampler, true);
 	m_ComputeDescriptorSet->Write(0, 0, m_OutputImage, nullptr);
 
+	glm::vec4 color = Color("#1414ED");
+
 	computeBuffer->Begin();
-	//computeBuffer->SetPipeline(m_ComputePipeline);
-	//computeBuffer->SetDescriptorSet(m_ComputeDescriptorSet, 0);
-	//computeBuffer->DispatchCompute({ m_OutputImage->GetWidth(), m_OutputImage->GetHeight(), 1 });
+	computeBuffer->SetPipeline(m_ComputePipeline);
+	computeBuffer->PushConstants(Buffer(&color, sizeof(glm::vec4)), 0, SHADER_STAGE_COMPUTE_BIT);
+	computeBuffer->SetDescriptorSet(m_ComputeDescriptorSet, 0);
+	computeBuffer->DispatchCompute({ m_OutputImage->GetWidth(), m_OutputImage->GetHeight(), 1 });
 	computeBuffer->End();
 	computeBuffer->Submit();
 
@@ -114,10 +127,10 @@ void ComputeShaderTest::Run()
 	auto renderPass = swapchain->GetRenderPass();
 
 	commandBuffer->BeginRenderPass(renderPass);
-	//commandBuffer->SetPipeline(m_Pipeline);
-	//commandBuffer->SetVertexBuffer(m_VertexBuffer);
-	//commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
-	//commandBuffer->Draw(6);
+	commandBuffer->SetPipeline(m_Pipeline);
+	commandBuffer->SetVertexBuffer(m_VertexBuffer);
+	commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
+	commandBuffer->Draw(6);
 	commandBuffer->EndRenderPass();
 }
 void ComputeShaderTest::Terminate()

@@ -46,10 +46,6 @@ namespace HazardRenderer::Vulkan
 		m_Specs.pTargetRenderPass = renderPass;
 		Invalidate();
 	}
-	bool VulkanPipeline::IsCompatibleWith(Ref<Shader> shader) const
-	{
-		return true;
-	}
 	void VulkanPipeline::Invalidate()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -78,8 +74,6 @@ namespace HazardRenderer::Vulkan
 
 	void VulkanPipeline::Invalidate_RT()
 	{
-		m_PushConstantFlags = 0;
-
 		switch (m_Specs.Usage)
 		{
 			case PipelineUsage::GraphicsBit:	InvalidateGraphicsPipeline(); break;
@@ -96,22 +90,43 @@ namespace HazardRenderer::Vulkan
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
-		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
-		auto setLayouts = std::vector<VkDescriptorSetLayout>(0);
 
-		auto pushConstantRanges = std::unordered_map<std::string, PushConstantRange>();
-		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
+		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
+
+		std::vector<VkDescriptorSetLayout> setLayouts(m_Specs.SetLayouts.size());
+		std::vector<VkDescriptorSetLayoutBinding> bindings;
+
+		{
+			for (uint32_t i = 0; i < setLayouts.size(); i++)
+			{
+				for (auto& element : m_Specs.SetLayouts[i])
+				{
+					auto& binding = bindings.emplace_back();
+					binding.binding = element.Binding;
+					binding.descriptorType = VkUtils::GetDescriptorType(element.Type);
+					binding.descriptorCount = element.Length;
+					binding.stageFlags = VkUtils::GetVulkanShaderStage(element.Flags);
+				}
+
+				VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+				layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+				layoutInfo.bindingCount = bindings.size();
+				layoutInfo.pBindings = bindings.data();
+
+				VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &setLayouts[i]), "Failed to create descriptor set layout");
+			}
+		}
+
+		std::vector<VkPushConstantRange> vulkanPushConstantRanges(m_Specs.PushConstants.size());
 		{
 			uint32_t i = 0;
-			for (auto& [name, range] : pushConstantRanges)
+			for (auto& range : m_Specs.PushConstants)
 			{
 				auto& vkRange = vulkanPushConstantRanges[i];
 
-				vkRange.stageFlags = range.Stages;
+				vkRange.stageFlags = VkUtils::GetVulkanShaderStage(range.Flags);
 				vkRange.offset = range.Offset;
 				vkRange.size = range.Size;
-
-				m_PushConstantFlags |= vkRange.stageFlags;
 			}
 		}
 
@@ -289,24 +304,43 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(m_Specs.Usage == PipelineUsage::ComputeBit, "Pipeline is not a compute pipeline");
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		auto setLayouts = std::vector<VkDescriptorSetLayout>(1);// m_Shader->GetDescriptorSetLayouts();
 
-		const auto& pushConstantRanges = std::unordered_map<std::string, PushConstantRange>();// m_Shader->GetPushConstantRanges();
-		std::vector<VkPushConstantRange> vulkanPushConstantRanges(pushConstantRanges.size());
+		std::vector<VkDescriptorSetLayout> setLayouts(m_Specs.SetLayouts.size());
+		std::vector<VkDescriptorSetLayoutBinding> bindings;
+
 		{
-			uint32_t i = 0;
-			for (auto& [name, range] : pushConstantRanges)
+			for (uint32_t i = 0; i < setLayouts.size(); i++)
 			{
-				auto& vkRange = vulkanPushConstantRanges[i];
+				for (auto& element : m_Specs.SetLayouts[i])
+				{
+					auto& binding = bindings.emplace_back();
+					binding.binding = element.Binding;
+					binding.descriptorType = VkUtils::GetDescriptorType(element.Type);
+					binding.descriptorCount = element.Length;
+					binding.stageFlags = VkUtils::GetVulkanShaderStage(element.Flags);
+				}
 
-				vkRange.stageFlags = range.Stages;
-				vkRange.offset = range.Offset;
-				vkRange.size = range.Size;
+				VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+				layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+				layoutInfo.bindingCount = bindings.size();
+				layoutInfo.pBindings = bindings.data();
 
-				m_PushConstantFlags |= vkRange.stageFlags;
+				VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &setLayouts[i]), "Failed to create descriptor set layout");
 			}
 		}
 
+		std::vector<VkPushConstantRange> vulkanPushConstantRanges(m_Specs.PushConstants.size());
+		{
+			uint32_t i = 0;
+			for (auto& range : m_Specs.PushConstants)
+			{
+				auto& vkRange = vulkanPushConstantRanges[i];
+
+				vkRange.stageFlags = VkUtils::GetVulkanShaderStage(range.Flags);
+				vkRange.offset = range.Offset;
+				vkRange.size = range.Size;
+			}
+		}
 
 		VkPipelineLayoutCreateInfo pipelineLayout = {};
 		pipelineLayout.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;

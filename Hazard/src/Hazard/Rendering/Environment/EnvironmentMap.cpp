@@ -61,13 +61,14 @@ namespace Hazard
 		AssetHandle computePipelineHandle = ShaderLibrary::GetPipelineAssetHandle("EquirectangularToCubemap");
 		Ref<Pipeline> computePipeline = AssetManager::GetAsset<AssetPointer>(computePipelineHandle)->Value.As<Pipeline>();
 
-		DescriptorSetLayout layout = { { "o_CubeMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE },
+		/*DescriptorSetLayout layout = {{"o_CubeMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE},
 									   { "u_EquirectangularTexture", 1, DESCRIPTOR_TYPE_SAMPLER_2D } };
+									   */
 
 		DescriptorSetCreateInfo setInfo = {};
 		setInfo.DebugName = "EquirectangularComputeSet";
 		setInfo.Set = 0;
-		setInfo.pLayout = &layout;
+		//setInfo.pLayout = &layout;
 
 		Ref<DescriptorSet> set = DescriptorSet::Create(&setInfo);
 		set->Write(0, 0, radianceMap, nullptr, true);

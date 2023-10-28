@@ -3,6 +3,8 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/RenderContext/TextureFactory.h"
+#include <spdlog/fmt/fmt.h>
+
 
 void UniformBufferTest::Reset()
 {
@@ -34,7 +36,18 @@ void UniformBufferTest::Init()
 							{ "a_TextureCoords",	ShaderDataType::Float2 }
 	};
 
-	//std::vector<ShaderStageCode> code = ShaderCompiler::GetShaderBinariesFromSource("assets/shaders/UboTest.glsl", m_Window->GetWindowInfo().SelectedAPI);
+	std::unordered_map<RenderAPI, std::string> extensions = {
+		{ RenderAPI::OpenGL, "ogl" },
+		{ RenderAPI::Vulkan, "vk" },
+		{ RenderAPI::Metal, "mtl" }
+	};
+
+
+	DescriptorSetLayout descriptorLayout = {
+		{ SHADER_STAGE_VERTEX_BIT, "u_Camera",  0, DESCRIPTOR_TYPE_UNIFORM_BUFFER	},
+		{ SHADER_STAGE_FRAGMENT_BIT, "u_Texture", 1, DESCRIPTOR_TYPE_SAMPLER_2D		}
+	};
+
 	Hazard::TextureHeader header = Hazard::TextureFactory::LoadTextureFromSourceFile("assets/textures/csharp.png", true);
 
 	BufferCreateInfo vbo = {};
@@ -54,8 +67,12 @@ void UniformBufferTest::Init()
 	spec.Usage = PipelineUsage::GraphicsBit;
 	spec.pTargetRenderPass = m_Window->GetSwapchain()->GetRenderPass().Raw();
 	spec.pBufferLayout = &layout;
-	//spec.ShaderCodeCount = code.size();
-	//spec.pShaderCode = code.data();
+	spec.SetLayouts = { descriptorLayout };
+	spec.Flags = PIPELINE_DRAW_FILL | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	spec.Shaders = {
+		{ SHADER_STAGE_VERTEX_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/UboTest.Vertex.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) },
+		{ SHADER_STAGE_FRAGMENT_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/UboTest.Fragment.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) } };
+
 
 	Image2DCreateInfo imageInfo = {};
 	imageInfo.DebugName = "Image2D";
@@ -75,11 +92,6 @@ void UniformBufferTest::Init()
 	samplerInfo.MagFilter = FilterMode::Linear;
 	samplerInfo.Wrapping = ImageWrap::ClampBorder;
 
-	DescriptorSetLayout descriptorLayout = {
-		{ "u_Camera",  0, DESCRIPTOR_TYPE_UNIFORM_BUFFER	},
-		{ "u_Texture", 1, DESCRIPTOR_TYPE_SAMPLER_2D		}
-	};
-
 	DescriptorSetCreateInfo descriptorSetSpec = {};
 	descriptorSetSpec.DebugName = "Camera";
 	descriptorSetSpec.Set = 0;
@@ -88,7 +100,7 @@ void UniformBufferTest::Init()
 	m_VertexBuffer = GPUBuffer::Create(&vbo);
 	m_IndexBuffer = GPUBuffer::Create(&ibo);
 	m_UniformBuffer = GPUBuffer::Create(&uboInfo);
-	//m_Pipeline = Pipeline::Create(&spec);
+	m_Pipeline = Pipeline::Create(&spec);
 	m_Image = Image2D::Create(&imageInfo);
 	m_Sampler = Sampler::Create(&samplerInfo);
 	m_DescriptorSet = DescriptorSet::Create(&descriptorSetSpec);
@@ -113,10 +125,10 @@ void UniformBufferTest::Run()
 	m_UniformBuffer->SetData(region);
 
 	commandBuffer->BeginRenderPass(renderPass);
-	//commandBuffer->SetPipeline(m_Pipeline);
-	//commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
-	//commandBuffer->SetVertexBuffer(m_VertexBuffer);
-	//commandBuffer->Draw(m_IndexBuffer->GetSize() / sizeof(uint32_t), m_IndexBuffer);
+	commandBuffer->SetPipeline(m_Pipeline);
+	commandBuffer->SetDescriptorSet(m_DescriptorSet, 0);
+	commandBuffer->SetVertexBuffer(m_VertexBuffer);
+	commandBuffer->Draw(m_IndexBuffer->GetSize() / sizeof(uint32_t), m_IndexBuffer);
 	commandBuffer->EndRenderPass();
 }
 

@@ -42,6 +42,7 @@ namespace Hazard
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip)
 	{
 		HZR_PROFILE_FUNCTION();
+
         if(!File::Exists(path))
            return TextureHeader();
 

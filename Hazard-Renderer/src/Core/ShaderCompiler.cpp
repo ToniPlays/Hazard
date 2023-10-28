@@ -70,24 +70,6 @@ namespace HazardRenderer
 				}
 
 				return glSource;
-
-				/*
-				//Compile to OpenGL SPV
-				CompileInfo compileInfoOpenGL = {};
-				compileInfoOpenGL.Renderer = RenderAPI::OpenGL;
-				compileInfoOpenGL.Name = File::GetName(sourceFile);
-				compileInfoOpenGL.Stage = stage;
-				compileInfoOpenGL.Source = glSource;
-				compileInfoOpenGL.DefineCount = glDefines.size();
-				compileInfoOpenGL.pDefines = glDefines.data();
-
-				//Get OpenGL compiled binary
-				if (!compiler.Compile(&compileInfoOpenGL))
-				{
-					std::cout << compiler.GetErrorMessage() << std::endl;
-					return "";
-				}
-				*/
 			}
 			case RenderAPI::Vulkan:
 			{
@@ -131,13 +113,12 @@ namespace HazardRenderer
 				}
 
 				std::string mslSource;
-				if (compiler.Decompile(compiler.GetCompiledBinary(), mslSource))
+				if (!compiler.Decompile(compiler.GetCompiledBinary(), mslSource))
 				{
-					return mslSource;
+					std::cout << compiler.GetErrorMessage() << std::endl;
+					return "";
 				}
-
-
-				return "";
+				return mslSource;
 			}
 			default: return "";
 		}

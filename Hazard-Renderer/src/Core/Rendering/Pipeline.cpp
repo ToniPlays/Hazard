@@ -11,7 +11,6 @@ namespace HazardRenderer
 	Ref<Pipeline> Pipeline::Create(PipelineSpecification* specs)
 	{
 		HZR_ASSERT(!specs->DebugName.empty(), "Unable to create pipeline with no name");
-		HZR_ASSERT(specs->Flags > 0, "Pipeline flags must not be 0");
 
 		switch (GraphicsContext::GetRenderAPI())
 		{

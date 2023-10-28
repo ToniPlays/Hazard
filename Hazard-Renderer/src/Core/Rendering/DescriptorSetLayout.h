@@ -24,12 +24,12 @@ namespace HazardRenderer
 
 		DescriptorSetElement() = default;
 
-		DescriptorSetElement(const std::string& name, uint32_t binding, DescriptorType type)
-			: Name(name), Binding(binding), Type(type)
+		DescriptorSetElement(uint32_t stageMask, const std::string& name, uint32_t binding, DescriptorType type)
+			: Flags(stageMask), Name(name), Binding(binding), Type(type)
 		{
 		}
-		DescriptorSetElement(const std::string& name, uint32_t binding, uint32_t length, DescriptorType type)
-			: Name(name), Binding(binding), Length(length), Type(type)
+		DescriptorSetElement(uint32_t stageMask, const std::string& name, uint32_t binding, uint32_t length, DescriptorType type)
+			: Flags(stageMask),Name(name), Binding(binding), Length(length), Type(type)
 		{
 		}
 	};
