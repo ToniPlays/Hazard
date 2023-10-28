@@ -70,24 +70,46 @@ bool File::Move(const std::filesystem::path& src, const std::filesystem::path& d
 
 std::string File::ReadFile(const std::filesystem::path& file)
 {
-    std::string filePath = file.parent_path() / GetNameNoExt(file);
-    std::string extension = GetFileExtension(file);
-    
-    NSString* fileName = [NSString stringWithUTF8String: filePath.c_str()];
-    
-    NSBundle* bundle = [NSBundle mainBundle];
-    NSString* path = [bundle pathForResource: fileName ofType: [NSString stringWithUTF8String: extension.c_str()]];
-    
-    if(!path)
-        return "";
-    
-    NSString* content = [NSString stringWithContentsOfFile: path encoding: kCFStringEncodingUTF8 error: nil];
-    
-    return content.UTF8String;
+    @autoreleasepool {
+        
+        
+        std::string filePath = file.parent_path() / GetNameNoExt(file);
+        std::string extension = GetFileExtension(file);
+        
+        NSString* fileName = [NSString stringWithUTF8String: filePath.c_str()];
+        
+        NSBundle* bundle = [NSBundle mainBundle];
+        NSString* path = [bundle pathForResource: fileName ofType: [NSString stringWithUTF8String: extension.c_str()]];
+        
+        if(!path)
+            return "";
+        
+        NSString* content = [NSString stringWithContentsOfFile: path encoding: kCFStringEncodingUTF8 error: nil];
+        
+        return content.UTF8String;
+    }
 }
 CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
 {
-    return CachedBuffer();
+    @autoreleasepool {
+        
+        
+        std::string filePath = path.parent_path() / GetNameNoExt(path);
+        std::string extension = GetFileExtension(path);
+        
+        NSString* fileName = [NSString stringWithUTF8String: filePath.c_str()];
+        
+        NSBundle* bundle = [NSBundle mainBundle];
+        NSString* bundlePath = [bundle pathForResource: fileName ofType: [NSString stringWithUTF8String: extension.c_str()]];
+        
+        if(!bundlePath)
+            return CachedBuffer();
+        
+        NSData* content = [NSData dataWithContentsOfFile: bundlePath];
+        CachedBuffer result(content.length);
+        result.Write(content.bytes, content.length);
+        return result;
+    }
 }
 
 std::filesystem::path File::GetFileAbsolutePath(const std::filesystem::path& file)

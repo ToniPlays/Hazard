@@ -100,6 +100,8 @@ void TexturedQuadTest::Init()
 
 	m_DescriptorSet = DescriptorSet::Create(&descriptorInfo);
 	m_DescriptorSet->Write(0, 0, m_Image, m_Sampler, true);
+    
+    header.ImageData.Release();
 }
 
 void TexturedQuadTest::Run()

@@ -74,10 +74,9 @@ namespace HazardRenderer
 
             m_Context->Init(this, info);
             m_Context->SetClearColor(windowInfo.Color);
-            m_WindowData.Width = m_Context->GetSwapchain()->GetWidth();
-            m_WindowData.Height = m_Context->GetSwapchain()->GetHeight();
-
-            //Center window
+            
+            m_WindowData.Width = m_Context->GetSwapchain()->GetHeight();
+            m_WindowData.Height = m_Context->GetSwapchain()->GetWidth();
             
             SetCallbacks();
             SetVSync(info->VSync);

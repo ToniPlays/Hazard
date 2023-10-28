@@ -4,6 +4,7 @@
 #include <iostream>
 #import "HazardViewController.h"
 #import "GestureDelegate.h"
+#include "Input.h"
 
 @implementation HazardViewController
 {
@@ -15,6 +16,7 @@
     [super viewDidLoad];
     std::cout << "View appeared" << std::endl;
     m_MTKView = (MTKView*)self.view;
+    
 
     [self SetupRecognizers];
     [self OnViewLoaded];
@@ -40,15 +42,25 @@
     {
         case UIGestureRecognizerStateBegan:
         {
-            
+            MouseButtonPressedEvent e(0);
+            Input::OnEvent(e);
+            break;
         }
         case UIGestureRecognizerStateEnded:
         {
-            
+            MouseButtonReleasedEvent e(0);
+            Input::OnEvent(e);
+            break;
         }
         case UIGestureRecognizerStateChanged:
         {
+            CGSize screenSize = [[UIScreen mainScreen] nativeBounds].size;
+            CGSize size = self.view.frame.size;
+            CGPoint coord = [delegate locationInView: self.view];
             
+            MouseMovedEvent e((coord.x / size.width) * screenSize.height, (coord.y / size.height) * screenSize.width);
+            Input::OnEvent(e);
+            break;
         }
         default: return;
     }

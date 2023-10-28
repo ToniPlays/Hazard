@@ -19,7 +19,13 @@ namespace HazardRenderer::Metal
     }
     MetalShader::~MetalShader()
     {
-        
+        Renderer::SubmitResourceFree([code = m_ShaderCode, functions = m_Functions]() mutable {
+            for(auto& [stage, buffer] : code)
+                buffer.Release();
+            
+            for(auto [stage, func] : functions)
+                func->release();
+        });
     }
     void MetalShader::Reload()
     {
@@ -33,6 +39,7 @@ namespace HazardRenderer::Metal
             
             NS::Error* libError;
             NS::String* source = NS::String::alloc()->string(msl.c_str(), NS::UTF8StringEncoding);
+            
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
             options->setFastMathEnabled(true);
             options->setPreserveInvariance(true);
@@ -41,8 +48,9 @@ namespace HazardRenderer::Metal
             MTL::Library* lib = device->GetMetalDevice()->newLibrary(source, options, &libError);
             
             source->release();
+            options->release();
             
-            if(libError->code() != 0)
+            if(false)
             {
                 RenderMessage message = {};
                 message.Severity = Severity::Error;
@@ -53,7 +61,7 @@ namespace HazardRenderer::Metal
                 continue;
             }
             
-            NS::Error* functionError = NS::Error::alloc();
+            NS::Error* functionError;
             std::string shaderTypeName = "main0";
             NS::String* name = NS::String::string()->string(shaderTypeName.c_str(), NS::UTF8StringEncoding);
             
@@ -62,7 +70,7 @@ namespace HazardRenderer::Metal
             
             auto func = lib->newFunction(descriptor, &functionError);
             
-            if(functionError->code() != 0)
+            if(false)
             {
                 RenderMessage message = {};
                 message.Severity = Severity::Error;
@@ -72,6 +80,11 @@ namespace HazardRenderer::Metal
                 Window::SendDebugMessage(message);
                 continue;
             }
+            
+            name->release();
+            descriptor->release();
+            lib->release();
+            
             m_Functions[stage] = func;
         }
     }

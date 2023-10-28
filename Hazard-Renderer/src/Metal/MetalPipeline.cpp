@@ -25,9 +25,15 @@ namespace HazardRenderer::Metal
     }
     MetalPipeline::~MetalPipeline()
     {
-        Renderer::SubmitResourceFree([descriptor = m_PipelineDescriptor, pipeline = m_Pipeline]() mutable {
-            descriptor->release();
-            pipeline->release();
+        Renderer::SubmitResourceFree([descriptor = m_PipelineDescriptor, compute = m_ComputeDescriptor, depth = m_DepthState, pipeline = m_Pipeline]() mutable {
+            if(compute)
+                compute->release();
+            if(descriptor)
+                descriptor->release();
+            if(depth)
+                depth->release();
+            if(pipeline)
+                pipeline->release();
         });
         
     }

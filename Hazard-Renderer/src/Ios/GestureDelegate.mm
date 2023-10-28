@@ -4,7 +4,6 @@
 #ifdef HZR_PLATFORM_IOS
 
 #import <Foundation/Foundation.h>
-#include "Input.h"
 
 @implementation GestureDelegate
 
@@ -18,20 +17,15 @@
 }
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    MouseButtonPressedEvent e(0);
-    Input::OnEvent(e);
+    self.state = UIGestureRecognizerStateBegan;
 }
 -(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    UITouch* touch = [[touches allObjects] firstObject];
-    CGPoint coord = [self locationInView: [self.view superview]];
-    MouseMovedEvent e(coord.x, coord.y);
-    Input::OnEvent(e);
+    self.state = UIGestureRecognizerStateChanged;
 }
 -(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    MouseButtonReleasedEvent e(0);
-    Input::OnEvent(e);
+{    
+    self.state = UIGestureRecognizerStateEnded;
 }
 
 @end

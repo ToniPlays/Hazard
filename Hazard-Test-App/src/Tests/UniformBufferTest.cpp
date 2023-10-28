@@ -107,6 +107,8 @@ void UniformBufferTest::Init()
 
 	m_DescriptorSet->Write(0, m_UniformBuffer, true);
 	m_DescriptorSet->Write(1, 0, m_Image, m_Sampler, true);
+    
+    header.ImageData.Release();
 }
 
 void UniformBufferTest::Run()

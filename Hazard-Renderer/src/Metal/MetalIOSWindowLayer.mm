@@ -26,7 +26,6 @@
             view.backgroundColor = [UIColor whiteColor];
             view.device = dev;
             
-            
             m_Width = size.width;
             m_Height = size.height;
             
@@ -39,7 +38,7 @@
             
             CAMetalLayer* metalLayer = (__bridge CAMetalLayer*)m_Layer;
             
-            metalLayer.frame.size = { (CGFloat)m_Width, (CGFloat)m_Height};
+            metalLayer.frame.size = { (CGFloat)m_Width, (CGFloat)m_Height };
             metalLayer.drawableSize = metalLayer.frame.size;
         }
 

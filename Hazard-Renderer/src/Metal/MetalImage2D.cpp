@@ -36,8 +36,10 @@ namespace HazardRenderer::Metal
     }
     MetalImage2D::~MetalImage2D()
     {
-        m_LocalBuffer.Release();
-        m_MetalTexture->release();
+        Renderer::SubmitResourceFree([buffer = m_LocalBuffer, texture = m_MetalTexture]() mutable {
+            buffer.Release();
+            texture->release();
+        });
     }
     void MetalImage2D::Invalidate()
     {
@@ -86,6 +88,10 @@ namespace HazardRenderer::Metal
             commandBuffer->commit();
             commandBuffer->waitUntilCompleted();
             
+            encoder->release();
+            commandBuffer->release();
+            buffer->release();
+            
             dataBuffer.Write(buffer->contents(), dataBuffer.Size);
         });
         return buffer;
@@ -130,28 +136,6 @@ namespace HazardRenderer::Metal
         
         descriptor->release();
     }
-/*
-    void MetalImage2D::CreateImageSampler()
-    {
-        auto device = MetalContext::GetMetalDevice();
-        
-        MTL::SamplerDescriptor* descriptor = MTL::SamplerDescriptor::alloc()->init();
-        SetDebugLabel(descriptor, m_DebugName);
-
-        descriptor->setMaxAnisotropy(1.0);
-        descriptor->setMagFilter(MTL::SamplerMinMagFilterLinear);
-        descriptor->setMinFilter(MTL::SamplerMinMagFilterLinear);
-        descriptor->setRAddressMode(MTL::SamplerAddressModeRepeat);
-        descriptor->setSAddressMode(MTL::SamplerAddressModeRepeat);
-        descriptor->setTAddressMode(MTL::SamplerAddressModeRepeat);
-        
-        descriptor->setLodMinClamp(0.0f);
-        descriptor->setLodMaxClamp(100.0f);
-        descriptor->setBorderColor(MTL::SamplerBorderColorOpaqueWhite);
-        
-        m_MetalSampler = device->GetMetalDevice()->newSamplerState(descriptor);
-    }
-    */
     void MetalImage2D::UploadImageData_RT()
     {
         MTL::Region region;
@@ -163,6 +147,8 @@ namespace HazardRenderer::Metal
         region.origin.z = 0;
         
         m_MetalTexture->replaceRegion(region, 0, m_LocalBuffer.Data, 4 * m_Width);
+        
+        m_LocalBuffer.Release();
     }
 }
 #endif
