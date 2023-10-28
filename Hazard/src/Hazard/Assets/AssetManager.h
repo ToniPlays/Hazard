@@ -80,10 +80,10 @@ namespace Hazard
 
 				//Load asset async and wait
 				Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
-				if (!graph) 
+				if (!graph)
 					return nullptr;
 
-				Ref<Asset> asset = graph->Execute()->GetResult().Read<Ref<Asset>>();
+				Ref<Asset> asset = graph->Execute()->GetResult<Ref<Asset>>();
 				if (asset)
 				{
 					metadata.LoadState = LoadState::Loaded;
@@ -125,32 +125,39 @@ namespace Hazard
 				Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
 				if (graph)
 				{
-					Ref<Job> job = Ref<Job>::Create("Add loaded asset", AddLoadedAssetJob, handle);
+					Ref<Job> job = Ref<Job>::Create("Add loaded asset", AddLoadedAssetJob);
 					graph->AddStage()->QueueJobs({ job });
 				}
-				JobPromise promise = Application::Get().GetJobSystem().QueueGraph(graph);
-				return promise;
+				return Application::Get().GetJobSystem().QueueGraph(graph);
 			}
+
 			return JobPromise();
 		}
 
+		static JobPromise CreateFromSource(const std::filesystem::path& file)
+		{
+			Ref<JobGraph> graph = s_AssetLoader.FromSourceFile(file);
+			if (!graph) return JobPromise();
+
+			return Application::Get().GetJobSystem().QueueGraph(graph);
+		}
 		static AssetHandle CreateMemoryOnly(AssetType type, Ref<Asset> asset);
 		static AssetHandle CreateNewAsset(AssetType type, const std::filesystem::path& path);
+		static Buffer AssetToBinary(Ref<Asset> asset);
 
 	private:
-		static void AddLoadedAssetJob(JobInfo& info, AssetHandle handle)
+		static void AddLoadedAssetJob(JobInfo& info)
 		{
-			Buffer assetBuffer = info.PreviousStage->GetJobResult(0);
-			if (!assetBuffer.Data) return;
-
-			Ref<Asset> asset = assetBuffer.Read<Ref<Asset>>();
-			auto& metadata = GetMetadata(handle);
-
-			metadata.LoadState = LoadState::Loaded;
+			auto assets = info.PreviousStage->GetJobResults<Ref<Asset>>();
+			if (!assets.size() == 0) return;
 
 			std::scoped_lock lock(s_Mutex);
-
-			s_LoadedAssets[handle] = asset;
+			for (auto& asset : assets)
+			{
+				auto& metadata = GetMetadata(asset->GetHandle());
+				metadata.LoadState = LoadState::Loaded;
+				s_LoadedAssets[metadata.Handle] = asset;
+			}
 		}
 
 	private:

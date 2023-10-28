@@ -309,6 +309,9 @@
     <ClInclude Include="src\Hazard\RenderContext\ShaderAssetLoader.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderCompiler.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\ShaderLibrary.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
@@ -1716,6 +1719,7 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\RenderGraphs\RasterRenderGraph.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -1827,6 +1831,9 @@
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\ShaderAssetLoader.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\ShaderCompiler.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\ShaderLibrary.cpp">

@@ -16,7 +16,7 @@ namespace Hazard
 
 		Ref<HScript> script = Ref<HScript>::Create(sourceFile, File::GetNameNoExt(sourceFile));
 		script->IncRefCount();
-		info.Job->SetResult(&script, sizeof(Ref<HScript>));
+		//info.Job->SetResult(&script, sizeof(Ref<HScript>));
 
 		buffer.Release();
 	}

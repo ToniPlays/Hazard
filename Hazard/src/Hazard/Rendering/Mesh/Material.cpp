@@ -12,7 +12,7 @@ namespace Hazard
 
 	Material::Material(AssetHandle pipelineHandle) : m_PipelineHandle(pipelineHandle)
 	{
-		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
+		//Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
 		/*
 		if (layout.GetElementCount() > 0)
 		{

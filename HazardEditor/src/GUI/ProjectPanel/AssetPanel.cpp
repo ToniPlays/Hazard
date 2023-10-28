@@ -1,7 +1,6 @@
 
 #include "AssetPanel.h"
 #include "Core/EditorAssetManager.h"
-#include "Core/EditorAssetPackBuilder.h"
 #include "Editor/EditorScriptManager.h"
 #include "Core/GUIManager.h"
 #include "GUI/AllPanels.h"

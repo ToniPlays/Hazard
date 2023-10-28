@@ -47,8 +47,7 @@ namespace Hazard
 		map->Update(header.Samples, header.Resolution, header.ImageHandle);
 		map->Invalidate();
 
-		map->IncRefCount();
-		info.Job->SetResult(&map, sizeof(Ref<EnvironmentMap>));
+		info.Job->SetResult(map);
 	}
 
 	Ref<JobGraph> EnvironmentAssetLoader::Load(AssetMetadata& metadata)

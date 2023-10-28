@@ -66,7 +66,7 @@ namespace HazardRenderer
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
-				//pFunc->~FuncT();
+				pFunc->~FuncT();
 			};
 
 			//std::scoped_lock<std::mutex> lock{ s_ResourceMutex };

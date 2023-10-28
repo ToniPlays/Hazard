@@ -4,11 +4,10 @@
 #ifdef HZR_DESKTOP
 
 #include "File.h"
-#include "Core/ShaderCompiler.h"
+#include "Core/CompileInfo.h"
 
 namespace HazardRenderer::Vulkan
 {
-
 	class VulkanShaderCompiler
 	{
 	public:

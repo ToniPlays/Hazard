@@ -80,7 +80,7 @@
 
 
 #define HZR_THROW(x) throw HazardRuntimeError(x, HZR_FUNC_SIG)
-#define BIT(x) (uint64_t)(1 << (x))
+#define BIT(x) (uint64_t)(1 << (uint64_t)x)
 #define TO_STRING(x) case x: return #x
 
 using namespace std::chrono_literals;

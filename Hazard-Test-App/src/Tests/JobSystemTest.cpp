@@ -11,6 +11,8 @@ static void AssetLoad(JobInfo& info)
 		info.Job->Progress((float)i / (float)count);
 		std::this_thread::sleep_for(1ms);
 	}
+	std::string result = fmt::format("{0}: AssetLoad: Invocation {1}", info.Job->GetName(), info.ExecutionID);
+	info.Job->SetResult(result);
 }
 
 static void Preprocess(JobInfo& info, int num)
@@ -25,9 +27,7 @@ static void Preprocess(JobInfo& info, int num)
 	std::vector<Ref<Job>> jobs;
 	jobs.resize(100);
 	for (uint32_t i = 0; i < jobs.size(); i++)
-	{
-		jobs[i] = Ref<Job>::Create("Job", AssetLoad);
-	}
+		jobs[i] = Ref<Job>::Create("Preprocessor kicked job", AssetLoad);
 
 	info.NextStage->QueueJobs(jobs);
 }
@@ -55,7 +55,7 @@ void JobGraphTest::Init()
 {
 	Hazard::Application::Get().GetModule<Hazard::RenderContextManager>().GetWindow().SetWindowTitle(GetName());
 
-	m_JobSystem = new JobSystem();
+	m_JobSystem = hnew JobSystem();
 
 	Ref<Job> loadingJob = hnew Job("World loading", Preprocess, 100);
 	m_Graph = Ref<JobGraph>::Create("World loader", 2);
@@ -83,6 +83,11 @@ void JobGraphTest::Run()
 	else
 	{
 		std::cout << fmt::format("Total time {} ms", timer.ElapsedMillis()) << std::endl;
+		std::vector<std::string> results = m_Graph->GetResults<std::string>();
+
+		for (auto& result : results)
+			std::cout << fmt::format("Job {0} completed with {1}\n", "", result);
+
 		m_Graph = nullptr;
 	}
 }

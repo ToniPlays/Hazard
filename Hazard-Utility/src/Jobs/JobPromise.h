@@ -18,11 +18,13 @@ public:
     bool Succeeded();
     void Wait();
 
-    Buffer GetResult();
-    std::vector<Buffer> GetResults();
+	template<typename T>
+	std::vector<T> GetResults()
+	{
+		return m_JobGraph->GetResults<T>();
+	}
 
 private:
-
 	Ref<JobGraph> m_JobGraph = nullptr;
 	Ref<Job> m_Job = nullptr;
 };

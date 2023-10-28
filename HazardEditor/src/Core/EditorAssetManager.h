@@ -31,7 +31,6 @@ public:
 
 private:
 	static void ImportEngineAssets();
-	static CachedBuffer GenerateEngineAssetPack(const std::filesystem::path& path);
 	static void GenerateAndSavePack(JobInfo& info, std::filesystem::path& path);
 
 private:

@@ -6,12 +6,7 @@
 
 #include "../VulkanContext.h"
 #include "../VkUtils.h"
-#include "../Textures/VulkanImage2D.h"
-#include "../Textures/VulkanCubemapTexture.h"
-#include "../RTCore/VulkanTopLevelAS.h"
 #include "Profiling/Timer.h"
-
-#include "Core/ShaderCompiler.h"
 
 #include "spdlog/fmt/fmt.h"
 

@@ -30,6 +30,7 @@ namespace Hazard
 		RenderEngine(RendererCreateInfo* createInfo);
 		~RenderEngine() = default;
 
+		void Init() override;
         void Update() override;
 		void Render() override;
 
@@ -58,12 +59,10 @@ namespace Hazard
 		RendererSettings& GetSettings() { return m_Settings; }
 
 	private:
-		void CreateRasterizedRenderGraph();
-	private:
 		std::vector<RendererDrawList> m_DrawList;
         
 		RenderContextManager* m_RenderContextManager;
-		Ref<RenderGraph> m_RasterizedRenderGraph;
+		Ref<RenderGraph> m_RenderGraph;
 
 		inline static RenderResources* s_Resources = nullptr;
 

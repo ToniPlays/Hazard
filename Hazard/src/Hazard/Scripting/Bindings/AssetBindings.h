@@ -13,8 +13,8 @@ namespace Hazard
 	{
 		const AssetMetadata& metadata = AssetManager::GetMetadata(id);
 		if (metadata.Handle == INVALID_ASSET_HANDLE)
-			return Coral::NativeString::FromUTF8("");
+			return Coral::NativeString("");
 
-		return Coral::NativeString::FromUTF8("");
+		return Coral::NativeString("");
 	}
 }

@@ -1,6 +1,7 @@
 #include "TestFramework.h"
 #include "Hazard/Input/InputManager.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
+#include "Hazard/RenderContext/ShaderCompiler.h"
 
 #include "Tests/JobSystemTest.h"
 #include "Tests/TriangleTest.h"
@@ -60,8 +61,8 @@ void TestFramework::Init()
 
 	Application::GetModule<InputManager>().InvalidateSchema(schema);
 
-	m_Tests.push_back(new JobGraphTest());
 	m_Tests.push_back(new TriangleTest());
+	m_Tests.push_back(new JobGraphTest());
 	m_Tests.push_back(new TexturedQuadTest());
 	m_Tests.push_back(new UniformBufferTest());
 	m_Tests.push_back(new ComputeShaderTest());
@@ -86,10 +87,10 @@ void TestFramework::GenerateShaders()
 	std::vector<RenderAPI> compileFor = { RenderAPI::OpenGL, RenderAPI::Vulkan, RenderAPI::Metal };
 
 	std::vector<std::filesystem::path> sources = {
-		"assets/shaders/compute.glsl",
 		"assets/shaders/triangle.glsl",
 		"assets/shaders/texturedQuad.glsl",
-		"assets/shaders/UboTest.glsl"
+		"assets/shaders/UboTest.glsl",
+		"assets/shaders/compute.glsl"
 	};
 
 	std::unordered_map<RenderAPI, std::string> extensions = {
@@ -102,10 +103,10 @@ void TestFramework::GenerateShaders()
 	{
 		for (auto& source : sources)
 		{
-			for (auto& [type, shader] : HazardRenderer::ShaderCompiler::GetShaderSources(source))
+			for (auto& [type, shader] : ShaderCompiler::GetShaderSources(source))
 			{
-				auto shaderSourceCode = HazardRenderer::ShaderCompiler::GetShaderFromSource(type, shader, api);
-				std::string shaderType = HazardRenderer::Utils::ShaderStageToString(type);
+				auto shaderSourceCode = ShaderCompiler::GetShaderFromSource(type, shader, api);
+				std::string shaderType = Utils::ShaderStageToString(type);
 
 				auto path = outputDir / std::filesystem::path(fmt::format("{0}.{1}.{2}", File::GetNameNoExt(source), shaderType, extensions[api]));
 				std::cout << File::GetFileAbsolutePath(path).string() << std::endl;

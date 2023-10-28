@@ -26,16 +26,5 @@ namespace Hazard
 	{
 		Ref<WorldRenderer> WorldRenderer;
 		DrawListStat Stats;
-
-		std::vector<HazardRenderer::GraphInstruction> GeometryPassInstructions;
-		std::vector<HazardRenderer::GraphInstruction> SkyboxInstructions;
-		//Resources
-		AddressableVector<void*, HazardRenderer::ResourceReference> Buffers;
-		AddressableVector<void*, HazardRenderer::ResourceReference> Pipelines;
-		std::vector<HazardRenderer::ResourceReference> PushConstantBuffers;
-
-		std::vector<Buffer> PushConstantData;
-		std::vector<Ref<Sampler>> Samplers;
-		std::vector<Ref<Texture>> Textures;
 	};
 }

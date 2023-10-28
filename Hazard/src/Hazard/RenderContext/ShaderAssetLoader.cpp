@@ -1,9 +1,9 @@
 
 #include <hzrpch.h>
 #include "ShaderAssetLoader.h"
-#include "Core/ShaderCompiler.h"
 #include "Core/GraphicsContext.h"
 #include "Hazard/Assets/AssetPack.h"
+#include "ShaderCompiler.h"
 
 #include <Hazard/RenderContext/ShaderAsset.h>
 #include "Hazard/Assets/AssetManager.h"
@@ -11,37 +11,12 @@
 
 namespace Hazard
 {
-	static void LoadShader(JobInfo& info, AssetHandle handle)
+	struct ShaderCodeResult
 	{
-		using namespace HazardRenderer;
-
-		Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
-		Buffer buffer = AssetManager::GetAssetData(handle);
-
-		if (buffer.Size == 0)
-        {
-            AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-            
-			throw JobException(fmt::format("Failed to load Shader {0} ({1})", metadata.Key, metadata.Handle));
-        }
-            
-		CachedBuffer readBuffer(buffer.Data, buffer.Size);
-
-
-		while (readBuffer.Available())
-		{
-			ShaderStageCode code = {};
-			code.Stage = readBuffer.Read<uint32_t>();
-			code.Size = readBuffer.Read<uint32_t>();
-			code.ShaderCode = readBuffer.Read<Buffer>(code.Size);
-			shaderAsset->ShaderCode.push_back(code);
-		}
-		
-		shaderAsset->IncRefCount();
-		info.Job->SetResult(&shaderAsset, sizeof(Ref<ShaderAsset>));
-
-		buffer.Release();
-	}
+		uint32_t Stage;
+		HazardRenderer::RenderAPI Api;
+		std::string Source;
+	};
 
 	Ref<JobGraph> ShaderAssetLoader::Load(AssetMetadata& metadata)
 	{
@@ -60,9 +35,149 @@ namespace Hazard
 		return nullptr;
 	}
 
+	Ref<JobGraph> ShaderAssetLoader::FromSourceFile(const std::filesystem::path& path)
+	{
+		using namespace HazardRenderer;
+
+		auto sources = ShaderCompiler::GetShaderSources(path);
+		if (sources.size() == 0) return nullptr;
+
+		std::vector<RenderAPI> compileFor = { RenderAPI::OpenGL, RenderAPI::Vulkan, RenderAPI::Metal };
+		std::vector<Ref<Job>> jobs;
+
+		for (auto& api : compileFor)
+		{
+			for (auto& [stage, source] : sources)
+			{
+				Ref<Job> job = Ref<Job>::Create("Shader create", LoadSourceCode, source, stage, api);
+				jobs.push_back(job);
+			}
+		}
+
+		Ref<Job> assetJob = Ref<Job>::Create("Shader asset create", CreateShaderAsset);
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create("Shader from source", 2);
+		Ref<GraphStage> stage = graph->GetStage(0);
+		Ref<GraphStage> assetStage = graph->GetStage(1);
+		assetStage->QueueJobs({ assetJob });
+
+		stage->QueueJobs(jobs);
+
+		return graph;
+	}
+
 	Ref<JobGraph> ShaderAssetLoader::Create(const std::filesystem::path& path)
 	{
-		HZR_CORE_ASSERT(false, "");
-		return Ref<JobGraph>();
+		return nullptr;
+	}
+
+	Buffer ShaderAssetLoader::ToBinary(Ref<Asset> asset)
+	{
+		static std::mutex mtx;
+		std::scoped_lock lock(mtx);
+
+		using namespace HazardRenderer;
+		ShaderAssetDataHeader header = {};
+		Ref<ShaderAsset> shaderAsset = asset.As<ShaderAsset>();
+
+		uint32_t stageCount = 0;
+
+		for (auto& [api, shader] : shaderAsset->ShaderCode)
+		{
+			header.IncludedAPIs |= BIT(api);
+			stageCount = shader.size();
+
+			for (auto& [stage, code] : shader)
+				header.Stages |= stage;
+		}
+
+		CachedBuffer buffer(1024 * 1024);
+		buffer.Write(&header, sizeof(ShaderAssetDataHeader));
+
+		std::vector<std::vector<std::string>> orderedSource(shaderAsset->ShaderCode.size());
+
+		uint32_t apiIndex = 0;
+
+		//Loop trough api sources
+		for (uint32_t i = 0; i < 16; i++)
+		{
+			if (!(header.IncludedAPIs & BIT(i))) continue;
+
+			std::vector<std::string> sourceStrings(stageCount);
+
+			for (uint32_t s = 0; s < 32; s++)
+			{
+				uint32_t stageFlag = BIT(s);
+				if (!(header.Stages & stageFlag)) continue;
+
+				orderedSource[apiIndex].push_back(shaderAsset->ShaderCode[(RenderAPI)i][stageFlag]);
+			}
+			apiIndex++;
+		}
+
+		for (auto& sources : orderedSource)
+		{
+			ShaderAPIDataHeader apiHeader = {};
+			for (auto& source : sources)
+				apiHeader.DataSize += source.length();
+
+			buffer.Write(apiHeader);
+			
+			for (auto& source : sources)
+				buffer.Write(source);
+		}
+
+		return Buffer::Copy(buffer.GetData(), buffer.GetCursor());
+	}
+
+	void ShaderAssetLoader::LoadShader(JobInfo& info, AssetHandle handle)
+	{
+		using namespace HazardRenderer;
+		Ref<ShaderAsset> shaderAsset = Ref<ShaderAsset>::Create();
+
+		Buffer data = AssetManager::GetAssetData(handle);
+		if (!data.Data)
+		{
+			AssetMetadata& meta = AssetManager::GetMetadata(handle);
+			throw JobException(fmt::format("Shader asset data {} not found", meta.Key));
+		}
+
+		CachedBuffer buffer(data.Data, data.Size);
+
+		ShaderAssetDataHeader header = buffer.Read<ShaderAssetDataHeader>();
+
+		for (uint32_t i = 0; i < 16; i++)
+		{
+			if (!(header.IncludedAPIs & BIT(i))) continue;
+			auto& sources = shaderAsset->ShaderCode[(RenderAPI)i];
+			
+			ShaderAPIDataHeader apiHeader = buffer.Read<ShaderAPIDataHeader>();
+
+			for (uint32_t i = 0; i < 32; i++)
+			{
+				if (!(header.Stages & BIT(i))) continue;
+				sources[BIT(i)] = buffer.Read<std::string>();
+			}
+		}
+
+		data.Release();
+		info.Job->SetResult(shaderAsset);
+	}
+	void ShaderAssetLoader::LoadSourceCode(JobInfo& info, const std::string& source, uint32_t stage, HazardRenderer::RenderAPI api)
+	{
+		info.Job->SetResult<ShaderCodeResult>({ stage, api, ShaderCompiler::GetShaderFromSource(stage, source, api) });
+	}
+	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info)
+	{
+		auto results = info.PreviousStage->GetJobResults<ShaderCodeResult>();
+		Ref<ShaderAsset> asset = Ref<ShaderAsset>::Create();
+
+		for (auto& result : results)
+			asset->ShaderCode[result.Api][result.Stage] = std::move(result.Source);
+
+		asset->m_Handle = UID();
+		asset->m_Type = AssetType::Shader;
+
+		info.Job->SetResult<Ref<ShaderAsset>>(asset);
 	}
 }

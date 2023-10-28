@@ -5,19 +5,18 @@
 #include "MathCore.h"
 #include "Utility/StringUtil.h"
 
-
 #include "OpenGL/OpenGLShaderCompiler.h"
 #include "Vulkan/VulkanShaderCompiler.h"
 #include "Metal/MetalShaderCompiler.h"
 
 #include "spdlog/fmt/fmt.h"
 
-namespace HazardRenderer
+namespace Hazard
 {
+	using namespace HazardRenderer;
+
 	std::string ShaderCompiler::GetShaderFromSource(uint32_t type, const std::string& source, RenderAPI api)
 	{
-		std::vector<ShaderStageCode> result;
-
 		switch (api)
 		{
 			case RenderAPI::OpenGL:
@@ -122,16 +121,6 @@ namespace HazardRenderer
 			}
 			default: return "";
 		}
-	}
-	uint64_t ShaderCompiler::GetBinaryLength(const std::vector<ShaderStageCode>& binaries)
-	{
-		uint64_t size = 0;
-		for (auto& stage : binaries)
-		{
-			size += sizeof(ShaderCode);
-			size += stage.ShaderCode.Size;
-		}
-		return size;
 	}
 
 	std::unordered_map<uint32_t, std::string> ShaderCompiler::GetShaderSources(const std::filesystem::path& path)

@@ -211,7 +211,6 @@ bool Input::OnMouseButtonReleased(MouseButtonReleasedEvent& e)
 bool Input::OnMouseMoved(MouseMovedEvent& e)
 {
 	s_MousePos = { e.GetX(), e.GetY() };
-    std::cout << s_MousePos.x << "x" << s_MousePos.y << std::endl;
 	return false;
 }
 

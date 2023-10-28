@@ -42,7 +42,7 @@ namespace Hazard
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer, sampler);
 		asset->IncRefCount();
-		info.Job->SetResult(&asset, sizeof(Ref<Texture2DAsset>));
+		//info.Job->SetResult(&asset, sizeof(Ref<Texture2DAsset>));
 
 		buffer.Release();
 	}

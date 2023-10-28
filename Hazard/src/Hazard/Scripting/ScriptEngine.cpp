@@ -34,7 +34,7 @@ namespace Hazard
 				return;
 			}
 
-			for (auto m : m_QueuedMessages)
+			for (auto& m : m_QueuedMessages)
 			{
 				m_MessageCallback(m);
 			}
@@ -58,8 +58,6 @@ namespace Hazard
 		Ref<ScriptAssembly> coreAssembly = m_Engine->GetLoadedAssembly("HazardScripting");
 
 		RegisterScriptGlueFor<InternalCalls>(coreAssembly);
-
-		m_Engine->Reload();
 	}
 	void ScriptEngine::Update()
 	{
@@ -93,7 +91,7 @@ namespace Hazard
 	}
 	void ScriptEngine::ReloadAssemblies()
 	{
-		Application::Get().SubmitMainThread([=]() {
+		Application::Get().SubmitMainThread([&]() {
 
 			for (auto& [uid, ctx] : m_WorldContext)
 			{

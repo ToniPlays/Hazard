@@ -106,13 +106,6 @@ namespace Hazard
 		AssetHandle irradiancePipelineHandle = ShaderLibrary::GetPipelineAssetHandle("EnvironmentIrradiance");
 		Ref<Pipeline> irradiancePipeline = AssetManager::GetAsset<AssetPointer>(irradiancePipelineHandle)->Value.As<Pipeline>();
 
-		{
-			auto shader = irradiancePipeline->GetShader();
-			//shader->Set("o_IrradianceMap", 0, irradianceMap);
-			//shader->Set("u_RadianceMap", 0, radianceMap->Value.As<CubemapTexture>());
-			//shader->Set("u_Settings", Buffer(&m_Samples, sizeof(uint32_t)));
-		}
-
 		GroupSize size = { irradianceInfo.Width / 32, irradianceInfo.Height / 32, 6 };
 
 		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit, 1);

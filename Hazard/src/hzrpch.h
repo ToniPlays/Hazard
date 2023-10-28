@@ -67,7 +67,7 @@ using namespace std::chrono_literals;
 #define HZR_CORE_WARN(...)
 #define HZR_CORE_ERROR(...)
 #define HZR_CORE_FATAL(...)
-#define HZR_CORE_ASSERT(c, ...)
+#define HZR_CORE_ASSERT(c, ...) (c)
 
 //Client logging macros
 #define HZR_TRACE(...)
@@ -75,7 +75,7 @@ using namespace std::chrono_literals;
 #define HZR_WARN(...)
 #define HZR_ERROR(...)
 #define HZR_FATAL(...)
-#define HZR_ASSERT(status, ...)
+#define HZR_ASSERT(status, ...) (status)
 
 #endif // !
 

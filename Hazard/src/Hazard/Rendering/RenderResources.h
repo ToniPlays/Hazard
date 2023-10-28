@@ -79,16 +79,14 @@ namespace Hazard
 			Ref<Material> skyboxMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("Skybox"));
 			SkyboxMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, skyboxMaterial);
 
-			/*DescriptorSetLayout layout = {{"Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER},
-										   { "Camu_RadianceMapera", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-										   { "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-										   { "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
-										   */
-
+			DescriptorSetLayout layout = { { SHADER_STAGE_VERTEX_BIT, "Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER},
+										   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
 			DescriptorSetCreateInfo setInfo = {};
 			setInfo.DebugName = "WorldDescriptor";
 			setInfo.Set = 0;
-			//setInfo.pLayout = &layout;
+			setInfo.pLayout = &layout;
 
 			WorldDescriptor = DescriptorSet::Create(&setInfo);
 
@@ -145,9 +143,9 @@ namespace Hazard
 
 			DefaultImageSampler = Sampler::Create(&samplerInfo);
 
-			WorldDescriptor->Write(1, 0, WhiteCubemap, DefaultImageSampler, true);
-			WorldDescriptor->Write(2, 0, WhiteCubemap, DefaultImageSampler, true);
-			WorldDescriptor->Write(3, 0, BRDFLut->GetSourceImageAsset()->Value.As<Image2D>(), DefaultImageSampler, true);
+			//WorldDescriptor->Write(1, 0, WhiteCubemap, DefaultImageSampler, true);
+			//WorldDescriptor->Write(2, 0, WhiteCubemap, DefaultImageSampler, true);
+			//WorldDescriptor->Write(3, 0, BRDFLut->GetSourceImageAsset()->Value.As<Image2D>(), DefaultImageSampler, true);
 		}
 	};
 }

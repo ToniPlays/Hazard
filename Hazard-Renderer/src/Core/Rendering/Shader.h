@@ -31,12 +31,6 @@ namespace HazardRenderer
 		SHADER_ACCESS_WRITE = BIT(1),
 	};
 
-	struct ShaderStageCode
-	{
-		uint32_t Stage;
-		uint32_t Size;
-		Buffer ShaderCode;
-	};
 	/*
     struct ShaderMemberType
     {

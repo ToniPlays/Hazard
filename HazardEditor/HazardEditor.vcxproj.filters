@@ -102,9 +102,6 @@
     <ClInclude Include="src\Core\EditorAssetManager.h">
       <Filter>src\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\EditorAssetPackBuilder.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\EditorEvent.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -264,9 +261,6 @@
       <Filter>src\BuildSystem</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\EditorAssetManager.cpp">
-      <Filter>src\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\EditorAssetPackBuilder.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\GUIManager.cpp">

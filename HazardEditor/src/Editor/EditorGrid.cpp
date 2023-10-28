@@ -52,13 +52,10 @@ namespace Editor
 
         PipelineSpecification specs = {};
         specs.DebugName = "Grid";
-        specs.DrawType = DrawType::Fill;
         specs.Usage = PipelineUsage::GraphicsBit;
-        specs.CullMode = CullMode::None;
         specs.DepthOperator = DepthOp::Less;
         specs.pTargetRenderPass = renderPass;
-        specs.ShaderCodeCount = shader->ShaderCode.size();
-        specs.pShaderCode = shader->ShaderCode.data();
+		specs.Flags = PIPELINE_DRAW_FILL | PIPELINE_DEPTH_TEST;
         
         m_Pipeline = Pipeline::Create(&specs);
 

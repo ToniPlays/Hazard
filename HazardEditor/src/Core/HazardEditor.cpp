@@ -99,9 +99,9 @@ void HazardEditorApplication::PreInit()
 	createInfo.ScriptEngineInfo = &scriptEngine;
 	createInfo.EntityComponent = &entity;
 
-	EditorAssetManager::Init();
-
 	CreateApplicationStack(&createInfo);
+
+	EditorAssetManager::Init();
 
 	auto& engine = GetModule<Hazard::ScriptEngine>();
 	Ref<ScriptAssembly> assembly = engine.GetLoadedAssembly("HazardScripting");

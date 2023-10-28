@@ -72,17 +72,6 @@ float JobGraph::GetProgress()
 
 	return progress;
 }
-
-Buffer JobGraph::GetResult()
-{
-	return m_Stages[m_Stages.size() - 1]->GetJobResult(0);
-}
-
-std::vector<Buffer> JobGraph::GetResults()
-{
-    return m_Stages[m_Stages.size() - 1]->GetJobResults();
-}
-
 void JobGraph::OnStageFinished(Ref<GraphStage> stage)
 {
 	Ref<GraphStage> next = GetNextStage();

@@ -30,7 +30,7 @@ namespace Hazard
 
 	struct AssetPack
 	{
-		AssetHandle Handle;
+		AssetHandle Handle = 0;
 		uint64_t ElementCount = 0;
 		std::vector<AssetPackElement> Elements;
 
@@ -43,6 +43,9 @@ namespace Hazard
 		static AssetPack Create(CachedBuffer& buffer)
 		{
 			buffer.ResetCursor();
+
+			if (buffer.GetSize() == 0) 
+				return AssetPack();
 			
             AssetPack pack = {};
 			AssetPackHeader header = buffer.Read<AssetPackHeader>();

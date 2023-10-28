@@ -33,6 +33,23 @@ namespace Hazard
 		}
 		return m_Loaders[metadata.Type]->Save(asset);
 	}
+
+	Ref<JobGraph> AssetLoader::FromSourceFile(const std::filesystem::path& path)
+	{
+		if (!File::Exists(path))
+			return nullptr;
+
+		AssetType type = Utils::AssetTypeFromExtension(File::GetFileExtension(path));
+
+		if (m_Loaders.find(type) == m_Loaders.end())
+		{
+			HZR_CORE_ERROR("No loaders for {0}", Utils::AssetTypeToString(type));
+			return nullptr;
+		}
+
+		return m_Loaders[type]->FromSourceFile(path);
+	}
+
 	Ref<JobGraph> AssetLoader::Create(AssetType type, const std::filesystem::path& path)
 	{
 		if (m_Loaders.find(type) == m_Loaders.end())
@@ -42,5 +59,17 @@ namespace Hazard
 		}
 
 		return m_Loaders[type]->Create(path);
+	}
+	Buffer AssetLoader::AssetToBinary(Ref<Asset> asset)
+	{
+		AssetType type = asset->GetType();
+
+		if (m_Loaders.find(type) == m_Loaders.end())
+		{
+			HZR_CORE_ERROR("No loaders for {0}", Utils::AssetTypeToString(type));
+			return Buffer();
+		}
+
+		return m_Loaders[type]->ToBinary(asset);
 	}
 }

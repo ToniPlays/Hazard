@@ -13,7 +13,6 @@ namespace UI
 	}
 	void MainMenuBar::Init()
 	{
-
 		AddMenuItem("File/New", nullptr);
 		AddMenuItem("File/New/Project");
 		AddMenuItem("File/New/Project/Crap/BunchOfShit", nullptr);

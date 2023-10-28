@@ -38,8 +38,8 @@ namespace Hazard::Utils
 			case AssetType::Pipeline:			return "Pipeline";
 			case AssetType::Shader:				return "Shader";
 			case AssetType::Material:           return "Material";
-			case AssetType::Buffer:			return "Buffer";
-			default:						return "Unknown";
+			case AssetType::Buffer:				return "Buffer";
+			default:							return "Unknown";
 		}
 		return "";
 	}

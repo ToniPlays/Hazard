@@ -4,6 +4,7 @@
 
 #include "MathCore.h"
 #include "Profiling/Timer.h"
+#include "Core/Rendering/Shader.h"
 
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>

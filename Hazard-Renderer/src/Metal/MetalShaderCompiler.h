@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Buffer/Buffer.h"
-#include "Core/ShaderCompiler.h"
+#include "Core/Rendering/Shader.h"
+#include "Core/CompileInfo.h"
 
 namespace HazardRenderer::Metal
 {
@@ -9,6 +10,7 @@ namespace HazardRenderer::Metal
         uint32_t Binding;
         uint32_t SamplerBinding;
     };
+
     #ifdef HZR_DESKTOP
 
     class MetalShaderCompiler

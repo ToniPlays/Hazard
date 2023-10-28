@@ -200,10 +200,10 @@ namespace Hazard
 		m_Material = Ref<Material>::Create(pipelineHandle);
 
 		Ref<Sampler> sampler = RenderEngine::GetResources().DefaultImageSampler;
-		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
+		//Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
 
-		for (uint32_t i = 0; i < m_Data.Samplers; i++)
-			set->Write(0, i, m_Data.TextureSlots[i], sampler, true);
+		//for (uint32_t i = 0; i < m_Data.Samplers; i++)
+		//	set->Write(0, i, m_Data.TextureSlots[i], sampler, true);
 
 		m_RenderPass = renderPass;
 	}

@@ -158,10 +158,7 @@ void EditorPlatformVulkan::EndFrame()
 
 	VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]), "");
 
-	std::vector<VkCommandBuffer> commandBuffers;
-	commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
-
-	vkCmdExecuteCommands(drawCommandBuffer, uint32_t(commandBuffers.size()), commandBuffers.data());
+	vkCmdExecuteCommands(drawCommandBuffer, 1, &s_ImGuiCommandBuffers[commandBufferIndex]);
 	vkCmdEndRenderPass(drawCommandBuffer);
 
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

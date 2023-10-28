@@ -61,7 +61,7 @@ namespace Hazard
 
 		Ref<Mesh> asset = Ref<Mesh>::Create(&meshInfo);
 		asset->IncRefCount();
-		info.Job->SetResult(&asset, sizeof(Ref<Mesh>));
+		//info.Job->SetResult(&asset, sizeof(Ref<Mesh>));
 	}
 
 	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)

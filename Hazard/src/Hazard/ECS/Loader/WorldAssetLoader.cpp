@@ -54,7 +54,7 @@ namespace Hazard
 		}
 
 		world->IncRefCount();
-		info.Job->SetResult(&world, sizeof(Ref<World>));
+		//info.Job->SetResult(&world, sizeof(Ref<World>));
 	}
 
 	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata)

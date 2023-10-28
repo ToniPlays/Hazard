@@ -74,65 +74,6 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_TIMED_FUNCTION();
-
-		if (count == 0) return;
-
-		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(material->GetPipeline())->Value.As<Pipeline>();
-
-		auto& drawList = s_Engine->GetDrawList();
-		{
-			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			uint64_t index;
-			if (drawList.Buffers.Contains(vertexBuffer.Raw()))
-				index = drawList.Buffers.GetIndex(vertexBuffer.Raw());
-			else index = drawList.Buffers.Push(vertexBuffer.Raw(), { .VertexBuffer = vertexBuffer.Raw() });
-
-			instruction.SetVertexBuffer(1, index, 0);
-		}
-		{
-			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			uint64_t index;
-			if (drawList.Pipelines.Contains(pipeline.Raw()))
-				index = drawList.Pipelines.GetIndex(pipeline.Raw());
-			else 
-				index = drawList.Pipelines.Push(pipeline.Raw(), { .Pipeline = pipeline.Raw() });
-			instruction.SetPipeline(2, index);
-		}
-		{
-			drawList.PushConstantData.push_back(Buffer((void*)&transform, sizeof(glm::mat4)));
-			uint32_t index = drawList.PushConstantData.size() - 1;
-			drawList.PushConstantBuffers.push_back(ResourceReference{ .PushConstantBuffer = &drawList.PushConstantData[index] });
-
-			GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-			instruction.PushConstants(3, drawList.PushConstantData.size() - 1, sizeof(glm::mat4));
-		}
-		{
-			if (material->GetDescriptorSet())
-			{
-				DescriptorSet* set = material->GetDescriptorSet().Raw();
-				GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-				instruction.SetDescriptor(1, drawList.Buffers.Push(set, { .DescriptorSet = set }), 1);
-			}
-		}
-		{
-			if (indexBuffer)
-			{
-				GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-
-				uint64_t index;
-				if (drawList.Buffers.Contains(indexBuffer.Raw()))
-					index = drawList.Buffers.GetIndex(indexBuffer.Raw());
-				else index = drawList.Buffers.Push(indexBuffer.Raw(), { .IndexBuffer = indexBuffer.Raw() });
-
-				instruction.Draw(count, 1, index);
-			}
-			else
-			{
-				GraphInstruction& instruction = drawList.GeometryPassInstructions.emplace_back();
-				instruction.Draw(count);
-			}
-		}
 	}
 
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count)
@@ -146,44 +87,6 @@ namespace Hazard
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (skyLight.EnvironmentMapHandle == INVALID_ASSET_HANDLE) return;
-
-		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(skyLight.EnvironmentMapHandle);
-		if (!map) return;
-		if (!map->RadianceMap) return;
-
-		AssetHandle skyboxHandle = s_Engine->GetResources().SkyboxMaterialHandle;
-		Ref<Material> skyboxMaterial = AssetManager::GetAsset<Material>(skyboxHandle);
-
-		skyboxMaterial->GetDescriptorSet()->Write(0, 0, map->RadianceMap->Value.As<Image2D>(), s_Engine->GetResources().DefaultImageSampler);
-		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(skyboxMaterial->GetPipeline())->Value.As<Pipeline>();
-
-		auto& drawList = s_Engine->GetDrawList();
-		{
-			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
-			instruction.SetPipeline(2, drawList.Pipelines.Push(pipeline.Raw(), { .Pipeline = pipeline.Raw() }));
-		}
-		{
-			/*
-			float values[] = { 0.25f, 1.0f };
-
-			drawList.PushConstantData.push_back(Buffer((void*)values, sizeof(float) * 2));
-			uint32_t index = drawList.PushConstantData.size() - 1;
-			drawList.PushConstantBuffers.push_back(ResourceReference{ .PushConstantBuffer = &drawList.PushConstantData[index] });
-
-			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
-			instruction.PushConstants(3, drawList.PushConstantData.size() - 1, sizeof(float) * 2);
-			*/
-		}
-		{
-			DescriptorSet* set = skyboxMaterial->GetDescriptorSet().Raw();
-			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
-			instruction.SetDescriptor(1, drawList.Buffers.Push(set, { .DescriptorSet = set }), 1);
-		}
-		{
-			GraphInstruction& instruction = drawList.SkyboxInstructions.emplace_back();
-			instruction.Draw(6);
-		}
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{
@@ -234,7 +137,8 @@ namespace Hazard
 	void HRenderer::SubmitPerspectiveCameraFrustum(const glm::vec3 position1, const glm::quat& orientation, const glm::mat4& transform, float verticalFOV, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
 		HZR_PROFILE_FUNCTION();
-		glm::vec4 c = { color.r, color.g, color.b, color.a };
+
+		glm::vec4 c = color.ToGLM();
 		std::vector<glm::vec3> linePoints = Math::GetProjectionBounds(orientation, transform, verticalFOV, clipping.x, clipping.y, aspectRatio);
 
 		const glm::vec3& position = transform[3];
@@ -242,17 +146,14 @@ namespace Hazard
 		auto& lineRenderer = s_Engine->GetLineRenderer();
 
 		for (uint32_t i = 0; i < 4; i++)
-		{
 			lineRenderer.SubmitLine(linePoints[i] + position, linePoints[(i + 1) % 4] + position, c);
-		}
+
 		for (uint32_t i = 0; i < 4; i++)
-		{
 			lineRenderer.SubmitLine(linePoints[i] + position, linePoints[i + 4] + position, c);
-		}
+
 		for (uint32_t i = 0; i < 4; i++)
-		{
 			lineRenderer.SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
-		}
+
 	}
 	void HRenderer::SubmitOrthoCameraFrustum(const glm::vec3 position1, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{

@@ -352,7 +352,7 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pipelineLayout, nullptr, &m_PipelineLayout), "Failed to create Pipeline layout");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE_LAYOUT, fmt::format("VkPipelineLayout {}", m_Specs.DebugName), m_PipelineLayout);
 
-		auto stage = m_Shader->GetShaderStageCreateInfos()[0];
+		auto& stage = m_Shader->GetShaderStageCreateInfos()[0];
 
 		VkComputePipelineCreateInfo pipelineInfo = {};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;

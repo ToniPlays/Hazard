@@ -8,8 +8,6 @@
 #include <src/Core/GUIManager.h>
 #include <src/GUI/Overlays/ProgressOverlay.h>
 
-#include "EditorAssetPackBuilder.h"
-
 #include <FileCache.h>
 
 using namespace Hazard;
@@ -45,7 +43,7 @@ void EditorAssetManager::LoadEditorAssets()
 		//Get asset pack handle
 		AssetHandle packHandle = AssetManager::GetHandleFromKey(texture.Path);
 		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
-		s_Icons[texture.Key] = pack.Elements[0].Handle;
+		//s_Icons[texture.Key] = pack.Elements[0].Handle;
 		pack.Free();
 	}
 
@@ -54,7 +52,7 @@ void EditorAssetManager::LoadEditorAssets()
 		//Get asset pack handle
 		AssetHandle packHandle = AssetManager::GetHandleFromKey(mesh.Path);
 		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
-		s_Icons[mesh.Key] = pack.Elements[0].Handle;
+		//s_Icons[mesh.Key] = pack.Elements[0].Handle;
 		pack.Free();
 	}
 }
@@ -76,14 +74,36 @@ void EditorAssetManager::GenerateAndSavePack(JobInfo& info, std::filesystem::pat
 {
 	FileCache cache("Library");
 
-	auto packPath = File::GetName(path) + ".hpack";
-	CachedBuffer buffer = EditorAssetManager::GenerateEngineAssetPack(path);
+	JobPromise promise = AssetManager::CreateFromSource(path);
+	promise.Wait();
+	if (!promise.Succeeded())
+		throw JobException(fmt::format("Cannot load source from file: {}", path.string()));
 
-	if (buffer.GetSize() == 0)
-		throw JobException(fmt::format("Asset pack generation failed: {}", path.string()));
+	std::vector<AssetPackElement> elements;
 
-	if (!File::WriteBinaryFile(cache.GetCachePath() / packPath, buffer.GetData(), buffer.GetSize()))
-		throw JobException(fmt::format("Asset pack saving failed: {}", path.string()));
+	for (auto& asset : promise.GetResults<Ref<Asset>>())
+	{
+		AssetPackElement& element = elements.emplace_back();
+		element.AddressableName = File::GetName(path);
+		element.Handle = asset->GetHandle();
+		element.Type = asset->GetType();
+		element.Data = AssetManager::AssetToBinary(asset);
+	}
+
+	AssetPack pack = {};
+	pack.Handle = AssetHandle();
+	pack.ElementCount = elements.size();
+	pack.Elements = elements;
+
+	for (auto& e : pack.Elements)
+		e.AssetPackHandle = pack.Handle;
+
+	CachedBuffer buffer = AssetPack::ToBuffer(pack);
+
+	if(!cache.WriteFile("Shaders" / std::filesystem::path(File::GetName(path) + ".hpack"), buffer.GetData(), buffer.GetSize()))
+	   throw JobException("Failed to save asset pack");
+
+	pack.Free();
 }
 
 void EditorAssetManager::ImportEngineAssets()
@@ -116,21 +136,24 @@ void EditorAssetManager::ImportEngineAssets()
 		jobs.push_back(job);
 	}
 
-	Ref<JobGraph> loadingGraph = Ref<JobGraph>::Create("EngineLoad", 1, JOB_FLAGS_SILENT_FAILURE);
-	loadingGraph->GetStage(0)->QueueJobs(jobs);
-
-
-	JobSystem& system = Application::Get().GetJobSystem();
 	if (jobs.size() > 0)
 	{
+		JobSystem& system = Application::Get().GetJobSystem();
+
+		Ref<JobGraph> loadingGraph = Ref<JobGraph>::Create("Engine asset Load", 1, JOB_FLAGS_SILENT_FAILURE);
+		loadingGraph->GetStage(0)->QueueJobs(jobs);
+
 		JobPromise promise = system.QueueGraph(loadingGraph);
 		promise.Wait();
+		
 		HZR_CORE_ASSERT(promise.Succeeded(), "Loading engine assets has failed");
 	}
 
 	auto files = Directory::GetAllInDirectory(cache.GetCachePath(), true);
 	for (auto& file : files)
 	{
+		if (File::IsDirectory(file)) continue;
+
 		auto packPath = File::GetName(file);
 
 		CachedBuffer buffer = File::ReadBinaryFile(file);
@@ -139,70 +162,4 @@ void EditorAssetManager::ImportEngineAssets()
 		pack.Free();
 	}
 	HZR_INFO("Engine assets imported in {}ms", timer.ElapsedMillis());
-}
-
-CachedBuffer EditorAssetManager::GenerateEngineAssetPack(const std::filesystem::path& path)
-{
-	AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(path));
-
-	if (type == AssetType::Undefined)
-		return CachedBuffer();
-
-	std::vector<AssetPackElement> elements;
-
-	switch (type)
-	{
-		case AssetType::Shader:
-		{
-			Ref<JobGraph> graph = EditorAssetPackBuilder::CreatePackElement(path, RenderAPI::Vulkan);
-
-			if (!graph) break;
-
-			Buffer result = graph->Execute()->GetResult();
-			AssetPackElement element = result.Read<AssetPackElement>();
-			element.Handle = AssetHandle();
-            std::cout << element.AddressableName;
-			elements.push_back(element);
-
-			break;
-		}
-		case AssetType::Image:
-		{
-			Image2DCreateInfo info = {};
-			info.DebugName = File::GetName(path);
-			info.GenerateMips = false;
-			info.Usage = ImageUsage::Texture;
-
-			UI::ImageImportSettings settings = {};
-			settings.GenerateMips = false;
-			settings.FlipOnLoad = true;
-
-			Buffer result = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult();
-			AssetPackElement element = result.Read<AssetPackElement>();
-			element.Handle = AssetHandle();
-			elements.push_back(element);
-
-			break;
-		}
-		case AssetType::Mesh:
-		{
-			MeshCreateInfo info = {};
-			info.DebugName = File::GetName(path);
-
-			UI::MeshImportSettings settings = {};
-
-			Buffer result = EditorAssetPackBuilder::CreatePackElement(path, info, settings)->Execute()->GetResult();
-			AssetPackElement element = result.Read<AssetPackElement>();
-			element.Handle = AssetHandle();
-			elements.push_back(element);
-		}
-	}
-	if (elements.size() == 0)
-		return CachedBuffer();
-
-	AssetPack pack = EditorAssetPackBuilder::CreateAssetPack(elements);
-	CachedBuffer buffer = AssetPack::ToBuffer(pack);
-
-	HZR_ASSERT(pack.ElementCount < 2000, "Too many elements");
-	return buffer;
 }

@@ -6,17 +6,12 @@
 
 Job::~Job()
 {
-	m_ResultBuffer.Release();
+	if (m_Result)
+		hdelete m_Result;
 }
 Ref<JobGraph> Job::GetJobGraph()
 {
 	return m_Stage->GetGraph();
-}
-
-void Job::SetResult(void* data, uint64_t size, uint64_t offset)
-{
-	m_ResultBuffer.Allocate(size);
-	m_ResultBuffer.Write(data, size);
 }
 
 void Job::Execute(JobInfo& info)

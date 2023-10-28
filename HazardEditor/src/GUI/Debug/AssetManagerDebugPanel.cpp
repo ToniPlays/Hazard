@@ -36,7 +36,7 @@ namespace UI
 
 		for (auto& [key, metadata] : AssetManager::GetMetadataRegistry())
 		{
-			if (metadata.Type == AssetType::Undefined) continue;
+			if (metadata.Type == AssetType::Undefined || metadata.MemoryOnly) continue;
 			if (!StringUtil::Contains(metadata.Key, m_SearchValue) && !StringUtil::Contains(std::to_string(metadata.Handle), m_SearchValue)) continue;
 
 			table.AddRow(metadata);

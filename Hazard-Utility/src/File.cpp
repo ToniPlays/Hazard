@@ -31,23 +31,7 @@ std::string File::SaveFile(const std::vector<std::string>& filters, const std::f
 
 bool File::Exists(const std::filesystem::path& path)
 {
-#ifdef HZR_PLATFORM_IOS
-	/*CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
-	char resourcePath[PATH_MAX];
-	if (CFURLGetFileSystemRepresentation(resourceURL, true, (UInt8*)resourcePath,
-										 PATH_MAX))
-	{
-		bool exists = resourceURL != NULL;
-		if (exists)
-		{
-			CFRelease(resourceURL);
-		}
-		return exists;
-	}*/
-    return false;
-#else
 	return std::filesystem::exists(path);
-#endif
 }
 bool File::IsDirectory(const std::filesystem::path& path)
 {

@@ -5,15 +5,18 @@
 
 #include "Core/Rendering/Shader.h"
 #include "Core/RenderContextCreateInfo.h"
+#include "Core/Rendering/Shader.h"
 
 #include <spirv_cross/spirv_reflect.hpp>
 
-namespace HazardRenderer
+namespace Hazard
 {
 	namespace Utils
 	{
-		static ShaderStageFlags ShaderStageFromString(const std::string& type)
+		static HazardRenderer::ShaderStageFlags ShaderStageFromString(const std::string& type)
 		{
+			using namespace HazardRenderer;
+
 			if (type == "Vertex")		return SHADER_STAGE_VERTEX_BIT;
 			if (type == "Fragment")		return SHADER_STAGE_FRAGMENT_BIT;
 			if (type == "Pixel")		return SHADER_STAGE_FRAGMENT_BIT;
@@ -27,6 +30,8 @@ namespace HazardRenderer
 		}
 		static std::string ShaderStageToString(const uint32_t& type)
 		{
+			using namespace HazardRenderer;
+
 			if (type & SHADER_STAGE_VERTEX_BIT)			return "Vertex";
 			if (type & SHADER_STAGE_FRAGMENT_BIT)		return "Fragment";
 			if (type & SHADER_STAGE_COMPUTE_BIT)		return "Compute";
@@ -34,12 +39,13 @@ namespace HazardRenderer
 			if (type & SHADER_STAGE_MISS_BIT)			return "Miss";
 			if (type & SHADER_STAGE_CLOSEST_HIT_BIT)	return "ClosestHit";
 			if (type & SHADER_STAGE_ANY_HIT_BIT)		return "AnyHit";
-			HZR_ASSERT(false, "Undefined shader stage");
-			return "Unknown";
+			return "None";
 		}
-		static ShaderDataType ShaderDataTypeFromSPV(const spirv_cross::SPIRType& type)
+		static HazardRenderer::ShaderDataType ShaderDataTypeFromSPV(const spirv_cross::SPIRType& type)
 		{
+			using namespace HazardRenderer;
 			using namespace spirv_cross;
+
 			switch (type.basetype)
 			{
 				case SPIRType::Float:
@@ -78,6 +84,8 @@ namespace HazardRenderer
 		}
 		static std::string UsageFlagsToString(const uint32_t& flags)
 		{
+			using namespace HazardRenderer;
+
 			std::string result;
 			if (flags & SHADER_STAGE_VERTEX_BIT)	result += " Vertex";
 			if (flags & SHADER_STAGE_FRAGMENT_BIT)	result += " Fragment";
@@ -87,41 +95,18 @@ namespace HazardRenderer
 		}
 	}
 
-	enum class Optimization { None = 0, Memory, Performance };
-
 	struct ShaderCode
 	{
 		uint32_t Stage;
 		uint64_t Length;
 	};
 
-	struct ShaderDefine
-	{
-		std::string Name;
-		std::string Value;
-
-		ShaderDefine(std::string name) : Name(name), Value("") {};
-		ShaderDefine(std::string name, std::string value) : Name(name), Value(value) {};
-	};
-
-	struct CompileInfo
-	{
-		RenderAPI Renderer;
-		Optimization Optimization;
-		uint32_t Stage;
-		std::string Source;
-		std::string Name;
-		uint64_t DefineCount = 0;
-		ShaderDefine* pDefines = nullptr;
-	};
-
-    
 	class ShaderCompiler
 	{
 	public:
 		//Only accepts GLSL code for now
-		static std::string GetShaderFromSource(uint32_t type, const std::string& source, RenderAPI api);
-		static uint64_t GetBinaryLength(const std::vector<ShaderStageCode>& binaries);
+		static std::string GetShaderFromSource(uint32_t type, const std::string& source, HazardRenderer::RenderAPI api);
+		//static uint64_t GetBinaryLength(const std::vector<ShaderStageCode>& binaries);
 		static std::unordered_map<uint32_t, std::string> GetShaderSources(const std::filesystem::path& path);
 
 	private:

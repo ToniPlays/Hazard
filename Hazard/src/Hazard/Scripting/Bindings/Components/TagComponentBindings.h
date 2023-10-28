@@ -13,11 +13,11 @@ namespace Hazard
 	{
 		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
 		auto& tag = entity.GetComponent<TagComponent>();
-		return Coral::NativeString::FromUTF8(tag.Tag);
+		return Coral::NativeString(tag.Tag);
 	}
 	static void TagComponent_SetName_Native(uint64_t id, Coral::NativeString tag)
 	{
 		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
-		entity.GetTag().Tag = tag.ToString();
+		//entity.GetTag().Tag = tag.Data()
 	}
 }

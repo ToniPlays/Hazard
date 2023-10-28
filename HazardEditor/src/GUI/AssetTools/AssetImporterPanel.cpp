@@ -1,7 +1,6 @@
 #include "AssetImporterPanel.h"
 #include "Core/EditorAssetManager.h"
 #include "Hazard/RenderContext/TextureFactory.h"
-#include "Core/EditorAssetPackBuilder.h"
 #include <spdlog/fmt/fmt.h>
 
 #include "Core/GUIManager.h"
@@ -260,15 +259,14 @@ namespace UI
 
 		Image2DCreateInfo info = {};
 		info.GenerateMips = settings.GenerateMips;
-
+		/*
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Import {}", File::GetName(filePath)), 2);
 		Ref<JobGraph> packGraph = EditorAssetPackBuilder::CreatePackElement(filePath, info, settings);
 		graph->CombineStages(packGraph);
 
-		Ref<Job> saveJob = Ref<Job>::Create(fmt::format("{0}", filePath.string()), EditorAssetPackBuilder::GenerateAndSaveAssetPack, packPath);
-		graph->GetStage(1)->QueueJobs({ saveJob });
 
 		Application::Get().GetJobSystem().QueueGraph(graph);
+		*/
 	}
 
 	void AssetImporterPanel::ImportMesh(std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings)
@@ -276,6 +274,7 @@ namespace UI
 		auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
 		MeshCreateInfo info = {};
 
+		/*
 		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Import {}", File::GetName(filePath)), 2);
 		Ref<JobGraph> packGraph = EditorAssetPackBuilder::CreatePackElement(filePath, info, settings);
 
@@ -283,11 +282,10 @@ namespace UI
 		firstStage->SetWeight(0.95);
 		graph->CombineStages(packGraph, 0);
 
-		Ref<Job> saveJob = Ref<Job>::Create(fmt::format("{0}", filePath.string()), EditorAssetPackBuilder::GenerateAndSaveAssetPack, packPath);
-		Ref<GraphStage> saveStage = graph->GetStage(1);
 		saveStage->SetWeight(0.05);
 		saveStage->QueueJobs({ saveJob });
 
 		Application::Get().GetJobSystem().QueueGraph(graph);
+		*/
 	}
 }

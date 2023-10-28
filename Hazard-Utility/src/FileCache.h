@@ -18,6 +18,12 @@ public:
 	{ 
 		return File::Exists(m_Path / file) && !File::IsDirectory(m_Path / file);
 	}
+	bool WriteFile(const std::filesystem::path& file, void* data, uint64_t size)
+	{
+		auto filePath = m_Path / file;
+		Directory::Create(filePath.parent_path());
+		return File::WriteBinaryFile(filePath, data, size);
+	}
 
 private:
 	std::filesystem::path m_Path;

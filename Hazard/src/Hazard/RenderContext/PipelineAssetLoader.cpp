@@ -6,7 +6,6 @@
 #include "Core/Rendering/RenderPass.h"
 
 #include "Core/GraphicsContext.h"
-#include "Core/ShaderCompiler.h"
 #include "ShaderAsset.h"
 
 namespace Hazard

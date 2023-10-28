@@ -83,12 +83,14 @@ namespace HazardScript
 	}
 	void HazardScriptEngine::InitializeCoralHost()
 	{
+		std::string coralDir = m_CoralData.CoralDirectory.lexically_normal().string();
+
 		Coral::HostSettings settings = {};
-		settings.CoralDirectory = m_CoralData.CoralDirectory.lexically_normal().string();
-		settings.ErrorCallback = [&](std::string_view message) {
+		settings.CoralDirectory = coralDir;
+		settings.MessageCallback = [&](Coral::NativeString message, Coral::MessageLevel level) {
 			std::string msg = std::string(message);
 			std::string exception = msg.substr(0, msg.find_first_of("\n"));
-			std::string trace = exception.length() + 1 < message.length() ? msg.substr(exception.length() + 1) : "";
+			std::string trace = exception.length() + 1 < msg.length() ? msg.substr(exception.length() + 1) : "";
 			m_DebugCallback({ Severity::Error, exception, trace });
 		};
 		settings.ExceptionCallback = ([&](std::string_view message) {

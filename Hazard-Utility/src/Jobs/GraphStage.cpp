@@ -38,22 +38,6 @@ Ref<JobGraph> GraphStage::GetGraph()
 	return m_JobGraph;
 }
 
-Buffer GraphStage::GetJobResult(uint32_t index)
-{
-	return m_Jobs[index]->GetResult();
-}
-
-std::vector<Buffer> GraphStage::GetJobResults()
-{
-	std::vector<Buffer> results;
-	results.reserve(m_Jobs.size());
-
-	for (auto& job : m_Jobs)
-		results.push_back(job->GetResult());
-
-	return results;
-}
-
 void GraphStage::OnJobFinished(Ref<Job> job)
 {
 	m_JobCount--;

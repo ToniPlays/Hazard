@@ -44,8 +44,17 @@ public:
 			m_CurrentStage.wait(m_CurrentStage);
 	}
 
-	Buffer GetResult();
-	std::vector<Buffer> GetResults();
+	template<typename T>
+	T GetResult()
+	{
+		auto results = GetResults<T>();
+		return results.size() > 0 ? results[0] : T();
+	}
+	template<typename T>
+	std::vector<T> GetResults()
+	{
+		return GetStage(GetStageCount() - 1)->GetJobResults<T>();
+	}
 
 private:
 	void OnStageFinished(Ref<GraphStage> stage);

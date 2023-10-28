@@ -87,7 +87,7 @@ namespace UI
 			for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 			{
 				ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
-					AssetMetadata data = AssetManager::GetMetadata(m_Handle);
+					AssetMetadata& data = AssetManager::GetMetadata(m_Handle);
 					//EditorAssetManager::MoveAssetToFolder(handle, data.Key);
 					Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
 				});

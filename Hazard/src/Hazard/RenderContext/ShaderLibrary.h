@@ -7,7 +7,7 @@ namespace Hazard
 	class ShaderLibrary
 	{
 	public:
-		static void Init();
+		static void Init(HazardRenderer::RenderAPI api);
 		static AssetHandle GetPipelineAssetHandle(const std::string& name);
 
 	private:

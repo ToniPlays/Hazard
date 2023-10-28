@@ -4,8 +4,7 @@
 
 #ifdef HZR_DESKTOP
 
-#include "Core/ShaderCompiler.h"
-
+#include "Core/CompileInfo.h"
 #include "File.h"
 
 namespace HazardRenderer::OpenGL

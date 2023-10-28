@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardEditor", "HazardEditor\HazardEditor.vcxproj", "{E64DB7A4-D2B0-4649-7B36-7FFF677812CC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{53E47842-3FC8-3998-A828-34EB942B241A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Box2D", "Hazard\vendor\Box2D\Box2D.vcxproj", "{A434E80C-1049-10BE-D9CA-B31D459E0CEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coral.Managed", "Hazard\vendor\Coral\Coral.Managed\Coral.Managed.csproj", "{11178401-7DD7-FF37-4612-49B5B2914414}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coral.Managed", "Hazard\vendor\Coral\Coral.Managed\Coral.Managed.csproj", "{11178401-7DD7-FF37-4612-49B5B2914414}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Coral.Native", "Hazard\vendor\Coral\Coral.Native\Coral.Native.vcxproj", "{EB0B2E29-D76E-BDCD-80F4-F5836C368950}"
 EndProject
@@ -20,6 +22,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yaml-cpp", "Hazard\vendor\yaml-cpp\yaml-cpp.vcxproj", "{88F1A057-74BE-FB62-9DD7-E90A890331F1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard", "Hazard\Hazard.vcxproj", "{DF4CF2B6-CBEE-1C8D-B4A9-30E1A0EAA3DD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{11178401-7DD7-FF37-4612-49B5B2914414} = {11178401-7DD7-FF37-4612-49B5B2914414}
+		{EB0B2E29-D76E-BDCD-80F4-F5836C368950} = {EB0B2E29-D76E-BDCD-80F4-F5836C368950}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-Renderer", "Hazard-Renderer\Hazard-Renderer.vcxproj", "{63990EDD-CF24-7CA1-D835-FF954440D8A1}"
 EndProject
@@ -33,7 +39,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hazard-Utility", "Hazard-Ut
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HazardLauncher", "HazardLauncher\HazardLauncher.vcxproj", "{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HazardScripting", "HazardScripting\HazardScripting.csproj", "{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HazardScripting", "HazardScripting\HazardScripting.csproj", "{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,8 +60,8 @@ Global
 		{A434E80C-1049-10BE-D9CA-B31D459E0CEF}.Dist|x64.Build.0 = Dist|x64
 		{A434E80C-1049-10BE-D9CA-B31D459E0CEF}.Release|x64.ActiveCfg = Release|x64
 		{A434E80C-1049-10BE-D9CA-B31D459E0CEF}.Release|x64.Build.0 = Release|x64
-		{11178401-7DD7-FF37-4612-49B5B2914414}.Debug|x64.ActiveCfg = Debug|x64
-		{11178401-7DD7-FF37-4612-49B5B2914414}.Debug|x64.Build.0 = Debug|x64
+		{11178401-7DD7-FF37-4612-49B5B2914414}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{11178401-7DD7-FF37-4612-49B5B2914414}.Debug|x64.Build.0 = Debug|Any CPU
 		{11178401-7DD7-FF37-4612-49B5B2914414}.Dist|x64.ActiveCfg = Dist|x64
 		{11178401-7DD7-FF37-4612-49B5B2914414}.Dist|x64.Build.0 = Dist|x64
 		{11178401-7DD7-FF37-4612-49B5B2914414}.Release|x64.ActiveCfg = Release|x64
@@ -132,8 +138,8 @@ Global
 		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Dist|x64.Build.0 = Dist|x64
 		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Release|x64.ActiveCfg = Release|x64
 		{311E2B5A-1DEC-1E60-0680-8F86F2ECFAC4}.Release|x64.Build.0 = Release|x64
-		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Debug|x64.ActiveCfg = Debug|x64
-		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Debug|x64.Build.0 = Debug|x64
+		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Debug|x64.Build.0 = Debug|Any CPU
 		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Dist|x64.ActiveCfg = Dist|x64
 		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Dist|x64.Build.0 = Dist|x64
 		{B207D3B5-1E93-407A-27A4-C36E93AE9C7A}.Release|x64.ActiveCfg = Release|x64
@@ -150,5 +156,8 @@ Global
 		{BDD6857C-A90D-870D-52FA-6C103E10030F} = {53E47842-3FC8-3998-A828-34EB942B241A}
 		{C0FF640D-2C14-8DBE-F595-301E616989EF} = {53E47842-3FC8-3998-A828-34EB942B241A}
 		{88F1A057-74BE-FB62-9DD7-E90A890331F1} = {53E47842-3FC8-3998-A828-34EB942B241A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB30660D-4C05-418A-A507-2A20FFE4B2AD}
 	EndGlobalSection
 EndGlobal

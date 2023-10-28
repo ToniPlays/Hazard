@@ -216,4 +216,10 @@ namespace Hazard
 
 		return handle;
 	}
+	Buffer AssetManager::AssetToBinary(Ref<Asset> asset)
+	{
+		if (!asset) return Buffer();
+
+		return s_AssetLoader.AssetToBinary(asset);
+	}
 }

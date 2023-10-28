@@ -31,8 +31,16 @@ public:
 
 	Ref<JobGraph> GetGraph();
 
-	Buffer GetJobResult(uint32_t index);
-	std::vector<Buffer> GetJobResults();
+	template<typename T>
+	std::vector<T> GetJobResults()
+	{
+		std::vector<T> result;
+		result.reserve(m_Jobs.size());
+
+		for (auto& job : m_Jobs)
+			result.push_back(job->GetResult<T>());
+		return result;
+	}
 
 private:
 	void OnJobFinished(Ref<Job> job);

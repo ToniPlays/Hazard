@@ -54,8 +54,13 @@ public:
 	Ref<GraphStage> GetStage() { return m_Stage; }
 	Ref<JobGraph> GetJobGraph();
 
-	Buffer GetResult() { return m_ResultBuffer; }
-	void SetResult(void* data, uint64_t size, uint64_t offset = 0);
+	template<typename T>
+	T GetResult() { return *(T*)m_Result; }
+	template<typename T>
+	void SetResult(T value)
+	{
+		m_Result = hnew T(value);
+	}
 
 private:
 	JobCallback m_JobCallback;
@@ -68,6 +73,6 @@ private:
 	std::string m_JobName;
 	JobStatus m_Status = JobStatus::None;
 
-	Buffer m_ResultBuffer;
+	void* m_Result;
 	Ref<GraphStage> m_Stage = nullptr;
 };
