@@ -16,6 +16,13 @@ namespace Hazard
 	{
 		HZR_PROFILE_SCOPE();
 		HZR_TIMED_FUNCTION();
+
+
+		DescriptorSetLayout setLayout = { { SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
+									   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+									   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+									   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
+
 		{
 			BufferLayout layout = LineVertex::Layout();
 
@@ -25,8 +32,9 @@ namespace Hazard
 			specs.DebugName = "Pipeline LineShader";
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.pBufferLayout = &layout;
-			specs.Flags = PIPELINE_DRAW_LINE | PIPELINE_DEPTH_WRITE;
+			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST | PIPELINE_DRAW_LINE | PIPELINE_DEPTH_WRITE;
 			specs.Shaders = asset->ShaderCode[api];
+			specs.SetLayouts = { setLayout };
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["LineShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
@@ -40,7 +48,7 @@ namespace Hazard
 			specs.DebugName = "Pipeline CircleShader";
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.pBufferLayout = &layout;
-			specs.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE;
+			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE;
 			specs.Shaders = asset->ShaderCode[api];
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
@@ -50,12 +58,6 @@ namespace Hazard
 			BufferLayout layout = QuadVertex::Layout();
 
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("QuadShader.glsl");
-
-
-			DescriptorSetLayout setLayout = { { SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
-										   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-										   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-										   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
 
 			DescriptorSetLayout samplerSet = { { SHADER_STAGE_FRAGMENT_BIT, "u_Textures", 0, 32, DESCRIPTOR_TYPE_SAMPLER_2D} };
 

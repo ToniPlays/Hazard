@@ -75,7 +75,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		
-		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("QuadShader");
+		AssetHandle pipelineHandle = material->GetPipeline();
 		if (pipelineHandle == INVALID_ASSET_HANDLE) return;
 
 		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
