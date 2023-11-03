@@ -354,7 +354,9 @@ namespace UI
 				directories.push_back(folder);
 			}
 		}
-		m_Icons[0] = AssetManager::GetAsset<Texture2DAsset>(EditorAssetManager::GetIconHandle("Folder"));
+		AssetHandle handle = EditorAssetManager::GetIconHandle("Folder");
+		m_Icons[0] = AssetManager::GetAsset<Texture2DAsset>(handle);
+
 		for (auto& dir : directories)
 			m_CurrentItems.push_back(dir);
 

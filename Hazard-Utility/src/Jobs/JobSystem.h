@@ -29,6 +29,7 @@ public:
 	void Join() { m_Thread.join(); };
 	void Detach() { m_Thread.detach(); };
 	void WaitForIdle() { m_Status.wait(ThreadStatus::Executing); }
+	bool IsMainThread() { return m_IsMainThread; }
 
 private:
 	void Execute(Ref<Job> job, JobSystem* system);
@@ -38,6 +39,7 @@ private:
 	uint32_t m_ThreadID = 0;
 	Ref<Job> m_CurrentJob;
 	std::atomic<ThreadStatus> m_Status = ThreadStatus::None;
+	bool m_IsMainThread = false;
 };
 
 class JobSystem
@@ -79,4 +81,6 @@ private:
 	std::mutex m_JobMutex;
 	std::mutex m_RunningJobMutex;
 	std::mutex m_GraphMutex;
+	std::thread::id m_LaunchThread;
+
 };

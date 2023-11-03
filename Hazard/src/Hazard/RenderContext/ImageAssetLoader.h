@@ -12,9 +12,13 @@ namespace Hazard
 
 		Ref<JobGraph> Load(AssetMetadata& metadata) override;
 		Ref<JobGraph> Save(Ref<Asset>& asset) override;
-		Ref<JobGraph> FromSourceFile(const std::filesystem::path& path) override { return nullptr; };
+		Ref<JobGraph> DataFromSource(const std::filesystem::path& path) override;
 		Ref<JobGraph> Create(const std::filesystem::path& path) override;
 
-		Buffer ToBinary(Ref<Asset> asset) override { return Buffer(); };
+		Buffer ToBinary(Ref<Asset> asset) override;
+
+	private:
+		static void LoadImageJob(JobInfo& info, AssetHandle handle);
+		static void LoadImageFromSourceJob(JobInfo& info, std::filesystem::path& path);
 	};
 }

@@ -148,8 +148,7 @@ std::filesystem::path File::GetDirectoryOf(const std::filesystem::path& file)
 }
 std::string File::GetName(const std::filesystem::path& file)
 {
-	std::filesystem::path path(file);
-	return path.filename().string();
+	return file.filename().string();
 }
 std::string File::GetNameNoExt(const std::filesystem::path& file)
 {

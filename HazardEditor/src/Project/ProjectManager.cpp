@@ -14,10 +14,8 @@ void ProjectManager::Close()
 HazardProject ProjectManager::LoadProjectFromFile(const std::filesystem::path& path)
 {
 	HazardProject project(path);
-    if(project.IsValid())
-    {
+    if(!project.IsValid())
         return project;
-    }
     
 	project.DeserializeSetting<HazardProjectInfo>();
 	project.DeserializeSetting<ProjectInputSettings>();

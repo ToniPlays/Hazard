@@ -84,7 +84,7 @@ void UniformBufferTest::Init()
 	BufferCreateInfo uboInfo = {};
 	uboInfo.Name = "Camera";
 	uboInfo.Size = sizeof(glm::mat4);
-	uboInfo.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+	uboInfo.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
 
 	SamplerCreateInfo samplerInfo = {};
 	samplerInfo.DebugName = "ImageSampler";

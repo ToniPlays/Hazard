@@ -34,7 +34,7 @@ namespace Hazard
 		return m_Loaders[metadata.Type]->Save(asset);
 	}
 
-	Ref<JobGraph> AssetLoader::FromSourceFile(const std::filesystem::path& path)
+	Ref<JobGraph> AssetLoader::DataFromSource(const std::filesystem::path& path)
 	{
 		if (!File::Exists(path))
 			return nullptr;
@@ -43,18 +43,18 @@ namespace Hazard
 
 		if (m_Loaders.find(type) == m_Loaders.end())
 		{
-			HZR_CORE_ERROR("No loaders for {0}", Utils::AssetTypeToString(type));
+			HZR_CORE_ERROR("No loaders for {0} ({1})", Utils::AssetTypeToString(type), path.string());
 			return nullptr;
 		}
 
-		return m_Loaders[type]->FromSourceFile(path);
+		return m_Loaders[type]->DataFromSource(path);
 	}
 
 	Ref<JobGraph> AssetLoader::Create(AssetType type, const std::filesystem::path& path)
 	{
 		if (m_Loaders.find(type) == m_Loaders.end())
 		{
-			HZR_CORE_ERROR("No loaders for {0}", Utils::AssetTypeToString(type));
+			HZR_CORE_ERROR("No loaders for {0} ({1})", Utils::AssetTypeToString(type), path.string());
 			return nullptr;
 		}
 

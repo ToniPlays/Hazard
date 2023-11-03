@@ -15,6 +15,9 @@ namespace HazardRenderer
 
 		void Execute(Ref<RenderCommandBuffer> commandBuffer);
 		float GetExecutionTime() { return m_ExecutionTime; }
+
+		void SetResource(const std::string& name, void* data, uint64_t size);
+
 		static Ref<RenderGraph> Create(RenderGraphCreateInfo* createInfo);
 
 	private:
@@ -23,6 +26,8 @@ namespace HazardRenderer
 
 	private:
 		std::string m_DebugName;
+		std::vector<RenderGraphStage> m_Stages;
+		std::unordered_map<std::string, Buffer> m_Resources;
 
 		std::atomic<float> m_ExecutionTime = 0.0f;
 	};

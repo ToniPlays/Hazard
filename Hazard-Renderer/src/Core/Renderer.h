@@ -12,6 +12,7 @@ namespace HazardRenderer
 		CommandQueue* ResourceCreateCommandQueue;
 		CommandQueue* ResourceFreeCommandQueue;
 	};
+
 	class Renderer
 	{
 	public:
@@ -23,9 +24,9 @@ namespace HazardRenderer
 
 			s_GraphicsContext = context;
 		}
+
 		static void WaitAndRender()
 		{
-			s_IsExecuting = true;
 			HZR_PROFILE_FUNCTION();
 			{
 				HZR_PROFILE_FUNCTION("ResourceCreateQueue::Execute()");
@@ -42,8 +43,6 @@ namespace HazardRenderer
 				s_CommandQueue.ResourceFreeCommandQueue->Excecute();
 				s_CommandQueue.ResourceFreeCommandQueue->Clear();
 			}
-			s_IsExecuting = false;
-			s_IsExecuting.notify_all();
 		}
 
 		template<typename FuncT>
@@ -54,9 +53,8 @@ namespace HazardRenderer
 				(*pFunc)();
 				pFunc->~FuncT();
 			};
-			s_IsExecuting.wait(true);
-			HZR_ASSERT(!s_IsExecuting, "Cannot submit while rendering");
-			//std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
+			
+			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
 			auto storageBuffer = s_CommandQueue.RenderCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
@@ -69,9 +67,7 @@ namespace HazardRenderer
 				pFunc->~FuncT();
 			};
 
-			//std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
-			s_IsExecuting.wait(true);
-			HZR_ASSERT(!s_IsExecuting, "Cannot submit while rendering");
+			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
 			auto storageBuffer = s_CommandQueue.ResourceCreateCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
@@ -83,10 +79,8 @@ namespace HazardRenderer
 				(*pFunc)();
 				pFunc->~FuncT();
 			};
-			s_IsExecuting.wait(true);
-			HZR_ASSERT(!s_IsExecuting, "Cannot submit while rendering");
-			//std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
-
+			
+			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
 			auto storageBuffer = s_CommandQueue.ResourceFreeCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
@@ -94,6 +88,5 @@ namespace HazardRenderer
 		static inline GraphicsContext* s_GraphicsContext = nullptr;
 		static inline CommandQueues s_CommandQueue;
 		static inline std::mutex s_ResourceMutex;
-		static inline std::atomic_bool s_IsExecuting = false;
 	};
 }

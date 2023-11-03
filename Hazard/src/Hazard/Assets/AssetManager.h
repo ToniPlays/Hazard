@@ -134,9 +134,9 @@ namespace Hazard
 			return JobPromise();
 		}
 
-		static JobPromise CreateFromSource(const std::filesystem::path& file)
+		static JobPromise DataFromSource(const std::filesystem::path& file)
 		{
-			Ref<JobGraph> graph = s_AssetLoader.FromSourceFile(file);
+			Ref<JobGraph> graph = s_AssetLoader.DataFromSource(file);
 			if (!graph) return JobPromise();
 
 			return Application::Get().GetJobSystem().QueueGraph(graph);
@@ -149,7 +149,7 @@ namespace Hazard
 		static void AddLoadedAssetJob(JobInfo& info)
 		{
 			auto assets = info.PreviousStage->GetJobResults<Ref<Asset>>();
-			if (!assets.size() == 0) return;
+			if (assets.size() == 0) return;
 
 			std::scoped_lock lock(s_Mutex);
 			for (auto& asset : assets)

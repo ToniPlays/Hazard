@@ -196,14 +196,16 @@ namespace Hazard
 
 		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 
+		DescriptorSetLayout layout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Texture", 0, 32, DESCRIPTOR_TYPE_SAMPLER_2D } };
+
 		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("QuadShader");
-		m_Material = Ref<Material>::Create(pipelineHandle);
+		m_Material = Ref<Material>::Create(pipelineHandle, layout);
 
 		Ref<Sampler> sampler = RenderEngine::GetResources().DefaultImageSampler;
-		//Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
+		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
 
-		//for (uint32_t i = 0; i < m_Data.Samplers; i++)
-		//	set->Write(0, i, m_Data.TextureSlots[i], sampler, true);
+		for (uint32_t i = 0; i < m_Data.Samplers; i++)
+			set->Write(0, i, m_Data.TextureSlots[i], sampler, true);
 
 		m_RenderPass = renderPass;
 	}
@@ -215,10 +217,9 @@ namespace Hazard
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++) 
 		{
 			if (m_Data.TextureSlots[i] == texture) 
-			{
 				return (float)i;
-			}
 		}
+
 		m_Data.TextureSlots[(uint32_t)m_Data.TextureIndex] = texture;
 		return m_Data.TextureIndex++;
 	}

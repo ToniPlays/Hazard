@@ -254,6 +254,8 @@ namespace UI
 	}
 	void Viewport::OnMouseClicked(const glm::vec2& mousePos)
 	{
+		return;
+
 		ImageCopyRegion region = {};
 		region.Extent.Width = 1;
 		region.Extent.Height = 1;

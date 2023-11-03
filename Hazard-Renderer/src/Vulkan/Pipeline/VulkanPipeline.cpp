@@ -90,15 +90,15 @@ namespace HazardRenderer::Vulkan
 
 		const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
-
 		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
 		std::vector<VkDescriptorSetLayout> setLayouts(m_Specs.SetLayouts.size());
-		std::vector<VkDescriptorSetLayoutBinding> bindings;
 
 		{
 			for (uint32_t i = 0; i < setLayouts.size(); i++)
 			{
+				std::vector<VkDescriptorSetLayoutBinding> bindings;
+
 				for (auto& element : m_Specs.SetLayouts[i])
 				{
 					auto& binding = bindings.emplace_back();

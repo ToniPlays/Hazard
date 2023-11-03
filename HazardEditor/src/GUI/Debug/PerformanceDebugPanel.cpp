@@ -142,7 +142,9 @@ namespace UI
 			ImGui::TableNextColumn();
 
 			ImUI::Shift(4.0f, 4.0f);
-			ImGui::Text("%s", ThreadStatusToString(thread->GetStatus()).c_str());
+			if (thread->IsMainThread())
+				ImGui::Text("%s", "Main thread");
+			else ImGui::Text("%s", ThreadStatusToString(thread->GetStatus()).c_str());
 			ImGui::TableNextColumn();
 
 			Ref<Job> job = thread->GetCurrentJob();

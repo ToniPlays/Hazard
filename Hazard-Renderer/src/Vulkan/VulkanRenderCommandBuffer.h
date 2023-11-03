@@ -52,11 +52,10 @@ namespace HazardRenderer::Vulkan
 
 		void DispatchCompute(GroupSize globalGroupSize) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
-		//BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) override;
 
-		//void InsertMemoryBarrier(const MemoryBarrierInfo& info) override;
-		//void TransitionImageLayout(const ImageTransitionInfo& info) override;
-		//void GenerateMipmaps(const GenMipmapsInfo& info) override;
+		void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region);
+		void CopyToImage(Ref<Image2D> targetImage, const ImageCopyRegion& region);
+
 
 		//Vulkan specific
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }

@@ -182,8 +182,10 @@ namespace Hazard
 
 		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 
+		auto layout = DescriptorSetLayout();
+
 		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("CircleShader");
-		m_Material = Ref<Material>::Create(pipelineHandle);
+		m_Material = Ref<Material>::Create(pipelineHandle, layout);
 
 		m_RenderPass = renderPass;
 	}

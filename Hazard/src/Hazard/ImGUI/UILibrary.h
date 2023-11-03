@@ -276,7 +276,7 @@ namespace Hazard::ImUI
 				const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
 				const Ref<Vulkan::VulkanSampler>& vkSampler = sampler.As<Vulkan::VulkanSampler>();
 
-				if (!vkImage->IsValid() && vkSampler->GetVulkanSampler())
+				if (!vkImage || !vkSampler->GetVulkanSampler())
 				{
 					auto& white = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
 					const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();
@@ -287,6 +287,7 @@ namespace Hazard::ImUI
 				ImTextureID id = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), imageInfo.imageView, imageInfo.imageLayout);
 				cache[image.Raw()] = id;
 				return id;
+
 			}
 		#endif
 		#ifdef HZR_INCLUDE_METAL
@@ -299,10 +300,10 @@ namespace Hazard::ImUI
 			default:
 				HZR_ASSERT(false, "Undefined ImageID");
 				break;
-		}
+			}
 
 		return 0;
-	}
+		}
 	static void Image(Ref<HazardRenderer::Image2D> image, Ref<HazardRenderer::Sampler> sampler, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 })
 	{
 		ImGui::Image(GetImageID(image, sampler), size, t0, t1);
@@ -681,4 +682,4 @@ namespace Hazard::ImUI
 		return accepted;
 	}
 #pragma endregion
-}
+	}

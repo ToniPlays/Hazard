@@ -52,7 +52,5 @@ namespace HazardRenderer
 		virtual uint32_t GetMipLevels() const = 0;
 
 		virtual float GetAspectRatio() = 0;
-		virtual Buffer GetBuffer() const = 0;
-		virtual const Buffer& GetBuffer() = 0;
 	};
 }

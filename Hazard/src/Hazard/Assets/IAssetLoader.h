@@ -27,7 +27,8 @@ namespace Hazard
 		
 		//TODO: Maybe a Revert option
 		virtual Ref<JobGraph> Save(Ref<Asset>& asset) = 0;
-		virtual Ref<JobGraph> FromSourceFile(const std::filesystem::path& path) = 0;
+		//Return asset data required to create 
+		virtual Ref<JobGraph> DataFromSource(const std::filesystem::path& path) = 0;
 
 		virtual Ref<JobGraph> Create(const std::filesystem::path& path) = 0;
 

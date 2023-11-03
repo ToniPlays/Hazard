@@ -20,11 +20,22 @@ namespace Hazard
 		uint64_t Indices;
 		uint64_t DrawCalls;
 	};
+	struct GeometryMesh
+	{
+		glm::mat4 Transform;
+		uint32_t Count;
+		Ref<GPUBuffer> VertexBuffer;
+		Ref<GPUBuffer> IndexBuffer;
+		Ref<Pipeline> Pipeline;
+		Ref<DescriptorSet> MaterialDescriptorSet;
+	};
 
 	//Draw list for single world context
 	struct RendererDrawList
 	{
 		Ref<WorldRenderer> WorldRenderer;
+
+		std::vector<GeometryMesh> GeometryMeshes;
 		DrawListStat Stats;
 	};
 }

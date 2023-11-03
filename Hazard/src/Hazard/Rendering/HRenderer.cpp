@@ -74,6 +74,22 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
+		
+		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("QuadShader");
+		if (pipelineHandle == INVALID_ASSET_HANDLE) return;
+
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
+
+		GeometryMesh mesh = {};
+		mesh.Transform = transform;
+		mesh.Count = count;
+		mesh.VertexBuffer = vertexBuffer;
+		mesh.IndexBuffer = indexBuffer;
+		mesh.Pipeline = pipeline;
+		mesh.MaterialDescriptorSet = material->GetDescriptorSet();
+
+		auto& drawList = s_Engine->GetDrawList();
+		drawList.GeometryMeshes.push_back(mesh);
 	}
 
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count)

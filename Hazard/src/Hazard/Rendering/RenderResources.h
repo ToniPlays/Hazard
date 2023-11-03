@@ -76,13 +76,14 @@ namespace Hazard
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
-			Ref<Material> skyboxMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("Skybox"));
+			Ref<Material> skyboxMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("Skybox"), DescriptorSetLayout());
 			SkyboxMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, skyboxMaterial);
 
-			DescriptorSetLayout layout = { { SHADER_STAGE_VERTEX_BIT, "Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER},
+			DescriptorSetLayout layout = { { SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
 										   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 										   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 										   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
+
 			DescriptorSetCreateInfo setInfo = {};
 			setInfo.DebugName = "WorldDescriptor";
 			setInfo.Set = 0;
@@ -98,7 +99,6 @@ namespace Hazard
 			CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
 			WorldDescriptor->Write(0, CameraUniformBuffer, true);
 
-
 			auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
 			Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
 
@@ -106,7 +106,7 @@ namespace Hazard
 			BRDFLutHandle = AssetManager::GetHandleFromKey("BRDF_LUT.tga");
 			BRDFLut = AssetManager::GetAsset<Texture2DAsset>(BRDFLutHandle);
 
-			Ref<Material> defaultMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("PBR_Static"));
+			Ref<Material> defaultMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("PBR_Static"), DescriptorSetLayout());
 			PBRMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, defaultMaterial);
 
 			CubemapTextureCreateInfo blackCubemap = {};
@@ -143,9 +143,9 @@ namespace Hazard
 
 			DefaultImageSampler = Sampler::Create(&samplerInfo);
 
-			//WorldDescriptor->Write(1, 0, WhiteCubemap, DefaultImageSampler, true);
-			//WorldDescriptor->Write(2, 0, WhiteCubemap, DefaultImageSampler, true);
-			//WorldDescriptor->Write(3, 0, BRDFLut->GetSourceImageAsset()->Value.As<Image2D>(), DefaultImageSampler, true);
+			WorldDescriptor->Write(1, 0, WhiteCubemap, DefaultImageSampler, true);
+			WorldDescriptor->Write(2, 0, WhiteCubemap, DefaultImageSampler, true);
+			WorldDescriptor->Write(3, 0, BRDFLut->GetSourceImageAsset()->Value.As<Image2D>(), DefaultImageSampler, true);
 		}
 	};
 }

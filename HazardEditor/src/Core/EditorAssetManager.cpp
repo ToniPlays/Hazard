@@ -25,16 +25,16 @@ void EditorAssetManager::LoadEditorAssets()
 	};
 
 	std::vector<EditorAsset> texturesToLoad = {
-		{ "Default", "Library/textureBG.png.hpack"},
-		{ "Folder",  "Library/folder.png.hpack"},
-		{ "World",   "Library/world.png.hpack"},
-		{ "Script",  "Library/csharp.png.hpack"},
-		{ "Camera",  "Library/camera.png.hpack"},
-		{ "DirectionalLight", "Library/directionalLight.png.hpack"}
+		{ "Default",			"Library/Packed/textureBG.png.hpack"},
+		{ "Folder",				"Library/Packed/folder.png.hpack"},
+		{ "World",				"Library/Packed/world.png.hpack"},
+		{ "Script",				"Library/Packed/csharp.png.hpack"},
+		{ "Camera",				"Library/Packed/camera.png.hpack"},
+		{ "DirectionalLight",	"Library/Packed/directionalLight.png.hpack"}
 	};
 	std::vector<EditorAsset> meshesToLoad = {
-		{ "Cube", "Library/cube.obj.hpack"     },
-		{ "Sphere", "Library/sphere.obj.hpack" }
+		//{ "Cube", "Library/cube.obj.hpack"     },
+		//{ "Sphere", "Library/sphere.obj.hpack" }
 	};
 
 	Timer timer;
@@ -43,7 +43,7 @@ void EditorAssetManager::LoadEditorAssets()
 		//Get asset pack handle
 		AssetHandle packHandle = AssetManager::GetHandleFromKey(texture.Path);
 		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
-		//s_Icons[texture.Key] = pack.Elements[0].Handle;
+		s_Icons[texture.Key] = pack.Elements[0].Handle;
 		pack.Free();
 	}
 
@@ -52,7 +52,7 @@ void EditorAssetManager::LoadEditorAssets()
 		//Get asset pack handle
 		AssetHandle packHandle = AssetManager::GetHandleFromKey(mesh.Path);
 		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
-		//s_Icons[mesh.Key] = pack.Elements[0].Handle;
+		s_Icons[mesh.Key] = pack.Elements[0].Handle;
 		pack.Free();
 	}
 }
@@ -70,40 +70,24 @@ AssetHandle EditorAssetManager::GetDefaultMesh(const std::string& name)
 	return INVALID_ASSET_HANDLE;
 }
 
-void EditorAssetManager::GenerateAndSavePack(JobInfo& info, std::filesystem::path& path)
+void EditorAssetManager::SaveAssetsToPack(const std::string& name, std::vector<AssetPackElement> assets)
 {
+	if (assets.size() == 0) return;
+
 	FileCache cache("Library");
-
-	JobPromise promise = AssetManager::CreateFromSource(path);
-	promise.Wait();
-	if (!promise.Succeeded())
-		throw JobException(fmt::format("Cannot load source from file: {}", path.string()));
-
-	std::vector<AssetPackElement> elements;
-
-	for (auto& asset : promise.GetResults<Ref<Asset>>())
-	{
-		AssetPackElement& element = elements.emplace_back();
-		element.AddressableName = File::GetName(path);
-		element.Handle = asset->GetHandle();
-		element.Type = asset->GetType();
-		element.Data = AssetManager::AssetToBinary(asset);
-	}
 
 	AssetPack pack = {};
 	pack.Handle = AssetHandle();
-	pack.ElementCount = elements.size();
-	pack.Elements = elements;
+	pack.ElementCount = assets.size();
+	pack.Elements = assets;
 
 	for (auto& e : pack.Elements)
 		e.AssetPackHandle = pack.Handle;
 
 	CachedBuffer buffer = AssetPack::ToBuffer(pack);
 
-	if(!cache.WriteFile("Shaders" / std::filesystem::path(File::GetName(path) + ".hpack"), buffer.GetData(), buffer.GetSize()))
-	   throw JobException("Failed to save asset pack");
-
-	pack.Free();
+	if (!cache.WriteFile("Packed" / std::filesystem::path(name + ".hpack"), buffer.GetData(), buffer.GetSize()))
+		pack.Free();
 }
 
 void EditorAssetManager::ImportEngineAssets()
@@ -112,9 +96,15 @@ void EditorAssetManager::ImportEngineAssets()
 	HZR_INFO("Importing engine assets");
 
 	Timer timer;
-	FileCache cache("Library");
+	FileCache cache("Library/Packed");
 
-	std::vector<Ref<Job>> jobs;
+	struct LoadingJobs
+	{
+		std::filesystem::path File;
+		JobPromise Promise;
+	};
+
+	std::vector<LoadingJobs> promises;
 
 	for (auto& file : Directory::GetAllInDirectory("res", true))
 	{
@@ -132,21 +122,14 @@ void EditorAssetManager::ImportEngineAssets()
 		if (extension == ".ico") continue;
 		if (extension == ".cs") continue;
 
-		Ref<Job> job = Ref<Job>::Create(fmt::format("Generate pack: {0}", file.string()), GenerateAndSavePack, file);
-		jobs.push_back(job);
+		promises.push_back({ file, AssetManager::DataFromSource(file) });
 	}
 
-	if (jobs.size() > 0)
+	for (auto& promise : promises)
 	{
-		JobSystem& system = Application::Get().GetJobSystem();
-
-		Ref<JobGraph> loadingGraph = Ref<JobGraph>::Create("Engine asset Load", 1, JOB_FLAGS_SILENT_FAILURE);
-		loadingGraph->GetStage(0)->QueueJobs(jobs);
-
-		JobPromise promise = system.QueueGraph(loadingGraph);
-		promise.Wait();
-		
-		HZR_CORE_ASSERT(promise.Succeeded(), "Loading engine assets has failed");
+		promise.Promise.Wait();
+		auto results = promise.Promise.GetResults<AssetPackElement>();
+		SaveAssetsToPack(File::GetName(promise.File), results);
 	}
 
 	auto files = Directory::GetAllInDirectory(cache.GetCachePath(), true);
@@ -161,5 +144,6 @@ void EditorAssetManager::ImportEngineAssets()
 		AssetManager::ImportAssetPack(pack, file);
 		pack.Free();
 	}
-	HZR_INFO("Engine assets imported in {}ms", timer.ElapsedMillis());
+
+	HZR_INFO("Engine assets imported in {0} ms", timer.ElapsedMillis());
 }

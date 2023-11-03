@@ -43,14 +43,6 @@ namespace Hazard
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
 
 		s_Resources = hnew RenderResources();
-		s_Resources->Initialize(m_RenderPass);
-
-		m_QuadRenderer.Init();
-		m_QuadRenderer.CreateResources(m_RenderPass);
-		m_LineRenderer.Init();
-		m_LineRenderer.CreateResources(m_RenderPass);
-		m_CircleRenderer.Init();
-		m_CircleRenderer.CreateResources(m_RenderPass);
 		m_RenderContextManager = &Application::GetModule<RenderContextManager>();
 
 		m_RenderGraph = CreateRasterGraph();
@@ -89,6 +81,15 @@ namespace Hazard
 	void RenderEngine::Init()
 	{
 		ShaderLibrary::Init(m_RenderContextManager->GetWindow().GetWindowInfo().SelectedAPI);
+
+		s_Resources->Initialize(m_RenderPass);
+
+		m_QuadRenderer.Init();
+		m_QuadRenderer.CreateResources(m_RenderPass);
+		m_LineRenderer.Init();
+		m_LineRenderer.CreateResources(m_RenderPass);
+		m_CircleRenderer.Init();
+		m_CircleRenderer.CreateResources(m_RenderPass);
 	}
 	void RenderEngine::Update()
 	{
@@ -123,7 +124,9 @@ namespace Hazard
 				region.Size = sizeof(CameraData);
 				region.Offset = 0;
 
-				//s_Resources->CameraUniformBuffer->SetData(region);
+				s_Resources->CameraUniformBuffer->SetData(region);
+
+				m_RenderGraph->SetResource("GeometryPass", worldDrawList.GeometryMeshes.data(), worldDrawList.GeometryMeshes.size() * sizeof(GeometryMesh));
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				m_RenderGraph->Execute(commandBuffer);

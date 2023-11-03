@@ -8,6 +8,8 @@ namespace Hazard
 	//Texture contains texture atlas coords, selected from a source image
 	class Texture2DAsset : public Asset
 	{
+		friend class ImageAssetLoader;
+
 	public:
 		Texture2DAsset(Ref<AssetPointer> sourceImage, Ref<HazardRenderer::Sampler> sampler) 
 			: m_SourceImage2D(sourceImage), m_ImageSampler(sampler) {};

@@ -103,7 +103,7 @@ namespace Hazard
 		m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
 
 		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("LineShader");
-		m_Material = Ref<Material>::Create(pipelineHandle);
+		m_Material = Ref<Material>::Create(pipelineHandle, DescriptorSetLayout());
 
 		m_RenderPass = renderPass;
 	}

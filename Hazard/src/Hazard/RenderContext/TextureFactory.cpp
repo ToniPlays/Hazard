@@ -62,6 +62,7 @@ namespace Hazard
 		header.Width = w;
 		header.Height = h;
 		header.Channels = desired;
+		header.Format = HazardRenderer::ImageFormat::RGBA;
 
 		stbi_image_free(data);
 

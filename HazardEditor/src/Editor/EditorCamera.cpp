@@ -84,10 +84,6 @@ namespace Editor {
 			{
 				MouseZoom(delta.x + delta.y);
 			}
-			else
-			{
-				//Enable mouse
-			}
 		}
 
 		m_InitialMousePos = mouse;
@@ -96,9 +92,8 @@ namespace Editor {
 		m_Pitch += m_PitchDelta;
 
 		if (m_CameraMode == CameraMode::Arcball)
-		{
 			m_Position = CalculatePosition();
-		}
+
 		UpdateView();
 	}
 

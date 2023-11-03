@@ -22,7 +22,9 @@
 #define STATIC_ASSERT(x, Type) HZR_THROW("This no use"); 
 //static_assert(x, __FUNCSIG__)
 #ifdef HZR_DEBUG
-#define HZR_ASSERT(x, m) if(!(x)) { std::cout << (m) << std::endl; assert(false); }
+	#ifndef HZR_ASSERT
+		#define HZR_ASSERT(x, m) if(!(x)) { std::cout << (m) << std::endl; assert(false); }
+	#endif
 #else
 #define HZR_ASSERT(x, m) (x)
 #endif

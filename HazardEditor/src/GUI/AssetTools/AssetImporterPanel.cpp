@@ -255,18 +255,29 @@ namespace UI
 	void AssetImporterPanel::ImportImage(std::filesystem::path filePath, std::filesystem::path destination, ImageImportSettings settings)
 	{
 		//Build image import pipeline
-		auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
+		JobPromise promise = AssetManager::DataFromSource(filePath);
+		promise.Wait();
 
-		Image2DCreateInfo info = {};
-		info.GenerateMips = settings.GenerateMips;
-		/*
-		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Import {}", File::GetName(filePath)), 2);
-		Ref<JobGraph> packGraph = EditorAssetPackBuilder::CreatePackElement(filePath, info, settings);
-		graph->CombineStages(packGraph);
+		if (promise.Succeeded())
+		{
+			auto result = promise.GetResults<AssetPackElement>();
+			auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
 
+			AssetPack pack = {};
+			pack.Handle = AssetHandle();
+			pack.ElementCount = result.size();
+			pack.Elements = result;
 
-		Application::Get().GetJobSystem().QueueGraph(graph);
-		*/
+			for (auto& e : pack.Elements)
+				e.AssetPackHandle = pack.Handle;
+
+			CachedBuffer buffer = AssetPack::ToBuffer(pack);
+
+			if (File::WriteBinaryFile(packPath, buffer.GetData(), buffer.GetSize()))
+				AssetManager::ImportAssetPack(pack, filePath);
+
+			pack.Free();
+		}
 	}
 
 	void AssetImporterPanel::ImportMesh(std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings)

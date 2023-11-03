@@ -21,7 +21,7 @@ namespace Hazard {
 		virtual bool OnEvent(Event& e) { return false; }
 		
 		std::string GetName() { return m_Name; };
-		bool GetActive() { return m_IsActive; }
+		bool IsActive() { return m_IsActive; }
 		void SetActive(bool active) { m_IsActive = active; }
 
 	private:

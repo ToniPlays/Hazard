@@ -6,7 +6,7 @@
 class Job;
 class JobGraph;
 
-class JobPromise
+struct JobPromise
 {
 	friend class JobSystem;
 
@@ -17,10 +17,12 @@ public:
 
     bool Succeeded();
     void Wait();
+	const std::string& GetJobName() const { return m_JobGraph->GetName(); }
 
 	template<typename T>
 	std::vector<T> GetResults()
 	{
+		if (!m_JobGraph) return std::vector<T>();
 		return m_JobGraph->GetResults<T>();
 	}
 

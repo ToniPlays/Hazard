@@ -70,9 +70,10 @@ namespace Hazard
 			{
 				AssetPackElement& element = pack.Elements[i];
 				element.AssetPackHandle = pack.Handle;
-				element.Data = Buffer::Copy( buffer.Read<Buffer>(headers[i].AssetDataSize));
+				element.Data = Buffer::Copy(buffer.Read<Buffer>(headers[i].AssetDataSize));
                 
-                HZR_ASSERT(element.Data.Data, fmt::format("Element {0} has no data", element.AddressableName));
+                if(!element.Data.Data) 
+					fmt::format("Element {0} has no data", element.AddressableName);
 			}
 			
 			return pack;

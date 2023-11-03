@@ -43,28 +43,6 @@ namespace HazardRenderer
 		uint32_t FirstInstance = 0;
 	};
 
-	//Fix this
-	struct MemoryBarrierInfo
-	{
-		MemoryBarrierFlags Flags;
-		
-		Ref<Image2D> Image = nullptr;
-		Ref<CubemapTexture> Cubemap = nullptr;
-	};
-	struct ImageTransitionInfo
-	{
-		ImageLayout SourceLayout;
-		ImageLayout DestLayout;
-		Ref<Image2D> Image = nullptr;
-		Ref<CubemapTexture> Cubemap = nullptr;
-	};
-
-	struct GenMipmapsInfo
-	{
-		Ref<Image2D> Image = nullptr;
-		Ref<CubemapTexture> Cubemap = nullptr;
-	};
-
 	//TODO: Check if needed
 	struct TraceRaysInfo
 	{
@@ -116,6 +94,9 @@ namespace HazardRenderer
 		//virtual void BuildAccelerationStructure(const AccelerationStructureBuildInfo& info) = 0;
 
 		//Statistics
+
+		virtual void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region) = 0;
+		virtual void CopyToImage(Ref<Image2D> targetImage, const ImageCopyRegion& region) = 0;
 		
 		virtual uint32_t GetFrameIndex() = 0;
 		virtual bool IsRecording() = 0;

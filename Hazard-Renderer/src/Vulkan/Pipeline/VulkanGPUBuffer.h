@@ -22,17 +22,16 @@ namespace HazardRenderer::Vulkan
 
 		//Vulkan specific
 
-		VkBuffer GetVulkanBuffer() const { return m_Buffer; }
+		VkBuffer GetVulkanBuffer() const { return m_VulkanBuffer; }
+		VmaAllocation GetVMAAllocation() const { return m_BufferAllocation; }
 
 	private:
-		void SetData_RT(const BufferCopyRegion& copyRegion);
 
 		std::string m_DebugName;
 		uint32_t m_Size;
-		uint32_t m_UsageFlags = (BufferUsageFlags)0;
+		uint32_t m_UsageFlags = 0;
 
-		Buffer m_LocalData;
-		VkBuffer m_Buffer;
+		VkBuffer m_VulkanBuffer;
 		VmaAllocation m_BufferAllocation = nullptr;
 	};
 }

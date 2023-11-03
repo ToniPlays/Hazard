@@ -37,7 +37,7 @@ namespace Hazard {
 				if (dynamic_cast<T*>(m))
 					return (T*)m;
 			}
-			HZR_ASSERT("GetModule not found");
+			HZR_ASSERT(false, "GetModule not found");
 			return nullptr;
 		}
 		template<typename T>

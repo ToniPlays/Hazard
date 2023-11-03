@@ -11,12 +11,12 @@ namespace Hazard
 		inline static double s_UnscaledDeltaTime = 0.0f;
 		inline static float s_TimeScale = 1.0f;
 
-		static void Update(double time) 
+		static void Update(double seconds) 
 		{
-			s_UnscaledDeltaTime = time - s_LastTime;
+			s_UnscaledDeltaTime = seconds - s_LastTime;
 			s_DeltaTime = s_UnscaledDeltaTime * Time::s_TimeScale;
-			s_Time = time;
-			s_LastTime = time;
+			s_Time = seconds;
+			s_LastTime = seconds;
 		}
 
 	private:

@@ -21,37 +21,37 @@ namespace Hazard {
 	void ModuleHandler::PreUpdate()
 	{
 		for (Module* m : m_Modules)
-			if (m->GetActive())
+			if (m->IsActive())
 				m->PreUpdate();
 	}
 	void ModuleHandler::Update()
 	{
 		for (Module* m : m_Modules)
-			if (m->GetActive())
+			if (m->IsActive())
 				m->Update();
 	}
 	void ModuleHandler::PostUpdate()
 	{
 		for (Module* m : m_Modules)
-			if (m->GetActive())
+			if (m->IsActive())
 				m->PostUpdate();
 	}
 	void ModuleHandler::PreRender()
 	{
 		for (Module* m : m_Modules)
-			if (m->GetActive())
+			if (m->IsActive())
 				m->PreRender();
 	}
 	void ModuleHandler::Render()
 	{
 		for (Module* m : m_Modules)
-			if (m->GetActive())
+			if (m->IsActive())
 				m->Render();
 	}
 	void ModuleHandler::PostRender()
 	{
 		for (Module* m : m_Modules)
-			if (m->GetActive())
+			if (m->IsActive())
 				m->PostRender();
 	}
 	void ModuleHandler::Close()

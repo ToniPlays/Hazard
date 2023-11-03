@@ -5,23 +5,19 @@
 
 namespace Hazard
 {
-	Material::Material()
-	{
-		SetPipeline(AssetManager::GetHandleFromKey("PBR_Static.glsl.hpack"));
-	}
+	Material::Material() {}
 
-	Material::Material(AssetHandle pipelineHandle) : m_PipelineHandle(pipelineHandle)
+	Material::Material(AssetHandle pipelineHandle, HazardRenderer::DescriptorSetLayout layout) : m_PipelineHandle(pipelineHandle)
 	{
-		//Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
-		/*
-		if (layout.GetElementCount() > 0)
-		{
-			DescriptorSetCreateInfo setInfo = {};
-			setInfo.DebugName = fmt::format("Material {}", pipeline->GetSpecifications().DebugName);
-			setInfo.Set = 1;
-			setInfo.pLayout = &layout;
-			m_DescriptorSet = DescriptorSet::Create(&setInfo);
-		}
-		*/
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
+
+		if (layout.GetElementCount() == 0) return;
+
+		DescriptorSetCreateInfo setInfo = {};
+		setInfo.DebugName = "Material " + pipeline->GetSpecifications().DebugName;
+		setInfo.pLayout = &layout;
+		setInfo.Set = 1;
+
+		m_DescriptorSet = DescriptorSet::Create(&setInfo);
 	}
 }

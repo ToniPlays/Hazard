@@ -67,6 +67,8 @@ public:
 	template<typename T>
 	T Read()
 	{
+		if (m_DataBuffer.Size < m_CurrentBufferOffset + sizeof(T)) assert(false);
+
 		T value = Buffer::Get<T>(m_DataBuffer.Data, m_CurrentBufferOffset);
 		m_CurrentBufferOffset += sizeof(T);
 		return value;
@@ -77,12 +79,15 @@ public:
 	{
 		uint64_t length = Read<uint64_t>();
 		Buffer data = Read<Buffer>(length);
+
 		return std::string((char*)data.Data, length);
 	}
 
 	template<typename T>
 	T Read(uint64_t size)
 	{
+		if (m_DataBuffer.Size < m_CurrentBufferOffset + size) assert(false);
+
 		uint32_t* start = (uint32_t*)m_DataBuffer.Data + m_CurrentBufferOffset;
 		m_CurrentBufferOffset += size;
 		return std::vector<uint32_t>(start, start + size);
@@ -91,6 +96,8 @@ public:
 	template<>
 	Buffer Read(uint64_t size)
 	{
+		if (m_DataBuffer.Size < m_CurrentBufferOffset + size) assert(false);
+
 		Buffer value((uint8_t*)m_DataBuffer.Data + m_CurrentBufferOffset, size);
 		m_CurrentBufferOffset += size;
 		return value;

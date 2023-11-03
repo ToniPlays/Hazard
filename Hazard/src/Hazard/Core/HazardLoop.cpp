@@ -97,7 +97,12 @@ namespace Hazard
         HZR_TIMED_FUNCTION();
         
         //Update Time
-        Time::Update(0.1f);
+
+		uint32_t micros =
+			std::chrono::duration_cast<std::chrono::microseconds>
+			(std::chrono::system_clock::now().time_since_epoch()).count();
+
+		Time::Update(micros / 1000000.0f);
         
         for(auto& fn : m_Application->m_MainJobs)
             fn();

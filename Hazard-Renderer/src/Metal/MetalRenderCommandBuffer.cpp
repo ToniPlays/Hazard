@@ -211,7 +211,6 @@ namespace HazardRenderer::Metal
                 metalPipeline->BindGraphics(instance->m_RenderEncoder);
             else if(usage == PipelineUsage::ComputeBit)
             {
-                std::cout << instance->m_ComputeEncoder << std::endl;
                 metalPipeline->BindCompute(instance->m_ComputeEncoder);
             }
         });

@@ -35,7 +35,7 @@ namespace Hazard
 		return nullptr;
 	}
 
-	Ref<JobGraph> ShaderAssetLoader::FromSourceFile(const std::filesystem::path& path)
+	Ref<JobGraph> ShaderAssetLoader::DataFromSource(const std::filesystem::path& path)
 	{
 		using namespace HazardRenderer;
 
@@ -54,13 +54,12 @@ namespace Hazard
 			}
 		}
 
-		Ref<Job> assetJob = Ref<Job>::Create("Shader asset create", CreateShaderAsset);
+		Ref<Job> assetJob = Ref<Job>::Create("Shader asset create", CreateShaderAsset, path);
 
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("Shader from source", 2);
 		Ref<GraphStage> stage = graph->GetStage(0);
 		Ref<GraphStage> assetStage = graph->GetStage(1);
 		assetStage->QueueJobs({ assetJob });
-
 		stage->QueueJobs(jobs);
 
 		return graph;
@@ -167,17 +166,23 @@ namespace Hazard
 	{
 		info.Job->SetResult<ShaderCodeResult>({ stage, api, ShaderCompiler::GetShaderFromSource(stage, source, api) });
 	}
-	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info)
+	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info, const std::filesystem::path& path)
 	{
 		auto results = info.PreviousStage->GetJobResults<ShaderCodeResult>();
+
 		Ref<ShaderAsset> asset = Ref<ShaderAsset>::Create();
+		asset->m_Type = AssetType::Shader;
 
 		for (auto& result : results)
 			asset->ShaderCode[result.Api][result.Stage] = std::move(result.Source);
 
-		asset->m_Handle = UID();
-		asset->m_Type = AssetType::Shader;
+		AssetPackElement element = {};
+		element.AddressableName = File::GetName(path);
+		element.AssetPackHandle = 0;
+		element.Handle = UID();
+		element.Type = AssetType::Shader;
+		element.Data = AssetManager::AssetToBinary(asset);
 
-		info.Job->SetResult<Ref<ShaderAsset>>(asset);
+		info.Job->SetResult(element);
 	}
 }

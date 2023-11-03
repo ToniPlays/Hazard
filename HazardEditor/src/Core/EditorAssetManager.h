@@ -28,10 +28,10 @@ public:
 	//---------------------
 	static AssetHandle GetIconHandle(const std::string& name);
     static AssetHandle GetDefaultMesh(const std::string& name);
+	static void SaveAssetsToPack(const std::string& name, std::vector<Hazard::AssetPackElement> assets);
 
 private:
 	static void ImportEngineAssets();
-	static void GenerateAndSavePack(JobInfo& info, std::filesystem::path& path);
 
 private:
 	inline static std::unordered_map<std::string, AssetHandle> s_Icons;

@@ -25,9 +25,6 @@ namespace Hazard
 		uint32_t Dimensions = 2;
 		uint32_t Channels = 0;
 		HazardRenderer::ImageFormat Format = HazardRenderer::ImageFormat::None;
-		uint8_t MinFilter = 0;
-		uint8_t MagFilter = 0;
-		uint8_t WrapMode  = 0;
 	};
 
 	class TextureFactory 

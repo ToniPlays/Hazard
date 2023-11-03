@@ -9,6 +9,8 @@
 JobSystem::JobSystem(uint32_t threads) : m_Running(true)
 {
 	m_Threads.resize(threads);
+	
+	m_LaunchThread = std::this_thread::get_id();
 
 	for (uint32_t i = 0; i < threads; i++)
 	{
@@ -25,6 +27,13 @@ JobSystem::~JobSystem()
 
 void JobSystem::ThreadFunc(Ref<Thread> thread)
 {
+	thread->m_IsMainThread = thread->m_Thread.get_id() == m_LaunchThread;
+	if (thread->IsMainThread())
+	{
+		thread->m_Status == ThreadStatus::Terminated;
+		return;
+	}
+
 	//Initialize thread state
 	while (m_Running)
 	{

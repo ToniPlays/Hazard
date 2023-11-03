@@ -52,9 +52,7 @@ namespace Hazard
 			Entity e = { entity, world.Raw() };
 			auto& comp = e.GetComponent<SpriteRendererComponent>();
 		}
-
-		world->IncRefCount();
-		//info.Job->SetResult(&world, sizeof(Ref<World>));
+		info.Job->SetResult(world);
 	}
 
 	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata)

@@ -2,6 +2,7 @@
 
 #include "Hazard/Assets/Asset.h"
 #include "Core/Rendering/Pipeline.h"
+#include "Core/Rendering/DescriptorSet.h"
 #include "Hazard/RenderContext/Texture2D.h"
 
 #include "UtilityCore.h"
@@ -21,7 +22,7 @@ namespace Hazard
     public:
         
         Material();
-        Material(AssetHandle pipelineHandle);
+        Material(AssetHandle pipelineHandle, HazardRenderer::DescriptorSetLayout layout);
         
         template<typename T>
         T Get(const std::string& key)

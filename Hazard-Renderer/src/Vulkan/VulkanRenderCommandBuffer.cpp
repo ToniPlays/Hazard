@@ -208,11 +208,10 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::Begin()
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		if (m_OwnedBySwapchain)
 		{
-			instance->m_State = State::Record;
+			m_State = State::Record;
 			Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 			uint32_t frameIndex = swapchain->GetCurrentBufferIndex();
 			VkCommandBuffer buffer = swapchain->GetCurrentDrawCommandBuffer();
@@ -222,17 +221,19 @@ namespace HazardRenderer::Vulkan
 			beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
 			VK_CHECK_RESULT(vkBeginCommandBuffer(buffer, &beginInfo), "Failed to begin Command Buffer");
-			instance->m_ActiveCommandBuffer = buffer;
+			m_ActiveCommandBuffer = buffer;
 
 			//instance->BeginPerformanceQuery_RT();
 			return;
 		}
 
+
+		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
 			instance->m_TimestampNextAvailQuery = 2;
 			instance->m_State = State::Record;
 
-			VkCommandBuffer buffer = instance->m_CommandBuffers[instance->m_FrameIndex];
+			VkCommandBuffer buffer = instance->m_CommandBuffers[instance->m_FrameIndex % instance->m_CommandBuffers.size()];
 
 			VkCommandBufferBeginInfo beginInfo = {};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -552,9 +553,126 @@ namespace HazardRenderer::Vulkan
 			//fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Extent.Width, info.Extent.Height, info.Extent.Depth);
 		});
 	}
+	void VulkanRenderCommandBuffer::CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanGPUBuffer> buffer = targetBuffer.As<VulkanGPUBuffer>();
+		Buffer data = Buffer::Copy(region.Data, region.Size);
+		uint32_t flags = buffer->GetUsageFlags();
+
+		if (flags & BUFFER_USAGE_DYNAMIC)
+		{
+			Renderer::Submit([instance, buffer, data, offset = region.Offset]() mutable {
+				uint32_t flags = buffer->GetUsageFlags();
+				VulkanAllocator allocator("UploadToBuffer");
+
+				uint8_t* dst = allocator.MapMemory<uint8_t>(buffer->GetVMAAllocation());
+				memcpy(dst + offset, data.Data, data.Size);
+				allocator.UnmapMemory(buffer->GetVMAAllocation());
+				data.Release();
+
+			});
+		}
+		else
+		{
+			Renderer::Submit([instance, buffer, data]() mutable {
+
+				auto device = VulkanContext::GetLogicalDevice();
+				VulkanAllocator allocator("VulkanGPUBuffer");
+
+				VkBufferCreateInfo stagingInfo = {};
+				stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+				stagingInfo.size = buffer->GetSize();
+				stagingInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+				stagingInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+
+				VkBuffer stagingBuffer;
+				VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
+
+				//Copy data
+				uint8_t* dstData = allocator.MapMemory<uint8_t>(stagingBufferAlloc);
+				memcpy(dstData, data.Data, data.Size);
+				allocator.UnmapMemory(stagingBufferAlloc);
+
+				VkBufferCopy copyRegion = {};
+				copyRegion.size = buffer->GetSize();
+
+				VkBuffer dstBuffer = buffer->GetVulkanBuffer();
+
+				vkCmdCopyBuffer(instance->m_ActiveCommandBuffer, stagingBuffer, dstBuffer, 1, &copyRegion);
+
+				Renderer::SubmitResourceFree([stagingBuffer, stagingBufferAlloc]() mutable {
+					VulkanAllocator allocator("VulkanGPUBuffer");
+					allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
+				});
+			});
+		}
+	}
+
+	void VulkanRenderCommandBuffer::CopyToImage(Ref<Image2D> targetImage, const ImageCopyRegion& region)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanImage2D> image = targetImage.As<VulkanImage2D>();
+		Buffer buffer = Buffer::Copy(region.Data, region.DataSize);
+
+		Renderer::Submit([instance, image, region, buffer]() mutable {
+
+			HZR_PROFILE_FUNCTION();
+			VulkanAllocator allocator("VulkanImage2D");
+
+			VkBufferCreateInfo stagingInfo = {};
+			stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+			stagingInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+			stagingInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			stagingInfo.size = region.DataSize;
+
+			VkBuffer stagingBuffer;
+			VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
+
+			//Copy image data
+			uint8_t* destData = allocator.MapMemory<uint8_t>(stagingBufferAlloc);
+			memcpy(destData, buffer.Data, buffer.Size);
+			allocator.UnmapMemory(stagingBufferAlloc);
+
+			VkImageSubresourceRange range = {};
+			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			range.baseMipLevel = 0;
+			range.levelCount = 1;
+			range.layerCount = 1;
+
+			VkUtils::InsertImageMemoryBarrier(instance->m_ActiveCommandBuffer, image->GetVulkanImage(),
+											  VK_ACCESS_NONE, VK_ACCESS_TRANSFER_WRITE_BIT,
+											  VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+											  VK_ACCESS_HOST_READ_BIT, VK_ACCESS_TRANSFER_WRITE_BIT, range);
+
+			VkBufferImageCopy imageCopyRegion = {};
+			imageCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			imageCopyRegion.imageSubresource.mipLevel = 0;
+			imageCopyRegion.imageSubresource.baseArrayLayer = 0;
+			imageCopyRegion.imageSubresource.layerCount = 1;
+			imageCopyRegion.imageExtent = { region.Extent.Width, region.Extent.Height, region.Extent.Depth };
+			imageCopyRegion.bufferOffset = 0;
+
+			vkCmdCopyBufferToImage(instance->m_ActiveCommandBuffer, stagingBuffer, image->GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
+
+			VkUtils::InsertImageMemoryBarrier(instance->m_ActiveCommandBuffer, image->GetVulkanImage(),
+											  VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_SHADER_READ_BIT,
+											  VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+											  VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, range);
+
+			buffer.Release();
+			Renderer::SubmitResourceFree([stagingBuffer, stagingBufferAlloc]() mutable {
+				VulkanAllocator allocator("VulkanImage2D");
+				allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
+			});
+		});
+	}
+
+
 	void VulkanRenderCommandBuffer::BeginPerformanceQuery_RT()
 	{
 		VkCommandBuffer commandBuffer = m_ActiveCommandBuffer;
+
 		vkCmdResetQueryPool(commandBuffer, m_TimestampQueryPools[m_FrameIndex], 0, m_TimestampQueryCount);
 		vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[m_FrameIndex], 0);
 		vkCmdResetQueryPool(commandBuffer, m_PipelineQueryPools[m_FrameIndex], 0, m_PipelineQueryCount);

@@ -55,7 +55,10 @@ public:
 	Ref<JobGraph> GetJobGraph();
 
 	template<typename T>
-	T GetResult() { return *(T*)m_Result; }
+	T GetResult() 
+	{
+		return m_Result ? *(T*)m_Result : T();
+	}
 	template<typename T>
 	void SetResult(T value)
 	{
@@ -73,6 +76,6 @@ private:
 	std::string m_JobName;
 	JobStatus m_Status = JobStatus::None;
 
-	void* m_Result;
+	void* m_Result = nullptr;
 	Ref<GraphStage> m_Stage = nullptr;
 };
