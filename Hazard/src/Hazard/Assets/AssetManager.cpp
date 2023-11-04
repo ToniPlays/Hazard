@@ -71,7 +71,6 @@ namespace Hazard
 		{
 			Ref<Asset> asset = GetAsset<Asset>(GetHandleFromKey(element.AddressableName));
 			AssetHandle handle = asset->GetHandle();
-			asset->DecRefCount();
 			s_Registry.Get(element.AddressableName).LoadState = LoadState::None;
 
 			s_LoadedAssets[asset->GetHandle()] = GetAsset<Asset>(handle);

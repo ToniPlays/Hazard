@@ -47,9 +47,11 @@ namespace Hazard
 			if (buffer.GetSize() == 0) 
 				return AssetPack();
 			
-            AssetPack pack = {};
 			AssetPackHeader header = buffer.Read<AssetPackHeader>();
 
+			HZR_ASSERT(header.ElementCount < 2000, "Asset pack has too many elements");
+
+            AssetPack pack = {};
 			pack.Handle = header.Handle;
 			pack.ElementCount = header.ElementCount;
 			pack.Elements.resize(header.ElementCount);

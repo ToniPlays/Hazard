@@ -79,7 +79,11 @@ void JobGraph::OnStageFinished(Ref<GraphStage> stage)
 	m_CurrentStage.notify_all();
 
 	if (!next)
+	{
+		for (auto& cb : m_OnFinished)
+			cb();
 		return;
+	}
 
 	if (next->GetJobs().size() == 0)
 		OnStageFinished(nullptr);

@@ -256,28 +256,32 @@ namespace UI
 	{
 		//Build image import pipeline
 		JobPromise promise = AssetManager::DataFromSource(filePath);
-		promise.Wait();
+		promise.Then([promise, destination, filePath]() {
+			if (promise.Succeeded())
+			{
+				auto result = promise.GetResults<AssetPackElement>();
+				auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
 
-		if (promise.Succeeded())
-		{
-			auto result = promise.GetResults<AssetPackElement>();
-			auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
+				Application::Get().SubmitMainThread([packPath, filePath, result]() {
 
-			AssetPack pack = {};
-			pack.Handle = AssetHandle();
-			pack.ElementCount = result.size();
-			pack.Elements = result;
+					AssetPack pack = {};
+					pack.Handle = AssetHandle();
+					pack.ElementCount = result.size();
+					pack.Elements = result;
 
-			for (auto& e : pack.Elements)
-				e.AssetPackHandle = pack.Handle;
+					for (auto& e : pack.Elements)
+						e.AssetPackHandle = pack.Handle;
 
-			CachedBuffer buffer = AssetPack::ToBuffer(pack);
+					CachedBuffer buffer = AssetPack::ToBuffer(pack);
 
-			if (File::WriteBinaryFile(packPath, buffer.GetData(), buffer.GetSize()))
-				AssetManager::ImportAssetPack(pack, filePath);
+					if (File::WriteBinaryFile(packPath, buffer.GetData(), buffer.GetSize()))
+						AssetManager::ImportAssetPack(pack, packPath);
+					pack.Free();
 
-			pack.Free();
-		}
+					Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
+				});
+			}
+		});
 	}
 
 	void AssetImporterPanel::ImportMesh(std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings)

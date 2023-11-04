@@ -103,9 +103,9 @@ namespace Hazard
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer, sampler);
 		asset->m_Handle = handle;
 		asset->m_Type = AssetType::Image;
-		buffer.Release();
 
 		info.Job->SetResult(asset);
+		buffer.Release();
 	}
 
 	void ImageAssetLoader::LoadImageFromSourceJob(JobInfo& info, std::filesystem::path& path)

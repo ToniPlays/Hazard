@@ -601,7 +601,7 @@ namespace HazardRenderer::Vulkan
 
 				vkCmdCopyBuffer(instance->m_ActiveCommandBuffer, stagingBuffer, dstBuffer, 1, &copyRegion);
 
-				Renderer::SubmitResourceFree([stagingBuffer, stagingBufferAlloc]() mutable {
+				Renderer::SubmitResourceDestroy([stagingBuffer, stagingBufferAlloc]() {
 					VulkanAllocator allocator("VulkanGPUBuffer");
 					allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 				});
@@ -661,7 +661,8 @@ namespace HazardRenderer::Vulkan
 											  VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, range);
 
 			buffer.Release();
-			Renderer::SubmitResourceFree([stagingBuffer, stagingBufferAlloc]() mutable {
+
+			Renderer::SubmitResourceDestroy([stagingBuffer, stagingBufferAlloc]() {
 				VulkanAllocator allocator("VulkanImage2D");
 				allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 			});

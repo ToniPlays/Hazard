@@ -21,7 +21,7 @@ public:
 	uint64_t GetStageCount() const { return m_Stages.size(); }
 	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
 	const std::vector<Ref<GraphStage>>& GetStages() const { return m_Stages; }
-	uint32_t GetFlags() { return m_Flags; }
+	uint32_t GetFlags() const { return m_Flags; }
 
 	Ref<GraphStage> GetNextStage();
 	Ref<GraphStage> GetPreviousStage();
@@ -33,12 +33,12 @@ public:
 
 	float GetProgress();
 
-	bool HasFinished() 
+	bool HasFinished() const
 	{
 		return m_CurrentStage >= m_Stages.size();
 	}
 
-	void Wait()
+	void Wait() const
 	{
 		while (!HasFinished())
 			m_CurrentStage.wait(m_CurrentStage);
@@ -51,9 +51,14 @@ public:
 		return results.size() > 0 ? results[0] : T();
 	}
 	template<typename T>
-	std::vector<T> GetResults()
+	std::vector<T> GetResults() const
 	{
 		return GetStage(GetStageCount() - 1)->GetJobResults<T>();
+	}
+
+	void AddOnFinished(const std::function<void()> callback)
+	{
+		m_OnFinished.push_back(callback);
 	}
 
 private:
@@ -66,4 +71,5 @@ private:
 	uint32_t m_Flags = JOB_FLAGS_SUCCEEDED;
 
 	JobSystem* m_JobSystem = nullptr;
+	std::vector<std::function<void()>> m_OnFinished;
 };

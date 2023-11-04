@@ -15,12 +15,13 @@ public:
 	JobPromise(Ref<Job> job) : m_Job(job) {};
 	JobPromise(Ref<JobGraph> graph) : m_JobGraph(graph) {};
 
-    bool Succeeded();
-    void Wait();
+    bool Succeeded() const;
+    void Wait() const;
+	void Then(const std::function<void()> callback);
 	const std::string& GetJobName() const { return m_JobGraph->GetName(); }
 
 	template<typename T>
-	std::vector<T> GetResults()
+	std::vector<T> GetResults() const
 	{
 		if (!m_JobGraph) return std::vector<T>();
 		return m_JobGraph->GetResults<T>();

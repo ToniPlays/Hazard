@@ -104,8 +104,8 @@ namespace Hazard
 
 		Time::Update(micros / 1000000.0f);
         
-        for(auto& fn : m_Application->m_MainJobs)
-            fn();
+        for(uint32_t i = 0; i < m_Application->m_MainJobs.size(); i++)
+			m_Application->m_MainJobs[i]();
 
         m_Application->m_MainJobs.clear();
         

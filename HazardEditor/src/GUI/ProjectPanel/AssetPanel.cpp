@@ -462,7 +462,13 @@ namespace UI
 					break;
 				if (metadata.LoadState == LoadState::None)
 				{
-					JobPromise asset = AssetManager::GetAssetAsync(metadata.Handle);
+					JobPromise promise = AssetManager::GetAssetAsync(metadata.Handle);
+					promise.Then([&]() {
+						Application::Get().SubmitMainThread([&]() {
+							Refresh();
+						});
+					});
+
 					break;
 				}
 				handle = metadata.Handle;
