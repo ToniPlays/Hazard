@@ -103,6 +103,23 @@ namespace Hazard
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{
 		HZR_PROFILE_FUNCTION();
+		AssetHandle handle = skyLight.EnvironmentMapHandle;
+		if (handle == INVALID_ASSET_HANDLE) return;
+		
+
+		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
+		if (!map) return;
+		if (!map->RadianceMap) return;
+
+		Ref<Image2D> sourceImage = AssetManager::GetAsset<Texture2DAsset>(map->GetSourceImageHandle())->GetSourceImageAsset()->Value.As<Image2D>();
+
+		Ref<Material> material = AssetManager::GetAsset<Material>(s_Engine->GetResources().SkyboxMaterialHandle);
+		Ref<Pipeline> skyboxPipeline = AssetManager::GetAsset<AssetPointer>(material->GetPipeline())->Value.As<Pipeline>();
+
+		auto& drawList = s_Engine->GetDrawList();
+		drawList.Environment.Pipeline = skyboxPipeline; 
+		drawList.Environment.MaterialDescriptorSet = s_Engine->GetResources().SkyboxDescriptor;
+		drawList.Environment.MaterialDescriptorSet->Write(1, 0, map->RadianceMap->Value.As<CubemapTexture>(), s_Engine->GetResources().DefaultImageSampler, false);
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{

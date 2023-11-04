@@ -75,6 +75,7 @@ namespace Hazard
 	{
 		Ref<EnvironmentMap> environmentMap = Ref<EnvironmentMap>::Create();
 		environmentMap->m_Handle = AssetHandle();
+
 		Ref<Job> createJob = Ref<Job>::Create("EnvironmentAsset Create", SaveEnvironmentMapJob, environmentMap, path);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("EnvironmentAsset Create", 1);
 		graph->GetStage(0)->QueueJobs({ createJob });

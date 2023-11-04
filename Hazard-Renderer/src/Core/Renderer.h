@@ -56,7 +56,7 @@ namespace HazardRenderer
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
-				pFunc->~FuncT();
+				//pFunc->~FuncT();
 			};
 
 			s_IsRendering.wait(true);

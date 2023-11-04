@@ -158,8 +158,8 @@ namespace UI
 
 		auto& sourceImages = m_SelectableAssets["RadianceMap"];
 
-		static uint64_t samples = map->GetSpec().Samples;
-		static uint32_t resolution = Math::GetBaseLog(map->GetSpec().Resolution) - 6;
+		uint64_t samples = map->GetSpec().Samples;
+		uint32_t resolution = Math::GetBaseLog(map->GetSpec().Resolution) - 6;
 		uint32_t selectedImage = 0;
 		static AssetHandle sourceImageHandle = map->GetSourceImageHandle();
 
@@ -169,7 +169,6 @@ namespace UI
 			selectedImage = i + 1;
 			break;
 		}
-
 
 		ImGui::Text("Samples");
 		ImGui::NextColumn();
@@ -185,6 +184,9 @@ namespace UI
 		resolutions.SetOptions({ "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" });
 		resolutions.SetSelected(6);
 		resolutions.Render();
+
+		if (resolutions.DidChange())
+			map->Update(samples, (1 << 6 + resolutions.GetSelected()), sourceImageHandle);
 
 		std::vector<std::string> displayNames;
 		displayNames.reserve(m_SelectableAssets["RadianceMap"].size() + 1);

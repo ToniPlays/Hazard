@@ -23,9 +23,10 @@ namespace HazardRenderer::Vulkan
 	}
 	VulkanDescriptorSet::~VulkanDescriptorSet()
 	{
-		Renderer::SubmitResourceFree([layout = m_DescriptorSetLayout]() mutable {
+		Ref<VulkanDescriptorSet> instance = this;
+		Renderer::SubmitResourceFree([instance]() mutable {
 			const auto& device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-			vkDestroyDescriptorSetLayout(device, layout, nullptr);
+			vkDestroyDescriptorSetLayout(device, instance->m_DescriptorSetLayout, nullptr);
 		});
 	}
 	void VulkanDescriptorSet::Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll)

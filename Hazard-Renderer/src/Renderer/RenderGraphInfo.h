@@ -16,10 +16,10 @@ namespace HazardRenderer
 		bool Enabled = true;
 		uint32_t DataSize;
 
-		std::function<void(Ref<RenderCommandBuffer>, void*)> Execute;
-		std::function<void(Ref<RenderCommandBuffer>)> OnDisabled;
-		std::function<void(Ref<RenderCommandBuffer>)> OnPrepare;
-		std::function<void(Ref<RenderCommandBuffer>)> OnFinished;
+		std::function<void(Ref<RenderCommandBuffer>, void*)> Execute = [](Ref<RenderCommandBuffer>, void*) {};
+		std::function<void(Ref<RenderCommandBuffer>)> OnDisabled = [](Ref<RenderCommandBuffer>) {};
+		std::function<void(Ref<RenderCommandBuffer>)> OnPrepare = [](Ref<RenderCommandBuffer>) {};
+		std::function<void(Ref<RenderCommandBuffer>)> OnFinished = [](Ref<RenderCommandBuffer>) {};
 	};
 
 	struct RenderGraphCreateInfo

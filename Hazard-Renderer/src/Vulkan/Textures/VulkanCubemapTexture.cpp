@@ -32,7 +32,7 @@ namespace HazardRenderer::Vulkan
 		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
 		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 
-		m_MipLevels = createInfo->GenerateMips ? VkUtils::GetMipLevelCount(m_Width, m_Height) : 1;
+		m_MipLevels = 1;
 
 		Ref<VulkanCubemapTexture> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {

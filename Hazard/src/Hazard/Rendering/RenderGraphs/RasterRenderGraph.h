@@ -12,11 +12,7 @@ namespace Hazard
 		geometryStage.DebugName = "GeometryPass";
 		geometryStage.Enabled = true;
 		geometryStage.DataSize = sizeof(GeometryMesh);
-		geometryStage.OnPrepare = [](Ref<RenderCommandBuffer> cmdBuffer) {
-		};
-		geometryStage.OnFinished = [](Ref<RenderCommandBuffer> cmdBuffer) {
 
-		};
 		geometryStage.Execute = [](Ref<RenderCommandBuffer> cmdBuffer, void* data) {
 			GeometryMesh& mesh = *(GeometryMesh*)data;
 
@@ -27,12 +23,21 @@ namespace Hazard
 			cmdBuffer->SetVertexBuffer(mesh.VertexBuffer);
 			cmdBuffer->Draw(mesh.Count, mesh.IndexBuffer);
 		};
-		geometryStage.OnDisabled = [](Ref<RenderCommandBuffer> cmdBuffer) {
+		RenderGraphStage skyboxStage = {};
+		skyboxStage.DebugName = "SkyboxPass";
+		skyboxStage.Enabled = true;
+		skyboxStage.DataSize = sizeof(EnvironmentData);
+		skyboxStage.Execute = [](Ref<RenderCommandBuffer> cmdBuffer, void* data) {
+			EnvironmentData& env = *(EnvironmentData*)data;
 
+			cmdBuffer->SetPipeline(env.Pipeline);
+			cmdBuffer->SetDescriptorSet(env.MaterialDescriptorSet, 0);
+			cmdBuffer->Draw(6);
 		};
 
+
 		std::vector<RenderGraphStage> stages = {
-			geometryStage
+			skyboxStage, geometryStage
 		};
 
 		RenderGraphCreateInfo info = {};

@@ -9,9 +9,9 @@ namespace Hazard
 
 	Material::Material(AssetHandle pipelineHandle, HazardRenderer::DescriptorSetLayout layout) : m_PipelineHandle(pipelineHandle)
 	{
-		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
-
 		if (layout.GetElementCount() == 0) return;
+		
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(pipelineHandle)->Value.As<Pipeline>();
 
 		DescriptorSetCreateInfo setInfo = {};
 		setInfo.DebugName = "Material " + pipeline->GetSpecifications().DebugName;

@@ -61,6 +61,7 @@ namespace Hazard
 	struct RenderResources
 	{
 		Ref<HazardRenderer::DescriptorSet> WorldDescriptor;
+		Ref<HazardRenderer::DescriptorSet> SkyboxDescriptor;
 		Ref<HazardRenderer::GPUBuffer> CameraUniformBuffer;
 
 		AssetHandle SkyboxMaterialHandle;
@@ -76,6 +77,18 @@ namespace Hazard
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
+			DescriptorSetLayout skyboxMaterialLayout = { 
+				{ SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
+				{ SHADER_STAGE_FRAGMENT_BIT, "u_CubeMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE } 
+			};
+
+			DescriptorSetCreateInfo skyboxSetSpec = {};
+			skyboxSetSpec.DebugName = "Skybox descriptor";
+			skyboxSetSpec.Set = 0;
+			skyboxSetSpec.pLayout = &skyboxMaterialLayout;
+
+			SkyboxDescriptor = DescriptorSet::Create(&skyboxSetSpec);
+
 			Ref<Material> skyboxMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("Skybox"), DescriptorSetLayout());
 			SkyboxMaterialHandle = AssetManager::CreateMemoryOnly(AssetType::Material, skyboxMaterial);
 
@@ -146,6 +159,8 @@ namespace Hazard
 			WorldDescriptor->Write(1, 0, WhiteCubemap, DefaultImageSampler, true);
 			WorldDescriptor->Write(2, 0, WhiteCubemap, DefaultImageSampler, true);
 			WorldDescriptor->Write(3, 0, BRDFLut->GetSourceImageAsset()->Value.As<Image2D>(), DefaultImageSampler, true);
+
+			SkyboxDescriptor->Write(0, CameraUniformBuffer, true);
 		}
 	};
 }

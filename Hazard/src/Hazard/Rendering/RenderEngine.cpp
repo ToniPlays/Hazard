@@ -24,7 +24,7 @@ namespace Hazard
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
 		AssetManager::RegisterLoader<MaterialAssetLoader>(AssetType::Material);
 		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
-		
+
 		FrameBufferCreateInfo frameBufferInfo = {};
 		frameBufferInfo.DebugName = "RenderEngine";
 		frameBufferInfo.AttachmentCount = 3;
@@ -125,8 +125,12 @@ namespace Hazard
 				region.Offset = 0;
 
 				s_Resources->CameraUniformBuffer->SetData(region);
+				if (worldDrawList.Environment.Pipeline)
+					worldDrawList.Environment.Pipeline->SetRenderPass(camera.RenderPass);
 
+				m_RenderGraph->SetStageActive("SkyboxPass", worldDrawList.Environment.Pipeline);
 				m_RenderGraph->SetResource("GeometryPass", worldDrawList.GeometryMeshes.data(), worldDrawList.GeometryMeshes.size() * sizeof(GeometryMesh));
+				m_RenderGraph->SetResource("SkyboxPass", &worldDrawList.Environment, sizeof(EnvironmentData));
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				m_RenderGraph->Execute(commandBuffer);

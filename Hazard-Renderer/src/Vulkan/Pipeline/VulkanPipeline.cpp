@@ -41,6 +41,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
 		HZR_PROFILE_FUNCTION();
+
 		if (m_Specs.pTargetRenderPass == renderPass) return;
 
 		m_Specs.pTargetRenderPass = renderPass;

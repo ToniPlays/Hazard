@@ -89,14 +89,20 @@ namespace Hazard
 			s_LoadedPipelines["PBR_Static"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
 		{
+			DescriptorSetLayout skyboxLayout = {
+				{ SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
+				{ SHADER_STAGE_FRAGMENT_BIT, "u_CubeMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE }
+			};
+
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("Skybox.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "Pipeline Skybox";
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.DepthOperator = DepthOp::LessOrEqual;
-			specs.Flags = PIPELINE_DRAW_FILL;
+			specs.Flags = PIPELINE_DRAW_FILL | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			specs.Shaders = asset->ShaderCode[api];
+			specs.SetLayouts = { skyboxLayout };
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["Skybox"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);

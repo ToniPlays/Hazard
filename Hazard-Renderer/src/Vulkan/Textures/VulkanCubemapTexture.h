@@ -43,9 +43,9 @@ namespace HazardRenderer::Vulkan
 		uint32_t m_Height = 0;
 		uint32_t m_MipLevels = 0;
 
-		Buffer m_LocalBuffer;
-
 		std::string m_DebugName = "";
+
+		Buffer m_LocalBuffer;
 
 		VkDescriptorImageInfo m_ImageDescriptor;
 		VkImage m_Image = VK_NULL_HANDLE;

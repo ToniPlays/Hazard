@@ -503,8 +503,8 @@ namespace UI
 			else if (flags & BIT(0))
 				path = "---";
 
-			ImUI::TextField sourceImage("Source image");
-			sourceImage.SetHint("Image asset");
+			ImUI::TextField sourceImage(path);
+			sourceImage.SetHint("Environment map");
 			sourceImage.Render();
 
 			ImUI::DropTarget<AssetHandle>(AssetType::EnvironmentMap, [&](AssetHandle handle) {

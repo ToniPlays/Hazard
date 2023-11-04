@@ -20,6 +20,13 @@ namespace Hazard
 		uint64_t Indices;
 		uint64_t DrawCalls;
 	};
+
+	struct EnvironmentData
+	{
+		Ref<Pipeline> Pipeline;
+		Ref<DescriptorSet> MaterialDescriptorSet;
+	};
+
 	struct GeometryMesh
 	{
 		glm::mat4 Transform;
@@ -35,6 +42,7 @@ namespace Hazard
 	{
 		Ref<WorldRenderer> WorldRenderer;
 
+		EnvironmentData Environment;
 		std::vector<GeometryMesh> GeometryMeshes;
 		DrawListStat Stats;
 	};

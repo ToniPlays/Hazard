@@ -17,6 +17,7 @@ namespace HazardRenderer
 		float GetExecutionTime() { return m_ExecutionTime; }
 
 		void SetResource(const std::string& name, void* data, uint64_t size);
+		void SetStageActive(const std::string& name, bool enabled);
 
 		static Ref<RenderGraph> Create(RenderGraphCreateInfo* createInfo);
 

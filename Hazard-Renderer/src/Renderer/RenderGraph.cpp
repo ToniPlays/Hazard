@@ -37,6 +37,16 @@ namespace HazardRenderer
 	{
 		m_Resources[name] = Buffer(data, size);
 	}
+	void RenderGraph::SetStageActive(const std::string& name, bool enabled)
+	{
+		for (auto& stage : m_Stages)
+		{
+			if (stage.DebugName != name) continue;
+
+			stage.Enabled = enabled;
+			return;
+		}
+	}
 
 	Ref<RenderGraph> RenderGraph::Create(RenderGraphCreateInfo* createInfo)
 	{
