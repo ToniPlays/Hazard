@@ -57,8 +57,9 @@ namespace Hazard
 		Buffer buffer = image->ReadPixels(region);
 
 		TextureFileHeader header = {};
-		header.Width = image->GetWidth();
-		header.Height = image->GetHeight();
+		header.Extent.Width = image->GetWidth();
+		header.Extent.Height = image->GetHeight();
+		header.Extent.Depth = 1;
 		header.Format = image->GetFormat();
 		header.Channels = 4;
 		header.Dimensions = 1;
@@ -90,12 +91,11 @@ namespace Hazard
 
 		Image2DCreateInfo imageInfo = {};
 		imageInfo.DebugName = fmt::format("{0}", metadata.Key);
-		imageInfo.Extent.Width = header.Width;
-		imageInfo.Extent.Height = header.Height;
-		imageInfo.Data = readBuffer.Read<Buffer>(header.Width * header.Height * header.Channels);
+		imageInfo.Extent = header.Extent;
+		imageInfo.Data = readBuffer.Read<Buffer>(header.Extent.Width * header.Extent.Height * header.Extent.Depth * header.Channels);
 		imageInfo.Format = header.Format;
+		imageInfo.MaxMips = header.MipCount;
 		imageInfo.Usage = ImageUsage::Texture;
-		imageInfo.MaxMips = 32;
 
 		Ref<Image2D> image = Image2D::Create(&imageInfo);
 		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
@@ -114,8 +114,8 @@ namespace Hazard
 		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(path, true);
 
 		TextureFileHeader fileHeader = {};
-		fileHeader.Width = header.Width;
-		fileHeader.Height = header.Height;
+		fileHeader.Extent = header.Extent;
+		fileHeader.MipCount = 64;
 		fileHeader.Channels = header.Channels;
 		fileHeader.Dimensions = header.Dimensions;
 		fileHeader.Format = header.Format;

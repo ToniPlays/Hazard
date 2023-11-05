@@ -1721,6 +1721,7 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderGraphs\RasterRenderGraph.h" />
     <ClInclude Include="src\Hazard\ImGUI\UIElements\InputNumber.h" />
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\TextureSlot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

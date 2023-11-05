@@ -8,6 +8,7 @@
 #include "Hazard/ImGUI/UIElements/Dropdown.h"
 #include "Hazard/ImGUI/UIElements/Treenode.h"
 #include "Hazard/ImGUI/UIElements/InputNumber.h"
+#include "Hazard/ImGUI/UIElements/TextureSlot.h"
 
 #include "Editor/EditorUtils.h"
 
@@ -227,34 +228,30 @@ namespace UI
 			else if (flags & BIT(0))
 				path = "---";
 
-
-			ImGui::Columns(2, 0, false);
-			ImGui::SetColumnWidth(0, colWidth);
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4, 8 });
-
-			ImUI::TextureSlot("Sprite", path, AssetManager::GetAsset<Texture2DAsset>(textureHandle), [&]() {
-				ImUI::DropTarget<AssetHandle>(AssetType::Image, [&](AssetHandle handle) {
-					Application::Get().SubmitMainThread([=]() mutable {
-						for (auto& entity : entities)
-						{
-							auto& c = entity.GetComponent<SpriteRendererComponent>();
-							c.TextureHandle = handle;
-						}
-					});
+			ImUI::TextureSlot slot("Texture", textureHandle);
+			slot.SetDropCallback(AssetType::Image, [&](AssetHandle handle) {
+				Application::Get().SubmitMainThread([entities, handle]() {
+					for (auto& entity : entities)
+						entity.GetComponent<SpriteRendererComponent>().TextureHandle = handle;
 				});
 			});
 
-			ImGui::PopStyleVar();
+			slot.Render();
+			if (slot.DidChange())
+			{
+				for (auto& entity : entities)
+					entity.GetComponent<SpriteRendererComponent>().TextureHandle = slot.GetValue();
+			}
+
+			ImGui::Columns(2, 0, false);
+			ImGui::SetColumnWidth(0, colWidth);
 
 			Color c = flags & BIT(1) ? Color::White : color;
 
 			if (ImUI::ColorPicker("Tint", "##Tint", c, flags & BIT(1)))
 			{
 				for (auto& entity : entities)
-				{
-					auto& sr = entity.GetComponent<SpriteRendererComponent>();
-					sr.Color = c;
-				}
+					entity.GetComponent<SpriteRendererComponent>().Color = c;
 			}
 			ImGui::Columns();
 		});

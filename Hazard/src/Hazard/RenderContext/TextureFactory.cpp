@@ -8,14 +8,6 @@
 
 namespace Hazard
 {
-	struct FileHeader
-	{
-		uint32_t Width;
-		uint32_t Height;
-		uint32_t Channels;
-		uint64_t DataSize;
-	};
-
 	uint32_t TextureFactory::PixelSize(const HazardRenderer::ImageFormat& format)
 	{
 		using namespace HazardRenderer;
@@ -53,15 +45,15 @@ namespace Hazard
         CachedBuffer buffer = File::ReadBinaryFile(path);
         
         stbi_uc* data = stbi_load_from_memory((stbi_uc*)buffer.GetData(), buffer.GetSize(), &w, &h, &channels, desired);
-        
-		//stbi_uc* data = stbi_load(path.string().c_str(), &w, &h, &channels, desired);
 		HZR_CORE_ASSERT(data, "Data not loaded correctly");
 
 		TextureHeader header = {};
 		header.ImageData = Buffer::Copy(data, w * h * desired);
-		header.Width = w;
-		header.Height = h;
+		header.Extent.Width = w;
+		header.Extent.Height = h;
+		header.Extent.Depth = 1;
 		header.Channels = desired;
+		header.Mips = 1;
 		header.Format = HazardRenderer::ImageFormat::RGBA;
 
 		stbi_image_free(data);

@@ -16,6 +16,7 @@
 #include "Metal/MetalCore.h"
 
 #include "UIElements/InputFloat.h"
+#include "UIElements/TextField.h"
 
 #include "../ImGui_Backend/imgui_impl_vulkan.h"
 #include <Hazard/RenderContext/RenderContextManager.h>
@@ -291,43 +292,6 @@ namespace Hazard::ImUI
 	static void Image(Ref<HazardRenderer::Image2D> image, Ref<HazardRenderer::Sampler> sampler, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 })
 	{
 		ImGui::Image(GetImageID(image, sampler), size, t0, t1);
-	}
-	static bool TextureSlot(std::string& text, Ref<Hazard::Texture2DAsset> texture)
-	{
-		constexpr float size = 32.0f;
-
-		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - size - 5.0f);
-		{
-
-		}
-		ImGui::SameLine(0, 5);
-
-		if (texture)
-			Image(texture->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), texture->GetSampler(), { size, size });
-		else
-		{
-			ImVec2 pos = ImGui::GetCursorScreenPos();
-			ImGui::GetWindowDrawList()->AddRectFilled(pos, { pos.x + size, pos.y + size }, ImGui::GetColorU32({ 1.0, 1.0, 1.0, 1.0 }));
-			ImUI::ShiftY(36.0f);
-		}
-
-		ImUI::ShiftY(2.0f);
-		return false;
-	}
-	template<typename T>
-	static bool TextureSlot(const char* name, std::string& text, Ref<Texture2DAsset> texture, T callback)
-	{
-		bool modified = false;
-		ImUI::ShiftY(8.0f);
-
-		ImGui::Text("%s", name);
-		ImGui::NextColumn();
-		ImGui::PushID(name);
-		modified = TextureSlot(text, texture);
-		callback();
-		ImGui::PopID();
-		ImGui::NextColumn();
-		return modified;
 	}
 #pragma endregion
 #pragma region Treenodes
