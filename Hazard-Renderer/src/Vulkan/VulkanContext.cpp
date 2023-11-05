@@ -206,7 +206,7 @@ namespace HazardRenderer::Vulkan
 		Image2DCreateInfo whiteTexture = {};
 		whiteTexture.DebugName = "DefaultWhiteTexture";
 		whiteTexture.Extent = { 1, 1, 1 };
-		whiteTexture.Mips = 1;
+		whiteTexture.MaxMips = 1;
 		whiteTexture.Data = Buffer(&data, sizeof(uint32_t));
 		whiteTexture.Format = ImageFormat::RGBA;
 		whiteTexture.Usage = ImageUsage::Texture;

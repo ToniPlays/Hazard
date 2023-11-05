@@ -25,6 +25,8 @@ namespace Hazard
 	{
 		Ref<Pipeline> Pipeline;
 		Ref<DescriptorSet> MaterialDescriptorSet;
+		float Intensity;
+		float LodLevel;
 	};
 
 	struct GeometryMesh

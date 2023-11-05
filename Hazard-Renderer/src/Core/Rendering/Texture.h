@@ -10,24 +10,15 @@ namespace HazardRenderer
 {
 	class CubemapTexture;
 
-	struct CubemapGen
-	{
-		std::string OutputImageName;
-		Ref<CubemapTexture> pCubemap = nullptr;
-		Ref<Pipeline> Pipeline = nullptr;
-	};
-
 	struct CubemapTextureCreateInfo
 	{
 		std::string DebugName;
 		uint32_t Width;
 		uint32_t Height;
 		Buffer Data;
-		uint32_t Mips = 1;
+		uint32_t MaxMips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
-
-		bool GenerateMips = true;
 	};
 
 	class Texture : public RefCount 
@@ -43,6 +34,8 @@ namespace HazardRenderer
 		virtual uint32_t GetMipLevels() const = 0;
 
 		virtual TextureType GetType() const = 0;
+
+		virtual void RegenerateMips() = 0;
 	};
 
 	class CubemapTexture : public Texture {

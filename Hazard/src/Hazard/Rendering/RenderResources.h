@@ -128,7 +128,7 @@ namespace Hazard
 			blackCubemap.Width = 1;
 			blackCubemap.Height = 1;
 			blackCubemap.Format = ImageFormat::RGBA;
-			blackCubemap.GenerateMips = false;
+			blackCubemap.MaxMips = 1;
 
 			BlackCubemap = CubemapTexture::Create(&blackCubemap);
 
@@ -143,7 +143,7 @@ namespace Hazard
 			whiteCubemap.Height = 1;
 			whiteCubemap.Data = data;
 			whiteCubemap.Format = ImageFormat::RGBA;
-			whiteCubemap.GenerateMips = false;
+			blackCubemap.MaxMips = 1;
 
 			WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
 			data.Release();

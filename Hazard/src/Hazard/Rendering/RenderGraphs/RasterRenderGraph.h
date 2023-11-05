@@ -23,6 +23,7 @@ namespace Hazard
 			cmdBuffer->SetVertexBuffer(mesh.VertexBuffer);
 			cmdBuffer->Draw(mesh.Count, mesh.IndexBuffer);
 		};
+
 		RenderGraphStage skyboxStage = {};
 		skyboxStage.DebugName = "SkyboxPass";
 		skyboxStage.Enabled = true;
@@ -30,8 +31,19 @@ namespace Hazard
 		skyboxStage.Execute = [](Ref<RenderCommandBuffer> cmdBuffer, void* data) {
 			EnvironmentData& env = *(EnvironmentData*)data;
 
+			struct PushConstants
+			{
+				float LodLevel;
+				float Intensity;
+			};
+
+			PushConstants constants;
+			constants.LodLevel = env.LodLevel;
+			constants.Intensity = env.Intensity;
+
 			cmdBuffer->SetPipeline(env.Pipeline);
 			cmdBuffer->SetDescriptorSet(env.MaterialDescriptorSet, 0);
+			cmdBuffer->PushConstants(Buffer(&constants, sizeof(PushConstants)), 0, SHADER_STAGE_FRAGMENT_BIT);
 			cmdBuffer->Draw(6);
 		};
 

@@ -18,14 +18,14 @@ namespace HazardRenderer::Vulkan
 		Renderer::SubmitResourceFree([sampler = m_Sampler]() mutable {
 			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 			vkDestroySampler(device, sampler, nullptr);
-			});
+		});
 	}
 	void VulkanSampler::Invalidate()
 	{
 		Ref<VulkanSampler> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 			instance->Invalidate_RT();
-			});
+		});
 	}
 	void VulkanSampler::Invalidate_RT()
 	{
@@ -37,8 +37,6 @@ namespace HazardRenderer::Vulkan
 
 		VkSamplerCreateInfo samplerCreateInfo = {};
 		samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-		samplerCreateInfo.maxAnisotropy = 1.0f;
-
 		samplerCreateInfo.magFilter = VkUtils::GetVulkanFilter(m_Info.MagFilter);
 		samplerCreateInfo.minFilter = VkUtils::GetVulkanFilter(m_Info.MinFilter);
 		samplerCreateInfo.mipmapMode = VkUtils::GetVulkanMipmapMode(m_Info.MinFilter);

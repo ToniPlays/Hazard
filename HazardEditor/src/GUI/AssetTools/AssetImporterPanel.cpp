@@ -176,17 +176,16 @@ namespace UI
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 		ImUI::InputUInt(samples, 128, 1, 0);
 		ImGui::PopID();
-
 		ImGui::NextColumn();
 		ImGui::Columns();
 
 		ImUI::Dropdown resolutions("Resolution", 200);
 		resolutions.SetOptions({ "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" });
-		resolutions.SetSelected(6);
+		resolutions.SetSelected(resolution);
 		resolutions.Render();
 
 		if (resolutions.DidChange())
-			map->Update(samples, (1 << 6 + resolutions.GetSelected()), sourceImageHandle);
+			resolution = resolutions.GetSelected();
 
 		std::vector<std::string> displayNames;
 		displayNames.reserve(m_SelectableAssets["RadianceMap"].size() + 1);
@@ -203,14 +202,13 @@ namespace UI
 		if (radianceDropdown.DidChange() && radianceDropdown.GetSelected() != 0)
 		{
 			sourceImageHandle = m_SelectableAssets["RadianceMap"][radianceDropdown.GetSelected() - 1].Handle;
-			map->Update(samples, resolution, sourceImageHandle);
 		}
 
+		map->Update(samples, (1 << resolution + 6), sourceImageHandle);
 		if (m_Import)
 		{
 			Application::Get().SubmitMainThread([&]() {
 				Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(m_AssetHandle);
-				map->Update(samples, (1 << 6 + resolution), map->GetSourceImageHandle());
 				map->Invalidate();
 
 				AssetManager::SaveAsset(map);

@@ -95,6 +95,7 @@ namespace Hazard
 		imageInfo.Data = readBuffer.Read<Buffer>(header.Width * header.Height * header.Channels);
 		imageInfo.Format = header.Format;
 		imageInfo.Usage = ImageUsage::Texture;
+		imageInfo.MaxMips = 32;
 
 		Ref<Image2D> image = Image2D::Create(&imageInfo);
 		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);

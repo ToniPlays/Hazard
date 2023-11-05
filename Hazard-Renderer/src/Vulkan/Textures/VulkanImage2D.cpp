@@ -21,7 +21,7 @@ namespace HazardRenderer::Vulkan
 		HZR_ASSERT(info->Extent.Width < 32768 && info->Extent.Height < 32768, "Image extent too large");
 
 		m_Info = *info;
-		m_Info.Mips = 1;
+		m_Info.MaxMips = info->MaxMips <= 1 ? 1 : glm::min(Math::GetBaseLog(info->MaxMips), info->MaxMips);
 
 		m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
@@ -39,11 +39,29 @@ namespace HazardRenderer::Vulkan
 		region.Data = info->Data.Data;
 		region.DataSize = info->Data.Size;
 
+		ImageMemoryInfo barrier = {};
+		barrier.Image = (Image*)this;
+		barrier.BaseLayer = 0;
+		barrier.LayerCount = 1;
+		barrier.BaseMip = 0;
+		barrier.MipCount = 1;
+		barrier.SrcLayout = IMAGE_LAYOUT_UNDEFINED;
+		barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
+
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("ImageUpload", DeviceQueue::TransferBit, 1);
 		cmdBuffer->Begin();
+		cmdBuffer->ImageMemoryBarrier(barrier);
 		cmdBuffer->CopyToImage(this, region);
+
+		barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_DST;
+		barrier.DstLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+		cmdBuffer->ImageMemoryBarrier(barrier);
+
 		cmdBuffer->End();
 		cmdBuffer->Submit();
+
+		if (m_Info.MaxMips > 1)
+			GenerateMips();
 	}
 
 	VulkanImage2D::~VulkanImage2D()
@@ -216,7 +234,7 @@ namespace HazardRenderer::Vulkan
 		createInfo.extent.width = m_Info.Extent.Width;
 		createInfo.extent.height = m_Info.Extent.Height;
 		createInfo.extent.depth = 1;
-		createInfo.mipLevels = m_Info.Mips;
+		createInfo.mipLevels = m_Info.MaxMips;
 		createInfo.arrayLayers = 1;
 		createInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 		createInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
@@ -228,6 +246,80 @@ namespace HazardRenderer::Vulkan
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VkImage2D {0}", m_Info.DebugName), m_Image);
 
 		CreateImageView_RT();
+	}
+
+	void VulkanImage2D::GenerateMips()
+	{
+		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Image gen mip", DeviceQueue::TransferBit, 1);
+
+		cmdBuffer->Begin();
+
+		{
+			ImageMemoryInfo barrier = {};
+			barrier.Image = (Image*)this;
+			barrier.BaseLayer = 0;
+			barrier.LayerCount = 1;
+			barrier.BaseMip = 0;
+			barrier.MipCount = 1;
+			barrier.SrcLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+			barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+			cmdBuffer->ImageMemoryBarrier(barrier);
+		}
+		{
+			ImageMemoryInfo barrier = {};
+			barrier.Image = (Image*)this;
+			barrier.BaseLayer = 0;
+			barrier.LayerCount = 1;
+			barrier.BaseMip = 1;
+			barrier.MipCount = m_Info.MaxMips - 1;
+			barrier.SrcLayout = IMAGE_LAYOUT_UNDEFINED;
+			barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
+
+			cmdBuffer->ImageMemoryBarrier(barrier);
+		}
+
+		for (uint32_t mip = 1; mip < m_Info.MaxMips; mip++)
+		{
+			BlitImageInfo blit = {};
+			blit.Image = (Image*)this;
+			blit.SrcExtent = { m_Info.Extent.Width >> (mip - 1), m_Info.Extent.Height >> (mip - 1), 1 };
+			blit.SrcLayer = 0;
+			blit.SrcMip = mip - 1;
+			blit.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+			blit.DstExtent = { m_Info.Extent.Width >> mip, m_Info.Extent.Height >> mip, 1 };
+			blit.DstLayer = 0;
+			blit.DstMip = mip;
+			blit.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
+
+			cmdBuffer->BlitImage(blit);
+
+			ImageMemoryInfo barrier = {};
+			barrier.Image = (Image*)this;
+			barrier.BaseLayer = 0;
+			barrier.LayerCount = 1;
+			barrier.BaseMip = mip;
+			barrier.MipCount = 1;
+			barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_DST;
+			barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+			cmdBuffer->ImageMemoryBarrier(barrier);
+		}
+
+		ImageMemoryInfo barrier = {};
+		barrier.Image = (Image*)this;
+		barrier.BaseLayer = 0;
+		barrier.LayerCount = 1;
+		barrier.BaseMip = 0;
+		barrier.MipCount = m_Info.MaxMips;
+		barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+		barrier.DstLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+
+		cmdBuffer->ImageMemoryBarrier(barrier);
+
+		cmdBuffer->End();
+		cmdBuffer->Submit();
 	}
 
 	void VulkanImage2D::CreateImageView_RT()
@@ -252,7 +344,7 @@ namespace HazardRenderer::Vulkan
 		viewInfo.subresourceRange = {};
 		viewInfo.subresourceRange.aspectMask = aspectMask;
 		viewInfo.subresourceRange.baseMipLevel = 0;
-		viewInfo.subresourceRange.levelCount = m_Info.Mips;
+		viewInfo.subresourceRange.levelCount = m_Info.MaxMips;
 		viewInfo.subresourceRange.baseArrayLayer = 0;
 		viewInfo.subresourceRange.layerCount = 1;
 		viewInfo.image = m_Image;

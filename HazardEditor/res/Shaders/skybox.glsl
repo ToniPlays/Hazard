@@ -26,14 +26,20 @@ layout(location = 0) in vec3 v_Position;
 
 layout(set = 0, binding = 1) uniform samplerCube u_CubeMap;
 
+layout(push_constant) uniform PushConstant
+{
+	float LodLevel;
+	float Intensity;
+} u_PushConstants;
+
 layout(location = 0) out vec4 OutputColor;
 layout(location = 1) out uint EntityID;
 
-void main() 
+void main()
 {
 	int levelTexels = textureQueryLevels(u_CubeMap);
-	vec3 color = textureLod(u_CubeMap, v_Position, (0.0f * levelTexels)).rgb;
-	OutputColor = vec4(color * 1.0, 1.0);
+	vec3 color = textureLod(u_CubeMap, v_Position, (u_PushConstants.LodLevel * levelTexels)).rgb;
+	OutputColor = vec4(color * u_PushConstants.Intensity, 1.0);
 
 	EntityID = 0;
 }

@@ -117,9 +117,12 @@ namespace Hazard
 		Ref<Pipeline> skyboxPipeline = AssetManager::GetAsset<AssetPointer>(material->GetPipeline())->Value.As<Pipeline>();
 
 		auto& drawList = s_Engine->GetDrawList();
-		drawList.Environment.Pipeline = skyboxPipeline; 
-		drawList.Environment.MaterialDescriptorSet = s_Engine->GetResources().SkyboxDescriptor;
-		drawList.Environment.MaterialDescriptorSet->Write(1, 0, map->RadianceMap->Value.As<CubemapTexture>(), s_Engine->GetResources().DefaultImageSampler, false);
+		auto& env = drawList.Environment;
+		env.Pipeline = skyboxPipeline;
+		env.MaterialDescriptorSet = s_Engine->GetResources().SkyboxDescriptor;
+		env.MaterialDescriptorSet->Write(1, 0, map->RadianceMap->Value.As<CubemapTexture>(), s_Engine->GetResources().DefaultImageSampler, false);
+		env.Intensity = skyLight.Intensity;
+		env.LodLevel = skyLight.LodLevel;
 	}
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{

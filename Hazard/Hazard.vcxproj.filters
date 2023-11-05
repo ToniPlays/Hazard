@@ -1720,6 +1720,7 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderGraphs\RasterRenderGraph.h" />
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\InputNumber.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

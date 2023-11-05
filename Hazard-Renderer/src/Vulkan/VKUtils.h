@@ -269,6 +269,63 @@ namespace HazardRenderer::Vulkan::VkUtils
 	{
 		return Math::GetBaseLog<uint32_t>(glm::min(width, height)) + 1;
 	}
+	static VkImageLayout GetVulkanImageLayout(uint32_t layout)
+	{
+		switch (layout)
+		{
+			case IMAGE_LAYOUT_UNDEFINED:					return VK_IMAGE_LAYOUT_UNDEFINED;
+			case IMAGE_LAYOUT_GENERAL:						return VK_IMAGE_LAYOUT_GENERAL;
+			case IMAGE_LAYOUT_COLOR_ATTACHMENT:				return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+			case IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT:		return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+			case IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY:		return VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+			case IMAGE_LAYOUT_SHADER_READ_ONLY:				return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			case IMAGE_LAYOUT_TRANSFER_SRC:					return VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+			case IMAGE_LAYOUT_TRANSFER_DST:					return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+			case IMAGE_LAYOUT_DEPTH_READ_ONLY:				return VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+			case IMAGE_LAYOUT_DEPTH_ATTACHMENT:				return VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL;
+		}
+		return VK_IMAGE_LAYOUT_MAX_ENUM;
+	}
+
+	static VkAccessFlags GetVulkanAccessFlag(uint32_t layout)
+	{
+		switch (layout)
+		{
+			case IMAGE_LAYOUT_UNDEFINED:					return 0;
+			case IMAGE_LAYOUT_GENERAL:						return 0;
+			case IMAGE_LAYOUT_COLOR_ATTACHMENT:				return VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+			case IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT:		return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+			case IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY:		return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+			case IMAGE_LAYOUT_SHADER_READ_ONLY:				return VK_ACCESS_SHADER_READ_BIT;
+			case IMAGE_LAYOUT_TRANSFER_SRC:					return VK_ACCESS_TRANSFER_READ_BIT;
+			case IMAGE_LAYOUT_TRANSFER_DST:					return VK_ACCESS_TRANSFER_WRITE_BIT;
+			case IMAGE_LAYOUT_DEPTH_READ_ONLY:				return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+			case IMAGE_LAYOUT_DEPTH_ATTACHMENT:				return VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+
+		}
+		return 0;
+	}
+
+	static void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
+										 VkImage image,
+										 uint32_t oldLayout,
+										 uint32_t newLayout, VkImageSubresourceRange range)
+	{
+		VkImageMemoryBarrier barrier = {};
+		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+
+		barrier.srcAccessMask = GetVulkanAccessFlag(oldLayout);
+		barrier.dstAccessMask = GetVulkanAccessFlag(newLayout);
+		barrier.oldLayout = GetVulkanImageLayout(oldLayout);
+		barrier.newLayout = GetVulkanImageLayout(newLayout);
+		barrier.image = image;
+		barrier.subresourceRange = range;
+
+		vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+	}
+
 	static void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer,
 										 VkImage image,
 										 VkAccessFlags srcAccessMask,
@@ -283,23 +340,23 @@ namespace HazardRenderer::Vulkan::VkUtils
 		barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
 		barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 		barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-
 		barrier.srcAccessMask = srcAccessMask;
 		barrier.dstAccessMask = dstAccessMask;
 		barrier.oldLayout = oldLayout;
 		barrier.newLayout = newLayout;
 		barrier.image = image;
 		barrier.subresourceRange = subresourceRange;
-
 		vkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 	}
+
+
 	static void SetImageLayout(VkCommandBuffer commandBuffer,
-						VkImage image,
-						VkImageLayout oldLayout,
-						VkImageLayout newLayout,
-						VkImageSubresourceRange subresourceRange,
-						VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-						VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
+							   VkImage image,
+							   VkImageLayout oldLayout,
+							   VkImageLayout newLayout,
+							   VkImageSubresourceRange subresourceRange,
+							   VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+							   VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT
 	)
 	{
 		VkImageMemoryBarrier barrier = {};
@@ -385,15 +442,6 @@ namespace HazardRenderer::Vulkan::VkUtils
 		return "";
 	}
 
-	static VkImageLayout GetVulkanImageLayout(ImageLayout layout)
-	{
-		switch (layout)
-		{
-			case ImageLayout::ImageLayout_General:			return VK_IMAGE_LAYOUT_GENERAL;
-			case ImageLayout::ImageLayout_ShaderReadOnly:	return VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		}
-		return VK_IMAGE_LAYOUT_MAX_ENUM;
-	}
 	static VkFilter GetVulkanFilter(FilterMode mode)
 	{
 		switch (mode)
@@ -416,7 +464,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		}
 		return VK_SAMPLER_MIPMAP_MODE_MAX_ENUM;
 	}
-	static VkAccessFlags GetVulkanAccess(ImageLayout layout)
+	/*static VkAccessFlags GetVulkanAccess(ImageLayout layout)
 	{
 		switch (layout)
 		{
@@ -434,6 +482,7 @@ namespace HazardRenderer::Vulkan::VkUtils
 		}
 		return VK_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM;
 	}
+	*/
 	static VkBufferUsageFlags GetUsageFlags(uint32_t flags)
 	{
 		uint32_t result = 0;

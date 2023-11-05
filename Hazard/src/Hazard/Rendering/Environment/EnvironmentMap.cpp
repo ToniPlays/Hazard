@@ -58,7 +58,7 @@ namespace Hazard
 		radianceInfo.Format = ImageFormat::RGBA;
 		radianceInfo.Width = m_Spec.Resolution;
 		radianceInfo.Height = m_Spec.Resolution;
-		radianceInfo.GenerateMips = false;
+		radianceInfo.MaxMips = 32;
 
 		Ref<CubemapTexture> radianceMap = CubemapTexture::Create(&radianceInfo);
 		AssetHandle computePipelineHandle = ShaderLibrary::GetPipelineAssetHandle("EquirectangularToCubemap");
@@ -86,6 +86,8 @@ namespace Hazard
 		computeBuffer->End();
 		computeBuffer->Submit();
 
+		radianceMap->RegenerateMips();
+
 		RadianceMap = AssetPointer::Create(radianceMap, AssetType::EnvironmentMap);
 		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, RadianceMap);
 	}
@@ -101,7 +103,7 @@ namespace Hazard
 		irradianceInfo.Height = 32;
 		irradianceInfo.Usage = ImageUsage::Texture;
 		irradianceInfo.Format = ImageFormat::RGBA;
-		irradianceInfo.GenerateMips = true;
+		irradianceInfo.MaxMips = 1;
 
 		Ref<CubemapTexture> irradianceMap = CubemapTexture::Create(&irradianceInfo);
 
@@ -109,8 +111,9 @@ namespace Hazard
 		Ref<Pipeline> irradiancePipeline = AssetManager::GetAsset<AssetPointer>(irradiancePipelineHandle)->Value.As<Pipeline>();
 
 		GroupSize size = { irradianceInfo.Width / 32, irradianceInfo.Height / 32, 6 };
-
 		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("RadianceMap compute", DeviceQueue::ComputeBit, 1);
+
+		return;
 
 		computeBuffer->Begin();
 		computeBuffer->SetPipeline(irradiancePipeline);

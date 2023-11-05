@@ -7,6 +7,7 @@
 #include "Hazard/ImGUI/UIElements/TextField.h"
 #include "Hazard/ImGUI/UIElements/Dropdown.h"
 #include "Hazard/ImGUI/UIElements/Treenode.h"
+#include "Hazard/ImGUI/UIElements/InputNumber.h"
 
 #include "Editor/EditorUtils.h"
 
@@ -482,7 +483,6 @@ namespace UI
 		ImUI::Treenode treenode((const char*)(" " ICON_FK_GLOBE " Sky light"), true);
 		treenode.DefaultOpen();
 		treenode.Content([&]() {
-
 			auto& firstDir = entities[0].GetComponent<SkyLightComponent>();
 			AssetHandle mapHandle = firstDir.EnvironmentMapHandle;
 			float intensity = firstDir.Intensity;
@@ -507,14 +507,31 @@ namespace UI
 			sourceImage.SetHint("Environment map");
 			sourceImage.Render();
 
+
 			ImUI::DropTarget<AssetHandle>(AssetType::EnvironmentMap, [&](AssetHandle handle) {
 				Application::Get().SubmitMainThread([handle, entities]() mutable {
-
 					for (auto& entity : entities)
 						entity.GetComponent<SkyLightComponent>().EnvironmentMapHandle = handle;
 				});
 			});
+			
+			ImUI::InputNumber<float> intensityField("Intensity", intensity);
+			intensityField.SetRange(0.0f, Math::MaxValue<float>());
+			intensityField.Render();
+
+			ImUI::InputNumber<float> lodField("Blurriness", lodLevel, true);
+			lodField.SetRange(0.0f, 1.0f);
+			lodField.Render();
+
+			if (intensityField.DidChange())
+				for (auto& entity : entities)
+					entity.GetComponent<SkyLightComponent>().Intensity = intensityField.GetValue();
+
+			if (lodField.DidChange())
+				for (auto& entity : entities)
+					entity.GetComponent<SkyLightComponent>().LodLevel = lodField.GetValue();
 		});
+
 		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
 			ImUI::MenuHeader("Component menu");
 			ImUI::MenuItem("Copy", []() {});

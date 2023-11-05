@@ -23,16 +23,17 @@ namespace HazardRenderer::Vulkan
 		uint32_t GetHeight() const override { return m_Height; }
 		glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
 		uint32_t GetMipLevels() const override { return m_MipLevels; };
+		void RegenerateMips() override;
 
 		//Vulkan specific
 		VkDescriptorImageInfo GetImageDescriptor() { return m_ImageDescriptor; }
 		VkImage GetVulkanImage() { return m_Image; }
 
-		void GenerateMipmaps_RT(VkCommandBuffer commandBuffer, VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-		void SetImageData(const Buffer& buffer);
+		void GenerateMipmaps(VkImageLayout imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
 
 	private:
-		void UploadImageData_RT();
+		void UploadImageData(Buffer imageData);
 		void CreateImageView_RT();
 		void SetImageLayout(VkImageLayout layout) { m_ImageDescriptor.imageLayout = layout; };
 

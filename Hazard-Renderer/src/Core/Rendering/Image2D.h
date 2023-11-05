@@ -9,7 +9,7 @@ namespace HazardRenderer
 		std::string DebugName;
 		Extent Extent;
 		Buffer Data;
-		uint32_t Mips = 1;
+		uint32_t MaxMips = 1;
 		ImageFormat Format;
 		ImageUsage Usage;
 	};

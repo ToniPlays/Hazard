@@ -54,8 +54,10 @@ namespace HazardRenderer::Vulkan
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
 
 		void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region);
-		void CopyToImage(Ref<Image2D> targetImage, const ImageCopyRegion& region);
+		void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region);
+		void BlitImage(const BlitImageInfo& blitInfo);
 
+		void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory);
 
 		//Vulkan specific
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }

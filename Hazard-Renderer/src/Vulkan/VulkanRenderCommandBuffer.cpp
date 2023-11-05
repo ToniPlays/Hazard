@@ -609,16 +609,17 @@ namespace HazardRenderer::Vulkan
 		}
 	}
 
-	void VulkanRenderCommandBuffer::CopyToImage(Ref<Image2D> targetImage, const ImageCopyRegion& region)
+	void VulkanRenderCommandBuffer::CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region)
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
-		Ref<VulkanImage2D> image = targetImage.As<VulkanImage2D>();
 		Buffer buffer = Buffer::Copy(region.Data, region.DataSize);
 
-		Renderer::Submit([instance, image, region, buffer]() mutable {
+		Renderer::Submit([instance, targetImage, region, buffer]() mutable {
 
 			HZR_PROFILE_FUNCTION();
 			VulkanAllocator allocator("VulkanImage2D");
+
+			VkImage image = targetImage->GetType() == TextureType::Image2D ? targetImage.As<VulkanImage2D>()->GetVulkanImage() : targetImage.As<VulkanCubemapTexture>()->GetVulkanImage();
 
 			VkBufferCreateInfo stagingInfo = {};
 			stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -638,27 +639,17 @@ namespace HazardRenderer::Vulkan
 			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			range.baseMipLevel = 0;
 			range.levelCount = 1;
-			range.layerCount = 1;
-
-			VkUtils::InsertImageMemoryBarrier(instance->m_ActiveCommandBuffer, image->GetVulkanImage(),
-											  VK_ACCESS_NONE, VK_ACCESS_TRANSFER_WRITE_BIT,
-											  VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-											  VK_ACCESS_HOST_READ_BIT, VK_ACCESS_TRANSFER_WRITE_BIT, range);
+			range.layerCount = region.Extent.Depth;
 
 			VkBufferImageCopy imageCopyRegion = {};
 			imageCopyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			imageCopyRegion.imageSubresource.mipLevel = 0;
 			imageCopyRegion.imageSubresource.baseArrayLayer = 0;
-			imageCopyRegion.imageSubresource.layerCount = 1;
-			imageCopyRegion.imageExtent = { region.Extent.Width, region.Extent.Height, region.Extent.Depth };
+			imageCopyRegion.imageSubresource.layerCount = region.Extent.Depth;
+			imageCopyRegion.imageExtent = { region.Extent.Width, region.Extent.Height, 1 };
 			imageCopyRegion.bufferOffset = 0;
 
-			vkCmdCopyBufferToImage(instance->m_ActiveCommandBuffer, stagingBuffer, image->GetVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
-
-			VkUtils::InsertImageMemoryBarrier(instance->m_ActiveCommandBuffer, image->GetVulkanImage(),
-											  VK_ACCESS_TRANSFER_READ_BIT, VK_ACCESS_SHADER_READ_BIT,
-											  VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-											  VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, range);
+			vkCmdCopyBufferToImage(instance->m_ActiveCommandBuffer, stagingBuffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopyRegion);
 
 			buffer.Release();
 
@@ -669,6 +660,64 @@ namespace HazardRenderer::Vulkan
 		});
 	}
 
+	void VulkanRenderCommandBuffer::BlitImage(const BlitImageInfo& blitInfo)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, blitInfo]() mutable {
+
+			VkImage image = blitInfo.Image->GetType() == TextureType::Image2D ? blitInfo.Image.As<VulkanImage2D>()->GetVulkanImage() : blitInfo.Image.As<VulkanCubemapTexture>()->GetVulkanImage();
+
+			// Source
+			VkImageBlit blit = {};
+			blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			blit.srcSubresource.layerCount = 1;
+			blit.srcSubresource.mipLevel = blitInfo.SrcMip;
+			blit.srcSubresource.baseArrayLayer = blitInfo.SrcLayer;
+			blit.srcOffsets[1].x = blitInfo.SrcExtent.Width;
+			blit.srcOffsets[1].y = blitInfo.SrcExtent.Height;
+			blit.srcOffsets[1].z = blitInfo.SrcExtent.Depth;
+
+			// Destination
+			blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			blit.dstSubresource.layerCount = 1;
+			blit.dstSubresource.mipLevel = blitInfo.DstMip;
+			blit.dstSubresource.baseArrayLayer = blitInfo.DstLayer;
+			blit.dstOffsets[1].x = blitInfo.DstExtent.Width;
+			blit.dstOffsets[1].y = blitInfo.DstExtent.Height;
+			blit.dstOffsets[1].z = blitInfo.DstExtent.Depth;
+
+			auto src = VkUtils::GetVulkanImageLayout(blitInfo.SrcLayout);
+			auto dst = VkUtils::GetVulkanImageLayout(blitInfo.DstLayout);
+
+			vkCmdBlitImage(
+				instance->m_ActiveCommandBuffer,
+				image,
+				src,
+				image,
+				dst,
+				1,
+				&blit,
+				VK_FILTER_LINEAR);
+		});
+	}
+
+	void VulkanRenderCommandBuffer::ImageMemoryBarrier(const ImageMemoryInfo& imageMemory)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Renderer::Submit([instance, imageMemory]() mutable {
+			VkImage image = imageMemory.Image->GetType() == TextureType::Image2D ? imageMemory.Image.As<VulkanImage2D>()->GetVulkanImage() : imageMemory.Image.As<VulkanCubemapTexture>()->GetVulkanImage();
+
+			VkImageSubresourceRange range = {};
+			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			range.baseMipLevel = imageMemory.BaseMip;
+			range.baseArrayLayer = imageMemory.BaseLayer;
+			range.levelCount = imageMemory.MipCount;
+			range.layerCount = imageMemory.LayerCount;
+
+			VkUtils::InsertImageMemoryBarrier(instance->m_ActiveCommandBuffer, image,
+											  imageMemory.SrcLayout, imageMemory.DstLayout, range);
+		});
+	}
 
 	void VulkanRenderCommandBuffer::BeginPerformanceQuery_RT()
 	{

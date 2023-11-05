@@ -32,7 +32,7 @@ namespace Hazard
 			specs.DebugName = "Pipeline LineShader";
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.pBufferLayout = &layout;
-			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST | PIPELINE_DRAW_LINE | PIPELINE_DEPTH_WRITE;
+			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST | PIPELINE_DRAW_LINE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST;
 			specs.Shaders = asset->ShaderCode[api];
 			specs.SetLayouts = { setLayout };
 
@@ -48,7 +48,7 @@ namespace Hazard
 			specs.DebugName = "Pipeline CircleShader";
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.pBufferLayout = &layout;
-			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE;
+			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST;
 			specs.Shaders = asset->ShaderCode[api];
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
@@ -65,7 +65,7 @@ namespace Hazard
 			specs.DebugName = "Pipeline QuadShader";
 			specs.Usage = PipelineUsage::GraphicsBit;
 			specs.pBufferLayout = &layout;
-			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE;
+			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST;
 			specs.Shaders = asset->ShaderCode[api];
 			specs.SetLayouts = { setLayout, samplerSet };
 			specs.PushConstants = { { SHADER_STAGE_VERTEX_BIT, sizeof(glm::mat4), 0} };
@@ -103,6 +103,7 @@ namespace Hazard
 			specs.Flags = PIPELINE_DRAW_FILL | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 			specs.Shaders = asset->ShaderCode[api];
 			specs.SetLayouts = { skyboxLayout };
+			specs.PushConstants = { { SHADER_STAGE_FRAGMENT_BIT, sizeof(float) * 2, 0 } };
 
 			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
 			s_LoadedPipelines["Skybox"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);

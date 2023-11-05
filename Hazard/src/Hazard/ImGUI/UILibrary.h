@@ -92,22 +92,6 @@ namespace Hazard::ImUI
 #pragma endregion
 #pragma region Input
 
-	static bool TextField_OLD(std::string& text, const char* id = "##InputField", bool isMixed = false)
-	{
-		char buffer[512] = { 0 };
-		strcpy(buffer, text.c_str());
-		bool changed = false;
-		ImGui::PushItemFlag(ImGuiItemFlags_MixedValue, isMixed);
-
-		if (ImGui::InputText(id, buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
-		{
-			text = buffer;
-			changed |= true;
-		}
-		ImGui::PopItemFlag();
-		return changed;
-	}
-
 	static bool TextArea(std::string& text, int minLines, int maxLines, bool isMixed = false)
 	{
 		char buffer[512] = { 0 };
@@ -314,7 +298,7 @@ namespace Hazard::ImUI
 
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - size - 5.0f);
 		{
-			ImUI::TextField_OLD(text);
+
 		}
 		ImGui::SameLine(0, 5);
 

@@ -262,7 +262,7 @@ namespace UI
 			Ref<TextAreaAttribute> attrib = field->Get<TextAreaAttribute>();
 			modified = ImUI::TextArea(value, attrib->Min, attrib->Max);
 		}
-		else modified = ImUI::TextField_OLD(value);
+		//else modified = ImUI::TextField_OLD(value);
 
 		if (modified)
 			obj->SetFieldValue<std::string>(field->GetName(), value, index);
