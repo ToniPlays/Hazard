@@ -46,6 +46,13 @@ namespace HazardRenderer::Metal
         void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset = 0, uint32_t maxDraws = 0, Ref<GPUBuffer> indexBuffer = nullptr) override {};
         
         
+        virtual void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region) override {};
+        virtual void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region) override {};
+        virtual void BlitImage(const BlitImageInfo& blitInfo) override {};
+
+        virtual void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory) override {};
+        
+        
         void DispatchCompute(GroupSize GlobalGroupSize) override;
         void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
           

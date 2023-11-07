@@ -33,8 +33,6 @@ namespace HazardRenderer::Metal
         virtual uint32_t GetMipLevels() const override { return m_MipLevels; };
         
         virtual float GetAspectRatio() override { return (float)m_Width / (float)m_Height; };
-        virtual Buffer GetBuffer() const override { return m_LocalBuffer; };
-        virtual const Buffer& GetBuffer() override { return m_LocalBuffer; };
         
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }

@@ -2,6 +2,7 @@
 
 #ifdef HZR_INCLUDE_METAL
 
+#include "MathCore.h"
 #include "MTLUtils.h"
 #include "Core/Renderer.h"
 
@@ -17,7 +18,7 @@ namespace HazardRenderer::Metal
         m_Width = createInfo->Width;
         m_Height = createInfo->Height;
         
-        m_MipLevels = createInfo->GenerateMips ? GetMipLevelCount(m_Width, m_Height) : 1;
+        m_MipLevels = createInfo->MaxMips < 1 ? 1 : glm::min(Math::GetBaseLog(m_Width), createInfo->MaxMips);
         
         Ref<MetalCubemapTexture> instance = this;
         Renderer::SubmitResourceCreate([instance]() mutable {
@@ -77,13 +78,6 @@ namespace HazardRenderer::Metal
             m_MetalTexture->replaceRegion(region, 0, i, m_LocalBuffer.Data, 4 * m_Width, 0);
         
         m_LocalBuffer.Release();
-    }
-
-    void MetalCubemapTexture::GenerateMipmaps_RT(MTL::CommandBuffer* commandBuffer)
-    {
-        auto blitEncoder = commandBuffer->blitCommandEncoder();
-        blitEncoder->generateMipmaps(m_MetalTexture);
-        blitEncoder->endEncoding();
     }
     
     void MetalCubemapTexture::CreateSampler()

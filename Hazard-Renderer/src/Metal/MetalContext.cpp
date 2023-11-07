@@ -40,7 +40,7 @@ namespace HazardRenderer::Metal
         whiteTexture.DebugName = "DefaultWhiteTexture";
         whiteTexture.Extent.Width = 1;
         whiteTexture.Extent.Height = 1;
-        whiteTexture.Mips = 1;
+        whiteTexture.MaxMips = 1;
         whiteTexture.Data = Buffer(&data, sizeof(uint32_t));
         whiteTexture.Format = ImageFormat::RGBA;
         whiteTexture.Usage = ImageUsage::Texture;

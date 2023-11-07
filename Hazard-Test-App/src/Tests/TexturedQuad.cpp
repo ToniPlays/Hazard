@@ -74,7 +74,7 @@ void TexturedQuadTest::Init()
 
 	Image2DCreateInfo imageInfo = {};
 	imageInfo.DebugName = "Image2D";
-	imageInfo.Extent = { header.Width, header.Height, 1 };
+    imageInfo.Extent = header.Extent;
 	imageInfo.Format = ImageFormat::RGBA;
 	imageInfo.Data = header.ImageData;
 	imageInfo.Usage = ImageUsage::Texture;

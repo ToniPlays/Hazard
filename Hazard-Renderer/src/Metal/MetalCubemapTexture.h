@@ -21,6 +21,7 @@ namespace HazardRenderer::Metal
         uint32_t GetHeight() const override { return m_Height; }
         glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
         uint32_t GetMipLevels() const override { return m_MipLevels; }
+        void RegenerateMips() override {};
         
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }
@@ -29,11 +30,9 @@ namespace HazardRenderer::Metal
         void SetImageData(const Buffer& data);
         void UploadImageData_RT();
         
-        void GenerateMipmaps_RT(MTL::CommandBuffer* commandBuffer);
         
     private:
         void CreateSampler();
-        void GenerateFromCubemap(CubemapGen& generationData) {};
         
     private:
         ImageFormat m_Format = ImageFormat::None;

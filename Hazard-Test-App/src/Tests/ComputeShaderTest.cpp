@@ -76,7 +76,7 @@ void ComputeShaderTest::Init()
 	Image2DCreateInfo outputImageSpec = {};
 	outputImageSpec.DebugName = "ComputeOutput";
 	outputImageSpec.Extent = { 512, 512, 1 };
-	outputImageSpec.Mips = 1;
+	outputImageSpec.MaxMips = 1;
 	outputImageSpec.Format = ImageFormat::RGBA;
 	outputImageSpec.Usage = ImageUsage::Storage;
 
