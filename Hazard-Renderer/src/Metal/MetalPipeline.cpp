@@ -164,7 +164,7 @@ namespace HazardRenderer::Metal
         
         m_Pipeline = device->GetMetalDevice()->newRenderPipelineState(m_PipelineDescriptor, &error);
         
-        if(error->code() != 0)
+        if(error)
             std::cout << error->description()->utf8String() << std::endl;
         
         //Create depth stencil

@@ -11,8 +11,6 @@
 - (void)OnViewLoaded
 {
     printf("%s", "Override ViewController\n");
-    
-    
     [self performSelectorInBackground:@selector(RunApplication) withObject: nil];
     
 }

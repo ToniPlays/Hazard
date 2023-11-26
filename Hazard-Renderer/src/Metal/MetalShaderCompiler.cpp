@@ -1,7 +1,7 @@
 
 #include "MetalShaderCompiler.h"
 
-#ifdef HZR_DESKTOP
+#ifdef HZR_SHADER_COMPILER
 
 #include "Profiling/Timer.h"
 

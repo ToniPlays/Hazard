@@ -84,7 +84,7 @@ void ComputeShaderTest::Init()
 	samplerInfo.DebugName = "ImageSampler";
 	samplerInfo.MinFilter = FilterMode::Linear;
 	samplerInfo.MagFilter = FilterMode::Linear;
-	samplerInfo.Wrapping = ImageWrap::ClampBorder;
+	samplerInfo.Wrapping = ImageWrap::Repeat;
 
 	DescriptorSetCreateInfo computeDescriptorSpec = {};
 	computeDescriptorSpec.DebugName = "Compute";

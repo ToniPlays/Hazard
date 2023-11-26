@@ -83,7 +83,7 @@ void TexturedQuadTest::Init()
 	samplerInfo.DebugName = "ImageSampler";
 	samplerInfo.MinFilter = FilterMode::Linear;
 	samplerInfo.MagFilter = FilterMode::Linear;
-	samplerInfo.Wrapping = ImageWrap::ClampBorder;
+	samplerInfo.Wrapping = ImageWrap::Repeat;
 
 	m_VertexBuffer = GPUBuffer::Create(&vbo);
 	m_IndexBuffer = GPUBuffer::Create(&ibo);

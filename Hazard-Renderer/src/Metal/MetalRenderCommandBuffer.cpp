@@ -173,7 +173,9 @@ namespace HazardRenderer::Metal
         Renderer::Submit([instance]() mutable {
             instance->m_RenderEncoder->endEncoding();
         });
+        
         Renderer::SubmitResourceFree([encoder = m_RenderEncoder]() mutable {
+            
             encoder->release();
         });
     }

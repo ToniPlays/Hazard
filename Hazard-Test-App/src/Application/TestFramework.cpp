@@ -110,11 +110,8 @@ void TestFramework::GenerateShaders()
 			{
                 std::string shaderType = Utils::ShaderStageToString(type);
                 auto path = outputDir / std::filesystem::path(fmt::format("{0}.{1}.{2}", File::GetNameNoExt(source), shaderType, extensions[api]));
-                std::cout << File::GetFileAbsolutePath(path).string() << std::endl;
                 
 				auto shaderSourceCode = ShaderCompiler::GetShaderFromSource(type, shader, api);
-                
-                //std::cout << shaderSourceCode << std::endl;
 
 				if (api == RenderAPI::Vulkan)
 				{
@@ -124,7 +121,6 @@ void TestFramework::GenerateShaders()
 				{
 					HZR_ASSERT(File::WriteFile(path, shaderSourceCode), "Failed to write file");
 				}
-                //std::cout << "Created: " << path << std::endl;
 			}
 		}
 	}
@@ -141,5 +137,4 @@ void TestFramework::RestartTest()
 
 	m_CurrentTest->Reset();
 	m_CurrentTest->Init();
-
 }

@@ -37,6 +37,7 @@ namespace Hazard
 
 	Ref<JobGraph> ShaderAssetLoader::DataFromSource(const std::filesystem::path& path)
 	{
+#ifdef HZR_SHADER_COMPILER
 		using namespace HazardRenderer;
 
 		auto sources = ShaderCompiler::GetShaderSources(path);
@@ -63,6 +64,9 @@ namespace Hazard
 		stage->QueueJobs(jobs);
         
 		return graph;
+#else
+        return nullptr;
+#endif
 	}
 
 	Ref<JobGraph> ShaderAssetLoader::Create(const std::filesystem::path& path)
@@ -164,8 +168,9 @@ namespace Hazard
 	}
 	void ShaderAssetLoader::LoadSourceCode(JobInfo& info, const std::string& source, uint32_t stage, HazardRenderer::RenderAPI api)
 	{
-        std::cout << info.Job->GetName() << std::endl;
+#ifdef HZR_SHADER_COMPILER
 		info.Job->SetResult<ShaderCodeResult>({ stage, api, ShaderCompiler::GetShaderFromSource(stage, source, api) });
+#endif
 	}
 	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info, const std::filesystem::path& path)
 	{

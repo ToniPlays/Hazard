@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
-#ifdef HZR_DESKTOP
+#ifdef HZR_SHADER_COMPILER
 
 #include "Core/Rendering/Shader.h"
 #include "Core/RenderContextCreateInfo.h"

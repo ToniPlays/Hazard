@@ -28,3 +28,8 @@ project "Hazard-Utility"
 	{
 		"yaml-cpp"
 	}
+	filter "system:ios
+	
+	files {
+		"src/**.mm"
+	}

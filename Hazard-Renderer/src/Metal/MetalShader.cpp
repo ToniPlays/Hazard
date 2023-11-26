@@ -50,7 +50,7 @@ namespace HazardRenderer::Metal
             source->release();
             options->release();
             
-            if(libError->code() != 0)
+            if(libError)
             {
                 RenderMessage message = {};
                 message.Severity = Severity::Error;
@@ -70,7 +70,7 @@ namespace HazardRenderer::Metal
             
             auto func = lib->newFunction(descriptor, &functionError);
             
-            if(functionError->code() != 0)
+            if(functionError)
             {
                 RenderMessage message = {};
                 message.Severity = Severity::Error;

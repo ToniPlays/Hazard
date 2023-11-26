@@ -1,6 +1,6 @@
 #include "OpenGLShaderCompiler.h"
 
-#ifdef HZR_DESKTOP
+#ifdef HZR_SHADER_COMPILER
 
 #include "MathCore.h"
 #include "Profiling/Timer.h"

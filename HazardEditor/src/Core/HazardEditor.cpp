@@ -37,20 +37,6 @@ static std::string GetBuildType()
 
 void HazardEditorApplication::PreInit()
 {
-
-#if HZR_DEBUG && false
-	std::cout << "Select api" << std::endl;
-	std::cout << " 0 - Auto" << std::endl;
-	std::cout << " 1 - OpenGL" << std::endl;
-	std::cout << " 2 - Vulkan" << std::endl;
-	std::cout << " 3 - Metal" << std::endl;
-	uint32_t api;
-	std::cin >> api;
-	RenderAPI renderAPI = (RenderAPI)api;
-#else
-	RenderAPI renderAPI = RenderAPI::Auto;
-#endif
-
 	std::string workingDir = CommandLineArgs::Get<std::string>("wdir");
 	if (!workingDir.empty())
 	{
@@ -73,9 +59,9 @@ void HazardEditorApplication::PreInit()
 #endif
 
 	RenderContextCreateInfo renderContextInfo = {};
-	renderContextInfo.Renderer = renderAPI;
+	renderContextInfo.Renderer = RenderAPI::Auto;
 	renderContextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderAPI) + " | " + GetBuildType();
+	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderContextInfo.Renderer) + " | " + GetBuildType();
 	renderContextInfo.Width = 1920;
 	renderContextInfo.Height = 1080;
 

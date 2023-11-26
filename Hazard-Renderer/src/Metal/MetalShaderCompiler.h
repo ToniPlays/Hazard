@@ -11,7 +11,7 @@ namespace HazardRenderer::Metal
         uint32_t SamplerBinding;
     };
 
-    #ifdef HZR_DESKTOP
+    #ifdef HZR_SHADER_COMPILER
 
     class MetalShaderCompiler
     {
