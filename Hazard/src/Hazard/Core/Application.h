@@ -50,7 +50,7 @@ namespace Hazard
 
 	private:
 
-		JobSystem m_JobSystem;
+		JobSystem m_JobSystem = JobSystem(2);
         std::vector<std::function<void()>> m_MainJobs;
 	};
 

@@ -37,7 +37,7 @@ namespace HazardRenderer::Metal
         {
             std::string msl((char*)code.Data, code.Size);
             
-            NS::Error* libError;
+            NS::Error* libError = nullptr;
             NS::String* source = NS::String::alloc()->string(msl.c_str(), NS::UTF8StringEncoding);
             
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
@@ -50,7 +50,7 @@ namespace HazardRenderer::Metal
             source->release();
             options->release();
             
-            if(false)
+            if(libError->code() != 0)
             {
                 RenderMessage message = {};
                 message.Severity = Severity::Error;
@@ -61,7 +61,7 @@ namespace HazardRenderer::Metal
                 continue;
             }
             
-            NS::Error* functionError;
+            NS::Error* functionError = nullptr;
             std::string shaderTypeName = "main0";
             NS::String* name = NS::String::string()->string(shaderTypeName.c_str(), NS::UTF8StringEncoding);
             
@@ -70,12 +70,12 @@ namespace HazardRenderer::Metal
             
             auto func = lib->newFunction(descriptor, &functionError);
             
-            if(false)
+            if(functionError->code() != 0)
             {
                 RenderMessage message = {};
                 message.Severity = Severity::Error;
                 message.Description = functionError->description()->utf8String();
-                message.StackTrace = functionError->localizedFailureReason()->utf8String();
+                message.StackTrace = code; //functionError->->utf8String();
                 
                 Window::SendDebugMessage(message);
                 continue;

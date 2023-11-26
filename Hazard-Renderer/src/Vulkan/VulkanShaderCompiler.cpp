@@ -24,8 +24,8 @@ namespace HazardRenderer::Vulkan
         case SHADER_STAGE_MISS_BIT:	        return shaderc_miss_shader;
         case SHADER_STAGE_CLOSEST_HIT_BIT:  return shaderc_closesthit_shader;
         case SHADER_STAGE_ANY_HIT_BIT:      return shaderc_anyhit_shader;
-        case SHADER_STAGE_NONE:             return (shaderc_shader_kind)0;
         }
+        HZR_ASSERT(false, "");
         return (shaderc_shader_kind)0;
     }
 
@@ -49,12 +49,13 @@ namespace HazardRenderer::Vulkan
         case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
         }
         
-        options.SetTargetSpirv(shaderc_spirv_version_1_4);
+        options.SetTargetSpirv(shaderc_spirv_version_1_2);
         options.SetOptimizationLevel((shaderc_optimization_level)compileInfo->Optimization);
         options.SetGenerateDebugInfo();
 
         for (uint32_t i = 0; i < compileInfo->DefineCount; i++)
         {
+            break;
             ShaderDefine define = compileInfo->pDefines[i];
             if (!define.Value.empty())
                 options.AddMacroDefinition(define.Name, define.Value);
@@ -67,7 +68,10 @@ namespace HazardRenderer::Vulkan
 
         bool succeeded = result.GetCompilationStatus() == shaderc_compilation_status_success;
         if (succeeded)
-            m_ResultBinary = Buffer::Copy(result.begin(), (result.end() - result.begin()) * sizeof(uint32_t));
+        {
+            std::vector<uint32_t> res(result.cbegin(), result.cend());
+            m_ResultBinary = Buffer::Copy(res.data(), res.size() * sizeof(uint32_t));
+        }
         else
             m_ErrorMessage = result.GetErrorMessage();
 

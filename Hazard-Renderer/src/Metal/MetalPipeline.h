@@ -47,8 +47,8 @@ namespace HazardRenderer::Metal
         
         MTL::PrimitiveType m_PrimitiveType;
         
-        MTL::RenderPipelineDescriptor* m_PipelineDescriptor;
-        MTL::ComputePipelineDescriptor* m_ComputeDescriptor;
+        MTL::RenderPipelineDescriptor* m_PipelineDescriptor = nullptr;
+        MTL::ComputePipelineDescriptor* m_ComputeDescriptor = nullptr;
         
         MTL::RenderPipelineState* m_Pipeline = nullptr;
         MTL::ComputePipelineState* m_ComputePipeline = nullptr;

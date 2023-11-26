@@ -107,7 +107,7 @@ namespace Memory
 				s_Data->m_AllocationMap.erase(memory);
 			}
 		}
-		//std::free(memory);
+        free(memory);
 	}
 }
 

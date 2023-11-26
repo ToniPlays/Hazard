@@ -30,11 +30,13 @@ void* CommandQueue::Allocate(CommandFn func, uint32_t size)
 	*(CommandFn*)m_CommandBufferPtr = func;
 	m_CommandBufferPtr += sizeof(CommandFn);
 
-	*(uint32_t*)m_CommandBufferPtr = size;
-	m_CommandBufferPtr += sizeof(uint32_t);
-
+	*(uint64_t*)m_CommandBufferPtr = size;
+	m_CommandBufferPtr += sizeof(uint64_t);
+    
 	void* memory = m_CommandBufferPtr;
 	m_CommandBufferPtr += size;
+    
+    HZR_ASSERT(m_CommandBuffer + m_Size >= m_CommandBufferPtr, "CommandQueue overflow");
 
 	m_CommandCount++;
 	uint32_t dataSize = (uint32_t)((uint8_t*)m_CommandBufferPtr - (uint8_t*)m_CommandBuffer);
@@ -51,8 +53,8 @@ void CommandQueue::Excecute()
 		CommandFn func = *(CommandFn*)buffer;
 		buffer += sizeof(CommandFn);
 
-		uint32_t size = *(uint32_t*)buffer;
-		buffer += sizeof(uint32_t);
+		uint64_t size = *(uint64_t*)buffer;
+		buffer += sizeof(uint64_t);
 		func(buffer);
 		buffer += size;
 	}

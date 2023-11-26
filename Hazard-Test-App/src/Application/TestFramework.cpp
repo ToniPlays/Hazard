@@ -67,8 +67,10 @@ void TestFramework::Init()
 	m_Tests.push_back(new UniformBufferTest());
 	m_Tests.push_back(new ComputeShaderTest());
 
+    GenerateShaders();
+    
 #ifdef HZR_PLATFORM_WINDOWS
-	//GenerateShaders();
+	
 #endif
 
 	RestartTest();
@@ -82,34 +84,37 @@ void TestFramework::Update()
 
 void TestFramework::GenerateShaders()
 {
-#if defined HZR_PLATFORM_WINDOWS
+#if defined HZR_PLATFORM_MACOS || defined HZR_PLATFORM_WINDOWS
 	std::filesystem::path outputDir = "assets/compiled/shaders/";
-	std::vector<RenderAPI> compileFor = { RenderAPI::OpenGL, RenderAPI::Vulkan, RenderAPI::Metal };
+	std::vector<RenderAPI> compileFor = { RenderAPI::Metal, RenderAPI::Vulkan, RenderAPI::OpenGL };
 
 	std::vector<std::filesystem::path> sources = {
 		"assets/shaders/triangle.glsl",
 		"assets/shaders/texturedQuad.glsl",
 		"assets/shaders/UboTest.glsl",
-		"assets/shaders/compute.glsl"
+        "assets/shaders/compute.glsl"
 	};
 
 	std::unordered_map<RenderAPI, std::string> extensions = {
-	{ RenderAPI::OpenGL, "ogl" },
-	{ RenderAPI::Vulkan, "vk" },
-	{ RenderAPI::Metal, "mtl" }
+        { RenderAPI::OpenGL, "ogl" },
+        { RenderAPI::Vulkan, "vk" },
+        { RenderAPI::Metal, "mtl" }
 	};
-
+    
+    
 	for (auto& api : compileFor)
 	{
 		for (auto& source : sources)
 		{
 			for (auto& [type, shader] : ShaderCompiler::GetShaderSources(source))
 			{
+                std::string shaderType = Utils::ShaderStageToString(type);
+                auto path = outputDir / std::filesystem::path(fmt::format("{0}.{1}.{2}", File::GetNameNoExt(source), shaderType, extensions[api]));
+                std::cout << File::GetFileAbsolutePath(path).string() << std::endl;
+                
 				auto shaderSourceCode = ShaderCompiler::GetShaderFromSource(type, shader, api);
-				std::string shaderType = Utils::ShaderStageToString(type);
-
-				auto path = outputDir / std::filesystem::path(fmt::format("{0}.{1}.{2}", File::GetNameNoExt(source), shaderType, extensions[api]));
-				std::cout << File::GetFileAbsolutePath(path).string() << std::endl;
+                
+                //std::cout << shaderSourceCode << std::endl;
 
 				if (api == RenderAPI::Vulkan)
 				{
@@ -119,6 +124,7 @@ void TestFramework::GenerateShaders()
 				{
 					HZR_ASSERT(File::WriteFile(path, shaderSourceCode), "Failed to write file");
 				}
+                //std::cout << "Created: " << path << std::endl;
 			}
 		}
 	}

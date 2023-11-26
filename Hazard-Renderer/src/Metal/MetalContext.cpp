@@ -17,6 +17,8 @@ namespace HazardRenderer::Metal
     {
         Renderer::Init(this);
         s_Instance = this;
+        
+        m_PhysicalDevice = hnew MetalPhysicalDevice();
     }
     MetalContext::~MetalContext()
     {
@@ -29,9 +31,7 @@ namespace HazardRenderer::Metal
         //Get preferred size
         uint32_t w = window->GetWidth();
         uint32_t h = window->GetHeight();
-        
-        m_PhysicalDevice = hnew MetalPhysicalDevice();
-        
+    
         m_Swapchain = Ref<MetalSwapchain>::Create(window);
         m_Swapchain->Create(&w, &h, m_Window->IsVSync());
         

@@ -12,21 +12,24 @@ struct Buffer
 	Buffer(void* data, uint64_t size) : Data(data), Size(size) {};
 
 	void Allocate(uint64_t size)
-	{
-		hdelete Data;
-		Data = nullptr;
-
+    {
+        if(Data)
+            hdelete[] (uint8_t*)Data;
+        
+        Data = nullptr;
+        
 		if (size == 0)
 			return;
         
-		Data = hnew uint8_t[size];
+		Data = new uint8_t[size];
 		Size = size;
 	}
 
 	void Release()
 	{
         if(Data)
-            hdelete Data;
+            hdelete[] (uint8_t*)Data;
+        
 		Data = nullptr;
 		Size = 0;
 	}

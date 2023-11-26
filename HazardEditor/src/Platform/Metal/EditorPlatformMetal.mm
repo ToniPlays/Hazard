@@ -1,95 +1,92 @@
 
 #include "EditorPlatformMetal.h"
+
 #ifdef HZR_INCLUDE_METAL
-#include "Backend/Core/Renderer.h"
-#include "Backend/Metal/MetalFrameBuffer.h"
-#include "Backend/Metal/MetalRenderCommandBuffer.h"
-#include "Backend/Metal/MetalSwapchain.h"
+#include "Core/Renderer.h"
+#include "Metal/MetalFrameBuffer.h"
+#include "Metal/MetalRenderCommandBuffer.h"
+#include "Metal/MetalSwapchain.h"
 
-//#include "../ImGui_Backend/imgui_impl_metal.h"
-#include "../ImGui_Backend/imgui_impl_glfw.h"
+#include "ImGui_Backend/imgui_impl_glfw.h"
+#include "ImGui_Backend/imgui_impl_metal.h"
 
-#import <Metal/Metal.h>
+#include <Metal/Metal.hpp>
+#include <Foundation/Foundation.hpp>
+#include <QuartzCore/QuartzCore.hpp>
+
+#import <Metal/Metal.hpp>
 #include <GLFW/glfw3.h>
 
 EditorPlatformMetal::EditorPlatformMetal(HazardRenderer::Window& window)
 {
     using namespace HazardRenderer::Metal;
-    /*
     m_Window = &window;
     m_Context = (MetalContext*)window.GetContext();
-    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), true);
     
-    auto device = MetalContext::GetMetalDevice();
-    
-    ImGui_ImplMetal_Init((__bridge id<MTLDevice>)(device->GetMetalDevice()));
+    Ref<MetalPhysicalDevice> device = m_Context->GetDevice();
     
     m_Descriptor = MTL::RenderPassDescriptor::alloc()->init();
     m_Descriptor->setDefaultRasterSampleCount(1);
     m_Descriptor->setRenderTargetWidth(window.GetWidth());
     m_Descriptor->setRenderTargetWidth(window.GetHeight());
     
-    auto* attachment = m_Descriptor->colorAttachments()->object(0);
+    MTL::RenderPassColorAttachmentDescriptor* attachment = m_Descriptor->colorAttachments()->object(0);
     attachment->setLoadAction(MTL::LoadActionClear);
     attachment->setStoreAction(MTL::StoreActionStore);
     
-    ImGuiIO& io = ImGui::GetIO();
+#ifdef HZR_PLATFORM_MACOS
+    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), false);
+#endif
     
-    float xScale, yScale;
-    glfwGetWindowContentScale((GLFWwindow*)m_Window->GetNativeWindow(), &xScale, &yScale);
-    io.DisplayFramebufferScale = { xScale, yScale };
-     */
+    ImGui_ImplMetal_Init((__bridge id<MTLDevice>)(device->GetMetalDevice()));
 }
 
 EditorPlatformMetal::~EditorPlatformMetal()
 {
+#ifdef HZR_PLATFORM_MACOS
     ImGui_ImplGlfw_Shutdown();
-    //ImGui_ImplMetal_Shutdown();
+#endif
+    ImGui_ImplMetal_Shutdown();
 }
 
 void EditorPlatformMetal::BeginFrame()
 {
     using namespace HazardRenderer::Metal;
-    /*
-    auto swapchain = m_Context->GetSwapchain();
     
-    uint32_t w = swapchain->GetWidth();
-    uint32_t h = swapchain->GetHeight();
-    
-    m_Descriptor->setRenderTargetWidth(w);
-    m_Descriptor->setRenderTargetHeight(h);
-    
-    ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize = { (float)w, (float)h };
-    
-    CA::MetalDrawable* drawable = swapchain.As<MetalSwapchain>()->GetDrawable();
-    m_Descriptor->colorAttachments()->object(0)->setTexture(drawable->texture());
+    auto swapchain = MetalContext::GetInstance()->GetSwapchain().As<MetalSwapchain>();
+    auto drawable = swapchain->GetDrawable();
+    auto* colorAttachment = m_Descriptor->colorAttachments()->object(0);
+    colorAttachment->setTexture(drawable->texture());
     
     ImGui_ImplMetal_NewFrame((__bridge MTLRenderPassDescriptor*)(m_Descriptor));
+#ifdef HZR_PLATFORM_MACOS
     ImGui_ImplGlfw_NewFrame();
+#endif
     ImGui::NewFrame();
-    */
 }
 
 void EditorPlatformMetal::EndFrame()
 {
-    /*
     using namespace HazardRenderer::Metal;
-    auto swapchain = m_Context->GetSwapchain();
+    auto swapchain = MetalContext::GetInstance()->GetSwapchain();
     auto cmdBuffer = swapchain->GetSwapchainBuffer().As<MetalRenderCommandBuffer>();
-    cmdBuffer->BeginRenderPass_RT(swapchain->GetRenderPass());
     
-           
-    id<MTLCommandBuffer> buffer = (__bridge id<MTLCommandBuffer>)(cmdBuffer->GetMetalCommandBuffer());
-    id<MTLRenderCommandEncoder> encoder = (__bridge id<MTLRenderCommandEncoder>)(cmdBuffer->GetRenderEncoder());
-           
-    ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), buffer, encoder);
-    cmdBuffer->GetRenderEncoder()->endEncoding();
-     */
+    uint32_t w = m_Window->GetWidth();
+    uint32_t h = m_Window->GetHeight();
+    
+    m_Descriptor->setRenderTargetWidth(w);
+    m_Descriptor->setRenderTargetHeight(h);
+    
+    auto encoder = cmdBuffer->GetMetalCommandBuffer()->renderCommandEncoder(m_Descriptor);
+    
+    ImGui_ImplMetal_RenderDrawData(ImGui::GetDrawData(), (__bridge id<MTLCommandBuffer>)(cmdBuffer->GetMetalCommandBuffer()), (__bridge id<MTLRenderCommandEncoder>)encoder);
+    
+    encoder->endEncoding();
 }
 
 void EditorPlatformMetal::Close()
 {
     ImGui::DestroyContext();
 }
+
 #endif

@@ -27,12 +27,16 @@ EditorPlatformMetal::EditorPlatformMetal(HazardRenderer::Window& window)
     
     m_Descriptor = MTL::RenderPassDescriptor::alloc()->init();
     m_Descriptor->setDefaultRasterSampleCount(1);
-    m_Descriptor->setRenderTargetWidth(window.GetWidth() * window.GetWindowInfo().FramebufferScale.x);
-    m_Descriptor->setRenderTargetWidth(window.GetHeight() * window.GetWindowInfo().FramebufferScale.y);
+    m_Descriptor->setRenderTargetWidth(window.GetWidth());
+    m_Descriptor->setRenderTargetWidth(window.GetHeight());
     
     MTL::RenderPassColorAttachmentDescriptor* attachment = m_Descriptor->colorAttachments()->object(0);
     attachment->setLoadAction(MTL::LoadActionClear);
     attachment->setStoreAction(MTL::StoreActionStore);
+    
+#ifdef HZR_PLATFORM_MACOS
+    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), false);
+#endif
     
     ImGui_ImplMetal_Init((__bridge id<MTLDevice>)(device->GetMetalDevice()));
 }
@@ -67,8 +71,8 @@ void EditorPlatformMetal::EndFrame()
     auto swapchain = MetalContext::GetInstance()->GetSwapchain();
     auto cmdBuffer = swapchain->GetSwapchainBuffer().As<MetalRenderCommandBuffer>();
     
-    uint32_t w = m_Context->GetSwapchain()->GetWidth();
-    uint32_t h = m_Context->GetSwapchain()->GetHeight();
+    uint32_t w = m_Window->GetWidth();
+    uint32_t h = m_Window->GetHeight();
     
     m_Descriptor->setRenderTargetWidth(w);
     m_Descriptor->setRenderTargetHeight(h);

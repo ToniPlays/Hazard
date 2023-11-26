@@ -97,7 +97,7 @@ namespace Hazard
 			BeginScene();
 		}
 
-		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+		//constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 		constexpr float size = 1.0f;
 
 		const glm::vec4 cameraRightVector = { view[0][0], view[1][0], view[2][0], 0.0f };

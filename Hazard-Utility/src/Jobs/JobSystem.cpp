@@ -30,7 +30,7 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 	thread->m_IsMainThread = thread->m_Thread.get_id() == m_LaunchThread;
 	if (thread->IsMainThread())
 	{
-		thread->m_Status == ThreadStatus::Terminated;
+		thread->m_Status = ThreadStatus::Terminated;
 		return;
 	}
 

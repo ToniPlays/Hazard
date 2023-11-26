@@ -21,8 +21,6 @@ namespace HazardRenderer::Metal {
 
     void MetalSwapchain::Create(uint32_t* width, uint32_t* height, bool vsync)
     {
-        glm::vec2 scale = m_Window->GetWindowInfo().FramebufferScale;
-        
         m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("Swapchain");
         
         if (m_DefaultFramebuffer)

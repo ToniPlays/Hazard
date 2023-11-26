@@ -49,7 +49,7 @@ namespace Hazard
 		{
 			for (auto& [stage, source] : sources)
 			{
-				Ref<Job> job = Ref<Job>::Create("Shader create", LoadSourceCode, source, stage, api);
+				Ref<Job> job = Ref<Job>::Create(fmt::format("Shader create {} ({})", File::GetName(path), stage), LoadSourceCode, source, stage, api);
 				jobs.push_back(job);
 			}
 		}
@@ -61,7 +61,7 @@ namespace Hazard
 		Ref<GraphStage> assetStage = graph->GetStage(1);
 		assetStage->QueueJobs({ assetJob });
 		stage->QueueJobs(jobs);
-
+        
 		return graph;
 	}
 
@@ -164,6 +164,7 @@ namespace Hazard
 	}
 	void ShaderAssetLoader::LoadSourceCode(JobInfo& info, const std::string& source, uint32_t stage, HazardRenderer::RenderAPI api)
 	{
+        std::cout << info.Job->GetName() << std::endl;
 		info.Job->SetResult<ShaderCodeResult>({ stage, api, ShaderCompiler::GetShaderFromSource(stage, source, api) });
 	}
 	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info, const std::filesystem::path& path)

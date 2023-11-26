@@ -68,28 +68,31 @@ namespace HazardRenderer::Metal
 
         bool succeeded = result.GetCompilationStatus() == shaderc_compilation_status_success;
         if (succeeded)
-            m_ResultBinary = Buffer::Copy(result.begin(), (result.end() - result.begin()) * sizeof(uint32_t));
+        {
+            std::vector<uint32_t> res(result.cbegin(), result.cend());
+            m_ResultBinary = Buffer::Copy(res.data(), res.size() * sizeof(uint32_t));
+        }
         else
             m_ErrorMessage = result.GetErrorMessage();
         m_CompilationTime = timer.ElapsedMillis();
         
         return succeeded;
     }
-    bool MetalShaderCompiler::Decompile(Buffer binary, std::string &result, bool tesellation)
+    bool MetalShaderCompiler::Decompile(Buffer binary, std::string& result, bool tesellation)
     {
         HZR_ASSERT(binary.Size > 0, "Cannot use empty binary data");
         HZR_PROFILE_FUNCTION();
         
         m_ErrorMessage.clear();
         
-        spirv_cross::CompilerMSL::Options options;
-        options.set_msl_version(2, 4);
+        spirv_cross::CompilerMSL::Options options = {};
+        options.set_msl_version(3, 2);
         options.vertex_for_tessellation = tesellation;
         options.texture_buffer_native = true;
         
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         
-        compiler.set_msl_options(options);
+        //compiler.set_msl_options(options);
         result = compiler.compile();
     
         return !result.empty();

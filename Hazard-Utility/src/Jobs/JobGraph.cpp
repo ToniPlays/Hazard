@@ -58,8 +58,13 @@ Ref<JobGraph> JobGraph::Execute()
 	JobInfo info = {};
 	for (auto& stage : m_Stages)
 	{
-		for (auto& job : stage->m_Jobs)
-			job->Execute(info);
+        info.PreviousStage = GetPreviousStage();
+        for (uint32_t i = 0; i < stage->m_Jobs.size(); i++)
+        {
+            info.ExecutionID = 0;
+            stage->m_Jobs[i]->Execute(info);
+        }
+
 	}
 	return this;
 }

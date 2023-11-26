@@ -1,10 +1,11 @@
 #pragma once
 
 #include <hzrpch.h>
-#include "../EditorGuiPlatform.h"
 #include "HazardRendererCore.h"
+
 #ifdef HZR_INCLUDE_METAL
 
+#include "../EditorGuiPlatform.h"
 #include "Metal/MetalContext.h"
 #include <Metal/Metal.hpp>
 

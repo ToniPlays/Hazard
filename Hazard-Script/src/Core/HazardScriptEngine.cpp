@@ -100,6 +100,6 @@ namespace HazardScript
 			m_DebugCallback({ Severity::Error, exception, trace });
 		});
 
-		HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
+		//HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
 	}
 }

@@ -69,6 +69,8 @@ namespace HazardRenderer
 		template<typename FuncT>
 		static void SubmitResourceCreate(FuncT func)
 		{
+            static_assert(sizeof(FuncT) % 8 == 0);
+            
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();

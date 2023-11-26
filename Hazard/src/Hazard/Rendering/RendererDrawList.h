@@ -32,7 +32,7 @@ namespace Hazard
 	struct GeometryMesh
 	{
 		glm::mat4 Transform;
-		uint32_t Count;
+		uint64_t Count;
 		Ref<GPUBuffer> VertexBuffer;
 		Ref<GPUBuffer> IndexBuffer;
 		Ref<Pipeline> Pipeline;

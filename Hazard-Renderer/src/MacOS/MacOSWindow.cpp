@@ -46,9 +46,7 @@ namespace HazardRenderer
         m_WindowData.EventCallback = info->pAppInfo->EventCallback;
 
         if (!m_WindowData.EventCallback)
-        {
             m_WindowData.EventCallback = [](Event& e) {};
-        }
 
         if (info->Renderer == RenderAPI::Auto)
             info->Renderer = RenderAPI::Metal;
@@ -100,15 +98,16 @@ namespace HazardRenderer
 
             if (monitor == nullptr)
                 monitor = glfwGetPrimaryMonitor();
-
+            
             glfwGetWindowContentScale(m_Window, &m_WindowData.FramebufferScale.x, &m_WindowData.FramebufferScale.y);
-
+            
+            m_WindowData.Width *= m_WindowData.FramebufferScale.x;
+            m_WindowData.Height *= m_WindowData.FramebufferScale.y;
+            
             m_Context = GraphicsContext::Create(&m_WindowData);
+            
             m_Context->Init(this, info);
             m_Context->SetClearColor(windowInfo.Color);
-            
-            m_WindowData.Width = m_Context->GetSwapchain()->GetWidth() * m_WindowData.FramebufferScale.x;
-            m_WindowData.Height = m_Context->GetSwapchain()->GetHeight() * m_WindowData.FramebufferScale.y;
             m_WindowData.RefreshRate = glfwGetVideoMode(monitor)->refreshRate;
 
             //Center window
@@ -120,6 +119,8 @@ namespace HazardRenderer
             for (uint32_t i = 0; i < GLFW_JOYSTICK_LAST; i++)
                 glfwSetJoystickUserPointer(i, &m_WindowData);
 
+            m_Context->GetSwapchain()->Resize(m_WindowData.Width, m_WindowData.Height);
+            
             m_WindowData.Width = m_Context->GetSwapchain()->GetWidth();
             m_WindowData.Height = m_Context->GetSwapchain()->GetHeight();
             

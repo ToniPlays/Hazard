@@ -110,7 +110,7 @@ namespace Hazard
 					std::cout << fmt::format("Stage: {0} error: {1}", Utils::ShaderStageToString(type), compiler.GetErrorMessage()) << std::endl;
 					return "";
 				}
-
+                std::cout << source << std::endl;
 				std::string mslSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), mslSource))
 				{

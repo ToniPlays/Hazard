@@ -223,8 +223,8 @@ namespace HazardRenderer
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int w, int h) {
 
 			WindowProps& data = *(WindowProps*)glfwGetWindowUserPointer(window);
-			data.Height = h;
-			data.Width = w;
+			data.Width = w * data.FramebufferScale.x;
+            data.Height = h * data.FramebufferScale.y;
 
 			data.Window->GetContext()->GetSwapchain()->Resize(data.Width, data.Height);
 

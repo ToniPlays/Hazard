@@ -18,7 +18,7 @@ public:
 	void Run() override;
 	void Terminate() override;
 
-	const char* GetName() { return "Job graph test"; }
+	const char* GetName() override { return "Job graph test"; }
 
 private:
 	JobSystem* m_JobSystem;

@@ -75,8 +75,9 @@ void Input::Update()
 		auto& gamepad = s_Gamepads[g];
 		if (!gamepad.Connected) continue;
 
-		auto& info = s_Window->GetWindowInfo();
         /*
+		auto& info = s_Window->GetWindowInfo();
+        
 		GLFWgamepadstate state = {};
 		glfwGetGamepadState(g, &state);
 
