@@ -1,0 +1,2 @@
+STARTUP_PROJECT = "Hazard-Test-App"
+CPP_DIALECT = "C++20"

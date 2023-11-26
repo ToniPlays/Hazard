@@ -16,51 +16,37 @@ project "Hazard-Test-App"
 
 	includedirs
 	{
-		"%{wks.location}/Hazard/vendor/spdlog/include",
-		"%{wks.location}/Hazard/src",
-		"%{wks.location}/Hazard/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.Entt}",
-		"%{IncludeDir.ImGuizmo}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.Box2D}",
-		"%{IncludeDir.VulkanSDK}",
-        	"%{IncludeDir.Metal}",
-		"%{IncludeDir.shaderc}",
-		"%{IncludeDir.Assimp}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.SPIRV_Cross}",
-		"%{IncludeDir.Hazard_Utility}",
-		"%{IncludeDir.Hazard_Renderer}",
-		"%{IncludeDir.Hazard_Script}",
-		"%{IncludeDir.Hazard_UI}",
-		"%{IncludeDir.PortableFileDialogs}",
-		"%{IncludeDir.VMA}",
-		"%{IncludeDir.Coral}",
-		"%{IncludeDir.Optick}",
-		"src"
+		"src",
+        "%{wks.location}/Hazard/vendor",
+        (Dependencies.HazardUtility.IncludeDir),
+        (Dependencies.HazardRenderer.IncludeDir),
+        (Dependencies.HazardScript.IncludeDir),
+        (Dependencies.Hazard.IncludeDir),
+        (Dependencies.Assimp.IncludeDir),
+        (Dependencies.GLM.IncludeDir),
+        (Dependencies.Spdlog.IncludeDir),
+        (Dependencies.ImGUI.IncludeDir),
+        (Dependencies.YAML.IncludeDir),
+        (Dependencies.EnTT.IncludeDir),
+        (Dependencies.Coral.IncludeDir),
+        (Dependencies.Box2D.IncludeDir),
+        (Dependencies.GLAD.IncludeDir),
+        (Dependencies.GLFW.IncludeDir),
+        (Dependencies.SpirvCross.IncludeDir),
+        (Dependencies.Vulkan.IncludeDir),
+        (Dependencies.Metal.IncludeDir)
 	}
-
-	links
-	{
-		"Hazard",
-		"Hazard-Script",
-		"Box2D",
-		"yaml-cpp"
-	}
+ 
+    libdirs {
+        (Dependencies.SpirvCross.LibraryDir),
+    }
 
 	filter "system:windows"
 		kind "ConsoleApp"
 		defines {
 			"_CRT_SECURE_NO_WARNINGS",
 		}
-		links {
-			"%{Library.Vulkan}",
-			"Hazard-Script",
-			"%{Library.Assimp_Lib}"
-		}
+        
 		postbuildcommands
 		{
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
@@ -69,36 +55,32 @@ project "Hazard-Test-App"
 
 	filter "system:macosx"
 		kind "ConsoleApp"
-		links
-		{
-			"Cocoa.framework"
-		}
 
 	filter "system:ios"
 		kind "WindowedApp"
-		links {
-			"UIKit.framework",
-		}
 
 	filter "system:macosx or system:ios"
-		links 
+        files
 		{
-			"IOKit.framework",
-			"Foundation.framework",
-			"CoreGraphics.framework",
-			"CoreFoundation.framework",
-			"QuartzCore.framework",
-			"Metal.framework",
-			"MetalKit.framework",
-			"%{Library.Assimp_Lib}",
-		}
-		libdirs {
-			"%{LibraryDir.Assimp_Lib}",			
-		}
-        	files 
-		{
-                	"src/**.m",
-                	"src/**.mm",
+            "src/**.m",
+            "src/**.mm",
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
 			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
-        	}
+        }
+    
+    References("HazardUtility")
+    References("HazardRenderer")
+    References("Hazard")
+    References("GLM")
+    References("Spdlog")
+    References("ImGUI")
+    References("YAML")
+    References("EnTT")
+    References("Coral")
+    References("Box2D")
+    References("GLAD")
+    References("GLFW")
+    References("SpirvCross")
+    References("OpenGL")
+    References("Vulkan")
+    References("Metal")

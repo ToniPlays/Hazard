@@ -24,7 +24,7 @@
 // SOFTWARE.
 //
 
-#include <hzrpch.h>
+
 
 // Undef from Windows.h
 #undef min

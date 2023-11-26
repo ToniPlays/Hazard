@@ -1,9 +1,11 @@
+include "Config.lua"
 include "Dependencies.lua"
+include "scripts/setup/premakeUtils/XCOdeBuildSettings.lua"
 
 workspace "Hazard"
 
-	startproject "HazardEditor"
-    	cppdialect "C++20"
+	startproject (STARTUP_PROJECT)
+    cppdialect (CPP_DIALECT)
 
 	configurations
 	{
@@ -16,10 +18,12 @@ workspace "Hazard"
 	{
 		"MultiProcessorCompile"
 	}
-	defines 
+    
+	defines
 	{
 		"GLFW_INCLUDE_NONE"
 	}
+ 
 
 	filter "system:windows"
         systemversion "latest"
@@ -30,37 +34,17 @@ workspace "Hazard"
         }
 
 	filter "system:macosx"
+        architecture "universal"
         defines
         {
             "HZR_PLATFORM_MACOS"
         }
         
     filter "system:ios"
+        architecture "universal"
         defines
         {
             "HZR_PLATFORM_IOS"
-        }
-	xcodebuildsettings 
-	{
-    	    ["SDKROOT"] = "iphoneos",
-	    ["VALIDATE_WORKSPACE"] = "YES",
-	    ["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] =" arm64"
-	}
- 
-    filter "system:ios or system:macosx"
-        architecture "universal"
-
-        xcodebuildsettings
-        {
-            ["MACOSX_DEPLOYMENT_TARGET"] = "13.0",
-            ["IPHONEOS_DEPLOYMENT_TARGET"] = "14.0",
-            ["ALWAYS_SEARCH_USER_PATHS"] = "YES",
-            ["CLANG_ENABLE_OBJC_WEAK"] = "YES",
-            ["DEAD_CODE_STRIPPING"] = "YES",
-            ["CLANG_CXX_LANGUAGE_STANDARD"] = "c++20",
-	        ["ONLY_ACTIVE_ARCH"] = "YES",
-	        ["PRODUCT_BUNDLE_IDENTIFIER"] = "com.hazard",
-	        ["INFOPLIST_FILE"] = "info.plist"
         }
         
     filter "configurations:Debug"
@@ -78,7 +62,7 @@ workspace "Hazard"
         runtime "Release"
         optimize "on"
 
-	filter ""
+    IncludeXCodeBuildSettings()
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -101,12 +85,9 @@ group ""
 include "Hazard-Utility"
 include "Hazard-Renderer"
 include "Hazard-UI"
+include "HazardScripting"
 include "HazardEditor"
 include "Hazard"
-
-if os.host() == "windows" then
-	include "HazardScripting"
-end
 
 include "HazardLauncher"
 include "Hazard-Test-App"

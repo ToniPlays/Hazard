@@ -1,9 +1,7 @@
 #pragma once
 
-#include <hzrpch.h>
+#include "Core/Events/Events.h"
 #include "Renderer/Camera.h"
-
-using namespace Hazard;
 
 namespace Editor 
 {

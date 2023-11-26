@@ -5,7 +5,7 @@ project "Hazard"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
-
+    
 
 	files
 	{
@@ -21,6 +21,27 @@ project "Hazard"
 		"vendor/ImGui_Backend/**.cpp"
 	}
 
+    includedirs {
+        "src",
+        (Dependencies.HazardUtility.IncludeDir),
+        (Dependencies.HazardRenderer.IncludeDir),
+        (Dependencies.HazardScript.IncludeDir),
+        (Dependencies.Hazard.IncludeDir),
+        (Dependencies.Assimp.IncludeDir),
+        (Dependencies.GLM.IncludeDir),
+        (Dependencies.Spdlog.IncludeDir),
+        (Dependencies.ImGUI.IncludeDir),
+        (Dependencies.YAML.IncludeDir),
+        (Dependencies.EnTT.IncludeDir),
+        (Dependencies.Coral.IncludeDir),
+        (Dependencies.Box2D.IncludeDir),
+        (Dependencies.GLAD.IncludeDir),
+        (Dependencies.GLFW.IncludeDir),
+        (Dependencies.SpirvCross.IncludeDir),
+        (Dependencies.Vulkan.IncludeDir),
+        (Dependencies.Metal.IncludeDir)
+    }
+
 	defines
 	{
 		"GLFW_INCLUDE_NONE",
@@ -28,63 +49,12 @@ project "Hazard"
 		"_CRT_SECURE_NO_WARNINGS"
 	}
 
-	includedirs
-	{
-		"src",
-		"vendor/spdlog/include",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Mono}",
-		"%{IncludeDir.Vorbis}",
-		"%{IncludeDir.Minimp3}",
-		"%{IncludeDir.Libogg}",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.Box2D}",
-		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.Entt}",
-		"%{IncludeDir.Assimp}",
-		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.VulkanSDK}",
-		"%{IncludeDir.SPIRV_Cross}",
-		"%{IncludeDir.shaderc}",
-		"%{IncludeDir.VMA}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.Hazard_Utility}",
-		"%{IncludeDir.Hazard_Renderer}",
-		"%{IncludeDir.Hazard_Script}",
-		"%{IncludeDir.Hazard_UI}",
-		"%{IncludeDir.PortableFileDialogs}",
-		"%{IncludeDir.Coral}"
-	}
-
-	links {
-		"ImGui",
-		"yaml-cpp",
-		"Box2D",
-		"Hazard-Renderer",
-		"HazardScripting",
-		"%{Library.Assimp_Lib}"
-	}
-
 	filter "system:windows"
 		pchheader "hzrpch.h"
 
-		links {
-			"%{Library.Vulkan}",
-			"opengl32.lib",
-			"Hazard-Script"
-		}
-		includedirs {
-			"%{IncludeDir.Optick}",
-			"%{IncludeDir.Mono}"
-		}
-
 	filter "system:macosx or system:ios"
 		pchheader "src/hzrpch.h"
-		includedirs {
-			"%{IncludeDir.SPIRV_Cross}",
-			"%{IncludeDir.Metal}"
-		}
+        
 		files
 		{
 			"src/**.m",
@@ -93,42 +63,18 @@ project "Hazard"
 			"vendor/ImGui_Backend/**.mm"
 		}
 
-	filter "system:windows or system:macosx"
-		links
-		{
-			"GLFW",
-			"Glad"
-		}
-
-	filter "configurations:Debug"
-
-		if os.host() == "windows" then
-			links {
-				"%{Library.ShaderC_Debug}",
-				"%{Library.SPIRV_Cross_Debug}",
-				"%{Library.SPIRV_Cross_GLSL_Debug}",
-				"%{Library.SPIRV_MSL_Debug}"
-			}
-		end
-
-	filter "configurations:Release"
-
-		if os.host() == "windows" then
-			links {
-				"%{Library.ShaderC_Release}",
-				"%{Library.SPIRV_Cross_Release}",
-				"%{Library.SPIRV_Cross_GLSL_Release}",
-				"%{Library.SPIRV_MSL_Release}"
-			}
-		end
-
-	filter "configurations:Dist"
-
-		if os.host() == "windows" then
-			links {
-				"%{Library.ShaderC_Release}",
-				"%{Library.SPIRV_Cross_Release}",
-				"%{Library.SPIRV_Cross_GLSL_Release}",
-				"%{Library.SPIRV_MSL_Release}"
-			}
-		end
+    References("HazardUtility")
+    References("HazardRenderer")
+    References("HazardScript")
+    References("GLM")
+    References("Spdlog")
+    References("ImGUI")
+    References("YAML")
+    References("EnTT")
+    References("Coral")
+    References("Box2D")
+    References("GLAD")
+    References("GLFW")
+    References("Assimp")
+    References("SpirvCross")
+    References("Metal")

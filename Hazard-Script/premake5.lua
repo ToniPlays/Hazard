@@ -16,17 +16,8 @@ project "Hazard-Script"
 	includedirs
 	{
 		"src",
-		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.Mono}",
-		"%{IncludeDir.Hazard_Utility}",
-		"%{IncludeDir.Optick}",
-		"%{IncludeDir.Coral}"
-	}
-
-	links 
-	{
-		"%{LibraryDir.CoralNetHost}",
-		"Hazard-Utility",
-		"Coral.Native"
+        (Dependencies.HazardUtility.IncludeDir),
+        (Dependencies.GLM.IncludeDir),
+        (Dependencies.Spdlog.IncludeDir),
+        (Dependencies.Coral.IncludeDir),
 	}

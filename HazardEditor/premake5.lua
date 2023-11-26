@@ -22,40 +22,7 @@ project "HazardEditor"
 
 	includedirs
 	{
-		"%{wks.location}/Hazard/vendor/spdlog/include",
-		"%{wks.location}/Hazard/src",
-		"%{wks.location}/Hazard/vendor",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.Entt}",
-		"%{IncludeDir.ImGuizmo}",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.Box2D}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.VulkanSDK}",
-        	"%{IncludeDir.Metal}",
-		"%{IncludeDir.shaderc}",
-		"%{IncludeDir.Assimp}",
-		"%{IncludeDir.SPIRV_Cross}",
-		"%{IncludeDir.Hazard_Utility}",
-		"%{IncludeDir.Hazard_Renderer}",
-		"%{IncludeDir.Hazard_Script}",
-		"%{IncludeDir.Hazard_UI}",
-		"%{IncludeDir.PortableFileDialogs}",
-		"%{IncludeDir.VMA}",
-		"%{IncludeDir.Optick}",
-		"%{IncludeDir.Coral}",
 		"src"
-	}
-
-	links
-	{
-		"ImGui",
-		"Hazard",
-		"Hazard-Script",
-		"Box2D",
-		"yaml-cpp"
 	}
 
 	postbuildcommands {
@@ -64,17 +31,6 @@ project "HazardEditor"
 
 
 	filter "system:windows"
-		links {
-			"%{Library.Vulkan}",
-			"Hazard-Script",
-			"%{Library.Assimp_Lib}",
-			"%{LibraryDir.CoralNetHost}"
-		}
-		includedirs {
-
-			"%{IncludeDir.Optick}",
-			"%{IncludeDir.Mono}"
-		}
 		postbuildcommands
 		{
 			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
@@ -82,26 +38,10 @@ project "HazardEditor"
 		}
 
 	filter "system:macosx"
-		links 
-		{
-			"IOKit.framework",
-			"QuartzCore.framework",
-			"CoreFoundation.framework",
-			"Cocoa.framework",
-			"Metal.framework",
-			"MetalKit.framework"
-		}
-        	files 
-		{
-                	"src/**.m",
-                	"src/**.mm",
-			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
-			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
-        	}
-
-	filter "system:windows or system:macosx"
-		links 
-		{
-			"GLFW",
-			"GLAD"
-		}
+	files
+	{
+            "src/**.m",
+            "src/**.mm",
+		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
+		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
+                }

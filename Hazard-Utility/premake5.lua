@@ -17,19 +17,18 @@ project "Hazard-Utility"
 	includedirs
 	{
 		"src",
-		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.glm}",
-		"%{IncludeDir.Optick}",
-		"%{IncludeDir.PortableFileDialogs}",
-		"%{wks.location}/Hazard/vendor/spdlog/include",
+        (Dependencies.GLM.IncludeDir),
+        (Dependencies.Spdlog.IncludeDir),
+        (Dependencies.YAML.IncludeDir),
+        (Dependencies.PortableFD.IncludeDir)
 	}
-
-	links 
-	{
-		"yaml-cpp"
-	}
-	filter "system:ios
-	
-	files {
-		"src/**.mm"
-	}
+ 
+    References("Spdlog")
+    References("YAML")
+    References("GLM")
+    References("PortableFD")
+    
+	filter "system:ios"
+        files {
+            "src/**.mm"
+        }
