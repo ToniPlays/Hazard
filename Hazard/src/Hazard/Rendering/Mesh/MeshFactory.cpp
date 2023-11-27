@@ -35,17 +35,6 @@ namespace Hazard
 		return UINT32_MAX;
 	}
 
-	uint64_t MeshFactory::GetMeshDataSize(const MeshData& data)
-	{
-		uint64_t vertexSize = GetVertexSize(data);
-
-		uint64_t size = 0;
-		size += data.Vertices.size() * vertexSize;
-		size += data.Indices.size() * sizeof(uint32_t);
-
-		return size;
-	}
-
 	uint64_t MeshFactory::GetVertexSize(const MeshData& data)
 	{
 		uint32_t vertexSize = 0;
@@ -138,7 +127,7 @@ namespace Hazard
 		if (mesh->HasTextureCoords(0))
 			data.Flags |= MeshFlags_TextCoord;
 
-		data.Vertices.reserve(mesh->mNumVertices);
+		//data.Vertices.reserve(mesh->mNumVertices);
 
 		for (uint64_t i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -182,15 +171,15 @@ namespace Hazard
 				vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
 				vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
 			}
-			data.Vertices.push_back(vertex);
+			//data.Vertices.push_back(vertex);
 		}
 
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 		{
 			const aiFace& face = mesh->mFaces[i];
-			data.Indices.reserve(face.mNumIndices);
-			for (unsigned int j = 0; j < face.mNumIndices; j++)
-				data.Indices.push_back(face.mIndices[j] + subMesh.BaseVertex);
+			//data.Indices.reserve(face.mNumIndices);
+			//for (unsigned int j = 0; j < face.mNumIndices; j++)
+			//	data.Indices.push_back(face.mIndices[j] + subMesh.BaseVertex);
 		}
 
 		m_ProcessedNodes++;

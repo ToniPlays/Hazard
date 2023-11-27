@@ -2,6 +2,7 @@
 
 #include "Hazard/Assets/IAssetLoader.h"
 #include "BoundingBox.h"
+#include "Mesh.h"
 
 namespace Hazard 
 {
@@ -22,9 +23,14 @@ namespace Hazard
 
 		Ref<JobGraph> Load(AssetMetadata& metadata) override;
 		Ref<JobGraph> Save(Ref<Asset>& asset) override;
-		Ref<JobGraph> DataFromSource(const std::filesystem::path& path) override { return nullptr; };
+		Ref<JobGraph> DataFromSource(const std::filesystem::path& path) override;
 		Ref<JobGraph> Create(const std::filesystem::path& path) override;
 
 		Buffer ToBinary(Ref<Asset> asset) override { return Buffer(); };
+
+	private:
+		static void LoadMeshFromSource(JobInfo& info, const std::filesystem::path& path);
+		static void ProcessSubmesh(JobInfo& info, const SubMesh& mesh);
+		static void FinalizeMesh(JobInfo& info, const std::filesystem::path& path);
 	};
 }

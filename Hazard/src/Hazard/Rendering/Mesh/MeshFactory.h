@@ -43,7 +43,6 @@ namespace Hazard
 		void SetProgressHandler(MeshProgressCallback handler) { m_Handler = handler; }
 
 		MeshData LoadMeshFromSource(const std::filesystem::path& file);
-		uint64_t GetMeshDataSize(const MeshData& data);
 		uint64_t GetVertexSize(const MeshData& data);
 
 	private:

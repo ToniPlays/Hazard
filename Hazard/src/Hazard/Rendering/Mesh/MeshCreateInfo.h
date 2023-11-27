@@ -62,7 +62,5 @@ namespace Hazard {
 		BoundingBox BoundingBox = {};
 
 		std::vector<SubMesh> SubMeshes;
-		std::vector<Vertex3D> Vertices;
-		std::vector<uint32_t> Indices;
 	};
 }

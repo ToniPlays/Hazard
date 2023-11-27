@@ -286,21 +286,32 @@ namespace UI
 
 	void AssetImporterPanel::ImportMesh(std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings)
 	{
-		auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
-		MeshCreateInfo info = {};
+		JobPromise promise = AssetManager::DataFromSource(filePath);
+		promise.Then([promise, destination, filePath]() {
+			if (promise.Succeeded())
+			{
+				auto result = promise.GetResults<AssetPackElement>();
+				auto packPath = (destination / File::GetName(filePath)).lexically_normal().string() + ".hpack";
 
-		/*
-		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Import {}", File::GetName(filePath)), 2);
-		Ref<JobGraph> packGraph = EditorAssetPackBuilder::CreatePackElement(filePath, info, settings);
+				Application::Get().SubmitMainThread([packPath, filePath, result]() {
 
-		Ref<GraphStage> firstStage = graph->GetStage(0);
-		firstStage->SetWeight(0.95);
-		graph->CombineStages(packGraph, 0);
+					AssetPack pack = {};
+					pack.Handle = AssetHandle();
+					pack.ElementCount = result.size();
+					pack.Elements = result;
 
-		saveStage->SetWeight(0.05);
-		saveStage->QueueJobs({ saveJob });
+					for (auto& e : pack.Elements)
+						e.AssetPackHandle = pack.Handle;
 
-		Application::Get().GetJobSystem().QueueGraph(graph);
-		*/
+					CachedBuffer buffer = AssetPack::ToBuffer(pack);
+
+					if (File::WriteBinaryFile(packPath, buffer.GetData(), buffer.GetSize()))
+						AssetManager::ImportAssetPack(pack, packPath);
+					pack.Free();
+
+					Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
+				});
+			}
+		});
 	}
 }

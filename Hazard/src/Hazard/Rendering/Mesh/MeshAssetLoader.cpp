@@ -60,8 +60,7 @@ namespace Hazard
 			throw JobException("Unable to create mesh");
 
 		Ref<Mesh> asset = Ref<Mesh>::Create(&meshInfo);
-		asset->IncRefCount();
-		//info.Job->SetResult(&asset, sizeof(Ref<Mesh>));
+		info.Job->SetResult(asset);
 	}
 
 	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)
@@ -80,9 +79,51 @@ namespace Hazard
 		return nullptr;
 	}
 
+	Ref<JobGraph> MeshAssetLoader::DataFromSource(const std::filesystem::path& path)
+	{
+		HZR_PROFILE_FUNCTION();
+
+		Ref<Job> meshJob = Ref<Job>::Create("Mesh preprocess", LoadMeshFromSource, path);
+		Ref<Job> combineMeshes = Ref<Job>::Create("Mesh finalize", FinalizeMesh, path);
+
+		Ref<JobGraph> graph = Ref<JobGraph>::Create("Mesh create", 3);
+		graph->GetStage(0)->QueueJobs({ meshJob });
+		graph->GetStage(2)->QueueJobs({ combineMeshes });
+
+		return graph;
+	}
+
 	Ref<JobGraph> MeshAssetLoader::Create(const std::filesystem::path& path)
 	{
 		HZR_CORE_ASSERT(false, "");
 		return Ref<JobGraph>();
+	}
+	void MeshAssetLoader::LoadMeshFromSource(JobInfo& info, const std::filesystem::path& path)
+	{
+		MeshFactory factory;
+
+		factory.SetProgressHandler([info](float progress) mutable {
+			info.Job->Progress(progress);
+		});
+
+		MeshData data = factory.LoadMeshFromSource(path);
+
+		for (auto& subMesh : data.SubMeshes)
+			Ref<Job> job = Ref<Job>::Create("Submesh", ProcessSubmesh, subMesh);
+	}
+	void MeshAssetLoader::ProcessSubmesh(JobInfo& info, const SubMesh& mesh)
+	{
+		MeshFactory factory;
+		std::cout << mesh.NodeName << std::endl;
+	}
+	void MeshAssetLoader::FinalizeMesh(JobInfo& info, const std::filesystem::path& path)
+	{
+		AssetPackElement element = {};
+		element.AddressableName = File::GetName(path);
+		element.AssetPackHandle = 0;
+		element.Handle = UID();
+		element.Type = AssetType::Mesh;
+
+		info.Job->SetResult(element);
 	}
 }
