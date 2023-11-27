@@ -4,8 +4,6 @@
 #include "MathCore.h"
 #include "Hazard/Math/Time.h"
 
-#include <GLFW/glfw3.h>
-
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 

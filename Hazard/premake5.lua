@@ -21,32 +21,14 @@ project "Hazard"
 		"vendor/ImGui_Backend/**.cpp"
 	}
 
-    includedirs {
-        "src",
-        (Dependencies.HazardUtility.IncludeDir),
-        (Dependencies.HazardRenderer.IncludeDir),
-        (Dependencies.HazardScript.IncludeDir),
-        (Dependencies.Hazard.IncludeDir),
-        (Dependencies.Assimp.IncludeDir),
-        (Dependencies.GLM.IncludeDir),
-        (Dependencies.Spdlog.IncludeDir),
-        (Dependencies.ImGUI.IncludeDir),
-        (Dependencies.YAML.IncludeDir),
-        (Dependencies.EnTT.IncludeDir),
-        (Dependencies.Coral.IncludeDir),
-        (Dependencies.Box2D.IncludeDir),
-        (Dependencies.GLAD.IncludeDir),
-        (Dependencies.GLFW.IncludeDir),
-        (Dependencies.SpirvCross.IncludeDir),
-        (Dependencies.Vulkan.IncludeDir),
-        (Dependencies.Metal.IncludeDir)
+    includedirs
+    {
+        "src"
     }
 
 	defines
 	{
-		"GLFW_INCLUDE_NONE",
-		"IMGUI_IMPL_OPENGL_LOADER_GLAD",
-		"_CRT_SECURE_NO_WARNINGS"
+		"IMGUI_IMPL_OPENGL_LOADER_GLAD"
 	}
 
 	filter "system:windows"

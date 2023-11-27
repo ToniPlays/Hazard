@@ -2,6 +2,7 @@ project "Hazard-Test-App"
 
 	language "C++"
 	staticruntime "off"
+    kind "ConsoleApp"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
@@ -17,70 +18,46 @@ project "Hazard-Test-App"
 	includedirs
 	{
 		"src",
-        "%{wks.location}/Hazard/vendor",
-        (Dependencies.HazardUtility.IncludeDir),
-        (Dependencies.HazardRenderer.IncludeDir),
-        (Dependencies.HazardScript.IncludeDir),
-        (Dependencies.Hazard.IncludeDir),
-        (Dependencies.Assimp.IncludeDir),
-        (Dependencies.GLM.IncludeDir),
-        (Dependencies.Spdlog.IncludeDir),
-        (Dependencies.ImGUI.IncludeDir),
-        (Dependencies.YAML.IncludeDir),
-        (Dependencies.EnTT.IncludeDir),
-        (Dependencies.Coral.IncludeDir),
-        (Dependencies.Box2D.IncludeDir),
-        (Dependencies.GLAD.IncludeDir),
-        (Dependencies.GLFW.IncludeDir),
-        (Dependencies.SpirvCross.IncludeDir),
-        (Dependencies.Vulkan.IncludeDir),
-        (Dependencies.Metal.IncludeDir)
+        "%{wks.location}/Hazard/vendor"
 	}
- 
-    libdirs {
-        (Dependencies.SpirvCross.LibraryDir),
-    }
 
 	filter "system:windows"
-		kind "ConsoleApp"
-		defines {
-			"_CRT_SECURE_NO_WARNINGS",
-		}
         
-		postbuildcommands
-		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
-			"{COPY} %{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll %{cfg.targetdir}",
-		}
+        References("GLFW")
+		References("GLAD")
+        References("SpirvCross")
 
 	filter "system:macosx"
-		kind "ConsoleApp"
+
+		References("GLFW")
+        References("SpirvCross")
 
 	filter "system:ios"
 		kind "WindowedApp"
+  
+        files
+        {
+            "**.storyboard",
+            "info.plist"
+        }
 
 	filter "system:macosx or system:ios"
         files
 		{
             "src/**.m",
-            "src/**.mm",
-			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
-			"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
+            "src/**.mm"
         }
     
+    	
     References("HazardUtility")
     References("HazardRenderer")
     References("Hazard")
     References("GLM")
     References("Spdlog")
-    References("ImGUI")
     References("YAML")
-    References("EnTT")
     References("Coral")
-    References("Box2D")
-    References("GLAD")
-    References("GLFW")
-    References("SpirvCross")
+    References("Assimp")
+    References("ImGUI")
     References("OpenGL")
     References("Vulkan")
     References("Metal")

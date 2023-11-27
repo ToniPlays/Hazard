@@ -18,7 +18,7 @@ namespace HazardRenderer::Metal
         m_Width = createInfo->Width;
         m_Height = createInfo->Height;
         
-        m_MipLevels = createInfo->MaxMips < 1 ? 1 : glm::min(Math::GetBaseLog(m_Width), createInfo->MaxMips);
+        m_MipLevels = createInfo->MaxMips <= 1 ? 1 : glm::min(Math::GetBaseLog(m_Width), createInfo->MaxMips);
         
         Ref<MetalCubemapTexture> instance = this;
         Renderer::SubmitResourceCreate([instance]() mutable {

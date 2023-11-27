@@ -15,7 +15,6 @@
 {
     [super viewDidLoad];
     m_MTKView = (MTKView*)self.view;
-    
 
     [self SetupRecognizers];
     [self OnViewLoaded];
@@ -27,7 +26,7 @@
 
 - (void)OnViewLoaded
 {
-    printf("%s", "Must override ViewController");
+    HZR_ASSERT(false, "Must override ViewController");
 }
 - (void)SetupRecognizers
 {

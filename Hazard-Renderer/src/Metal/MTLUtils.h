@@ -74,7 +74,7 @@ namespace HazardRenderer::Metal
                 
                 return MTL::PixelFormatDepth32Float;
             }
-            case ImageFormat::RED32I:           return MTL::PixelFormatR32Sint;
+            case ImageFormat::RED32I:           return MTL::PixelFormatR32Uint;
         }
         HZR_ASSERT(false, "");
         return MTL::PixelFormatInvalid;

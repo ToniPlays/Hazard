@@ -29,8 +29,10 @@ namespace Hazard
 		Buffer ToBinary(Ref<Asset> asset) override { return Buffer(); };
 
 	private:
+#if defined HZR_PLATFORM_WINDOWS || defined HZR_PLATFORM_MACOS
 		static void LoadMeshFromSource(JobInfo& info, const std::filesystem::path& path);
 		static void ProcessSubmesh(JobInfo& info, const SubMesh& mesh);
 		static void FinalizeMesh(JobInfo& info, const std::filesystem::path& path);
+#endif
 	};
 }

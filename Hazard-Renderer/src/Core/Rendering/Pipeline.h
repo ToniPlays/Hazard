@@ -5,7 +5,6 @@
 #include "GPUBuffer.h"
 #include "Shader.h"
 #include "DescriptorSetLayout.h"
-#include <glad/glad.h>
 
 namespace HazardRenderer
 {

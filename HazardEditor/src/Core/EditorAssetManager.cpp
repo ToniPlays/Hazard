@@ -5,8 +5,8 @@
 #include "Utility/YamlUtils.h"
 #include "Hazard.h"
 #include <Hazard/RenderContext/ShaderAsset.h>
-#include <src/Core/GUIManager.h>
-#include <src/GUI/Overlays/ProgressOverlay.h>
+#include <Core/GUIManager.h>
+#include <GUI/Overlays/ProgressOverlay.h>
 
 #include <FileCache.h>
 

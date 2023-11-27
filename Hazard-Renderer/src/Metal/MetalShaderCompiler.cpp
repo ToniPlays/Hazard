@@ -92,8 +92,8 @@ namespace HazardRenderer::Metal
         
         spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         
-        //compiler.set_msl_options(options);
-        result = compiler.compile();
+        compiler.set_msl_options(options);
+        result = compiler.compile(); 
     
         return !result.empty();
     }

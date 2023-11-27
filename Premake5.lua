@@ -68,10 +68,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 group "Dependencies"
 
-	filter "system:windows or system:macosx"
+	if os.target() == "windows" or os.target() == "macosx" then
 		include "Hazard/vendor/Glad"
 		include "Hazard/vendor/GLFW"
-	filter ""
+	end
 
 	include "Hazard/vendor/Box2D"
 	include "Hazard/vendor/yaml-cpp"

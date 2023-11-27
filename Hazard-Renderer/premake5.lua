@@ -17,15 +17,7 @@ project "Hazard-Renderer"
 	}
     
 	includedirs {
-		"src",
-        (Dependencies.HazardUtility.IncludeDir),
-        (Dependencies.GLM.IncludeDir),
-        (Dependencies.Spdlog.IncludeDir),
-        (Dependencies.GLAD.IncludeDir),
-        (Dependencies.GLFW.IncludeDir),
-        (Dependencies.SpirvCross.IncludeDir),
-        (Dependencies.Vulkan.IncludeDir),
-        (Dependencies.Metal.IncludeDir)
+		"src"
 	}
     
 	filter "system:macosx or system:ios"
@@ -33,7 +25,7 @@ project "Hazard-Renderer"
 			"src/**.mm",
 			"src/**.m"
 		}
-        
+    
     References("HazardUtility")
     References("GLM")
     References("SpirvCross")

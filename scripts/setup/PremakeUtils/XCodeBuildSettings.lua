@@ -17,6 +17,9 @@ XCodeBuildSettings = {
     Ios = {
         SDKROOT = "iphoneos",
         INFOPLIST_FILE = "Info.plist",
+        GENERATE_INFOPLIST_FILE = "YES",
+        INFOPLIST_KEY_UILaunchStoryboardName = "LaunchScreen.storyboard",
+        INFOPLIST_KEY_UIMainStoryboardFile = "Main"
     }
 }
 

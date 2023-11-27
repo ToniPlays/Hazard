@@ -83,6 +83,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
+#if defined HZR_PLATFORM_WINDOWS || defined HZR_PLATFORM_MACOS
 		Ref<Job> meshJob = Ref<Job>::Create("Mesh preprocess", LoadMeshFromSource, path);
 		Ref<Job> combineMeshes = Ref<Job>::Create("Mesh finalize", FinalizeMesh, path);
 
@@ -91,6 +92,9 @@ namespace Hazard
 		graph->GetStage(2)->QueueJobs({ combineMeshes });
 
 		return graph;
+#else
+        return nullptr;
+#endif
 	}
 
 	Ref<JobGraph> MeshAssetLoader::Create(const std::filesystem::path& path)
@@ -98,6 +102,7 @@ namespace Hazard
 		HZR_CORE_ASSERT(false, "");
 		return Ref<JobGraph>();
 	}
+#if defined HZR_PLATFORM_WINDOWS || defined HZR_PLATFORM_MACOS
 	void MeshAssetLoader::LoadMeshFromSource(JobInfo& info, const std::filesystem::path& path)
 	{
 		MeshFactory factory;
@@ -126,4 +131,5 @@ namespace Hazard
 
 		info.Job->SetResult(element);
 	}
+#endif
 }

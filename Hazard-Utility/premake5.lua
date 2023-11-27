@@ -16,11 +16,7 @@ project "Hazard-Utility"
 
 	includedirs
 	{
-		"src",
-        (Dependencies.GLM.IncludeDir),
-        (Dependencies.Spdlog.IncludeDir),
-        (Dependencies.YAML.IncludeDir),
-        (Dependencies.PortableFD.IncludeDir)
+		"src"
 	}
  
     References("Spdlog")

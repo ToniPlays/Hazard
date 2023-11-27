@@ -22,7 +22,25 @@ project "HazardEditor"
 
 	includedirs
 	{
-		"src"
+		"src",
+        "%{wks.location}/Hazard/vendor",
+        (Dependencies.HazardUtility.IncludeDir),
+        (Dependencies.HazardRenderer.IncludeDir),
+        (Dependencies.HazardScript.IncludeDir),
+        (Dependencies.Hazard.IncludeDir),
+        (Dependencies.Assimp.IncludeDir),
+        (Dependencies.GLM.IncludeDir),
+        (Dependencies.Spdlog.IncludeDir),
+        (Dependencies.ImGUI.IncludeDir),
+        (Dependencies.YAML.IncludeDir),
+        (Dependencies.EnTT.IncludeDir),
+        (Dependencies.Coral.IncludeDir),
+        (Dependencies.Box2D.IncludeDir),
+        (Dependencies.GLAD.IncludeDir),
+        (Dependencies.GLFW.IncludeDir),
+        (Dependencies.SpirvCross.IncludeDir),
+        (Dependencies.Vulkan.IncludeDir),
+        (Dependencies.Metal.IncludeDir)
 	}
 
 	postbuildcommands {
@@ -44,4 +62,21 @@ project "HazardEditor"
             "src/**.mm",
 		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.m",
 		"%{wks.location}/Hazard/vendor/ImGui_Backend/**.mm"
-                }
+    }
+    
+    References("HazardUtility")
+    References("HazardRenderer")
+    References("Hazard")
+    References("GLM")
+    References("Spdlog")
+    References("ImGUI")
+    References("YAML")
+    References("EnTT")
+    References("Coral")
+    References("Box2D")
+    References("GLAD")
+    References("GLFW")
+    References("SpirvCross")
+    References("OpenGL")
+    References("Vulkan")
+    References("Metal")

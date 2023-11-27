@@ -84,10 +84,10 @@ void HazardEditorApplication::PreInit()
 	createInfo.RendererInfo = &rendererInfo;
 	createInfo.ScriptEngineInfo = &scriptEngine;
 	createInfo.EntityComponent = &entity;
-
+    
 	CreateApplicationStack(&createInfo);
-
-	EditorAssetManager::Init();
+    
+    EditorAssetManager::Init();
 
 	auto& engine = GetModule<Hazard::ScriptEngine>();
 	Ref<ScriptAssembly> assembly = engine.GetLoadedAssembly("HazardScripting");
@@ -95,8 +95,8 @@ void HazardEditorApplication::PreInit()
 }
 void HazardEditorApplication::Init()
 {
-	EditorAssetManager::LoadEditorAssets();
-
+    EditorAssetManager::LoadEditorAssets();
+    
 	Editor::EditorWorldManager::Init();
 	PushModule<GUIManager>();
 
