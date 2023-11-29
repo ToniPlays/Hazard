@@ -5,6 +5,7 @@
 #include "Core/Renderer.h"
 #include "MetalContext.h"
 #include "MTLUtils.h"
+#include "MathCore.h"
 
 namespace HazardRenderer::Metal
 {
@@ -16,22 +17,46 @@ namespace HazardRenderer::Metal
         HZR_ASSERT(info->Usage != ImageUsage::None, "Image usage cannot be none");
 
         m_DebugName = info->DebugName;
-        m_Width = info->Extent.Width;
-        m_Height = info->Extent.Height;
+        m_Extent = info->Extent;
         m_Format = info->Format;
-        m_MipLevels = 1; //TODO: Make this work
+        m_MipLevels = info->MaxMips <= 1 ? 1 : glm::min(Math::GetBaseLog(info->MaxMips), info->MaxMips);
         m_Usage = info->Usage;
         
         Invalidate();
-        
-        if(!info->Data) return;
-        
-        m_LocalBuffer = Buffer::Copy(info->Data.Data, info->Data.Size);
-        
-        Ref<MetalImage2D> instance = this;
-        Renderer::SubmitResourceCreate([instance]() mutable {
-            instance->UploadImageData_RT();
-        });
+    
+        if (!info->Data.Data) return;
+
+        ImageCopyRegion region = {};
+        region.Extent = m_Extent;
+        region.X = 0;
+        region.Y = 0;
+        region.Z = 0;
+        region.Data = info->Data.Data;
+        region.DataSize = info->Data.Size;
+
+        ImageMemoryInfo barrier = {};
+        barrier.Image = (Image*)this;
+        barrier.BaseLayer = 0;
+        barrier.LayerCount = 1;
+        barrier.BaseMip = 0;
+        barrier.MipCount = 1;
+        barrier.SrcLayout = IMAGE_LAYOUT_UNDEFINED;
+        barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
+
+        Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("ImageUpload", DeviceQueue::TransferBit, 1);
+        cmdBuffer->Begin();
+        cmdBuffer->ImageMemoryBarrier(barrier);
+        cmdBuffer->CopyToImage(this, region);
+
+        barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_DST;
+        barrier.DstLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+        cmdBuffer->ImageMemoryBarrier(barrier);
+
+        cmdBuffer->End();
+        cmdBuffer->Submit();
+
+        if (m_MipLevels > 1)
+            GenerateMips();
         
     }
     MetalImage2D::~MetalImage2D()
@@ -44,7 +69,7 @@ namespace HazardRenderer::Metal
     void MetalImage2D::Invalidate()
     {
         HZR_PROFILE_FUNCTION();
-        HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
+        HZR_ASSERT(m_Extent.Width > 0 && m_Extent.Height > 0, "Image dimensions failed");
         
         Ref<MetalImage2D> instance = this;
         Renderer::SubmitResourceCreate([instance]() mutable {
@@ -61,7 +86,8 @@ namespace HazardRenderer::Metal
     }
     void MetalImage2D::Release_RT()
     {
-        
+        if(m_MetalTexture)
+            m_MetalTexture->release();
     }
     void MetalImage2D::Resize_RT(uint32_t width, uint32_t height)
     {
@@ -100,16 +126,16 @@ namespace HazardRenderer::Metal
     void MetalImage2D::Invalidate_RT()
     {
         HZR_PROFILE_FUNCTION();
-        HZR_ASSERT(m_Width > 0 && m_Height > 0, "Image dimensions failed");
+        HZR_ASSERT(m_Extent.Width > 0 && m_Extent.Height > 0, "Image dimensions failed");
         
         auto device = MetalContext::GetMetalDevice();
         
         Release_RT();
         
         MTL::TextureDescriptor* descriptor = MTL::TextureDescriptor::alloc()->init();
-        descriptor->setWidth(m_Width);
-        descriptor->setHeight(m_Height);
-        descriptor->setDepth(1);
+        descriptor->setWidth(m_Extent.Width);
+        descriptor->setHeight(m_Extent.Height);
+        descriptor->setDepth(m_Extent.Depth);
         descriptor->setSampleCount(1);
         descriptor->setArrayLength(1);
         descriptor->setMipmapLevelCount(m_MipLevels);
@@ -117,7 +143,7 @@ namespace HazardRenderer::Metal
         descriptor->setPixelFormat(ImageFormatToMTLFormat(m_Format));
         
         if(m_Usage == ImageUsage::Texture)
-            descriptor->setUsage(MTL::TextureUsageShaderRead);
+            descriptor->setUsage(MTL::TextureUsageShaderRead + MTL::TextureUsageShaderWrite);
         else if(m_Usage == ImageUsage::Storage)
             descriptor->setUsage(MTL::TextureUsageShaderWrite + MTL::TextureUsageShaderRead);
         else
@@ -136,19 +162,77 @@ namespace HazardRenderer::Metal
         
         descriptor->release();
     }
-    void MetalImage2D::UploadImageData_RT()
+    void MetalImage2D::GenerateMips()
     {
-        MTL::Region region;
-        region.size.width = m_Width;
-        region.size.height = m_Height;
-        region.size.depth = 1;
-        region.origin.x = 0;
-        region.origin.y = 0;
-        region.origin.z = 0;
-        
-        m_MetalTexture->replaceRegion(region, 0, m_LocalBuffer.Data, 4 * m_Width);
-        
-        m_LocalBuffer.Release();
+        Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Image gen mip", DeviceQueue::TransferBit, 1);
+
+        cmdBuffer->Begin();
+        {
+            ImageMemoryInfo barrier = {};
+            barrier.Image = (Image*)this;
+            barrier.BaseLayer = 0;
+            barrier.LayerCount = 1;
+            barrier.BaseMip = 0;
+            barrier.MipCount = 1;
+            barrier.SrcLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+            barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+            cmdBuffer->ImageMemoryBarrier(barrier);
+        }
+        {
+            ImageMemoryInfo barrier = {};
+            barrier.Image = (Image*)this;
+            barrier.BaseLayer = 0;
+            barrier.LayerCount = 1;
+            barrier.BaseMip = 1;
+            barrier.MipCount = m_MipLevels - 1;
+            barrier.SrcLayout = IMAGE_LAYOUT_UNDEFINED;
+            barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
+
+            cmdBuffer->ImageMemoryBarrier(barrier);
+        }
+
+        for (uint32_t mip = 1; mip < m_MipLevels; mip++)
+        {
+            BlitImageInfo blit = {};
+            blit.Image = (Image*)this;
+            blit.SrcExtent = { m_Extent.Width >> (mip - 1), m_Extent.Height >> (mip - 1), 1 };
+            blit.SrcLayer = 0;
+            blit.SrcMip = mip - 1;
+            blit.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+            blit.DstExtent = { m_Extent.Width >> mip, m_Extent.Height >> mip, 1 };
+            blit.DstLayer = 0;
+            blit.DstMip = mip;
+            blit.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
+
+            cmdBuffer->BlitImage(blit);
+
+            ImageMemoryInfo barrier = {};
+            barrier.Image = (Image*)this;
+            barrier.BaseLayer = 0;
+            barrier.LayerCount = 1;
+            barrier.BaseMip = mip;
+            barrier.MipCount = 1;
+            barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_DST;
+            barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+            cmdBuffer->ImageMemoryBarrier(barrier);
+        }
+
+        ImageMemoryInfo barrier = {};
+        barrier.Image = (Image*)this;
+        barrier.BaseLayer = 0;
+        barrier.LayerCount = 1;
+        barrier.BaseMip = 0;
+        barrier.MipCount = m_MipLevels;
+        barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+        barrier.DstLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+
+        cmdBuffer->ImageMemoryBarrier(barrier);
+
+        cmdBuffer->End();
+        cmdBuffer->Submit();
     }
 }
 #endif

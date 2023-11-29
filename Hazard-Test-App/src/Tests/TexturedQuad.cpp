@@ -78,6 +78,7 @@ void TexturedQuadTest::Init()
 	imageInfo.Format = ImageFormat::RGBA;
 	imageInfo.Data = header.ImageData;
 	imageInfo.Usage = ImageUsage::Texture;
+    imageInfo.MaxMips = 32;
 
 	SamplerCreateInfo samplerInfo = {};
 	samplerInfo.DebugName = "ImageSampler";

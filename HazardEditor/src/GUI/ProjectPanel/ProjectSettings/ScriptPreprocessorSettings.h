@@ -45,11 +45,11 @@ namespace UI
 		table.RowHeight(18.0f);
 		table.RowContent([](Editor::ScriptPreprocessor define) mutable {
 			ImUI::Shift(4.0f, 4.0f);
-			ImGui::Text(define.Name.c_str());
+			ImGui::Text("%s", define.Name.c_str());
 			ImGui::TableNextColumn();
 
 			ImUI::Shift(4.0f, 4.0f);
-			ImGui::Text(define.Availability.c_str());
+			ImGui::Text("%s", define.Availability.c_str());
 			ImGui::TableNextColumn();
 		});
 

@@ -33,9 +33,10 @@ namespace HazardRenderer::Metal
         
         auto device = MetalContext::GetMetalDevice();
         MTL::SamplerDescriptor* descriptor = MTL::SamplerDescriptor::alloc()->init();
-        descriptor->setMaxAnisotropy(1.0);
+        descriptor->setMaxAnisotropy(10.0);
         descriptor->setMagFilter(FilterModeToMTLFilter(m_Info.MagFilter));
         descriptor->setMinFilter(FilterModeToMTLFilter(m_Info.MinFilter));
+        descriptor->setMipFilter(MTL::SamplerMipFilterLinear);
         descriptor->setRAddressMode(ImageWrapToSamplerAddressMode(m_Info.Wrapping));
         descriptor->setSAddressMode(ImageWrapToSamplerAddressMode(m_Info.Wrapping));
         descriptor->setTAddressMode(ImageWrapToSamplerAddressMode(m_Info.Wrapping));

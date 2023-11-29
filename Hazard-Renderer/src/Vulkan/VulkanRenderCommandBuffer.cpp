@@ -562,8 +562,7 @@ namespace HazardRenderer::Vulkan
 
 		if (flags & BUFFER_USAGE_DYNAMIC)
 		{
-			Renderer::Submit([instance, buffer, data, offset = region.Offset]() mutable {
-				uint32_t flags = buffer->GetUsageFlags();
+			Renderer::Submit([instance, buffer, data, offset = region.Offset, flags]() mutable {
 				VulkanAllocator allocator("UploadToBuffer");
 
 				uint8_t* dst = allocator.MapMemory<uint8_t>(buffer->GetVMAAllocation());

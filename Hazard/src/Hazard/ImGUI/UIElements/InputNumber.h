@@ -20,12 +20,11 @@ namespace Hazard::ImUI
 		{
 			using namespace Hazard::ImUI;
 
-			const Style& style = StyleManager::GetCurrent();
 			ImGui::PushID(m_Title.c_str());
 			ImGui::Columns(2, 0, false);
 			ImGui::SetColumnWidth(0, 100.0f);
 			ImUI::Shift(0.0f, 4.0f);
-			ImGui::Text(m_Title.c_str());
+			ImGui::Text("%s", m_Title.c_str());
 			ImGui::NextColumn();
 
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);

@@ -62,8 +62,7 @@ namespace HazardRenderer::Metal
             }
             
             NS::Error* functionError = nullptr;
-            std::string shaderTypeName = "main0";
-            NS::String* name = NS::String::string()->string(shaderTypeName.c_str(), NS::UTF8StringEncoding);
+            NS::String* name = NS::String::alloc()->init("main0", NS::UTF8StringEncoding);
             
             MTL::FunctionDescriptor* descriptor = MTL::FunctionDescriptor::functionDescriptor();
             descriptor->setName(name);
@@ -75,7 +74,7 @@ namespace HazardRenderer::Metal
                 RenderMessage message = {};
                 message.Severity = Severity::Error;
                 message.Description = functionError->description()->utf8String();
-                message.StackTrace = code; //functionError->->utf8String();
+                message.StackTrace = code;
                 
                 Window::SendDebugMessage(message);
                 continue;

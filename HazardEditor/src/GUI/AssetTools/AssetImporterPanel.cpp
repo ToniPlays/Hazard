@@ -54,6 +54,7 @@ namespace UI
 			case AssetType::Mesh:
 				DrawMeshImportSettings();
 				break;
+            default: break;
 		}
 
 		DrawBottomBar();
@@ -204,7 +205,7 @@ namespace UI
 			sourceImageHandle = m_SelectableAssets["RadianceMap"][radianceDropdown.GetSelected() - 1].Handle;
 		}
 
-		map->Update(samples, (1 << resolution + 6), sourceImageHandle);
+		map->Update(samples, (1 << (resolution + 6)), sourceImageHandle);
 		if (m_Import)
 		{
 			Application::Get().SubmitMainThread([&]() {
@@ -249,6 +250,7 @@ namespace UI
 				m_SelectableAssets["RadianceMap"] = AssetManager::GetAllAssetMetadata(AssetType::Image);
 				break;
 			}
+            default: break;
 		}
 	}
 

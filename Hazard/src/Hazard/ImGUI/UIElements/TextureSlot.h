@@ -23,14 +23,13 @@ namespace Hazard::ImUI
 			float width = ImGui::GetContentRegionAvail().x;
 			float size = 28.0f;
 
-			const Style& style = StyleManager::GetCurrent();
 			ImGui::PushID(m_Title.c_str());
 			ImGui::Columns(3, 0, false);
 			ImGui::SetColumnWidth(0, 125.0f);
 			ImGui::SetColumnWidth(1, width - 125.0f - size - 7.0f);
 			ImGui::SetColumnWidth(2, 28.0f);
 			ImUI::Shift(0.0f, 4.0f);
-			ImGui::Text(m_Title.c_str());
+			ImGui::Text("%s", m_Title.c_str());
 			ImGui::NextColumn();
 
 			ImGui::SetNextItemWidth(width);

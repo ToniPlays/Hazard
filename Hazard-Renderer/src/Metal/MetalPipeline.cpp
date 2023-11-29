@@ -156,7 +156,6 @@ namespace HazardRenderer::Metal
             {
                 auto depthAttachment = fb->GetDepthImage();
                 m_PipelineDescriptor->setDepthAttachmentPixelFormat(ImageFormatToMTLFormat(depthAttachment->GetFormat()));
-                
             }
         }
         
@@ -170,14 +169,16 @@ namespace HazardRenderer::Metal
         //Create depth stencil
         if(fb->GetDepthImage() && !fb->GetSpecification().SwapChainTarget)
         {
-            MTL::DepthStencilDescriptor* depth = MTL::DepthStencilDescriptor::alloc()->init();
-            depth->setDepthWriteEnabled(m_Specs.Flags);
-            SetDebugLabel(depth, m_Specs.DebugName + " DepthState");
-            depth->setDepthCompareFunction(DepthOpToMTLDepthOp(m_Specs.DepthOperator));
-            
-            m_DepthState = device->GetMetalDevice()->newDepthStencilState(depth);
-            
-            depth->release();
+            if(m_Specs.Flags & PIPELINE_DEPTH_TEST)
+            {
+                MTL::DepthStencilDescriptor* depth = MTL::DepthStencilDescriptor::alloc()->init();
+                depth->setDepthWriteEnabled(m_Specs.Flags & PIPELINE_DEPTH_WRITE);
+                SetDebugLabel(depth, m_Specs.DebugName + " DepthState");
+                depth->setDepthCompareFunction(DepthOpToMTLDepthOp(m_Specs.DepthOperator));
+                
+                m_DepthState = device->GetMetalDevice()->newDepthStencilState(depth);
+                depth->release();
+            }
         }
         vertexDescriptor->release();
     }
@@ -187,15 +188,9 @@ namespace HazardRenderer::Metal
         auto device = MetalContext::GetMetalDevice();
         
         if(!m_ComputeDescriptor)
-            
             m_ComputeDescriptor = MTL::ComputePipelineDescriptor::alloc()->init();
         
         SetDebugLabel(m_ComputeDescriptor, m_Specs.DebugName);
-        
-        //if(m_Specs.Usage == PipelineUsage::ComputeBit)
-        //    m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Compute));
-        //else
-        //    m_ComputeDescriptor->setComputeFunction(m_Shader->GetFunction(ShaderStage::Raygen));
         
         NS::Error* error;
         

@@ -27,8 +27,6 @@ namespace UI
 		RenderNavbar();
 		ImGui::SameLine();
 
-		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
 
@@ -226,11 +224,11 @@ namespace UI
 	{
 		ImUI::Shift(8.0, 8.0f);
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
-		ImGui::Text(title);
+		ImGui::Text("%s", title);
 		ImGui::PopFont();
 
 		ImUI::Shift(8.0, 8.0f);
-		ImGui::Text(description);
+		ImGui::Text("%s", description);
 
 		ImUI::Shift(8.0, 8.0f);
 	}

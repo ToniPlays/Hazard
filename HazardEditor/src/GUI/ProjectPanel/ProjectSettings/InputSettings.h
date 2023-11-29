@@ -77,7 +77,6 @@ namespace UI
 	static void DrawInputBindingsTable(std::vector<Hazard::InputBinding>& bindings, ProjectSettingsPanel* settings)
 	{
 		using namespace Hazard;
-		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 		for (uint32_t i = 0; i < bindings.size(); i++)
 		{
@@ -145,7 +144,6 @@ namespace UI
 	static void DrawInputAxisTable(std::vector<Hazard::InputBinding>& bindings, ProjectSettingsPanel* settings)
 	{
 		using namespace Hazard;
-		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 		for (uint32_t i = 0; i < bindings.size(); i++)
 		{

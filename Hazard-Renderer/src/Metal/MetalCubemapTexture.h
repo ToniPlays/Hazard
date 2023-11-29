@@ -21,18 +21,11 @@ namespace HazardRenderer::Metal
         uint32_t GetHeight() const override { return m_Height; }
         glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
         uint32_t GetMipLevels() const override { return m_MipLevels; }
-        void RegenerateMips() override {};
+        void RegenerateMips() override;
         
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }
-        MTL::SamplerState* GetMetalSamplerState() const { return m_MetalSampler; }
-        
-        void SetImageData(const Buffer& data);
-        void UploadImageData_RT();
-        
-        
-    private:
-        void CreateSampler();
+        const std::string& GetDebugName() const { return m_DebugName; }
         
     private:
         ImageFormat m_Format = ImageFormat::None;
@@ -44,11 +37,7 @@ namespace HazardRenderer::Metal
         Buffer m_LocalBuffer;
         
         std::string m_DebugName = "";
-        
-        Ref<Image2D> m_SourceImage = nullptr;
-        
         MTL::Texture* m_MetalTexture = nullptr;
-        MTL::SamplerState* m_MetalSampler = nullptr;
     };
 }
 #endif

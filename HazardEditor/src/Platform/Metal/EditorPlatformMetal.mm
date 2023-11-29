@@ -35,7 +35,7 @@ EditorPlatformMetal::EditorPlatformMetal(HazardRenderer::Window& window)
     attachment->setStoreAction(MTL::StoreActionStore);
     
 #ifdef HZR_PLATFORM_MACOS
-    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), false);
+    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window.GetNativeWindow(), true);
 #endif
     
     ImGui_ImplMetal_Init((__bridge id<MTLDevice>)(device->GetMetalDevice()));

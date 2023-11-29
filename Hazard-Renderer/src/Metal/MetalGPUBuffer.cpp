@@ -16,34 +16,43 @@ namespace HazardRenderer::Metal
         m_DebugName = info->Name;
         m_Size = info->Size;
         
-        if(info->Data)
+        Ref<MetalGPUBuffer> instance = this;
+        Renderer::SubmitResourceCreate([instance]() mutable {
+            auto device = MetalContext::GetMetalDevice();
+            instance->m_Buffer = device->GetMetalDevice()->newBuffer(instance->m_Size, MTL::ResourceOptionCPUCacheModeDefault);
+                        
+            SetDebugLabel(instance->m_Buffer, instance->m_DebugName);
+        });
+        
+        if (info->Data && !(info->UsageFlags & BUFFER_USAGE_DYNAMIC))
         {
-            m_LocalBuffer = Buffer::Copy(info->Data, info->Size);
-            Ref<MetalGPUBuffer> instance = this;
-            Renderer::SubmitResourceCreate([instance]() mutable {
-                
-                auto device = MetalContext::GetMetalDevice();
-                instance->m_Buffer = device->GetMetalDevice()->newBuffer(instance->m_LocalBuffer.Data, instance->m_Size, MTL::ResourceOptionCPUCacheModeDefault);
-                
-                SetDebugLabel(instance->m_Buffer, instance->m_DebugName);
-            });
+            BufferCopyRegion region = {};
+            region.Data = info->Data;
+            region.Size = info->Size;
+            region.Offset = 0;
+
+            Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Upload buffer", DeviceQueue::TransferBit, 1);
+            cmdBuffer->Begin();
+            cmdBuffer->CopyToBuffer(this, region);
+            cmdBuffer->End();
+            cmdBuffer->Submit();
         }
-        else
+        else if(info->Data)
         {
-            Ref<MetalGPUBuffer> instance = this;
-            Renderer::SubmitResourceCreate([instance]() mutable {
-                
-                auto device = MetalContext::GetMetalDevice();
-                instance->m_Buffer = device->GetMetalDevice()->newBuffer(instance->m_Size, MTL::ResourceOptionCPUCacheModeDefault);
-                
-                SetDebugLabel(instance->m_Buffer, instance->m_DebugName);
-            });
+            BufferCopyRegion region = {};
+            region.Data = info->Data;
+            region.Size = info->Size;
+            region.Offset = 0;
+
+            SetData(region);
         }
     }
     MetalGPUBuffer::~MetalGPUBuffer()
     {
         m_LocalBuffer.Release();
-        m_Buffer->release();
+        Renderer::SubmitResourceFree([buffer = m_Buffer]() mutable {
+            buffer->release();
+        });
     }
     void MetalGPUBuffer::SetData(const BufferCopyRegion& copyRegion)
     {

@@ -35,7 +35,7 @@ namespace HazardRenderer::Metal
         
         void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding) override;
         void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set = 0) override;
-        void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) override {}
+        void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) override;
         
         void SetPipeline(Ref<Pipeline> pipeline) override;
         void SetLineWidth(float width) override;
@@ -43,14 +43,14 @@ namespace HazardRenderer::Metal
         void Draw(uint64_t count, Ref<GPUBuffer> indexBuffer = nullptr) override;
         void DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;
         void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<GPUBuffer> indexBuffer = nullptr) override;
-        void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset = 0, uint32_t maxDraws = 0, Ref<GPUBuffer> indexBuffer = nullptr) override {};
+        void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset = 0, uint32_t maxDraws = 0, Ref<GPUBuffer> indexBuffer = nullptr) override;
         
         
-        virtual void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region) override {};
-        virtual void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region) override {};
-        virtual void BlitImage(const BlitImageInfo& blitInfo) override {};
+        virtual void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region) override;
+        virtual void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region) override;
+        virtual void BlitImage(const BlitImageInfo& blitInfo) override ;
 
-        virtual void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory) override {};
+        virtual void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory) override;
         
         
         void DispatchCompute(GroupSize GlobalGroupSize) override;
@@ -69,6 +69,7 @@ namespace HazardRenderer::Metal
         bool m_OwnedBySwapchain = false;
         bool m_WaitOnSubmit = false;
         Ref<MetalPipeline> m_CurrentPipeline = nullptr;
+        Ref<MetalPipeline> m_BlitComputePipeline = nullptr;
         State m_State = State::Waiting;
             
         MTL::CommandBuffer* m_CommandBuffer = nullptr;
@@ -76,6 +77,8 @@ namespace HazardRenderer::Metal
         MTL::RenderCommandEncoder* m_RenderEncoder = nullptr;
         MTL::ComputeCommandEncoder* m_ComputeEncoder = nullptr;
         MTL::AccelerationStructureCommandEncoder* m_AccelerationEcoder;
+        
+        
     };
 }
 #endif

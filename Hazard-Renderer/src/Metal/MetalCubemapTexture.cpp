@@ -52,55 +52,87 @@ namespace HazardRenderer::Metal
             instance->m_MetalTexture = device->GetMetalDevice()->newTexture(descriptor);
             SetDebugLabel(instance->m_MetalTexture, instance->m_DebugName);
             
-            instance->CreateSampler();
-            
             descriptor->release();
         });
         
-        if(createInfo->Data)
-            SetImageData(createInfo->Data);
+        if(m_MipLevels > 1 && false)
+            RegenerateMips();
     }
-    void MetalCubemapTexture::SetImageData(const Buffer& data)
+
+    void MetalCubemapTexture::RegenerateMips()
     {
-        m_LocalBuffer = Buffer::Copy(data);
-        Ref<MetalCubemapTexture> instance = this;
-        Renderer::SubmitResourceCreate([instance]() mutable {
-            instance->UploadImageData_RT();
-        });
-    }
-    void MetalCubemapTexture::UploadImageData_RT()
-    {
-        MTL::Region region = {};
-        region.origin = { 0, 0, 0 };
-        region.size = { m_Width, m_Height, 1 };
-        
-        for(uint32_t i = 0; i < 6; i++)
-            m_MetalTexture->replaceRegion(region, 0, i, m_LocalBuffer.Data, 4 * m_Width, 0);
-        
-        m_LocalBuffer.Release();
-    }
-    
-    void MetalCubemapTexture::CreateSampler()
-    {
-        auto device = MetalContext::GetMetalDevice();
-        
-        MTL::SamplerDescriptor* descriptor = MTL::SamplerDescriptor::alloc()->init();
-        SetDebugLabel(descriptor, m_DebugName);
-        
-        descriptor->setMaxAnisotropy(1.0f);
-        descriptor->setMinFilter(MTL::SamplerMinMagFilterLinear);
-        descriptor->setMagFilter(MTL::SamplerMinMagFilterLinear);
-        descriptor->setMipFilter(MTL::SamplerMipFilterLinear);
-        descriptor->setRAddressMode(MTL::SamplerAddressModeClampToEdge);
-        descriptor->setSAddressMode(MTL::SamplerAddressModeClampToEdge);
-        descriptor->setTAddressMode(MTL::SamplerAddressModeClampToEdge);
-        descriptor->setBorderColor(MTL::SamplerBorderColorOpaqueWhite);
-        descriptor->setLodMinClamp(0.0f);
-        descriptor->setLodMaxClamp(100.0f);
-        
-        m_MetalSampler = device->GetMetalDevice()->newSamplerState(descriptor);
-        
-        descriptor->release();
+        Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Image gen mip", DeviceQueue::TransferBit, 1);
+
+        cmdBuffer->Begin();
+        {
+            ImageMemoryInfo barrier = {};
+            barrier.Image = (Image*)this;
+            barrier.BaseLayer = 0;
+            barrier.LayerCount = 6;
+            barrier.BaseMip = 0;
+            barrier.MipCount = 1;
+            barrier.SrcLayout = IMAGE_LAYOUT_GENERAL;
+            barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+            cmdBuffer->ImageMemoryBarrier(barrier);
+        }
+        {
+            ImageMemoryInfo barrier = {};
+            barrier.Image = (Image*)this;
+            barrier.BaseLayer = 0;
+            barrier.LayerCount = 6;
+            barrier.BaseMip = 1;
+            barrier.MipCount = m_MipLevels - 1;
+            barrier.SrcLayout = IMAGE_LAYOUT_UNDEFINED;
+            barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
+
+            cmdBuffer->ImageMemoryBarrier(barrier);
+        }
+
+        for (uint32_t face = 0; face < 6; face++)
+        {
+            for (uint32_t mip = 1; mip < m_MipLevels; mip++)
+            {
+                BlitImageInfo blit = {};
+                blit.Image = (Image*)this;
+                blit.SrcExtent = { m_Width >> (mip - 1), m_Height >> (mip - 1), 1 };
+                blit.SrcLayer = face;
+                blit.SrcMip = mip - 1;
+                blit.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+                blit.DstExtent = { m_Width >> mip, m_Height >> mip, 1 };
+                blit.DstLayer = face;
+                blit.DstMip = mip;
+                blit.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
+
+                cmdBuffer->BlitImage(blit);
+
+                ImageMemoryInfo barrier = {};
+                barrier.Image = (Image*)this;
+                barrier.BaseLayer = face;
+                barrier.LayerCount = 1;
+                barrier.BaseMip = mip;
+                barrier.MipCount = 1;
+                barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_DST;
+                barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+
+                cmdBuffer->ImageMemoryBarrier(barrier);
+            }
+        }
+
+        ImageMemoryInfo barrier = {};
+        barrier.Image = (Image*)this;
+        barrier.BaseLayer = 0;
+        barrier.LayerCount = 6;
+        barrier.BaseMip = 0;
+        barrier.MipCount = m_MipLevels;
+        barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+        barrier.DstLayout = IMAGE_LAYOUT_GENERAL;
+
+        cmdBuffer->ImageMemoryBarrier(barrier);
+
+        cmdBuffer->End();
+        cmdBuffer->Submit();
     }
 }
 #endif

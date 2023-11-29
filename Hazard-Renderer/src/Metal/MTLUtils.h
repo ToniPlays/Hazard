@@ -24,6 +24,8 @@ namespace HazardRenderer::Metal
             return MTL::PrimitiveTypeLine;
         if(flags & PIPELINE_PRIMITIVE_TOPOLOGY_POINT_LIST)
             return MTL::PrimitiveTypePoint;
+        
+        return MTL::PrimitiveTypeTriangle;
     }
     static MTL::PrimitiveTopologyClass DrawTypeToMTLTopology(uint32_t flags)
     {
@@ -75,6 +77,7 @@ namespace HazardRenderer::Metal
                 return MTL::PixelFormatDepth32Float;
             }
             case ImageFormat::RED32I:           return MTL::PixelFormatR32Uint;
+            default: break;
         }
         HZR_ASSERT(false, "");
         return MTL::PixelFormatInvalid;
@@ -93,15 +96,15 @@ namespace HazardRenderer::Metal
     {
         switch (op)
         {
-        case DepthOp::None:                 return MTL::CompareFunctionNever;
-        case DepthOp::Never:                return MTL::CompareFunctionNever;
-        case DepthOp::NotEqual:             return MTL::CompareFunctionNotEqual;
-        case DepthOp::Less:                 return MTL::CompareFunctionLess;
-        case DepthOp::LessOrEqual:          return MTL::CompareFunctionLessEqual;
-        case DepthOp::Equal:          return MTL::CompareFunctionEqual;
-        case DepthOp::Greater:              return MTL::CompareFunctionGreater;
-        case DepthOp::GreaterOrEqual:       return MTL::CompareFunctionGreaterEqual;
-        case DepthOp::Always:               return MTL::CompareFunctionAlways;
+        case DepthOp::None:             return MTL::CompareFunctionNever;
+        case DepthOp::Never:            return MTL::CompareFunctionNever;
+        case DepthOp::NotEqual:         return MTL::CompareFunctionNotEqual;
+        case DepthOp::Less:             return MTL::CompareFunctionLess;
+        case DepthOp::LessOrEqual:      return MTL::CompareFunctionLessEqual;
+        case DepthOp::Equal:            return MTL::CompareFunctionEqual;
+        case DepthOp::Greater:          return MTL::CompareFunctionGreater;
+        case DepthOp::GreaterOrEqual:   return MTL::CompareFunctionGreaterEqual;
+        case DepthOp::Always:           return MTL::CompareFunctionAlways;
         }
         return MTL::CompareFunctionNever;
     }

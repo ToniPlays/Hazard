@@ -91,19 +91,25 @@ namespace HazardRenderer::Metal
                     encoder->setFragmentSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_SAMPLER_CUBE:
-                    
+                    encoder->setFragmentTexture(b.Value.As<MetalCubemapTexture>()->GetMetalTexture(), element.Binding - offset);
+                    encoder->setFragmentSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_STORAGE_IMAGE:
                     
                     break;
                 case DESCRIPTOR_TYPE_UNIFORM_BUFFER:
-                    encoder->setVertexBuffer(b.Value.As<MetalGPUBuffer>()->GetMetalBuffer(), 0, element.Binding);
+                {
+                    MTL::Buffer* buffer = b.Value.As<MetalGPUBuffer>()->GetMetalBuffer();
+                    if(element.Flags & SHADER_STAGE_VERTEX_BIT)
+                        encoder->setVertexBuffer(buffer, 0, element.Binding);
+                    if(element.Flags & SHADER_STAGE_FRAGMENT_BIT)
+                        encoder->setFragmentBuffer(buffer, 0, element.Binding);
                     break;
+                }
                 case DESCRIPTOR_TYPE_STORAGE_BUFFER:
                     
                     break;
                 case DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE:
-                    
                     break;
             }
         }
@@ -120,15 +126,21 @@ namespace HazardRenderer::Metal
             switch(element.Type)
             {
                 case DESCRIPTOR_TYPE_SAMPLER_2D:
-                    encoder->setTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding - offset);
+                    encoder->setTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding);
                     encoder->setSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_SAMPLER_CUBE:
-                    
+                    encoder->setTexture(b.Value.As<MetalCubemapTexture>()->GetMetalTexture(), element.Binding);
+                    encoder->setSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_STORAGE_IMAGE:
-                    encoder->setTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding - offset);
+                {
+                    const TextureType type = b.Value.As<Image2D>()->GetType();
+                    if(type == TextureType::Image2D)
+                        encoder->setTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding);
+                    else encoder->setTexture(b.Value.As<MetalCubemapTexture>()->GetMetalTexture(), element.Binding);
                     break;
+                }
                 case DESCRIPTOR_TYPE_UNIFORM_BUFFER:
                     encoder->setBuffer(b.Value.As<MetalGPUBuffer>()->GetMetalBuffer(), 0, element.Binding);
                     break;

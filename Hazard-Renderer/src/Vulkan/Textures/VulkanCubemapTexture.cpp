@@ -165,7 +165,6 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanCubemapTexture::GenerateMipmaps(VkImageLayout imageLayout)
 	{
-		std::cout << m_DebugName << std::endl;
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Image gen mip", DeviceQueue::TransferBit, 1);
 
 		cmdBuffer->Begin();
