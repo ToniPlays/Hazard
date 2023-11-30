@@ -1,3 +1,4 @@
+#pragma once
 
 #include "Hazard.h"
 #include "Hazard/Scripting/Attributes/ClassAttributes.h"

@@ -18,6 +18,6 @@ namespace Hazard
 	static void TagComponent_SetName_Native(uint64_t id, Coral::NativeString tag)
 	{
 		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
-		//entity.GetTag().Tag = tag.Data()
+        entity.GetTag().Tag = tag.Data();
 	}
 }

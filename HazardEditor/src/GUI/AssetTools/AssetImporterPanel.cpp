@@ -126,8 +126,6 @@ namespace UI
 	}
 	void AssetImporterPanel::DrawMeshImportSettings()
 	{
-		MeshImportSettings info = m_ImportDataBuffer.Read<MeshImportSettings>();
-
 		ImUI::ShiftY(4);
 
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));
@@ -193,7 +191,7 @@ namespace UI
 		displayNames.push_back("None");
 
 		for (auto& metadata : m_SelectableAssets["RadianceMap"])
-			displayNames.push_back(metadata.Key.c_str());
+			displayNames.push_back(File::GetNameNoExt(metadata.Key.c_str()));
 
 		ImUI::Dropdown radianceDropdown("Radiance", 200);
 		radianceDropdown.SetOptions(displayNames);
@@ -201,9 +199,7 @@ namespace UI
 		radianceDropdown.Render();
 
 		if (radianceDropdown.DidChange() && radianceDropdown.GetSelected() != 0)
-		{
 			sourceImageHandle = m_SelectableAssets["RadianceMap"][radianceDropdown.GetSelected() - 1].Handle;
-		}
 
 		map->Update(samples, (1 << (resolution + 6)), sourceImageHandle);
 		if (m_Import)

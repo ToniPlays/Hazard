@@ -137,7 +137,7 @@ namespace UI
 	}
 	void ScriptCreatePanel::CreateFiles()
 	{
-		AssetHandle handle = AssetManager::CreateNewAsset(AssetType::Script, m_CreateInfo.Path.string() + ".hpack");
+		AssetHandle handle = AssetManager::CreateNewAsset(AssetType::Script, m_CreateInfo.Path.string() + ".hpack", "");
 
 		if (handle != INVALID_ASSET_HANDLE)
 		{

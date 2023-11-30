@@ -10,7 +10,7 @@ namespace Hazard::ImUI
 		const Style& style = StyleManager::GetCurrent();
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, m_Width);
-		ImGui::Text(m_Title.c_str());
+		ImGui::Text("%s", m_Title.c_str());
 		ImGui::NextColumn();
 
 		ScopedStyleVar padding(ImGuiStyleVar_FramePadding, ImVec2(4, 6));

@@ -116,7 +116,7 @@ namespace Hazard
 			Ref<AssetPointer> asset = AssetPointer::Create(resources.WhiteTexture, AssetType::Image);
 
 			WhiteTextureHandle = AssetManager::CreateMemoryOnly(AssetType::Image, asset);
-			BRDFLutHandle = AssetManager::GetHandleFromKey("BRDF_LUT.tga");
+			BRDFLutHandle = AssetManager::GetHandleFromKey("res/Textures/BRDF_LUT.tga");
 			BRDFLut = AssetManager::GetAsset<Texture2DAsset>(BRDFLutHandle);
 
 			Ref<Material> defaultMaterial = Ref<Material>::Create(ShaderLibrary::GetPipelineAssetHandle("PBR_Static"), DescriptorSetLayout());

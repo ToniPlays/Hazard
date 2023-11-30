@@ -51,6 +51,11 @@ std::filesystem::path File::FindAvailableName(const std::filesystem::path& direc
 	return path;
 }
 
+std::filesystem::path File::Relative(const std::filesystem::path& base, const std::filesystem::path& path)
+{
+    return std::filesystem::relative(path, base);
+}
+
 bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, uint64_t size)
 {
 	if (size == 0) return false;

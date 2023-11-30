@@ -49,8 +49,10 @@ namespace UI
 		AddMenuItem("Tools/Audio", nullptr);
 		AddMenuItem("Tools/Rendering", nullptr);
 
-		AddMenuItem("Build/Settings", nullptr);
-		AddMenuItem("Build/Output", nullptr);
+        AddMenuItem("Build/Export package", [&]() {
+            Application::GetModule<GUIManager>().SetPanelOpen<ExportPanel>(true);
+        });
+		AddMenuItem("Build/Show build folder", nullptr);
 
 		AddMenuItem("Window/General/Hierarchy", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Hierarchy>(true);

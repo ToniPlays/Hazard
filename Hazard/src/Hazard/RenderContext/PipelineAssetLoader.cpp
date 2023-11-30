@@ -37,7 +37,7 @@ namespace Hazard
 		return nullptr;
 	}
 
-	Ref<JobGraph> PipelineAssetLoader::Create(const std::filesystem::path& path)
+	Ref<JobGraph> PipelineAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
 	{
 		HZR_CORE_ASSERT(false, "");
 		return Ref<JobGraph>();

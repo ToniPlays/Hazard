@@ -69,7 +69,7 @@ namespace Hazard
 #endif
 	}
 
-	Ref<JobGraph> ShaderAssetLoader::Create(const std::filesystem::path& path)
+	Ref<JobGraph> ShaderAssetLoader::Create(const std::filesystem::path& base, const std::filesystem::path& internalPath)
 	{
 		return nullptr;
 	}
@@ -183,7 +183,7 @@ namespace Hazard
 			asset->ShaderCode[result.Api][result.Stage] = std::move(result.Source);
 
 		AssetPackElement element = {};
-		element.AddressableName = File::GetName(path);
+		element.AddressableName = path.string();
 		element.AssetPackHandle = 0;
 		element.Handle = UID();
 		element.Type = AssetType::Shader;

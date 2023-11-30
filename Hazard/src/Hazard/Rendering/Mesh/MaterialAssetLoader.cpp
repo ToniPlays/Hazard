@@ -16,7 +16,7 @@ namespace Hazard
         return nullptr;
     }
 
-    Ref<JobGraph> MaterialAssetLoader::Create(const std::filesystem::path& path)
+    Ref<JobGraph> MaterialAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
     {
         return nullptr;
     }

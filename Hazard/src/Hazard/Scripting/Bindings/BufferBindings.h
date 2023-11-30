@@ -51,7 +51,7 @@ namespace Hazard
 		Renderer::SubmitResourceFree([dataPtr = data]() mutable {
 			HZR_CORE_TRACE("Deleted C# data");
 			if (!dataPtr) return;
-			hdelete dataPtr;
+			hdelete (uint8_t*)dataPtr;
 			});
 		
 		AssetManager::CreateMemoryOnly(AssetType::Buffer, asset);

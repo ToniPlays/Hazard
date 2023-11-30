@@ -25,7 +25,8 @@ namespace UI
 		//Draw hierarchy panel
 		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-
+        
+        auto& metadata = AssetManager::GetMetadata(world->GetHandle());
 		m_SearchField.Render();
 
 		ImUI::Table_OLD("Hierarchy", { "Name", "Type", "Modifiers" }, ImGui::GetContentRegionAvail(), [&]() {

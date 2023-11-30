@@ -37,7 +37,7 @@ namespace Hazard
 		return graph;
 	}
 
-	Ref<JobGraph> ImageAssetLoader::Create(const std::filesystem::path& path)
+	Ref<JobGraph> ImageAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
 	{
 		HZR_ASSERT(false, "");
 		return Ref<JobGraph>();
@@ -126,7 +126,7 @@ namespace Hazard
 		buffer.Write(header.ImageData.Data, header.ImageData.Size, sizeof(TextureFileHeader));
 
 		AssetPackElement element = {};
-		element.AddressableName = File::GetName(path);
+		element.AddressableName = path.string();
 		element.Type = AssetType::Image;
 		element.AssetPackHandle = 0;
 		element.Handle = UID();

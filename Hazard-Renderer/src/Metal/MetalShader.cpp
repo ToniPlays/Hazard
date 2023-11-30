@@ -38,7 +38,7 @@ namespace HazardRenderer::Metal
             std::string msl((char*)code.Data, code.Size);
             
             NS::Error* libError = nullptr;
-            NS::String* source = NS::String::alloc()->string(msl.c_str(), NS::UTF8StringEncoding);
+            NS::String* source = NS::String::alloc()->init(msl.c_str(), NS::UTF8StringEncoding);
             
             MTL::CompileOptions* options = MTL::CompileOptions::alloc()->init();
             options->setFastMathEnabled(true);

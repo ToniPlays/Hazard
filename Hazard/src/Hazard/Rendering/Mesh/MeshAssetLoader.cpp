@@ -97,7 +97,7 @@ namespace Hazard
 #endif
 	}
 
-	Ref<JobGraph> MeshAssetLoader::Create(const std::filesystem::path& path)
+	Ref<JobGraph> MeshAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
 	{
 		HZR_CORE_ASSERT(false, "");
 		return Ref<JobGraph>();
@@ -124,7 +124,7 @@ namespace Hazard
 	void MeshAssetLoader::FinalizeMesh(JobInfo& info, const std::filesystem::path& path)
 	{
 		AssetPackElement element = {};
-		element.AddressableName = File::GetName(path);
+        element.AddressableName = path.string();
 		element.AssetPackHandle = 0;
 		element.Handle = UID();
 		element.Type = AssetType::Mesh;

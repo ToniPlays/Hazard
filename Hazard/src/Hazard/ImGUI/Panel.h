@@ -15,8 +15,11 @@ namespace Hazard::ImUI
 
 		virtual ~Panel() = default;
 
-		void Open() { m_Open = true; };
-		void Close() { m_Open = false; };
+        void Open() { m_Open = true; OnOpen(); };
+        void Close() { m_Open = false; OnClose(); };
+        
+        virtual void OnOpen() {}
+        virtual void OnClose() {}
 
 		//<summary>
 		// This renders the panel

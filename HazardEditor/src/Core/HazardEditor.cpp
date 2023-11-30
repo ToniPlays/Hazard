@@ -44,8 +44,7 @@ void HazardEditorApplication::PreInit()
 		HZR_INFO("Working directory: {0} ", std::filesystem::current_path().string());
 	}
     
-    auto projectPath = CommandLineArgs::Get<std::string>("hprj");
-	HazardProject project = PushModule<ProjectManager>().LoadProjectFromFile(projectPath);
+    std::filesystem::path projectPath = CommandLineArgs::Get<std::string>("hprj");
 
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
@@ -70,8 +69,8 @@ void HazardEditorApplication::PreInit()
 	EntityComponentCreateInfo entity = {};
 	entity.StartupFile = "world.hpack";
 
-	std::string dllFile = project.GetInfo().ProjectName + ".dll";
-	std::filesystem::path appAssemblyPath = project.GetInfo().ProjectPath / "Library" / "Scripts" / "Binaries" / dllFile;
+	std::string dllFile = File::GetName(projectPath) + ".dll";
+	std::filesystem::path appAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / dllFile;
 
 	ScriptEngineCreateInfo scriptEngine = {};
 	scriptEngine.CoreAssemblyPath = "../HazardScripting/bin/Debug/net7.0/HazardScripting.dll";
@@ -87,6 +86,7 @@ void HazardEditorApplication::PreInit()
     
 	CreateApplicationStack(&createInfo);
     
+    HazardProject project = PushModule<ProjectManager>().LoadProjectFromFile(projectPath);
     EditorAssetManager::Init();
 
 	auto& engine = GetModule<Hazard::ScriptEngine>();

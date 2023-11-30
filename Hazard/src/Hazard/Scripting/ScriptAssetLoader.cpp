@@ -43,7 +43,7 @@ namespace Hazard
 		element.Handle = asset->GetHandle();
 		element.Type = AssetType::Script;
 		element.Data = buffer;
-		element.AddressableName = File::GetName(path);
+        element.AddressableName = path.string();
 
 		AssetPack pack = {};
 		pack.Handle = packHandle;
@@ -75,7 +75,7 @@ namespace Hazard
 	{
 		return nullptr;
 	}
-	Ref<JobGraph> ScriptAssetLoader::Create(const std::filesystem::path& path)
+	Ref<JobGraph> ScriptAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
 	{
 		Ref<HScript> script = Ref<HScript>::Create();
 		script->m_Handle = AssetHandle();

@@ -65,6 +65,7 @@ void GUIManager::Init()
     m_PanelManager.AddRenderable<UI::MaterialEditor>();
     m_PanelManager.AddRenderable<UI::AssetImporterPanel>();
 	m_PanelManager.AddRenderable<UI::ProgressOverlay>();
+    m_PanelManager.AddRenderable<UI::ExportPanel>();
 }
 
 void GUIManager::Update()

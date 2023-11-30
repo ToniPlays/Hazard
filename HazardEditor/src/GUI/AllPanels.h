@@ -15,6 +15,7 @@
 #include "ProjectPanel/AssetPanel.h"
 #include "ProjectPanel/ProjectTodoPanel.h"
 #include "ProjectPanel/ProjectSettingsPanel.h"
+#include "ProjectPanel/ExportPanel.h"
 
 #include "Properties/Properties.h"
 #include "Properties/Hierarchy.h"

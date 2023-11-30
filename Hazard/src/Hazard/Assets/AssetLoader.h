@@ -15,7 +15,7 @@ namespace Hazard
 		Ref<JobGraph> Load(AssetMetadata& metadata);
 		Ref<JobGraph> Save(Ref<Asset>& asset);
 		Ref<JobGraph> DataFromSource(const std::filesystem::path& path);
-		Ref<JobGraph> Create(AssetType type, const std::filesystem::path& path);
+		Ref<JobGraph> Create(AssetType type, const std::filesystem::path& base, const std::filesystem::path& internalPath);
 
 		Buffer AssetToBinary(Ref<Asset> asset);
 

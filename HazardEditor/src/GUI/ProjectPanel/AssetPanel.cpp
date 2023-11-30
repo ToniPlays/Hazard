@@ -278,7 +278,8 @@ namespace UI
 				panel->Open();
 			});
 			ImUI::MenuItem("World", [&]() {
-				AssetManager::CreateNewAsset(AssetType::World, File::FindAvailableName(m_CurrentPath, "world", "hpack"));
+                auto path = File::FindAvailableName(m_CurrentPath, "world", "hpack");
+				AssetManager::CreateNewAsset(AssetType::World, path, File::Relative(m_RootPath, path));
 				changed = true;
 			});
 			ImUI::MenuItem("Material", nullptr);
@@ -298,8 +299,9 @@ namespace UI
 				ImUI::MenuItem("Material", nullptr);
 				ImUI::MenuItem("Shader", nullptr);
 				ImUI::MenuItem("Environment map", [&]() {
-					AssetManager::CreateNewAsset(AssetType::EnvironmentMap, File::FindAvailableName(m_CurrentPath, "EnvironmentMap", "hpack"));
-					changed = true;
+                    auto path = File::FindAvailableName(m_CurrentPath, "Environment", "hpack");
+                    AssetManager::CreateNewAsset(AssetType::EnvironmentMap, path, File::Relative(m_RootPath, path));
+                    changed = true;
 				});
 			});
 			ImUI::Submenu("Physics", nullptr);
@@ -498,7 +500,6 @@ namespace UI
 			data.Path = folder;
 			data.SubFolders = GenerateSubFolderData(folder);
 		}
-
 		return result;
 	}
 	std::vector<FolderStructureData> AssetPanel::GenerateSubFolderData(const std::filesystem::path& folder)
@@ -507,9 +508,6 @@ namespace UI
 
 		for (auto& subfolder : Directory::GetAllInDirectory(folder))
 		{
-			AssetHandle handle = AssetManager::GetHandleFromKey(subfolder.string());
-			if (handle == INVALID_ASSET_HANDLE) continue;
-
 			if (!File::IsDirectory(subfolder)) continue;
 
 			auto& data = result.emplace_back();

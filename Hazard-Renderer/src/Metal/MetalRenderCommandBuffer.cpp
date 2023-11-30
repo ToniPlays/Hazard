@@ -348,9 +348,9 @@ namespace HazardRenderer::Metal
                         kernel void main0(constant BlitInfo& info [[buffer(0)]], texturecube<float> src [[texture(0)]], texturecube<float, access::write> dst [[texture(1)]], uint3 gl_GlobalInvocationID [[thread_position_in_grid]], uint3 gl_NumWorkGroups [[threadgroups_per_grid]])
                         {
                             
-                            int3 texelCoord = int3(gl_GlobalInvocationID.xyz);
+                            int2 texelCoord = int2(gl_GlobalInvocationID.xy);
                             float2 coord = float2(float(texelCoord.x) / float(info.DstExtent.x),
-                                                        1.0 - float(texelCoord.y) / float(info.DstExtent.y));
+                                                1.0 - float(texelCoord.y) / float(info.DstExtent.y));
                             
                             float3 samplerCoord = float3(0.0);
                             
@@ -387,23 +387,23 @@ namespace HazardRenderer::Metal
             spec.PushConstants = {};
             spec.Shaders = {
                 { SHADER_STAGE_COMPUTE_BIT, R"(
-                                                                    #include <metal_stdlib>
-                                                                    #include <simd/simd.h>
+                            #include <metal_stdlib>
+                            #include <simd/simd.h>
                                                                                     
-                                                                    using namespace metal;
+                            using namespace metal;
+                                                                                
+                            struct BlitInfo {
+                            float4 SrcExtent;
+                            float4 DstExtent;
+                            uint SrcLayer;
+                            uint DstLayer;
+                            uint SrcMip;
+                            uint DstMip;
+                            };
                                                                                     
-                                                                    struct BlitInfo {
-                                                                    float4 SrcExtent;
-                                                                    float4 DstExtent;
-                                                                    uint SrcLayer;
-                                                                    uint DstLayer;
-                                                                    uint SrcMip;
-                                                                    uint DstMip;
-                                                                    };
-                                                                                    
-                                                                    constant uint3 gl_WorkGroupSize [[maybe_unused]] = uint3(1u);
-                                                                    constexpr sampler smplr (mag_filter::linear,
-                                                                    min_filter::linear);)" + shaderSource }
+                            constant uint3 gl_WorkGroupSize [[maybe_unused]] = uint3(1u);
+                            constexpr sampler smplr (mag_filter::linear,
+                            min_filter::linear);)" + shaderSource }
             };
             m_BlitComputePipeline = Pipeline::Create(&spec).As<MetalPipeline>();
         }

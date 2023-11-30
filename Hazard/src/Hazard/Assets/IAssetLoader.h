@@ -30,7 +30,7 @@ namespace Hazard
 		//Return asset data required to create 
 		virtual Ref<JobGraph> DataFromSource(const std::filesystem::path& path) = 0;
 
-		virtual Ref<JobGraph> Create(const std::filesystem::path& path) = 0;
+		virtual Ref<JobGraph> Create(const std::filesystem::path& base, const std::filesystem::path& path) = 0;
 
 		virtual Buffer ToBinary(Ref<Asset> asset) = 0;
 	};

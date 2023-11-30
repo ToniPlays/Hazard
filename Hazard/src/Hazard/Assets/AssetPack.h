@@ -28,6 +28,9 @@ namespace Hazard
 		std::string AddressableName;
 	};
 
+    //Asset packs must contain a single element if editability is desired
+    //Editing asset in a pack with multiple elements is not supported
+
 	struct AssetPack
 	{
 		AssetHandle Handle = 0;

@@ -8,8 +8,9 @@
 
 namespace Hazard
 {
-	void SaveWorld(JobInfo& info, Ref<World> world, std::filesystem::path path)
+	void SaveWorld(JobInfo& info, Ref<World> world, std::filesystem::path path, std::filesystem::path internalPath)
 	{
+        std::cout << fmt::format("Saving world: {0}", path.string()) << std::endl;
 		WorldSerializer serializer(world);
 		Buffer buffer = serializer.Serialize();
 
@@ -28,7 +29,7 @@ namespace Hazard
 		element.Handle = world->GetHandle();
 		element.Type = AssetType::World;
 		element.Data = buffer;
-		element.AddressableName = File::GetName(path);
+		element.AddressableName = internalPath.string();
 
 		AssetPack pack = {};
 		pack.Handle = packHandle;
@@ -74,19 +75,21 @@ namespace Hazard
 		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
 		auto world = asset.As<World>();
 
-		Ref<Job> job = Ref<Job>::Create("Save world", SaveWorld, world, metadata.Key);
+        AssetMetadata& packMetadata = AssetManager::GetMetadata(metadata.AssetPackHandle);
+        
+		Ref<Job> job = Ref<Job>::Create("Save world", SaveWorld, world, packMetadata.Key, metadata.Key);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World save", 1);
 		graph->GetStage(0)->QueueJobs({ job });
 
 		return graph;
 	}
-	Ref<JobGraph> WorldAssetLoader::Create(const std::filesystem::path& path)
+	Ref<JobGraph> WorldAssetLoader::Create(const std::filesystem::path& base, const std::filesystem::path& internalPath)
 	{
 		AssetHandle handle = AssetHandle();
 		Ref<World> world = Ref<World>::Create(std::to_string(handle));
 		world->m_Handle = handle;
 
-		Ref<Job> job = Ref<Job>::Create("Save world", SaveWorld, world, path);
+		Ref<Job> job = Ref<Job>::Create("Save world", SaveWorld, world, base, internalPath);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("World save", 1);
 		graph->GetStage(0)->QueueJobs({ job });
 

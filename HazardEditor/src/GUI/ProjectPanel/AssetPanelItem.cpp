@@ -196,7 +196,7 @@ namespace UI
 			return File::GetName(m_SourcePath);
 
 		const AssetMetadata& metadata = GetMetadata();
-		return File::GetNameNoExt(GetMetadata().Key);
+        return File::GetNameNoExt(metadata.Key);
 	}
 	void AssetPanelItem::DrawItemName(const char* name, float edgeOffset)
 	{
@@ -204,7 +204,11 @@ namespace UI
 		{
 			ImGui::SetKeyboardFocusHere();
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - edgeOffset * 4.0f);
-			//ImUI::TextField_OLD(m_RenameValue);
+			
+            char buf[512];
+            strcpy(buf, m_RenameValue.c_str());
+            if(ImGui::InputText("##", buf, 512))
+                m_RenameValue = buf;
 
 			if (ImGui::IsItemDeactivated())
 			{
@@ -228,7 +232,12 @@ namespace UI
 
 		if (IsFolder())
 			Directory::Rename(m_SourcePath, newName);
-
+        else
+        {
+            auto& metadata = Hazard::AssetManager::GetMetadata(m_Handle);
+            metadata.Key = newName;
+        }
+        
 		Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
 	}
 	void AssetPanelItem::OnItemClicked()

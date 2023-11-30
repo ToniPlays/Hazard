@@ -6,7 +6,7 @@
 
 namespace Hazard
 {
-	static void SaveEnvironmentMapJob(JobInfo& info, Ref<EnvironmentMap> asset, const std::filesystem::path& path)
+	static void SaveEnvironmentMapJob(JobInfo& info, Ref<EnvironmentMap> asset, const std::filesystem::path& path, const std::filesystem::path& internalPath)
 	{
 		EnvironmentAssetHeader header = {};
 		header.ImageHandle = asset->GetSourceImageHandle();
@@ -24,7 +24,7 @@ namespace Hazard
 		element.Handle = asset->GetHandle();
 		element.Type = AssetType::EnvironmentMap;
 		element.Data = Buffer(&header, sizeof(EnvironmentAssetHeader));
-		element.AddressableName = File::GetName(path);
+        element.AddressableName = internalPath.string();
 
 		AssetPack pack = {};
 		pack.Handle = packHandle;
@@ -63,20 +63,21 @@ namespace Hazard
 	Ref<JobGraph> EnvironmentAssetLoader::Save(Ref<Asset>& asset)
 	{
 		const AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
+        const AssetMetadata& packMetadata = AssetManager::GetMetadata(metadata.AssetPackHandle);
 
-		Ref<Job> saveJob = Ref<Job>::Create("EnvironmentAsset Create", SaveEnvironmentMapJob, asset, metadata.Key);
+		Ref<Job> saveJob = Ref<Job>::Create("EnvironmentAsset Create", SaveEnvironmentMapJob, asset, packMetadata.Key, metadata.Key);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("EnvironmentAsset Create", 1);
 		graph->GetStage(0)->QueueJobs({ saveJob });
 
 		return graph;
 	}
 
-	Ref<JobGraph> EnvironmentAssetLoader::Create(const std::filesystem::path& path)
+	Ref<JobGraph> EnvironmentAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
 	{
 		Ref<EnvironmentMap> environmentMap = Ref<EnvironmentMap>::Create();
 		environmentMap->m_Handle = AssetHandle();
 
-		Ref<Job> createJob = Ref<Job>::Create("EnvironmentAsset Create", SaveEnvironmentMapJob, environmentMap, path);
+		Ref<Job> createJob = Ref<Job>::Create("EnvironmentAsset Create", SaveEnvironmentMapJob, environmentMap, path, internalPath);
 		Ref<JobGraph> graph = Ref<JobGraph>::Create("EnvironmentAsset Create", 1);
 		graph->GetStage(0)->QueueJobs({ createJob });
 

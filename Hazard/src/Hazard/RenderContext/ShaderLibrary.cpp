@@ -26,7 +26,7 @@ namespace Hazard
 		{
 			BufferLayout layout = LineVertex::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("LineShader.glsl");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Debug/LineShader.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "Pipeline LineShader";
@@ -42,7 +42,7 @@ namespace Hazard
 		{
 			BufferLayout layout = CircleVertex::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("CircleShader.glsl");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/2D/CircleShader.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "Pipeline CircleShader";
@@ -57,7 +57,7 @@ namespace Hazard
 		{
 			BufferLayout layout = QuadVertex::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("QuadShader.glsl");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/2D/QuadShader.glsl");
 
 			DescriptorSetLayout samplerSet = { { SHADER_STAGE_FRAGMENT_BIT, "u_Textures", 0, 32, DESCRIPTOR_TYPE_SAMPLER_2D} };
 
@@ -76,7 +76,7 @@ namespace Hazard
 		{
 			BufferLayout layout = Vertex3D::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("PBR_Static.glsl");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/PBR_Static.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "Pipeline PBR_Static";
@@ -94,7 +94,7 @@ namespace Hazard
 				{ SHADER_STAGE_FRAGMENT_BIT, "u_CubeMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE }
 			};
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("Skybox.glsl");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Skybox.glsl");
 
 			PipelineSpecification specs = {};
 			specs.DebugName = "Pipeline Skybox";
@@ -109,7 +109,7 @@ namespace Hazard
 			s_LoadedPipelines["Skybox"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
 		{
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("EquirectangularToCubemap.glsl");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Compute/EquirectangularToCubemap.glsl");
 
 			DescriptorSetLayout layout = {
 				{ SHADER_STAGE_COMPUTE_BIT, "o_CubeMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE },
@@ -126,7 +126,7 @@ namespace Hazard
 			s_LoadedPipelines["EquirectangularToCubemap"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
 		}
 		{
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("EnvironmentIrradiance.glsl");
+			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Compute/EnvironmentIrradiance.glsl");
 
 			DescriptorSetLayout layout = {
 				{ SHADER_STAGE_COMPUTE_BIT, "o_IrradianceMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE }, 

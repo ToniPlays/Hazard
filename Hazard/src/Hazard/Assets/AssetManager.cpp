@@ -194,20 +194,20 @@ namespace Hazard
 
 		return metadata.Handle;
 	}
-	AssetHandle AssetManager::CreateNewAsset(AssetType type, const std::filesystem::path& path)
+	AssetHandle AssetManager::CreateNewAsset(AssetType type, const std::filesystem::path& base, const std::filesystem::path& internalPath)
 	{
-		Ref<JobGraph> graph = s_AssetLoader.Create(type, path);
+		Ref<JobGraph> graph = s_AssetLoader.Create(type, base, internalPath);
 		if (!graph)
 			return INVALID_ASSET_HANDLE;
 
 		graph->Execute();
 
-		if (!File::Exists(path))
+		if (!File::Exists(base))
 			return INVALID_ASSET_HANDLE;
 
-		CachedBuffer buffer = File::ReadBinaryFile(path);
+		CachedBuffer buffer = File::ReadBinaryFile(base);
 		AssetPack pack = AssetPack::Create(buffer);
-		AssetManager::ImportAssetPack(pack, path);
+		AssetManager::ImportAssetPack(pack, base);
 
 		//TODO: This is bad
 		AssetHandle handle = pack.Elements[0].Handle;

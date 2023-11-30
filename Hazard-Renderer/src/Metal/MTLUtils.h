@@ -146,12 +146,9 @@ namespace HazardRenderer::Metal
     template<typename T>
     static void SetDebugLabel(T* object, const std::string& label)
     {
-        NS::String* l = NS::String::alloc()->string(label.c_str(), NS::UTF8StringEncoding);
+        NS::String* l = NS::String::alloc()->init(label.c_str(), NS::UTF8StringEncoding);
         object->setLabel(l);
-    }
-    static uint32_t GetMipLevelCount(uint32_t width, uint32_t height)
-    {
-        return std::floor(std::log2(glm::min(width, height))) + 1;
+        l->release();
     }
 }
 #endif

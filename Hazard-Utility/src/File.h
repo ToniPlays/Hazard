@@ -35,6 +35,7 @@ public:
 	static bool Exists(const std::filesystem::path& path);
 	static bool IsDirectory(const std::filesystem::path& path);
 	static std::filesystem::path FindAvailableName(const std::filesystem::path& directory, const std::string& name, const std::string& extension);
+    static std::filesystem::path Relative(const std::filesystem::path& base, const std::filesystem::path& path);
 
 	static CachedBuffer ReadBinaryFile(const std::filesystem::path& path);
 	static std::string ReadFile(const std::filesystem::path& file);

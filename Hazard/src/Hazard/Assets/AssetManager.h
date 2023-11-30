@@ -142,7 +142,7 @@ namespace Hazard
 			return Application::Get().GetJobSystem().QueueGraph(graph);
 		}
 		static AssetHandle CreateMemoryOnly(AssetType type, Ref<Asset> asset);
-		static AssetHandle CreateNewAsset(AssetType type, const std::filesystem::path& path);
+		static AssetHandle CreateNewAsset(AssetType type, const std::filesystem::path& base, const std::filesystem::path& internalPath);
 		static Buffer AssetToBinary(Ref<Asset> asset);
 
 	private:
