@@ -13,9 +13,6 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\BuildSystem">
-      <UniqueIdentifier>{B1B9F98C-1D45-6751-2656-EA459260C351}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
@@ -90,12 +87,6 @@
     <ClInclude Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>Hazard\vendor\ImGui_Backend</Filter>
     </ClInclude>
-    <ClInclude Include="src\BuildSystem\BuildReport.h">
-      <Filter>src\BuildSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="src\BuildSystem\GameExportManager.h">
-      <Filter>src\BuildSystem</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\Defines.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -124,9 +115,6 @@
       <Filter>src\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\EditorScriptManager.h">
-      <Filter>src\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\EditorSettings.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\EditorUtils.h">
@@ -181,6 +169,9 @@
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\ProjectPanel\AssetPanelItem.h">
+      <Filter>src\GUI\ProjectPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\ProjectPanel\ExportPanel.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\InputSettings.h">
@@ -257,9 +248,6 @@
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>Hazard\vendor\ImGui_Backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\BuildSystem\GameExportManager.cpp">
-      <Filter>src\BuildSystem</Filter>
-    </ClCompile>
     <ClCompile Include="src\Core\EditorAssetManager.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
@@ -279,9 +267,6 @@
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorScriptManager.cpp">
-      <Filter>src\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\EditorSettings.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorWorldManager.cpp">
@@ -324,6 +309,9 @@
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\ProjectPanel\AssetPanelItem.cpp">
+      <Filter>src\GUI\ProjectPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\ProjectPanel\ExportPanel.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\ProjectPanel\ProjectSettingsPanel.cpp">

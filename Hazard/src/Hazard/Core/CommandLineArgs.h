@@ -49,6 +49,13 @@ namespace Hazard
 			return m_Arguments[key][0];
 		}
 		template<>
+		static std::filesystem::path Get(const std::string& key)
+		{
+			if (m_Arguments[key].size() == 0)
+				return "";
+			return std::filesystem::path(m_Arguments[key][0]).lexically_normal();
+		}
+		template<>
 		static std::vector<std::string> Get(const std::string& key)
 		{
 			return m_Arguments[key];

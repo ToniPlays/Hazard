@@ -16,22 +16,28 @@ project "Hazard-Renderer"
 		"examples/**.cpp"
 	}
     
-	includedirs {
+	includedirs 
+	{
 		"src"
 	}
-    
-	filter "system:macosx or system:ios"
-		files {
-			"src/**.mm",
-			"src/**.m"
-		}
-    
-    References("HazardUtility")
+
+	References("HazardUtility")
     References("GLM")
     References("SpirvCross")
     References("GLFW")
     References("GLAD")
     References("Spdlog")
+	References("VMA")
     References("OpenGL")
     References("Vulkan")
     References("Metal")
+
+	filter "system:windows or system:macosx"
+		References("ShaderC")
+    
+	filter "system:macosx or system:ios"
+		files 
+		{
+			"src/**.mm",
+			"src/**.m"
+		}

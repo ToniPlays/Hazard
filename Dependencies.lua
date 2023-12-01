@@ -1,7 +1,7 @@
 
 -- Hazard Dependencies
 
-VULKAN_SDK = "/Users/tonisimoska/VulkanSDK/1.3.216.0/macos"
+VULKAN_SDK = os.getenv("VULKAN_SDK")
 
 Dependencies = {
     YAML = {
@@ -41,7 +41,12 @@ Dependencies = {
     },
     OpenGL = {},
     Vulkan = {
-        IncludeDir = "%{VULKAN_SDK}/Include"
+        IncludeDir = "%{VULKAN_SDK}/Include",
+        LibraryDir = "%{VULKAN_SDK}/Lib",
+        WindowsLibs = {
+            Debug = { "%{VULKAN_SDK}/Lib/vulkan-1.lib" },
+            Release = { "%{VULKAN_SDK}/Lib/vulkan-1.lib" }
+        }
     },
     Metal = {
         IncludeDir = "%{wks.location}/Hazard/vendor/Metal-CPP",
@@ -52,12 +57,23 @@ Dependencies = {
             Debug = {"UIKit.framework", "Foundation.framework", "CoreFoundation.framework", "Metal.framework", "MetalKit.framework", "IOKit.framework", "QuartzCore.framework"}
         }
     },
+    VMA = {
+        IncludeDir = "%{wks.location}/Hazard-Renderer/vendor/VulkanMemoryAllocator"
+    },
     ShaderC = {
-        IncludeDir = "%{wks.location}/Hazard/vendor/shaderc/include"
+        IncludeDir = "%{wks.location}/Hazard/vendor/shaderc/include",
+        WindowsLibs = {
+            Debug = { "%{VULKAN_SDK}/Lib/shaderc_sharedd.lib" },
+            --Release = { "%{VULKAN_SDK}/Lib/shaderc_shared.lib" }
+        }
     },
     SpirvCross = {
         IncludeDir = "%{VULKAN_SDK}/Include",
         LibraryDir = "%{wks.location}/Hazard/libmacos",
+        WindowsLibs = {
+            Debug = { "%{VULKAN_SDK}/Lib/spirv-cross-cored.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsld.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msld.lib" },
+            --Release = { "%{VULKAN_SDK}/Lib/spirv-cross-core.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsl.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msl.lib" },
+        }
     },
     StbImage = {
         IncludeDir = "%{wks.location}/Hazard/vendor/stb_image"
@@ -72,7 +88,11 @@ Dependencies = {
     },
     Coral = {
         IncludeDir = "%{wks.location}/Hazard/vendor/Coral/Coral.Native/Include",
-        CommonLib = "Coral.Native"
+        LibraryDir = "%{wks.location}/Hazard/vendor/Coral/NetCore/7.0.7",
+        CommonLib = "Coral.Native",
+        WindowsLibs = {
+            Debug = { "%{wks.location}/Hazard/vendor/Coral/NetCore/7.0.7/nethost.lib", "%{wks.location}/Hazard/vendor/Coral/NetCore/7.0.7/nethost.dll" }
+        }
     },
     HazardUtility = {
         IncludeDir = "%{wks.location}/Hazard-Utility/src",
@@ -93,7 +113,6 @@ Dependencies = {
 }
 
 local function LinkLibs(libs)
-
     for key, value in pairs(libs) do
         if key ~= "Common" then
             --filter (string.format("configurations:%s", key))
@@ -102,7 +121,7 @@ local function LinkLibs(libs)
             links { lib }
         end
         if key ~= "Common" then
-            --filter ""
+            --print("")
         end
     end
 end
@@ -117,10 +136,14 @@ function References(reference)
     if(ref.LibraryDir ~= nil) then
         libdirs { ref.LibraryDir }
     end
+
     if(ref.CommonLib ~= nil) then
         links { ref.CommonLib }
     end
     
+    if(ref.WindowsLibs ~= nil and os.target() == "windows") then
+        LinkLibs(ref.WindowsLibs)
+    end
     if(ref.MacosLibs ~= nil and os.target() == "macosx") then
         LinkLibs(ref.MacosLibs)
     end

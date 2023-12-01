@@ -7,12 +7,7 @@ workspace "Hazard"
 	startproject (STARTUP_PROJECT)
     cppdialect (CPP_DIALECT)
 
-	configurations
-	{
-		"Debug",
-		"Release",
-		"Dist"
-	}
+	configurations (CONFIGS)
 
 	flags
 	{
@@ -21,7 +16,8 @@ workspace "Hazard"
     
 	defines
 	{
-		"GLFW_INCLUDE_NONE"
+		"GLFW_INCLUDE_NONE",
+        "NOMINMAX"
 	}
  
 

@@ -50,7 +50,7 @@ namespace Hazard
 
 	private:
 
-		JobSystem m_JobSystem = JobSystem(2);
+		JobSystem m_JobSystem = JobSystem(std::thread::hardware_concurrency());
         std::vector<std::function<void()>> m_MainJobs;
 	};
 

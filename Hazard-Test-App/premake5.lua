@@ -20,15 +20,26 @@ project "Hazard-Test-App"
 		"src",
         "%{wks.location}/Hazard/vendor"
 	}
+    
+    References("HazardUtility")
+    References("HazardRenderer")
+    References("Hazard")
+    References("GLM")
+    References("Spdlog")
+    References("YAML")
+    References("Coral")
+    References("Assimp")
+    References("ImGUI")
+    References("OpenGL")
+    References("Vulkan")
+    References("Metal")
 
 	filter "system:windows"
-        
         References("GLFW")
 		References("GLAD")
         References("SpirvCross")
 
 	filter "system:macosx"
-
 		References("GLFW")
         References("SpirvCross")
 
@@ -47,17 +58,4 @@ project "Hazard-Test-App"
             "src/**.m",
             "src/**.mm"
         }
-    
-    	
-    References("HazardUtility")
-    References("HazardRenderer")
-    References("Hazard")
-    References("GLM")
-    References("Spdlog")
-    References("YAML")
-    References("Coral")
-    References("Assimp")
-    References("ImGUI")
-    References("OpenGL")
-    References("Vulkan")
-    References("Metal")
+   

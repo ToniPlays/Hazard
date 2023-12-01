@@ -2,6 +2,7 @@
 #include "AssetManager.h"
 
 #include "Hazard/Core/Application.h"
+#include <Utility/StringUtil.h>
 
 namespace Hazard
 {
@@ -26,7 +27,7 @@ namespace Hazard
 		if (pack.ElementCount == 0)
 			return INVALID_ASSET_HANDLE;
 
-		auto filePath = path.lexically_normal();
+		auto filePath = StringUtil::Replace(path.lexically_normal().string(), "\\", "/");
 
 		if (s_Registry.Contains(filePath))
 		{
@@ -42,7 +43,7 @@ namespace Hazard
 		AssetMetadata metadata = {};
 		metadata.AssetPackHandle = INVALID_ASSET_HANDLE;
 		metadata.Type = AssetType::Last;
-		metadata.Key = filePath.string();
+		metadata.Key = filePath;
 		metadata.Handle = pack.Handle;
 		metadata.LoadState = LoadState::None;
 
@@ -196,7 +197,7 @@ namespace Hazard
 	}
 	AssetHandle AssetManager::CreateNewAsset(AssetType type, const std::filesystem::path& base, const std::filesystem::path& internalPath)
 	{
-		Ref<JobGraph> graph = s_AssetLoader.Create(type, base, internalPath);
+		Ref<JobGraph> graph = s_AssetLoader.Create(type, base, StringUtil::Replace(internalPath.string(), "\\", "/"));
 		if (!graph)
 			return INVALID_ASSET_HANDLE;
 

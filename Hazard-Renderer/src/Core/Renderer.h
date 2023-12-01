@@ -21,9 +21,9 @@ namespace HazardRenderer
 		{
 			s_GraphicsContext = context;
 
-				s_CommandQueue.RenderCommandQueue = hnew CommandQueue(0.5f MB);
-				s_CommandQueue.ResourceCreateCommandQueue = hnew CommandQueue(2.0f MB);
-				s_CommandQueue.ResourceFreeCommandQueue = hnew CommandQueue(0.5f MB);
+				s_CommandQueue.RenderCommandQueue = hnew CommandQueue(0.5 MB);
+				s_CommandQueue.ResourceCreateCommandQueue = hnew CommandQueue(2.0 MB);
+				s_CommandQueue.ResourceFreeCommandQueue = hnew CommandQueue(0.5 MB);
 		}
 
 		static void WaitAndRender()

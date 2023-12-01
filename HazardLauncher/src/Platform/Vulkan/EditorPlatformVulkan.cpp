@@ -1,10 +1,12 @@
 
 #include "Hazard.h"
 
-#ifdef HZR_INCLUDE_VULKAN
 #include "EditorPlatformVulkan.h"
-#include "Backend/Core/Renderer.h"
-#include "Backend/Vulkan/VKUtils.h"
+
+#ifdef HZR_INCLUDE_VULKAN
+
+#include "Core/Renderer.h"
+#include "Vulkan/VKUtils.h"
 #include "imgui.h"
 #include <../ImGui_Backend/imgui_impl_glfw.h>
 
@@ -14,8 +16,6 @@ static std::vector<VkCommandBuffer> s_ImGuiCommandBuffers;
 EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
 	m_Window = &window;
-	//Renderer::Submit([&]() mutable {
-
 	m_Context = (VulkanContext*)window.GetContext();
 	Ref<VulkanSwapchain> swapchain = m_Context->GetSwapchain().As<VulkanSwapchain>();
 	auto physicalDevice = m_Context->GetDevice().As<VulkanPhysicalDevice>();
@@ -45,7 +45,6 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 	poolInfo.pPoolSizes = poolSizes;
 
 	VK_CHECK_RESULT(vkCreateDescriptorPool(device->GetVulkanDevice(), &poolInfo, nullptr, &descriptorPool), "Failed to create descriptor pool");
-
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)window.GetNativeWindow(), true);
@@ -77,9 +76,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 
 	for (uint32_t i = 0; i < framesInFlight; i++)
 		s_ImGuiCommandBuffers[i] = device->CreateSecondaryCommandBuffer("EditorPlatformVulkan secondary CommandBuffer");
-	//});
 }
-
 
 EditorPlatformVulkan::~EditorPlatformVulkan()
 {
@@ -102,8 +99,6 @@ void EditorPlatformVulkan::EndFrame()
 
 	auto swapchain = context->GetSwapchain().As<VulkanSwapchain>();
 	ImGuiIO& io = ImGui::GetIO();
-
-
 
 	glm::vec4 color = swapchain->GetRenderTarget()->GetSpecification().ClearColor;
 
@@ -163,10 +158,7 @@ void EditorPlatformVulkan::EndFrame()
 
 	VK_CHECK_RESULT(vkEndCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex]), "");
 
-	std::vector<VkCommandBuffer> commandBuffers;
-	commandBuffers.push_back(s_ImGuiCommandBuffers[commandBufferIndex]);
-
-	vkCmdExecuteCommands(drawCommandBuffer, uint32_t(commandBuffers.size()), commandBuffers.data());
+	vkCmdExecuteCommands(drawCommandBuffer, 1, &s_ImGuiCommandBuffers[commandBufferIndex]);
 	vkCmdEndRenderPass(drawCommandBuffer);
 
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -180,6 +172,6 @@ void EditorPlatformVulkan::EndFrame()
 
 void EditorPlatformVulkan::Close()
 {
-
+	ImGui_ImplGlfw_Shutdown();
 }
 #endif

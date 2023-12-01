@@ -13,7 +13,7 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <IntermediateOutputPath>obj\Debug\</IntermediateOutputPath>
-    <DefineConstants>GLFW_INCLUDE_NONE;HZR_PLATFORM_WINDOWS;HZR_DEBUG</DefineConstants>
+    <DefineConstants>GLFW_INCLUDE_NONE;NOMINMAX;HZR_PLATFORM_WINDOWS;HZR_DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -24,7 +24,7 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <IntermediateOutputPath>obj\Release\</IntermediateOutputPath>
-    <DefineConstants>GLFW_INCLUDE_NONE;HZR_PLATFORM_WINDOWS;HZR_RELEASE</DefineConstants>
+    <DefineConstants>GLFW_INCLUDE_NONE;NOMINMAX;HZR_PLATFORM_WINDOWS;HZR_RELEASE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -35,7 +35,7 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Dist\</OutputPath>
     <IntermediateOutputPath>obj\Dist\</IntermediateOutputPath>
-    <DefineConstants>GLFW_INCLUDE_NONE;HZR_PLATFORM_WINDOWS;HZR_DIST</DefineConstants>
+    <DefineConstants>GLFW_INCLUDE_NONE;NOMINMAX;HZR_PLATFORM_WINDOWS;HZR_DIST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>

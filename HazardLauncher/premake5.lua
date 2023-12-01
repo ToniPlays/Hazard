@@ -18,22 +18,24 @@ project "HazardLauncher"
 	{
 		"src"
 	}
-
-	postbuildcommands 
-	{
-		"{COPYDIR} \"%{wks.location}/HazardEditor/res\" \"%{cfg.targetdir}/res\""
-	}
-
-
-	filter "system:windows"
-		defines {
-			"_CRT_SECURE_NO_WARNINGS",
-		}
-		postbuildcommands
-		{
-			"{COPYDIR} \"%{LibraryDir.VulkanSDK_DebugDLL}\" \"%{cfg.targetdir}\"",
-			"{COPY} %{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.dll %{cfg.targetdir}",
-		}
+	
+	References("YAML")
+	References("GLM")
+	References("Spdlog")
+	References("EnTT")
+	References("GLFW")
+	References("VMA")
+	References("SpirvCross")
+	References("OpenGL")
+	References("Vulkan")
+	References("Metal")
+	References("Box2D")
+	References("ImGUI")
+	References("Coral")
+	References("HazardUtility")
+	References("HazardRenderer")
+	References("HazardScript")
+	References("Hazard")
 
 	filter "system:ios"
 		kind "WindowedApp"
@@ -48,5 +50,3 @@ project "HazardLauncher"
         }
 	filter "system:windows or system:macosx"
 		kind "ConsoleApp"
-		
-	filter ""
