@@ -35,9 +35,6 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-        if(!File::Exists(path))
-           return TextureHeader();
-
 		int w, h, channels;
 		constexpr int desired = 4;
 		stbi_set_flip_vertically_on_load(verticalFlip);

@@ -7,6 +7,6 @@ namespace Hazard
 {
 	Asset::~Asset()
 	{
-		AssetManager::RemoveAsset(m_Handle);
+		AssetManager::Unload(m_Handle);
 	}
 }

@@ -8,7 +8,7 @@ namespace Hazard
 {
 	struct SkyLightComponent : ComponentBase
 	{
-		AssetHandle EnvironmentMapHandle;
+		AssetHandle EnvironmentMapHandle = INVALID_ASSET_HANDLE;
 		float Intensity = 1.0f;
 		float LodLevel = 0.0f;
 	};

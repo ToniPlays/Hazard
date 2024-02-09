@@ -64,7 +64,7 @@ namespace HazardRenderer
 		uint32_t Flags = 0;
 	};
 
-	class Pipeline : public RefCount 
+	class Pipeline : public RefCount
 	{
 	public:
 		virtual ~Pipeline() = default;

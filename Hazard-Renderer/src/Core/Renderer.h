@@ -4,14 +4,19 @@
 #include "GraphicsContext.h"
 #include "Profiling/MemoryDiagnostic.h"
 
+#define FREE_QUEUE_COUNT 3
+
 namespace HazardRenderer
 {
 	struct CommandQueues
 	{
 		CommandQueue* RenderCommandQueue;
 		CommandQueue* ResourceCreateCommandQueue;
-		CommandQueue* ResourceFreeCommandQueue;
+		CommandQueue* ResourceFreeCommandQueue[FREE_QUEUE_COUNT];
 
+		//			 F		 R
+		//---1--- ---2--- ---3--- ---4--- ---1--- ---2--- ---3--- ---4---
+		//					-->
 	};
 
 	class Renderer
@@ -21,9 +26,11 @@ namespace HazardRenderer
 		{
 			s_GraphicsContext = context;
 
-				s_CommandQueue.RenderCommandQueue = hnew CommandQueue(0.5 MB);
-				s_CommandQueue.ResourceCreateCommandQueue = hnew CommandQueue(2.0 MB);
-				s_CommandQueue.ResourceFreeCommandQueue = hnew CommandQueue(0.5 MB);
+			s_CommandQueue.RenderCommandQueue = hnew CommandQueue(0.5 MB);
+			s_CommandQueue.ResourceCreateCommandQueue = hnew CommandQueue(2 MB);
+
+			for (uint32_t i = 0; i < FREE_QUEUE_COUNT; i++)
+				s_CommandQueue.ResourceFreeCommandQueue[i] = hnew CommandQueue(0.5 MB);
 		}
 
 		static void WaitAndRender()
@@ -40,12 +47,15 @@ namespace HazardRenderer
 				HZR_PROFILE_FUNCTION("RenderCommandQueue::Execute()");
 				queue.RenderCommandQueue->Excecute();
 				queue.RenderCommandQueue->Clear();
+				s_RenderedFrames++;
 			}
 			{
 				HZR_PROFILE_FUNCTION("ResourceFreeQueue::Execute()");
-				queue.ResourceFreeCommandQueue->Excecute();
-				queue.ResourceFreeCommandQueue->Clear();
+				//TODO: Fix resource free queue count
+				queue.ResourceFreeCommandQueue[s_RenderedFrames % FREE_QUEUE_COUNT]->Excecute();
+				queue.ResourceFreeCommandQueue[s_RenderedFrames % FREE_QUEUE_COUNT]->Clear();
 			}
+
 			s_IsRendering = false;
 			s_IsRendering.notify_all();
 		}
@@ -56,12 +66,13 @@ namespace HazardRenderer
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
-				//pFunc->~FuncT();
+				pFunc->~FuncT();
 			};
 
 			s_IsRendering.wait(true);
 			HZR_ASSERT(!s_IsRendering, "Cannot submit while rendering");
 			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
+
 			auto& queue = s_CommandQueue;
 			auto storageBuffer = queue.RenderCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
@@ -69,16 +80,14 @@ namespace HazardRenderer
 		template<typename FuncT>
 		static void SubmitResourceCreate(FuncT func)
 		{
-            static_assert(sizeof(FuncT) % 8 == 0);
-            
+			static_assert(sizeof(FuncT) % 8 == 0);
+
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
 				pFunc->~FuncT();
 			};
-			
-			s_IsRendering.wait(true);
-			HZR_ASSERT(!s_IsRendering, "Cannot submit while rendering");
+
 			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
 			auto& queue = s_CommandQueue;
 			auto storageBuffer = queue.ResourceCreateCommandQueue->Allocate(renderCmd, sizeof(func));
@@ -93,11 +102,8 @@ namespace HazardRenderer
 				pFunc->~FuncT();
 			};
 
-			s_IsRendering.wait(true);
-			HZR_ASSERT(!s_IsRendering, "Cannot submit while rendering");
-			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
 			auto& queue = s_CommandQueue;
-			auto storageBuffer = queue.ResourceFreeCommandQueue->Allocate(renderCmd, sizeof(func));
+			auto storageBuffer = queue.ResourceFreeCommandQueue[s_RenderedFrames % FREE_QUEUE_COUNT]->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 
@@ -112,7 +118,7 @@ namespace HazardRenderer
 
 			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
 			auto& queue = s_CommandQueue;
-			auto storageBuffer = queue.ResourceFreeCommandQueue->Allocate(renderCmd, sizeof(func));
+			auto storageBuffer = queue.ResourceFreeCommandQueue[s_RenderedFrames % FREE_QUEUE_COUNT]->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
 		}
 
@@ -121,5 +127,6 @@ namespace HazardRenderer
 		static inline CommandQueues s_CommandQueue;
 		static inline std::mutex s_ResourceMutex;
 		static inline std::atomic_bool s_IsRendering;
+		static inline uint64_t s_RenderedFrames = 0;
 	};
 }

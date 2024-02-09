@@ -78,5 +78,8 @@ void main()
 		case 31: 	 textureColor = texture(u_Textures[31], v_TextureCoords);  break;
 	}
 	Color = textureColor * v_Color;
+
+	if(Color.a <= 0.0001f) discard;
+
 	EntityID = 0;
 }

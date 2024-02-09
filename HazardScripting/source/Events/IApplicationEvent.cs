@@ -11,7 +11,6 @@ namespace Hazard.Events
         void OnApplicationOpen();
         bool OnApplicationWantsClose();
         void OnApplicationClose();
-
         void OnApplicationMinimized();
         void OnApplicationMaximized();
     }

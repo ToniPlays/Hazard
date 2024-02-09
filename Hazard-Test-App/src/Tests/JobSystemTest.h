@@ -21,7 +21,7 @@ public:
 	const char* GetName() override { return "Job graph test"; }
 
 private:
-	JobSystem* m_JobSystem;
 	Ref<JobGraph> m_Graph;
+	JobSystem* m_JobSystem;
 };
 

@@ -18,10 +18,7 @@ namespace Hazard
         ~MaterialAssetLoader() = default;
         
         Ref<JobGraph> Load(AssetMetadata& metadata) override;
-        Ref<JobGraph> Save(Ref<Asset>& asset) override;
-        Ref<JobGraph> DataFromSource(const std::filesystem::path& path) override { return nullptr; };
-        Ref<JobGraph> Create(const std::filesystem::path& path, const std::filesystem::path& internalPath) override;
-
-        Buffer ToBinary(Ref<Asset> asset) override { return Buffer(); };
+        Ref<JobGraph> Save(Ref<Asset> asset, const SaveAssetSettings& settings) override;
+        Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
     };
 }

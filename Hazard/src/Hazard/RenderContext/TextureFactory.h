@@ -11,22 +11,13 @@ namespace Hazard
 	struct TextureHeader 
 	{
 		HazardRenderer::Extent Extent;
-		uint32_t Dimensions = 2;
-		uint32_t Channels;
-		uint32_t Mips;
-		Buffer ImageData;
+		uint32_t Dimensions = 0;
+		uint32_t Channels = 0;
 		HazardRenderer::ImageFormat Format = HazardRenderer::ImageFormat::None;
+		uint32_t Mips = 0;
+		Buffer ImageData;
 
 		bool IsValid() { return ImageData.Data && ImageData.Size != 0; }
-	};
-
-	struct TextureFileHeader
-	{
-		HazardRenderer::Extent Extent;
-		uint32_t Dimensions = 2;
-		uint32_t Channels = 0;
-		uint32_t MipCount = 1;	//Regenerated later
-		HazardRenderer::ImageFormat Format = HazardRenderer::ImageFormat::None;
 	};
 
 	class TextureFactory 

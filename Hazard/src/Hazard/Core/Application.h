@@ -32,9 +32,9 @@ namespace Hazard
 		void CreateApplicationStack(HazardCreateInfo* info);
 		JobSystem& GetJobSystem() { return m_JobSystem; }
         
-        void SubmitMainThread(const std::function<void()>&& function)
+        void SubmitMainThread(const std::function<void()>& function)
         {
-            m_MainJobs.push_back(function);
+			m_MainJobs.push_back(function);
         }
 
 	public:

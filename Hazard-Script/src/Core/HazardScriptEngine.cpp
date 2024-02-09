@@ -16,8 +16,7 @@ namespace HazardScript
 
 	void HazardScriptEngine::SendDebugMessage(ScriptMessage message)
 	{
-		if (!s_Instance->m_DebugCallback) return;
-		s_Instance->m_DebugCallback(message);
+		s_Instance->m_DebugCallbacks.Invoke<ScriptMessage&>(message);
 	}
 
 	HazardScriptEngine::HazardScriptEngine(HazardScriptCreateInfo* info)
@@ -37,7 +36,7 @@ namespace HazardScript
 		HZR_ASSERT(info->DebugCallback, "Debug callback is required");
 		HZR_ASSERT(info->BindingCallback, "Binding callback is required");
 
-		m_DebugCallback = info->DebugCallback;
+		m_DebugCallbacks.Add(info->DebugCallback);
 		SendDebugMessage({ Severity::Info, "Debug enabled" });
 
 		InitializeCoralHost();
@@ -48,6 +47,7 @@ namespace HazardScript
 	}
 	void HazardScriptEngine::Reload()
 	{
+		return;
 		HZR_PROFILE_FUNCTION();
 		std::scoped_lock lock(m_ReloadMutex);
 		Coral::GC::Collect();
@@ -87,19 +87,21 @@ namespace HazardScript
 
 		Coral::HostSettings settings = {};
 		settings.CoralDirectory = coralDir;
-		settings.MessageCallback = [&](Coral::NativeString message, Coral::MessageLevel level) {
+		settings.MessageCallback = [&](std::string_view message, Coral::MessageLevel level) {
 			std::string msg = std::string(message);
 			std::string exception = msg.substr(0, msg.find_first_of("\n"));
 			std::string trace = exception.length() + 1 < msg.length() ? msg.substr(exception.length() + 1) : "";
-			m_DebugCallback({ Severity::Error, exception, trace });
+			m_DebugCallbacks.Invoke<ScriptMessage>({ Severity::Error, exception, trace });
+			std::cout << msg << std::endl;
 		};
 		settings.ExceptionCallback = ([&](std::string_view message) {
 			std::string msg = std::string(message);
 			std::string exception = msg.substr(0, msg.find_first_of("\n"));
 			std::string trace = exception.length() + 1 < message.length() ? msg.substr(exception.length() + 1) : "";
-			m_DebugCallback({ Severity::Error, exception, trace });
+			m_DebugCallbacks.Invoke<ScriptMessage>({ Severity::Error, exception, trace });
+			std::cout << msg << std::endl;
 		});
 
-		HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
+		//HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
 	}
 }

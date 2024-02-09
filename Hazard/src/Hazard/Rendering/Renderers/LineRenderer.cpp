@@ -51,7 +51,7 @@ namespace Hazard
 
 		m_VertexBuffer->SetData(region);
 
-		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(m_Material->GetPipeline())->Value.As<Pipeline>();
+		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("LineShader");
 		pipeline->SetRenderPass(m_RenderPass);
 		
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Material, m_LineBatch->GetCount());
@@ -100,10 +100,9 @@ namespace Hazard
 		vertexBufferInfo.Size = m_Data.MaxVertices * sizeof(LineVertex);
 		vertexBufferInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
 
-		m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
+		m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("LineShader"));
 
-		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("LineShader");
-		m_Material = Ref<Material>::Create(pipelineHandle, DescriptorSetLayout());
+		m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
 
 		m_RenderPass = renderPass;
 	}

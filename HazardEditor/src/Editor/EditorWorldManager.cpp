@@ -3,8 +3,9 @@
 #include "Core/GUIManager.h"
 #include "GUI/Overlays/ProgressOverlay.h"
 #include "Core/EditorEvent.h"
+#include "Core/HazardEditor.h"
 
-namespace Editor 
+namespace Editor
 {
 	using namespace Hazard;
 
@@ -23,11 +24,17 @@ namespace Editor
 	}
 	void EditorWorldManager::LoadWorld(AssetHandle handle)
 	{
-		auto& handler = Application::GetModule<WorldHandler>();
-		handler.LoadWorld(handle);
-		s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
+		JobPromise promise = AssetManager::GetAssetAsync(handle);
+		promise.Then([](JobGraph& graph) {
+			Ref<World> result = graph.GetResult<Ref<World>>();
+			if (!result) return;
 
-        Events::SelectionContextChange e({});
-        HazardLoop::GetCurrent().OnEvent(e);
+			auto& handler = Application::GetModule<WorldHandler>();
+			handler.SetWorld(result);
+			s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
+
+			Events::SelectionContextChange e({});
+			HazardLoop::GetCurrent().OnEvent(e);
+		});
 	}
 }

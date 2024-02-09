@@ -1,60 +1,79 @@
 #include "ProgressOverlay.h"
 
 #include "Hazard/ImGUI/UILibrary.h"
+#include "Hazard/Math/Time.h"
 
 namespace UI
 {
-	ProgressOverlay::ProgressOverlay() : Overlay("Progress", { 400, 0 }, { 24, 32 })
+	ProgressOverlay::ProgressOverlay() : Overlay("Progress", { 400, 0 }, { 24, 32 }) 
 	{
-		Open();
+		using namespace Hazard;
+
+		JobSystem& system = Hazard::Application::Get().GetJobSystem();
+		system.Hook(JobSystem::Submit, [this](Ref<JobGraph> graph) {
+			m_JobGraphs.push_back({ Time::s_Time, 0.0, 0.0, 0.0, graph });
+		});
+
+		system.Hook(JobSystem::Failure, [this](Ref<JobGraph> graph) {
+			for (auto& graphs : m_JobGraphs)
+			{
+				if (graphs.Graph != graph) continue;
+				graphs.TerminatedAt = Time::s_Time;
+			}
+		});
+
+		system.Hook(JobSystem::Finished, [this](Ref<JobGraph> graph) {
+			for (auto& graphs : m_JobGraphs)
+			{
+				if (graphs.Graph != graph) continue;
+
+				graphs.FinishedAt = Time::s_Time;
+				graphs.RemoveAfter = graphs.FinishedAt + 2.5;
+			}
+		});
 	}
+
 	void ProgressOverlay::Update()
 	{
-		JobSystem& system = Hazard::Application::Get().GetJobSystem();
+		using namespace Hazard;
+		m_Open = m_JobGraphs.size() > 0;
+		if (!m_Open) return;
 
-		if (system.GetQueuedGraphs().size() > 0 || system.GetQueuedJobs().size() > 0)
+		double time = Time::s_Time;
+
+		std::vector<JobGraphProgress> remaining;
+		for (uint32_t i = 0; i < m_JobGraphs.size(); i++)
 		{
-			Open();
-			return;
+			JobGraphProgress& progress = m_JobGraphs[i];
+			if (progress.RemoveAfter >= time || progress.RemoveAfter == 0.0f)
+				remaining.push_back(progress);
 		}
-		Close();
+		m_JobGraphs = remaining;
 	}
 
 	void ProgressOverlay::OnPanelRender()
 	{
-		JobSystem& system = Hazard::Application::Get().GetJobSystem();
-		for (auto& graph : system.GetQueuedGraphs())
+		for (auto& info : m_JobGraphs)
 		{
-			if (!graph->HasFinished())
-				DrawProgressCard(graph->GetName().c_str(), graph->GetCurrentStage()->GetName(), graph->GetProgress());
+			Ref<JobGraph>& graph = info.Graph;
+			DrawProgressCard(graph);
 		}
 
 		ImGui::Separator();
-		auto threads = system.GetThreads();
-		for (auto& thread : threads)
-		{
-			if (!thread->GetCurrentJob()) continue;
-			auto job = thread->GetCurrentJob();
-
-			if (job->GetJobGraph()) continue;
-
-			DrawProgressCard(job->GetName().c_str(), ",", job->GetProgress());
-		}
-
-		ImGui::Separator();
-
-		for (auto& job : system.GetQueuedJobs())
-			DrawProgressCard(job->GetName().c_str(), "", job->GetProgress());
 	}
-	void ProgressOverlay::DrawProgressCard(const std::string& graphName, const std::string& currentJob, float progress)
+	void ProgressOverlay::DrawProgressCard(Ref<JobGraph> graph)
 	{
+		const Hazard::ImUI::Style& style = Hazard::ImUI::StyleManager::GetCurrent();
+		const std::string& currentJob = graph->GetCurrentStageInfo().Name;
+		float progress = graph->GetProgress();
+
 		std::string progressText = fmt::format("{0}/100", (uint32_t)(progress * 100.0f));
 
 		float width = ImGui::CalcTextSize(progressText.c_str()).x;
 		float panelWidth = ImGui::GetContentRegionAvail().x;
 
 		ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
-		Hazard::ImUI::MenuHeader(graphName.c_str(), width - 32);
+		Hazard::ImUI::MenuHeader(graph->GetName().c_str(), width - 32);
 		ImGui::PopFont();
 
 		ImGui::SameLine();
@@ -64,6 +83,8 @@ namespace UI
 		if (!currentJob.empty())
 			ImGui::Text("%s", currentJob.c_str());
 
-		ImGui::ProgressBar(progress, { panelWidth, 32 });
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, graph->GetFlags() & JOB_GRAPH_FAILED ? style.Colors.AxisX : style.Colors.AxisZ);
+		ImGui::ProgressBar(progress, { panelWidth, 32});
+		ImGui::PopStyleColor();
 	}
 }

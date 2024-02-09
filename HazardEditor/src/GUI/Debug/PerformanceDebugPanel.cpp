@@ -61,7 +61,7 @@ namespace UI
 		const auto timerMap = PerformanceProfiler::GetPerFrameData();
 		table.Reserve(timerMap.size());
 		table.RowHeight(24.0f);
-		table.RowContent([style](const RowData& data) {
+		table.RowContent([style](uint32_t, const RowData& data) {
 			ImUI::Separator({ 4.0, 24.0f }, data.Time < data.MaxTime ? style.Colors.AxisY : style.Colors.Warning);
 			ImGui::SameLine();
 			ImGui::Text("%s", data.Name);
@@ -110,7 +110,7 @@ namespace UI
 		table.SetColumns({ "Time", "Memory usage" });
 		table.RowHeight(24.0f);
 		table.Reserve(allocStatsMap.size());
-		table.RowContent([this](const MemoryItem& item) {
+		table.RowContent([this](uint32_t, const MemoryItem& item) {
 			std::string title = std::string(item.Category);
 
 			ImUI::Separator({ 4.0, 24.0f }, GetMemoryColor(item.Size));
@@ -136,15 +136,13 @@ namespace UI
 		table.SetColumns({ "Thread", "Status", "Current job" });
 		table.Reserve(threads.size());
 		table.RowHeight(28.0f);
-		table.RowContent([&](Ref<Thread> thread) {
+		table.RowContent([&](uint32_t, Ref<Thread> thread) {
 			ImUI::Shift(4.0f, 4.0f);
 			ImGui::Text("Thread %u", thread->GetThreadID());
 			ImGui::TableNextColumn();
 
 			ImUI::Shift(4.0f, 4.0f);
-			if (thread->IsMainThread())
-				ImGui::Text("%s", "Main thread");
-			else ImGui::Text("%s", ThreadStatusToString(thread->GetStatus()).c_str());
+			ImGui::Text("%s", ThreadStatusToString(thread->GetStatus()).c_str());
 			ImGui::TableNextColumn();
 
 			Ref<Job> job = thread->GetCurrentJob();

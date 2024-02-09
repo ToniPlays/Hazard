@@ -17,17 +17,10 @@ namespace Hazard
 	{
 		AssetManager::RegisterLoader<WorldAssetLoader>(AssetType::World);
 
-		if (info->StartupFile.empty())
-			m_World = Ref<World>::Create("0");
-		else
-		{
-			AssetHandle handle = AssetManager::GetHandleFromKey(info->StartupFile.string());
-			if (handle != INVALID_ASSET_HANDLE)
-				m_World = AssetManager::GetAsset<World>(handle);
-			else m_World = Ref<World>::Create("0");
-		}
+		m_World = AssetManager::CreateAsset(AssetType::World, CreateAssetSettings()).As<World>();
 		SetActive(true);
 	}
+
 	WorldHandler::~WorldHandler()
 	{
 
@@ -92,23 +85,5 @@ namespace Hazard
 				sc.m_Handle->TryInvoke("OnDestroy");
 			}
 		}
-	}
-
-	bool WorldHandler::LoadWorld(AssetHandle handle)
-	{
-		HZR_PROFILE_FUNCTION();
-		if (handle != INVALID_ASSET_HANDLE)
-		{
-			m_World = AssetManager::GetAsset<World>(handle);
-			return m_World;
-		}
-
-		m_World = Ref<World>::Create("0");
-
-		Entity entity = m_World->CreateEntity("Camera");
-		m_World->CreateEntity("Entity 1");
-		entity.AddComponent<CameraComponent>();
-
-		return false;
 	}
 }

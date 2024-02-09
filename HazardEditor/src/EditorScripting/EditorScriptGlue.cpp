@@ -18,17 +18,5 @@ namespace Editor::Bindings
 	void EditorScriptGlue::OnAssemblyLoaded(Ref<HazardScript::ScriptAssembly> assembly) 
 	{
 		using namespace HazardScript;
-		/*
-		if (Application::HasModule<GUIManager>()) 
-		{
-			auto& menubar = Application::GetModule<GUIManager>().GetMenuBar();
-			menubar.Reset();
-
-			auto view = assembly->ViewAttributes<MenuBarItemAttribute>();
-
-			for (auto& script : view)
-				menubar.AddMenuItem(script->Get<MenuBarItemAttribute>()->Path, nullptr);
-		}
-		*/
 	}
 }

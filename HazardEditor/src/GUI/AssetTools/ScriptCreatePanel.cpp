@@ -6,7 +6,6 @@
 #include "GUI/ProjectPanel/AssetPanel.h"
 #include "Core/HazardEditor.h"
 #include "Localization/Localization.h"
-#include <Hazard/Scripting/HScript.h>
 
 using namespace Hazard;
 
@@ -16,11 +15,13 @@ namespace UI
 	{
 		m_CreateInfo.SetDefaults();
 	}
+
 	bool ScriptCreatePanel::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(ScriptCreatePanel::OnKeyPressed));
 	}
+
 	bool ScriptCreatePanel::OnKeyPressed(KeyPressedEvent& e)
 	{
 		if (e.GetKeyCode() == Key::Escape)
@@ -30,6 +31,7 @@ namespace UI
 		}
 		return false;
 	}
+
 	void ScriptCreatePanel::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -137,7 +139,7 @@ namespace UI
 	}
 	void ScriptCreatePanel::CreateFiles()
 	{
-		AssetHandle handle = AssetManager::CreateNewAsset(AssetType::Script, m_CreateInfo.Path.string() + ".hpack", "");
+		AssetHandle handle = INVALID_ASSET_HANDLE;
 
 		if (handle != INVALID_ASSET_HANDLE)
 		{
@@ -150,17 +152,6 @@ namespace UI
 			source = StringUtil::Replace(source, "%ScriptName%", m_CreateInfo.ClassName);
 			source = StringUtil::Replace(source, "%DerivesFrom%", " : " + m_CreateInfo.Derives);
 			source = StringUtil::Replace(source, "%MethodList%", methodList);
-
-			Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
-			File::WriteFile(script->GetSourceFile(), source);
-
-			auto& manager = Application::GetModule<Editor::EditorScriptManager>();
-			manager.RecompileAndLoad();
-
-			auto* assetPanel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>();
-			assetPanel->RefreshFolderItems();
-			((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
-			Close();
 		}
 	}
 }

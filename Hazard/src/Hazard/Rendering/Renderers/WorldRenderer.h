@@ -2,11 +2,10 @@
 
 #include "HazardRenderer.h"
 #include "Hazard/ECS/World.h"
+#include "Callback.h"
 
 namespace Hazard
 {
-	using RenderExtraCallback = std::function<void()>;
-
 	struct WorldCameraData 
 	{
 		glm::mat4 Projection;
@@ -63,14 +62,13 @@ namespace Hazard
 		/// </summary>
 		void Submit();
 		void Render();
-		void SubmitExtra(const RenderExtraCallback& callback) 
+		void SubmitExtra(const std::function<void()>& callback)
 		{
-			m_RendererExtraCalls.push_back(callback);
+			m_RendererExtraCalls.Add(callback);
 		}
 		void OnRenderExtra() 
 		{
-			for (auto& cb : m_RendererExtraCalls) 
-				cb();
+			m_RendererExtraCalls.Invoke();
 		}
 
 		const WorldRendererSpec& GetSpec() const { return m_Spec; }
@@ -84,6 +82,6 @@ namespace Hazard
 		Ref<World> m_TargetWorld;
 		std::vector<WorldCameraData> m_CameraData;
 
-		std::vector<RenderExtraCallback> m_RendererExtraCalls;
+		Callback<void()> m_RendererExtraCalls;
 	};
 }

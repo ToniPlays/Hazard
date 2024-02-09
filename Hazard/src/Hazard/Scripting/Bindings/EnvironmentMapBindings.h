@@ -20,7 +20,7 @@ namespace Hazard
 	static uint64_t EnvironmentMap_Create_Native()
 	{
 		Ref<EnvironmentMap> map = Ref<EnvironmentMap>::Create();
-		AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, map);
+		//AssetManager::CreateMemoryOnly(AssetType::EnvironmentMap, map);
 		return map->GetHandle();
 	}
 	static void EnvironmentMap_Destroy_Native(uint64_t handle)

@@ -5,22 +5,22 @@
 
 #include "UtilityCore.h"
 
-class RefCount 
+class RefCount
 {
 public:
 	RefCount() { m_RefCount = 0; };
 	virtual ~RefCount() = default;
 
-	void IncRefCount() const 
+	void IncRefCount() const
 	{
 		m_RefCount++;
 	}
-	void DecRefCount() const 
+	void DecRefCount() const
 	{
 		m_RefCount--;
 	}
-	uint32_t GetRefCount() const 
-	{ 
+	uint32_t GetRefCount() const
+	{
 		return m_RefCount.load();
 	}
 
@@ -34,10 +34,14 @@ class Ref
 {
 public:
 	Ref()
-		: m_Instance(nullptr) {}
+		: m_Instance(nullptr)
+	{
+	}
 
 	Ref(std::nullptr_t n)
-		: m_Instance(nullptr) {}
+		: m_Instance(nullptr)
+	{
+	}
 
 	Ref(T* instance)
 		: m_Instance(instance)
@@ -150,12 +154,11 @@ private:
 
 	void DecRef() const
 	{
-		if (m_Instance != nullptr)
-		{
-			m_Instance->DecRefCount();
-			if (m_Instance->GetRefCount() == 0)
-				hdelete m_Instance;
-		}
+		if (m_Instance == nullptr) return;
+
+		m_Instance->DecRefCount();
+		if (m_Instance->GetRefCount() == 0)
+			hdelete m_Instance;
 	}
 
 	template<class T2>
@@ -164,13 +167,13 @@ private:
 };
 
 template<class T, class RT = void>
-struct IsRef 
+struct IsRef
 {
 	static constexpr bool value = false;
 };
 
 template<class RT>
-struct IsRef<Ref<RT>> 
+struct IsRef<Ref<RT>>
 {
 	static constexpr bool value = true;
 };

@@ -75,7 +75,7 @@ void GUIManager::Update()
 void GUIManager::Render()
 {
 	Renderer::Submit([this]() mutable {
-		const ImUI::Style& style = ImUI::StyleManager().GetCurrent();
+		ImUI::Style& style = ImUI::StyleManager().GetCurrent();
 		m_Platform->BeginFrame();
 
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
@@ -108,8 +108,8 @@ void GUIManager::Render()
 		ImUI::Table<HazardProject> table("ProjectTable", ImGui::GetContentRegionAvail());
 		table.SetColumns({ "Project", "Version", "Modified" });
 		table.RowHeight(36.0f);
-		table.RowContent([style](const HazardProject& project) {
-			ImUI::Separator({ 2.0f, 36.0f }, style.Colors.AxisZ);
+		table.RowContent([color = style.Colors.AxisZ](uint32_t index, const HazardProject& project) {
+			ImUI::Separator({ 2.0f, 36.0f }, color);
 			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 			ImGui::SameLine(0, 8.0f);
 			ImGui::Text("%s", project.Name.c_str());

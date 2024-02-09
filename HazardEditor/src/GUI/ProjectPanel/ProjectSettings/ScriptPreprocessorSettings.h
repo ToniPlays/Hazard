@@ -17,7 +17,7 @@ namespace UI
 		ImUI::Table<uint32_t> table("Define table", { size.x, 0 }, false);
 		table.SetColumns({ "Name" });
 		table.RowHeight(28.0f);
-		table.RowContent([defines](uint32_t index) mutable {
+		table.RowContent([defines](uint32_t, uint32_t index) mutable {
 			ImUI::TextField defineName(defines->at(index));
 			defineName.SetHint("Define name");
 			defineName.Render();
@@ -43,7 +43,7 @@ namespace UI
 		ImUI::Table<Editor::ScriptPreprocessor> table("Predefined", { size.x, 0 }, false);
 		table.SetColumns({ "Name", "Availability" });
 		table.RowHeight(18.0f);
-		table.RowContent([](Editor::ScriptPreprocessor define) mutable {
+		table.RowContent([](uint32_t, Editor::ScriptPreprocessor define) mutable {
 			ImUI::Shift(4.0f, 4.0f);
 			ImGui::Text("%s", define.Name.c_str());
 			ImGui::TableNextColumn();

@@ -2,74 +2,119 @@
 
 #include <Ref.h>
 #include "JobFlags.h"
-#include "GraphStage.h"
+#include "Callback.h"
+#include "Job.h"
+#include <functional>
+#include <MathCore.h>
 
 class JobSystem;
-class GraphStage;
-class Job;
+
+struct GraphStageInfo 
+{
+	std::string Name;
+	float Weight;
+	std::vector<Ref<Job>> Jobs;
+};
+
+struct JobGraphInfo
+{
+	std::string Name;
+	std::vector<GraphStageInfo> Stages;
+	uint32_t Flags = 0;
+};
 
 class JobGraph : public RefCount
 {
 	friend class GraphStage;
-	friend class JobSystem;
+	friend class Job;
+
 public:
-	JobGraph(const std::string& name, uint32_t stageCount, uint32_t flags = 0);
+	JobGraph(const JobGraphInfo& info);
+	~JobGraph() = default;
 
-	const std::string& GetName() const { return m_Name; }
+	const std::string& GetName() const { return m_Info.Name; }
 	uint32_t GetCurrentStageIndex() const { return m_CurrentStage; }
-	Ref<GraphStage> GetCurrentStage() const { return m_Stages[m_CurrentStage]; }
-	uint64_t GetStageCount() const { return m_Stages.size(); }
-	Ref<GraphStage> GetStage(uint32_t index) const { return m_Stages[index]; }
-	const std::vector<Ref<GraphStage>>& GetStages() const { return m_Stages; }
-	uint32_t GetFlags() const { return m_Flags; }
+	uint32_t GetFlags() const { return m_Info.Flags; }
 
-	Ref<GraphStage> GetNextStage();
-	Ref<GraphStage> GetPreviousStage();
-	Ref<GraphStage> AddStage();
+	const JobGraphInfo& GetInfo() const { return m_Info; }
+	const GraphStageInfo& GetCurrentStageInfo() const 
+	{ 
+		return m_Info.Stages[Math::Min<uint64_t>(m_CurrentStage, m_Info.Stages.size() - 1)]; 
+	}
 
-	void CombineStages(Ref<JobGraph> graph, uint32_t offset = 0);
+	void Execute(JobSystem* system);
+	void Halt();
+	void Continue();
 
-	Ref<JobGraph> Execute();
+	void ContinueWith(const std::vector<Ref<Job>>& jobs);
 
 	float GetProgress();
 
-	bool HasFinished() const
+	void WaitUntilFinished() const
 	{
-		return m_CurrentStage >= m_Stages.size();
+		m_HasFinished.wait(false);
 	}
 
-	void Wait() const
+	bool HasFinished() const
 	{
-		while (!HasFinished())
-			m_CurrentStage.wait(m_CurrentStage);
+		return m_HasFinished;
 	}
 
 	template<typename T>
-	T GetResult()
+	T GetResult() const
 	{
 		auto results = GetResults<T>();
 		return results.size() > 0 ? results[0] : T();
 	}
+
 	template<typename T>
 	std::vector<T> GetResults() const
 	{
-		return GetStage(GetStageCount() - 1)->GetJobResults<T>();
+		if (m_CurrentStage < 1) return std::vector<T>();
+
+		auto& stageJobs = m_Info.Stages[m_CurrentStage - 1].Jobs;
+		std::vector<T> results;
+		results.reserve(stageJobs.size());
+
+		for (auto& job : stageJobs)
+			results.push_back(job->GetResult<T>());
+
+		return results;
 	}
 
-	void AddOnFinished(const std::function<void()> callback)
+	void AddOnCompleted(const std::function<void(JobGraph&)>& callback)
 	{
-		m_OnFinished.push_back(callback);
+		m_OnCompleted.Add(callback);
+	}
+
+	template<typename T>
+	static Ref<JobGraph> EmptyWithResult(T value)
+	{
+		Ref<Job> job = Ref<Job>::Create();
+		job->SetResult(value);
+
+		JobGraphInfo info = {};
+		info.Stages = { { "", 1.0f, { job }} };
+		auto graph = Ref<JobGraph>::Create(info);
+		graph->m_HasFinished = true;
+		return graph;
 	}
 
 private:
-	void OnStageFinished(Ref<GraphStage> stage);
 
+	void OnJobFinished(Ref<Job> job);
+	void OnJobFailed(Ref<Job> job);
+	void SubmitNextStage();
+	
 private:
-	std::string m_Name;
-	std::vector<Ref<GraphStage>> m_Stages;
+
+	JobGraphInfo m_Info;
 	std::atomic_uint32_t m_CurrentStage = 0;
-	uint32_t m_Flags = JOB_FLAGS_SUCCEEDED;
+	std::atomic_bool m_HasFinished = false;
+	std::atomic_bool m_IsHalted = false;
+	std::mutex m_StageMutex;
 
 	JobSystem* m_JobSystem = nullptr;
-	std::vector<std::function<void()>> m_OnFinished;
+
+	Callback<void(JobGraph&)> m_OnCompleted;
 };

@@ -22,32 +22,16 @@ namespace Hazard
     public:
         
         Material();
-        Material(AssetHandle pipelineHandle, HazardRenderer::DescriptorSetLayout layout);
-        
-        template<typename T>
-        T Get(const std::string& key)
-        {
-            return T();
-        };
-    
-        void* GetValue(const std::string& key)
-        {
-            return nullptr;
-        };
-        
-        template<typename T>
-        void Set(const std::string& key, T& value)
-        {
+        Material(Ref<HazardRenderer::Pipeline> pipeline, HazardRenderer::DescriptorSetLayout layout = HazardRenderer::DescriptorSetLayout());
 
-        }
+        AssetType GetType() const override { return AssetType::Material; }
         
-        
-        AssetHandle GetPipeline() const { return m_PipelineHandle; };
+        Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; };
         Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; };
-        void SetPipeline(AssetHandle handle) { m_PipelineHandle = handle; };
+        void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline) { m_Pipeline = pipeline; };
         
     private:
-        AssetHandle m_PipelineHandle;
+        Ref<HazardRenderer::Pipeline> m_Pipeline;
         Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;
     };
 }

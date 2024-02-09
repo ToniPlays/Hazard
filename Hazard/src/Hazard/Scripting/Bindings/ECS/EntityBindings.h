@@ -25,12 +25,12 @@ namespace Hazard
 
 	using namespace HazardScript;
 
-	static uint64_t Entity_InstantiateOrigin_Native(Coral::NativeString name)
+	static uint64_t Entity_InstantiateOrigin_Native(Coral::String name)
 	{
 		//TODO
 		return ScriptEngine::GetTargetWorldForEntity(0)->CreateEntity(name).GetUID();
 	}
-	static uint64_t Entity_InstantiateAt_Native(Coral::NativeString name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
+	static uint64_t Entity_InstantiateAt_Native(Coral::String name, glm::vec3 position, glm::vec3 rotation, glm::vec3 scale)
 	{
 		//TODO
 		//Entity e = CreateEntity(name.ToString());

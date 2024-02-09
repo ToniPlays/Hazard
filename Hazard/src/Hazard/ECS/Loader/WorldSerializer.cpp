@@ -7,7 +7,7 @@
 
 namespace Hazard
 {
-	Buffer WorldSerializer::Serialize()
+	std::string WorldSerializer::Serialize()
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -22,12 +22,10 @@ namespace Hazard
 					SerializeEntity(entity, out);
 			});
 		});
+
 		out << YAML::EndMap;
 
-		Buffer result;
-		result.Allocate(out.size() * sizeof(char));
-		result.Write(out.c_str(), result.Size);
-		return result;
+		return out.c_str();
 	}
 
 	void WorldSerializer::SerializeEntity(Entity& entity, YAML::Emitter& out)
@@ -58,10 +56,5 @@ namespace Hazard
 		TrySerialize<CircleCollider2DComponent>(entity, out);
 
 		out << YAML::EndMap;
-	}
-
-	bool WorldSerializer::SerializeRuntime(const std::string& file)
-	{
-		return false;
 	}
 }

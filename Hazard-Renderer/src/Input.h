@@ -64,7 +64,7 @@ private:
 	inline static glm::vec2 s_PreviosMousePos;
 	inline static uint8_t s_MouseButtons[128];
 	inline static uint64_t s_KeysPressed = 0;
-	inline static uint8_t s_KeyStates[384];
+	inline static std::unordered_map<uint32_t, uint8_t> s_KeyStates;
 	inline static std::vector<Joystick> s_Gamepads;
 	inline static HazardRenderer::Window* s_Window;
 };

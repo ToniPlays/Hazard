@@ -99,12 +99,12 @@ namespace Editor
 		Ref<Job> compileSource = Ref<Job>::Create("Compile C#", CompileSourcesJob, this);
 		Ref<Job> reloadAssembly = Ref<Job>::Create("Reload", ReloadAssembliesJob, this);
 
-		Ref<JobGraph> graph = Ref<JobGraph>::Create("Script compilation", 3);
-		graph->GetStage(0)->QueueJobs({ generateProject });
-		graph->GetStage(1)->QueueJobs({ compileSource });
-		graph->GetStage(2)->QueueJobs({ reloadAssembly });
+		//Ref<JobGraph> graph = Ref<JobGraph>::Create("Script compilation", 3);
+		//graph->GetStage(0)->QueueJobs({ generateProject });
+		//graph->GetStage(1)->QueueJobs({ compileSource });
+		//graph->GetStage(2)->QueueJobs({ reloadAssembly });
 
-		Application::Get().GetJobSystem().QueueGraph(graph);
+		//Application::Get().GetJobSystem().QueueGraph(graph);
 	}
 	bool EditorScriptManager::OnEvent(Event& e)
 	{

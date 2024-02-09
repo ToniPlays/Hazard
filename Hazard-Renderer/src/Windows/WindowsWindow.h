@@ -6,6 +6,7 @@
 #include "Core/Window.h"
 #include "Input.h"
 #include <GLFW/glfw3.h>
+#include "Callback.h"
 
 namespace HazardRenderer {
 
@@ -65,24 +66,25 @@ namespace HazardRenderer {
 		WindowProps& GetWindowInfo() override { return m_WindowData; }
 		GraphicsContext* GetContext() const override { return m_Context; };
 		Ref<Swapchain> GetSwapchain() override { return m_Context->GetSwapchain(); }
-		virtual void SetDebugCallback(const RendererMessageCallback& callback) override
+		virtual void AddDebugCallback(const RendererMessageCallback& callback) override
 		{
-			s_DebugCallback = callback;
+			s_DebugCallback.Add(callback);
 			for (auto& m : s_QueueMessages)
-				s_DebugCallback(m);
+				s_DebugCallback.Invoke<RenderMessage&>(m);
 
 			s_QueueMessages.clear();
 		}
 
 	private:
+
 		WindowProps m_WindowData;
 		GraphicsContext* m_Context;
 		GLFWwindow* m_Window = nullptr;
-		static inline RendererMessageCallback s_DebugCallback = nullptr;
+		static inline Callback<void(const RenderMessage&)> s_DebugCallback;
 		static inline std::vector<RenderMessage> s_QueueMessages;
+
 		void SetCallbacks();
 		inline static Window* s_CurrentWindow = nullptr;
-
 	};
 }
 #endif

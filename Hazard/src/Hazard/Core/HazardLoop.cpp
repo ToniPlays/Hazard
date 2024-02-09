@@ -12,43 +12,45 @@
 
 namespace Hazard
 {
-    HazardLoop::HazardLoop()
-    {
-        //OPTICK_THREAD("MainThread");
-        HazardLoop::s_Instance = this;
-        m_ModuleHandler = CreateScope<ModuleHandler>();
-        
-#ifndef HZR_RELEASE
-        m_ModuleHandler->AddModule<Logging::Logger>();
-#endif // HZR_RELEASE
-    }
+	HazardLoop::HazardLoop()
+	{
+		//OPTICK_THREAD("MainThread");
+		HazardLoop::s_Instance = this;
+		m_ModuleHandler = CreateScope<ModuleHandler>();
+
+	#ifndef HZR_RELEASE
+		m_ModuleHandler->AddModule<Logging::Logger>();
+	#endif // HZR_RELEASE
+	}
 	HazardLoop::HazardLoop(Application* app) : m_Application(app)
 	{
 		//OPTICK_THREAD("MainThread");
 		HazardLoop::s_Instance = this;
 		m_ModuleHandler = CreateScope<ModuleHandler>();
-        
-#ifndef HZR_RELEASE
+
+	#ifndef HZR_RELEASE
 		m_ModuleHandler->AddModule<Logging::Logger>();
-#endif // HZR_RELEASE
+	#endif // HZR_RELEASE
 	}
 
 	HazardLoop::~HazardLoop()
 	{
-		
+
 	}
-    void HazardLoop::SetApplication(Application *app) {
-        if(m_Application)
-        {
-            m_Application->Close();
-            delete m_Application;
-        }
-        m_Application = app;
-    }
+	void HazardLoop::SetApplication(Application* app)
+	{
+		if (m_Application)
+		{
+			m_Application->Close();
+			delete m_Application;
+		}
+		m_Application = app;
+	}
 
 	void HazardLoop::Start()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Start.json");
+		m_StartMicros = std::chrono::steady_clock::now();
 		try
 		{
 			Timer timer;
@@ -71,13 +73,12 @@ namespace Hazard
 	void HazardLoop::Close()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
-        AssetManager::Shutdown();
-        
+
 		m_Application->Close();
 		m_ModuleHandler->Close();
-        
+
+		AssetManager::Shutdown();
 		HZR_PROFILE_SESSION_END();
-		//OPTICK_SHUTDOWN();
 	}
 
 	bool HazardLoop::Quit(WindowCloseEvent& e)
@@ -86,39 +87,48 @@ namespace Hazard
 		return true;
 	}
 
-	void HazardLoop::Process(Event& e) 
+	void HazardLoop::Process(Event& e)
 	{
 		s_Instance->OnEvent(e);
 	}
 
 	void HazardLoop::Run()
-{
-        HZR_PROFILE_FRAME("MainThread");
-        HZR_TIMED_FUNCTION();
-        
-        //Update Time
+	{
+		HZR_PROFILE_FRAME("MainThread");
+		HZR_TIMED_FUNCTION();
+
+		//Update Time
 
 		uint32_t micros =
 			std::chrono::duration_cast<std::chrono::microseconds>
-			(std::chrono::system_clock::now().time_since_epoch()).count();
+			(std::chrono::steady_clock::now() - m_StartMicros).count();
 
 		Time::Update(micros / 1000000.0f);
-        
-        for(uint32_t i = 0; i < m_Application->m_MainJobs.size(); i++)
-			m_Application->m_MainJobs[i]();
 
-        m_Application->m_MainJobs.clear();
-        
+		auto jobs = m_Application->m_MainJobs;
+
+		for (uint32_t i = 0; i < jobs.size(); i++)
+		{
+			if (jobs[i])
+				jobs[i]();
+		}
+
+		m_Application->m_MainJobs.clear();
+
 		//Update
 		m_ModuleHandler->PreUpdate();
 		m_ModuleHandler->Update();
 		m_Application->Update();
 		m_ModuleHandler->PostUpdate();
+
 		//Render
 
 		m_ModuleHandler->PreRender();
 		m_ModuleHandler->Render();
 		m_ModuleHandler->PostRender();
+
+		if (m_FrameCount % 100)
+			AssetManager::UnloadRequired();
 
 		m_FrameCount++;
 	}

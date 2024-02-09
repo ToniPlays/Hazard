@@ -40,6 +40,7 @@ namespace Hazard
 	private:
 		Application* m_Application = nullptr;
 		Scope<ModuleHandler> m_ModuleHandler;
+		std::chrono::time_point<std::chrono::steady_clock> m_StartMicros;
 
 		uint64_t m_FrameCount = 0;
 		bool m_ShouldClose = false;

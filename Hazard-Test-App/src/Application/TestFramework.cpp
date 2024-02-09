@@ -32,7 +32,7 @@ void TestFramework::PreInit()
 void TestFramework::Init()
 {
 	auto& window = Application::GetModule<RenderContextManager>().GetWindow();
-	window.SetDebugCallback([](const RenderMessage& msg) {
+	window.AddDebugCallback([](const RenderMessage& msg) {
 		std::cout << msg.Description << std::endl;
 		std::cout << msg.StackTrace << std::endl;
 	});
@@ -110,7 +110,8 @@ void TestFramework::GenerateShaders()
 			{
                 std::string shaderType = Utils::ShaderStageToString(type);
                 auto path = outputDir / std::filesystem::path(fmt::format("{0}.{1}.{2}", File::GetNameNoExt(source), shaderType, extensions[api]));
-                
+				if (File::Exists(path)) continue;
+
 				auto shaderSourceCode = ShaderCompiler::GetShaderFromSource(type, shader, api);
 
 				if (api == RenderAPI::Vulkan)

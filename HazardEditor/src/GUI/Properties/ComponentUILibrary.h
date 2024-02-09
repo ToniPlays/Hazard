@@ -2,7 +2,6 @@
 
 #include <imgui.h>
 #include "Hazard.h"
-#include "Hazard/Scripting/HScript.h"
 #include "ScriptFieldUI.h"
 #include "Hazard/ImGUI/UIElements/TextField.h"
 #include "Hazard/ImGUI/UIElements/Dropdown.h"
@@ -224,7 +223,7 @@ namespace UI
 
 			std::string path = "None";
 			if (textureHandle != INVALID_ASSET_HANDLE)
-				path = File::GetNameNoExt(AssetManager::GetMetadata(textureHandle).Key);
+				path = File::GetNameNoExt(AssetManager::GetMetadata(textureHandle).FilePath);
 			else if (flags & BIT(0))
 				path = "---";
 
@@ -418,13 +417,7 @@ namespace UI
 			bool changed = ImUI::TextFieldWithHint(c.ModuleName, "Script class");
 
 			ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
-				Ref<HScript> script = AssetManager::GetAsset<HScript>(handle);
-
-				if (script)
-				{
-					c.ModuleName = script->GetModuleName();
-					changed = true;
-				}
+	
 			});
 
 			if (changed)
@@ -494,16 +487,15 @@ namespace UI
 				flags |= (sc.LodLevel != lodLevel) ? BIT(2) : 0;
 			}
 
-			std::string path = "None";
+			std::filesystem::path path = "None";
 			if (mapHandle != INVALID_ASSET_HANDLE)
-				path = AssetManager::GetMetadata(mapHandle).Key;
+				path = AssetManager::GetMetadata(mapHandle).SourceFile;
 			else if (flags & BIT(0))
 				path = "---";
 
-			ImUI::TextField sourceImage(path);
+			ImUI::TextField sourceImage(File::GetName(path));
 			sourceImage.SetHint("Environment map");
 			sourceImage.Render();
-
 
 			ImUI::DropTarget<AssetHandle>(AssetType::EnvironmentMap, [&](AssetHandle handle) {
 				Application::Get().SubmitMainThread([handle, entities]() mutable {
@@ -709,12 +701,12 @@ namespace UI
 			std::string meshName = "";
 			std::string materialName = "";
 			if (mesh)
-				meshName = File::GetNameNoExt(AssetManager::GetMetadata(mesh).Key);
+				meshName = File::GetNameNoExt(AssetManager::GetMetadata(mesh).FilePath);
 			else if (flags & BIT(0))
 				meshName = "---";
 
 			if (material)
-				materialName = File::GetNameNoExt(AssetManager::GetMetadata(material).Key);
+				materialName = File::GetNameNoExt(AssetManager::GetMetadata(material).FilePath);
 			else if (flags & BIT(1))
 				materialName = "---";
 

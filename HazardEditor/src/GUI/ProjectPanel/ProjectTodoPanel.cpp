@@ -27,7 +27,7 @@ namespace UI
 			ImUI::Table<Ref<TodoAttribute>> table("Assembly", size);
 			table.SetColumns({ "Status", "Message" });
 			table.RowHeight(24.0f);
-			table.RowContent([this](const Ref<TodoAttribute>& item) {
+			table.RowContent([this](uint32_t, const Ref<TodoAttribute>& item) {
 				DrawElement("", "", item);
 			});
 

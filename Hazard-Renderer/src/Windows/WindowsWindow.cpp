@@ -25,18 +25,17 @@ namespace HazardRenderer
 
 	void Window::SendDebugMessage(const RenderMessage& message)
 	{
-		if (!WindowsWindow::s_DebugCallback)
+		if (WindowsWindow::s_DebugCallback.Count() == 0)
 		{
 			WindowsWindow::s_QueueMessages.push_back(message);
 			return;
 		}
 
 		for (auto& m : WindowsWindow::s_QueueMessages)
-		{
-			WindowsWindow::s_DebugCallback(m);
-		}
+			WindowsWindow::s_DebugCallback.Invoke<const RenderMessage&>(m);
+
 		WindowsWindow::s_QueueMessages.clear();
-		WindowsWindow::s_DebugCallback(message);
+		WindowsWindow::s_DebugCallback.Invoke<const RenderMessage&>(message);
 	}
 
 	WindowsWindow::WindowsWindow(HazardRendererCreateInfo* info)
@@ -46,13 +45,11 @@ namespace HazardRenderer
 
 		s_CurrentWindow = this;
 
-		s_DebugCallback = info->pAppInfo->MessageCallback;
+		s_DebugCallback.Add(info->pAppInfo->MessageCallback);
 		m_WindowData.EventCallback = info->pAppInfo->EventCallback;
 
 		if (!m_WindowData.EventCallback)
-		{
 			m_WindowData.EventCallback = [](Event& e) {};
-		}
 
 		if (info->Renderer == RenderAPI::Auto)
 			info->Renderer = RenderAPI::Vulkan;

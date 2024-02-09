@@ -1,138 +1,193 @@
 
 #include <hzrpch.h>
 #include "ImageAssetLoader.h"
+#include "Hazard/Assets/AssetPack.h"
 #include "TextureFactory.h"
 #include "Texture2D.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Rendering/RenderEngine.h"
 
-#include "Hazard/Assets/AssetPack.h"
+
+
 #include "Hazard/Core/Application.h"
 
 namespace Hazard
 {
 	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata)
 	{
-		Ref<Job> job = Ref<Job>::Create(fmt::format("Image load {}", metadata.Key), LoadImageJob, metadata.Handle);
+		HZR_PROFILE_FUNCTION();
 
-		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Image load {}", metadata.Handle), 1);
-		graph->GetStage(0)->QueueJobs({ job });
+		Ref<Job> createJob = Ref<Job>::Create(fmt::format("ImageLoad: {}", metadata.FilePath.string()), CreateImageFromBinary, metadata.Handle);
 
-		return graph;
+		JobGraphInfo info = {};
+		info.Name = "Image load";
+		info.Stages = { { "Create", 1.0f, { createJob } } };
+		info.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+
+		return Ref<JobGraph>::Create(info);
 	}
 
-	Ref<JobGraph> ImageAssetLoader::Save(Ref<Asset>& asset)
+	Ref<JobGraph> ImageAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
 		HZR_PROFILE_FUNCTION();
-		return nullptr;
+
+		Ref<Job> readbackJob = Ref<Job>::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
+		Ref<Job> processJob = Ref<Job>::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
+
+		JobGraphInfo info = {};
+		info.Name = "Image save";
+		info.Stages = { { "Readback", 0.5f, { readbackJob } },
+					   { "Process", 0.5f, { processJob } }
+		};
+		info.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+
+		return Ref<JobGraph>::Create(info);
 	}
 
-	Ref<JobGraph> ImageAssetLoader::DataFromSource(const std::filesystem::path& path)
+	Ref<JobGraph> ImageAssetLoader::Create(const CreateAssetSettings& settings)
 	{
-		Ref<Job> job = Ref<Job>::Create(fmt::format("Image From source {}", path.string()), LoadImageFromSourceJob, path);
+		auto& file = settings.SourcePath;
 
-		Ref<JobGraph> graph = Ref<JobGraph>::Create(fmt::format("Image create {}", path.string()), 1);
-		graph->GetStage(0)->QueueJobs({ job });
+		ImageAssetLoaderSettings imageSpec = {};
+		if (settings.Settings)
+			imageSpec = *(ImageAssetLoaderSettings*)settings.Settings;
 
-		return graph;
+		Ref<Job> sourceLoad = Ref<Job>::Create(fmt::format("Image data load from: {0}", file.string()), ImageDataLoadFromSource, file, imageSpec);
+		Ref<Job> createImage = Ref<Job>::Create(fmt::format("Image {}", File::GetName(file)), CreateImageFromData, imageSpec);
+
+		JobGraphInfo info = {};
+		info.Name = "Image load";
+		info.Stages = { { "Load data", 0.8f, { sourceLoad } },
+						{ "Create", 0.2f, { createImage } }
+		};
+		info.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+
+		return Ref<JobGraph>::Create(info);
 	}
 
-	Ref<JobGraph> ImageAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
+	void ImageAssetLoader::ImageDataLoadFromSource(JobInfo& info, const std::filesystem::path& path, ImageAssetLoaderSettings settings)
 	{
-		HZR_ASSERT(false, "");
-		return Ref<JobGraph>();
+		if (!File::Exists(path))
+			throw JobException(fmt::format("Image source file does not exist: {}", path.string()));
+
+		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(path, settings.FlipOnLoad);
+		if (!header.ImageData.Data)
+			throw JobException("Image load from source failed");
+
+		info.Job->SetResult(header);
 	}
-	Buffer ImageAssetLoader::ToBinary(Ref<Asset> asset)
+
+	void ImageAssetLoader::CreateImageFromData(JobInfo& info, ImageAssetLoaderSettings settings)
+	{
+		TextureHeader header = info.ParentGraph->GetResult<TextureHeader>();
+
+		Image2DCreateInfo spec = {};
+		spec.DebugName = info.Job->GetName();
+		spec.Extent = header.Extent;
+		spec.Data = header.ImageData;
+		spec.Format = header.Format;
+		spec.MaxMips = header.Mips;
+		spec.Usage = ImageUsage::Texture;
+
+		Ref<Image2D> image = Image2D::Create(&spec);
+		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(image, RenderEngine::GetResources().DefaultImageSampler);
+		info.Job->SetResult(asset);
+	}
+
+	void ImageAssetLoader::ReadImageDataFromGPU(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
 		using namespace HazardRenderer;
-		Ref<Image2D> image = asset.As<Texture2DAsset>()->GetSourceImageAsset()->Value;
-		if (!image) return Buffer();
-
 		ImageCopyRegion region = {};
 		region.Extent = { image->GetWidth(), image->GetHeight(), 1 };
 		region.X = 0;
 		region.Y = 0;
 		region.Z = 0;
 
-		Buffer buffer = image->ReadPixels(region);
+		BufferCreateInfo bufferInfo = {};
+		bufferInfo.Name = "Image readback";
+		bufferInfo.Size = region.Extent.Width * region.Extent.Height * region.Extent.Depth * sizeof(float);
+		bufferInfo.UsageFlags = BUFFER_USAGE_STORAGE_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
 
-		TextureFileHeader header = {};
-		header.Extent.Width = image->GetWidth();
-		header.Extent.Height = image->GetHeight();
-		header.Extent.Depth = 1;
-		header.Format = image->GetFormat();
-		header.Channels = 4;
-		header.Dimensions = 1;
+		Ref<GPUBuffer> readbackBuffer = GPUBuffer::Create(&bufferInfo);
 
-		Buffer imageData;
-		imageData.Allocate(sizeof(TextureFileHeader) + buffer.Size);
-		imageData.Write(&header, sizeof(TextureFileHeader));
-		imageData.Write(buffer.Data, buffer.Size, sizeof(TextureFileHeader));
+		ImageMemoryInfo barrier = {};
+		barrier.Image = (Image*)image.Raw();
+		barrier.BaseLayer = 0;
+		barrier.LayerCount = 1;
+		barrier.BaseMip = 0;
+		barrier.MipCount = 1;
+		barrier.SrcLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+		barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
 
-		return imageData;
+		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Image readback", DeviceQueue::TransferBit, 1);
+		cmdBuffer->Begin();
+		cmdBuffer->ImageMemoryBarrier(barrier);
+		cmdBuffer->CopyImageToBuffer(image, readbackBuffer, region);
+
+		barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+		barrier.DstLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+
+		cmdBuffer->ImageMemoryBarrier(barrier);
+		cmdBuffer->End();
+		cmdBuffer->Submit();
+		cmdBuffer->OnCompleted([info, readbackBuffer]() mutable {
+
+			BufferCopyRegion region = {};
+			region.Offset = 0;
+			region.Size = readbackBuffer->GetSize();
+
+			Buffer data = readbackBuffer->ReadData(region);
+			info.Job->SetResult(data);
+			info.ParentGraph->Continue();
+		});
+
+		info.ParentGraph->Halt();
 	}
 
-	void ImageAssetLoader::LoadImageJob(JobInfo& info, AssetHandle handle)
+	void ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
-		using namespace HazardRenderer;
+		Buffer imageData = info.ParentGraph->GetResult<Buffer>();
 
+		ImageAssetFileHeader file = {};
+		file.Extent = { image->GetWidth(), image->GetHeight(), 1 };
+		file.Format = image->GetFormat();
+
+		Buffer assetData;
+		assetData.Allocate(sizeof(ImageAssetFileHeader) + imageData.Size);
+		CachedBuffer buf(assetData.Data, assetData.Size);
+		buf.Write(file);
+		buf.Write(imageData);
+
+		info.Job->SetResult(assetData),
+			imageData.Release();
+	}
+
+	void ImageAssetLoader::CreateImageFromBinary(JobInfo& info, AssetHandle handle)
+	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-		Buffer buffer = AssetManager::GetAssetData(handle);
 
-		if (!buffer.Data)
-		{
-			HZR_CORE_ERROR("Cannot find asset data for {}", handle);
-			return;
-		}
+		if (!File::Exists(metadata.FilePath))
+			throw JobException("File does not exist");
 
-		CachedBuffer readBuffer(buffer.Data, buffer.Size);
+		CachedBuffer buffer = File::ReadBinaryFile(metadata.FilePath);
+		AssetPack pack = {};
+		pack.FromBuffer(buffer);
 
-		TextureFileHeader header = readBuffer.Read<TextureFileHeader>();
+		CachedBuffer data(pack.AssetData.Data, pack.AssetData.Size);
+
+		ImageAssetFileHeader header = data.Read<ImageAssetFileHeader>();
 
 		Image2DCreateInfo imageInfo = {};
-		imageInfo.DebugName = fmt::format("{0}", metadata.Key);
+		imageInfo.DebugName = fmt::format("Image: {}", File::GetName(metadata.FilePath));
 		imageInfo.Extent = header.Extent;
-		imageInfo.Data = readBuffer.Read<Buffer>(header.Extent.Width * header.Extent.Height * header.Extent.Depth * header.Channels);
 		imageInfo.Format = header.Format;
-		imageInfo.MaxMips = header.MipCount;
+		imageInfo.MaxMips = 1;
+		imageInfo.Data = pack.AssetData;
 		imageInfo.Usage = ImageUsage::Texture;
 
 		Ref<Image2D> image = Image2D::Create(&imageInfo);
-		Ref<AssetPointer> pointer = AssetPointer::Create(image, AssetType::Image);
-		Ref<Sampler> sampler = RenderEngine::GetResources().DefaultImageSampler;
-
-		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(pointer, sampler);
-		asset->m_Handle = handle;
-		asset->m_Type = AssetType::Image;
+		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(image, RenderEngine::GetResources().DefaultImageSampler);
 
 		info.Job->SetResult(asset);
-		buffer.Release();
-	}
-
-	void ImageAssetLoader::LoadImageFromSourceJob(JobInfo& info, std::filesystem::path& path)
-	{
-		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(path, true);
-
-		TextureFileHeader fileHeader = {};
-		fileHeader.Extent = header.Extent;
-		fileHeader.MipCount = 64;
-		fileHeader.Channels = header.Channels;
-		fileHeader.Dimensions = header.Dimensions;
-		fileHeader.Format = header.Format;
-
-		Buffer buffer;
-		buffer.Allocate(sizeof(TextureFileHeader) + header.ImageData.Size);
-		buffer.Write(&fileHeader, sizeof(TextureFileHeader));
-		buffer.Write(header.ImageData.Data, header.ImageData.Size, sizeof(TextureFileHeader));
-
-		AssetPackElement element = {};
-		element.AddressableName = path.string();
-		element.Type = AssetType::Image;
-		element.AssetPackHandle = 0;
-		element.Handle = UID();
-		element.Data = buffer;
-
-		info.Job->SetResult(element);
-		header.ImageData.Release();
 	}
 }

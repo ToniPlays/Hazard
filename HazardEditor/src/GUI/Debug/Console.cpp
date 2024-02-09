@@ -9,13 +9,33 @@ namespace UI
 {
 	Console::Console() : Panel("Console")
 	{
+		auto& window = Application::GetModule<RenderContextManager>().GetWindow();
+		auto& scriptEngine = Application::GetModule<ScriptEngine>();
 
+		window.AddDebugCallback([this](const RenderMessage& message) {
+			uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
+			AddMessage({ message.Description, message.StackTrace, messageFlags });
+		});
+
+		scriptEngine.AddDebugCallback([this](const HazardScript::ScriptMessage& message) {
+			uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
+			AddMessage({ message.Message, message.StackTrace, GetMessageFlagsFromSeverity(Severity::Error) });
+		});
+
+		JobSystem& system = Application::Get().GetJobSystem();
+		system.Hook(JobSystem::Message, [this](Severity severity, const std::string& message) {
+			Application::Get().SubmitMainThread([this, severity, message]() {
+				AddMessage({ message, "", GetMessageFlagsFromSeverity(severity) });
+			});
+		});
 	}
+
 	bool Console::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT(Console::KeyPressed));
 	}
+
 	void Console::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -30,7 +50,7 @@ namespace UI
 		ImUI::Table<ConsoleMessage> table("Console", consoleSize);
 		table.SetColumns({ "Type", "Timestamp", "Message" });
 		table.RowHeight(24.0f);
-		table.RowContent([&](const ConsoleMessage& message) {
+		table.RowContent([&](uint32_t, const ConsoleMessage& message) {
 			ImGui::PushID(message.Message.c_str());
 
 			ImUI::Separator({ 4.0, 24.0f }, GetMessageColor(message.Flags));
@@ -79,6 +99,7 @@ namespace UI
 			ImGui::EndPopup();
 		}
 	}
+
 	bool Console::KeyPressed(KeyPressedEvent& e)
 	{
 		if (e.GetKeyCode() == Key::Escape && m_DetailedPanelOpen)
@@ -88,6 +109,7 @@ namespace UI
 		}
 		return false;
 	}
+
 	void Console::Clear(bool force)
 	{
 		std::vector<ConsoleMessage> messages;
@@ -112,6 +134,7 @@ namespace UI
 		if (message.Flags & MessageFlags_Fatal)		return "Fatal";
 		return "Unknown";
 	}
+
 	void Console::DrawToolbar(const ImVec2& size)
 	{
 		using namespace ImUI;
@@ -170,6 +193,7 @@ namespace UI
 		}
 		ImGui::EndChild();
 	}
+
 	ImVec4 Console::GetMessageColor(const uint32_t& flag)
 	{
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();

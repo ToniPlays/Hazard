@@ -3,6 +3,7 @@
 #ifdef HZR_INCLUDE_VULKAN
 
 #include "Core/Rendering/RenderCommandBuffer.h"
+#include "Callback.h"
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -53,11 +54,19 @@ namespace HazardRenderer::Vulkan
 		void DispatchCompute(GroupSize globalGroupSize) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
 
-		void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region);
-		void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region);
+		void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region) override;
+		void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region) override;
+		void CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> targetImage, const BufferCopyRegion& region) override;
+		void CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> targetBuffer, const ImageCopyRegion& region) override;
+
 		void BlitImage(const BlitImageInfo& blitInfo);
 
 		void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory);
+
+		virtual void OnCompleted(std::function<void()> callback)
+		{
+			m_OnCompletion.Add(callback);
+		};
 
 		//Vulkan specific
 		VkCommandBuffer GetBuffer(uint32_t index) { return m_CommandBuffers[index]; }
@@ -92,6 +101,8 @@ namespace HazardRenderer::Vulkan
 		bool m_OwnedBySwapchain = false;
 
 		Ref<VulkanPipeline> m_CurrentPipeline = nullptr;
+
+		Callback<void()> m_OnCompletion;
 
 		State m_State = State::Waiting;
 		VkQueue m_SubmitQueue = VK_NULL_HANDLE;

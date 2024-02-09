@@ -18,7 +18,7 @@ namespace Hazard
 		return nullptr;
 	}
 
-	Ref<JobGraph> PipelineAssetLoader::Save(Ref<Asset>& asset)
+	Ref<JobGraph> PipelineAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
 		HZR_PROFILE_FUNCTION();
 		return nullptr;
@@ -37,9 +37,8 @@ namespace Hazard
 		return nullptr;
 	}
 
-	Ref<JobGraph> PipelineAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
+	Ref<JobGraph> PipelineAssetLoader::Create(const CreateAssetSettings& settings)
 	{
-		HZR_CORE_ASSERT(false, "");
-		return Ref<JobGraph>();
+		return nullptr;
 	}
 }

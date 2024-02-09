@@ -78,9 +78,8 @@ namespace UI
 		ImGui::SetCursorPosY(yPos + edgeOffset);
 		ImUI::ShiftX(edgeOffset);
 
-
-		ImUI::Image(thumbnailIcon->GetSourceImageAsset()->Value.As<HazardRenderer::Image2D>(), sampler,
-					ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
+		ImUI::Image(thumbnailIcon->GetSourceImage(), sampler,
+			ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
 
 		if (IsFolder())
 		{
@@ -152,27 +151,11 @@ namespace UI
 		});
 
 		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && !IsFolder() && Input::IsKeyDown(Key::LeftControl))
-			OS::OpenInDefault(GetMetadata().Key);
+			OS::OpenInDefault(GetMetadata().FilePath);
 
 		if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() && m_Flags == 0)
 		{
 			OnItemClicked();
-		}
-		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && m_Flags == 0)
-		{
-			if (!IsFolder())
-			{
-				if (GetType() == AssetType::Script)
-				{
-					HZR_INFO("Open script in editor");
-				}
-				else
-				{
-					//Open import settings
-					auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
-					panel->OpenExisting(m_SourcePath, m_Handle);
-				}
-			}
 		}
 
 		ImGui::PopStyleVar();
@@ -196,7 +179,7 @@ namespace UI
 			return File::GetName(m_SourcePath);
 
 		const AssetMetadata& metadata = GetMetadata();
-        return File::GetNameNoExt(metadata.Key);
+		return File::GetNameNoExt(metadata.FilePath);
 	}
 	void AssetPanelItem::DrawItemName(const char* name, float edgeOffset)
 	{
@@ -204,11 +187,11 @@ namespace UI
 		{
 			ImGui::SetKeyboardFocusHere();
 			ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - edgeOffset * 4.0f);
-			
-            char buf[512];
-            strcpy(buf, m_RenameValue.c_str());
-            if(ImGui::InputText("##", buf, 512))
-                m_RenameValue = buf;
+
+			char buf[512];
+			strcpy(buf, m_RenameValue.c_str());
+			if (ImGui::InputText("##", buf, 512))
+				m_RenameValue = buf;
 
 			if (ImGui::IsItemDeactivated())
 			{
@@ -232,12 +215,12 @@ namespace UI
 
 		if (IsFolder())
 			Directory::Rename(m_SourcePath, newName);
-        else
-        {
-            auto& metadata = Hazard::AssetManager::GetMetadata(m_Handle);
-            metadata.Key = newName;
-        }
-        
+		else
+		{
+			auto& metadata = Hazard::AssetManager::GetMetadata(m_Handle);
+			metadata.FilePath = newName;
+		}
+
 		Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
 	}
 	void AssetPanelItem::OnItemClicked()

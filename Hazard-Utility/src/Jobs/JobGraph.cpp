@@ -1,98 +1,177 @@
 #include "JobGraph.h"
-
-#include "GraphStage.h"
 #include "JobSystem.h"
 
-JobGraph::JobGraph(const std::string& name, uint32_t count, uint32_t flags) : m_Name(name)
-{
-	m_Flags |= flags;
+#include "spdlog/fmt/fmt.h"
 
-	m_Stages.resize(count);
-	for (uint32_t i = 0; i < count; i++)
+JobGraph::JobGraph(const JobGraphInfo& info)
+{
+	m_Info = info;
+
+	for (auto& stage : m_Info.Stages)
 	{
-		m_Stages[i] = Ref<GraphStage>::Create(i, 1.0f / (float)count, flags);
-		m_Stages[i]->m_JobGraph = this;
-	}
-}
-Ref<GraphStage> JobGraph::GetNextStage()
-{
-	if (m_CurrentStage + 1 >= m_Stages.size())
-		return nullptr;
-
-	return m_Stages[m_CurrentStage + 1];
-}
-Ref<GraphStage> JobGraph::GetPreviousStage()
-{
-	if ((int64_t)m_CurrentStage - 1 < 0)
-		return nullptr;
-
-	return m_Stages[m_CurrentStage - 1];
-}
-
-Ref<GraphStage> JobGraph::AddStage()
-{
-	Ref<GraphStage> stage = Ref<GraphStage>::Create(m_Stages.size(), 0.0f, m_Flags);
-	stage->m_JobGraph = this;
-	m_Stages.push_back(stage);
-	return stage;
-}
-
-void JobGraph::CombineStages(Ref<JobGraph> graph, uint32_t offset)
-{
-	if (graph == nullptr) return;
-
-	auto& stages = graph->GetStages();
-	for (uint32_t i = 0; i < stages.size(); i++)
-	{
-		Ref<GraphStage> stage = GetStage(i + offset);
-		if (!stage)
-			stage = AddStage();
-
-		stage->m_JobGraph = this;
-		stage->QueueJobs(stages[i]->m_Jobs);
+		for (uint32_t i = 0; i < stage.Jobs.size(); i++)
+		{
+			Ref<Job> job = stage.Jobs[i];
+			job->m_JobGraph = this;
+			job->m_InvocationId = i;
+		}
 	}
 }
 
-Ref<JobGraph> JobGraph::Execute()
+void JobGraph::Execute(JobSystem* system)
 {
-	JobInfo info = {};
-	for (auto& stage : m_Stages)
+	m_JobSystem = system;
+	auto& jobs = m_Info.Stages[m_CurrentStage].Jobs;
+	if (jobs.size() == 0)
 	{
-        info.PreviousStage = GetPreviousStage();
-        for (uint32_t i = 0; i < stage->m_Jobs.size(); i++)
-        {
-            info.ExecutionID = 0;
-            stage->m_Jobs[i]->Execute(info);
-        }
-
+		OnJobFinished(nullptr);
+		return;
 	}
-	return this;
+
+	system->QueueJobs(jobs);
+}
+
+void JobGraph::Halt()
+{
+	if (m_IsHalted) return;
+
+	m_IsHalted = true;
+	m_IsHalted.notify_all();
+	m_JobSystem->TerminateGraphJobs(this);
+
+	std::string msg = fmt::format("Graph {} halted", GetName());
+	m_JobSystem->m_MessageHook.Invoke(Severity::Warning, msg);
+}
+
+void JobGraph::Continue() 
+{
+	if (!m_IsHalted) return;
+
+	m_IsHalted = false;
+	m_IsHalted.notify_all();
+
+	std::vector<Ref<Job>> remainingJobs;
+	for (auto& job : GetCurrentStageInfo().Jobs)
+	{
+		if (job->GetStatus() == JobStatus::None)
+			remainingJobs.push_back(job);
+	}
+
+	if (remainingJobs.size() == 0)
+		SubmitNextStage();
+	else 
+		m_JobSystem->QueueJobs(remainingJobs);
+
+	std::string msg = fmt::format("Graph {} continuing after halt", GetName());
+	m_JobSystem->m_MessageHook.Invoke(Severity::Warning, msg);
+}
+
+void JobGraph::ContinueWith(const std::vector<Ref<Job>>& jobs)
+{
+	if (m_CurrentStage + 1 >= m_Info.Stages.size()) return;
+
+	for (uint32_t i = 0; i < jobs.size(); i++)
+	{
+		Ref<Job> job = jobs[i];
+		job->m_JobGraph = this;
+		job->m_InvocationId = i;
+	}
+
+	std::scoped_lock lock(m_StageMutex);
+	auto& stageJobs = m_Info.Stages[m_CurrentStage + 1].Jobs;
+	stageJobs.insert(stageJobs.end(), jobs.begin(), jobs.end());
 }
 
 float JobGraph::GetProgress()
 {
-	float progress = 0;
-	for (auto& stage : m_Stages)
-		progress += stage->GetProgress();
+	float progress = 0.0;
+
+	for (uint32_t i = 0; i < m_CurrentStage; i++)
+	{
+		const GraphStageInfo& info = m_Info.Stages[i];
+		float stageProgress = 0.0f;
+
+		for (auto& jobs : info.Jobs)
+			stageProgress += jobs->GetProgress() / (float)info.Jobs.size();
+
+		if (info.Jobs.size() == 0) stageProgress = 1.0f;
+
+		progress += info.Weight * stageProgress;
+	}
 
 	return progress;
 }
-void JobGraph::OnStageFinished(Ref<GraphStage> stage)
-{
-	Ref<GraphStage> next = GetNextStage();
-	m_CurrentStage++;
-	m_CurrentStage.notify_all();
 
-	if (!next)
+void JobGraph::OnJobFinished(Ref<Job> job)
+{
+	if (m_IsHalted) return;
+
+	if (m_CurrentStage + 1 < m_Info.Stages.size())
 	{
-		for (auto& cb : m_OnFinished)
-			cb();
+		SubmitNextStage();
 		return;
 	}
 
-	if (next->GetJobs().size() == 0)
-		OnStageFinished(nullptr);
+	if (m_HasFinished) return;
 
-	if (m_JobSystem)
-		m_JobSystem->QueueJobs(next->m_Jobs);
+	m_CurrentStage++;
+	m_HasFinished = true;
+	m_Info.Flags |= JOB_GRAPH_SUCCEEDED;
+	m_JobSystem->m_Hooks.Invoke(JobSystem::Finished, Ref<JobGraph>(this));
+
+	try {
+		m_OnCompleted.Invoke<JobGraph&>(*this);
+	}
+	catch (JobException e)
+	{
+		m_OnCompleted.Clear();
+		std::string msg = fmt::format("Graph {} OnComplete error: {}", m_Info.Name, e.what());
+		m_JobSystem->m_MessageHook.Invoke(Severity::Error, msg);
+	}
+
+	m_JobSystem->OnGraphFinished(Ref<JobGraph>(this));
+	m_HasFinished.notify_all();
+}
+void JobGraph::OnJobFailed(Ref<Job> job)
+{
+	if (m_Info.Flags & JOB_GRAPH_TERMINATE_ON_ERROR)
+	{
+		m_JobSystem->TerminateGraphJobs(this);
+		m_HasFinished = true;
+		m_Info.Flags |= JOB_GRAPH_FAILED;
+
+		m_JobSystem->m_Hooks.Invoke(JobSystem::Failure, this);
+		m_CurrentStage = m_Info.Stages.size() - 1;
+
+		try
+		{
+			m_OnCompleted.Invoke<JobGraph&>(*this);
+		}
+		catch (JobException e)
+		{
+			m_OnCompleted.Clear();
+			std::string msg = fmt::format("Graph {} OnComplete error: {}", m_Info.Name, e.what());
+			m_JobSystem->m_MessageHook.Invoke(Severity::Error, msg);
+		}
+
+		m_JobSystem->OnGraphFinished(this);
+		m_HasFinished.notify_all();
+		return;
+	}
+
+	if (m_IsHalted) return;
+
+	if (m_CurrentStage + 1 < m_Info.Stages.size())
+		SubmitNextStage();
+}
+
+void JobGraph::SubmitNextStage()
+{
+	for (auto& job : m_Info.Stages[m_CurrentStage].Jobs)
+		if (job->GetStatus() != JobStatus::Success && job->GetStatus() != JobStatus::Failure)
+			return;
+
+	m_CurrentStage++;
+	if (!m_JobSystem->QueueJobs(m_Info.Stages[m_CurrentStage].Jobs))
+		OnJobFinished(nullptr);
 }

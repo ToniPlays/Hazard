@@ -4,9 +4,9 @@
 #include <functional>
 #include "JobException.h"
 #include "JobFlags.h"
+#include "Callback.h"
 
 class JobGraph;
-class GraphStage;
 class Thread;
 class Job;
 
@@ -15,21 +15,19 @@ struct JobInfo
 	Ref<Job> Job;
 	Ref<Thread> Thread;
 	Ref<JobGraph> ParentGraph;
-	Ref<GraphStage> PreviousStage;
-	Ref<GraphStage> NextStage;
+	uint32_t StageIndex;
 	uint32_t ExecutionID;
 };
 
 class Job : public RefCount
 {
 	friend class JobSystem;
-	friend class GraphStage;
-
+	friend class JobGraph;
 	using JobCallback = std::function<void(JobInfo&)>;
 
 public:
 
-	Job() = delete;
+	Job() = default;
 	~Job();
 
 	template<typename Fn, typename... Args>
@@ -38,31 +36,29 @@ public:
 		m_JobCallback = std::bind(&callback, std::placeholders::_1, std::forward<Args>(args)...);
 	}
 
-	const std::string& GetName() { return m_JobName; }
-	const std::string& GetTag() { return m_JobTag; }
-	JobStatus GetStatus() { return m_Status; }
-
-	void SetJobTag(const std::string& name) { m_JobTag = name; }
+	const std::string& GetName() const { return m_JobName; }
+	JobStatus GetStatus() const { return m_Status; }
 
 	void Execute(JobInfo& info);
 	void Progress(float progress);
 
-	float GetExecutionTime() { return m_ExecutionTime; }
-	float WaitForUpdate();
-	float GetProgress() { return m_Progress; }
-
-	Ref<GraphStage> GetStage() { return m_Stage; }
-	Ref<JobGraph> GetJobGraph();
+	float GetExecutionTime() const { return m_ExecutionTime; }
+	float GetProgress() const { return m_Progress; }
 
 	template<typename T>
-	T GetResult() 
+	T GetResult() const
 	{
 		return m_Result ? *(T*)m_Result : T();
 	}
 	template<typename T>
 	void SetResult(T value)
 	{
-		m_Result = hnew T(value);
+		T* val = hnew T(value);
+		m_Result = (void*)val;
+		
+		m_DestroyQueue.Add([result = val]() mutable {
+			hdelete (T*)result;
+		});
 	}
 
 private:
@@ -71,11 +67,12 @@ private:
 	std::atomic<float> m_Progress = 0.0f;
 	std::atomic<float> m_ExecutionTime = 0.0f;
 	uint32_t m_InvocationId = 0;
-	
-	std::string m_JobTag;
+	JobGraph* m_JobGraph = nullptr;
+
 	std::string m_JobName;
 	JobStatus m_Status = JobStatus::None;
 
 	void* m_Result = nullptr;
-	Ref<GraphStage> m_Stage = nullptr;
+
+	Callback<void()> m_DestroyQueue;
 };

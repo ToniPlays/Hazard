@@ -52,7 +52,7 @@ namespace UI
 		ImUI::Table<Ref<InputDevice>> inputSources("Input sources", { ImGui::GetContentRegionAvail().x, 0.0f });
 		inputSources.RowHeight(34.0f);
 		inputSources.SetColumns({ "Name", "Type", "Binding" });
-		inputSources.RowContent([&](const Ref<Hazard::InputDevice>& device) {
+		inputSources.RowContent([&](uint32_t, const Ref<Hazard::InputDevice>& device) {
 			ImUI::Separator({ 4.0, 34.0f }, device->IsConnected() ? style.Colors.AxisY : style.Colors.AxisX);
 			ImGui::SameLine();
 			ImGui::Text("%s", device->GetName().c_str());
@@ -107,7 +107,7 @@ namespace UI
 				ImUI::Table<InputButtonBinding> bindingTable("BindingTable", ImVec2(size.x, 150), false);
 				bindingTable.SetColumns({ "Type", "Mapped keys", "Inverted",  "Pressed" });
 				bindingTable.RowHeight(32.0f);
-				bindingTable.RowContent([settings](InputButtonBinding map) {
+				bindingTable.RowContent([settings](uint32_t, InputButtonBinding map) {
 					ImUI::Shift(4.0f, 4.0f);
 					ImGui::Text("%s", AxisDirectionToString(map.Axis->Direction).c_str());
 
@@ -189,7 +189,7 @@ namespace UI
 				ImUI::Table<InputButtonBinding> bindingTable("BindingTable", ImVec2(size.x, 0.0f), false);
 				bindingTable.SetColumns({  "Type", "Mapped keys", "Multiplier", "Inverted", "Current value" });
 				bindingTable.RowHeight(32.0f);
-				bindingTable.RowContent([bindingTable](InputButtonBinding& map) {
+				bindingTable.RowContent([bindingTable](uint32_t, InputButtonBinding& map) {
 					ImUI::Shift(4.0f, 4.0f);
 					ImGui::Text("%s", AxisDirectionToString(map.Axis[0].Direction).c_str());
 

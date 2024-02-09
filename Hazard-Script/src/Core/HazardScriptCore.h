@@ -15,9 +15,6 @@ namespace HazardScript
 		std::string StackTrace;
 	};
 
-	using ScriptDebugCallback = std::function<void(ScriptMessage)>;
-	using BindingCallback = std::function<void(Ref<ScriptAssembly>)>;
-
 	struct HazardScriptCreateInfo 
 	{
 		std::filesystem::path CoreAssemblyPath;
@@ -25,8 +22,8 @@ namespace HazardScript
 
 		std::filesystem::path CoralDirectory;
 
-		ScriptDebugCallback DebugCallback;
-		BindingCallback BindingCallback;
+		std::function<void(ScriptMessage)> DebugCallback;
+		std::function<void(Ref<ScriptAssembly>)> BindingCallback;
 
 		bool LoadAssebmlies = true;
 	};

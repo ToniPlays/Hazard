@@ -2,7 +2,6 @@
 #include <hzrpch.h>
 #include "ScriptEngine.h"
 #include "InternalCalls.h"
-#include "ScriptAssetLoader.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Attributes/AttributeConstructor.h"
 
@@ -18,8 +17,6 @@ namespace Hazard
 	}
 	void ScriptEngine::PreInit()
 	{
-		AssetManager::RegisterLoader<ScriptAssetLoader>(AssetType::Script, this);
-
 		HZR_PROFILE_FUNCTION();
 
 		HazardScriptCreateInfo createInfo = {};
@@ -28,29 +25,28 @@ namespace Hazard
 		createInfo.CoralDirectory = m_Info.CoralDirectory;
 
 		createInfo.DebugCallback = [&](ScriptMessage message) {
-			if (!m_MessageCallback)
+			if (m_MessageCallback.Count() == 0)
 			{
 				m_QueuedMessages.push_back(message);
 				return;
 			}
 
 			for (auto& m : m_QueuedMessages)
-			{
-				m_MessageCallback(m);
-			}
+				m_MessageCallback.Invoke<ScriptMessage&>(m);
+
 			m_QueuedMessages.clear();
-			m_MessageCallback(message);
+			m_MessageCallback.Invoke<ScriptMessage&>(message);
 		};
+
 		createInfo.BindingCallback = [&](Ref<ScriptAssembly> assembly) {
-			if (m_ScriptGlue.contains(assembly.Raw()))
+			if (!m_ScriptGlue.contains(assembly.Raw())) return;
+
+			for (auto& glue : m_ScriptGlue[assembly.Raw()])
 			{
-				for (auto& glue : m_ScriptGlue[assembly.Raw()])
-				{
-					glue->OnAssemblyLoaded(assembly);
-					glue->Register(assembly);
-				}
-				assembly->UploadInternalCalls();
+				glue->OnAssemblyLoaded(assembly);
+				glue->Register(assembly);
 			}
+			assembly->UploadInternalCalls();
 		};
 		AttributeConstructor::Init();
 
@@ -118,15 +114,17 @@ namespace Hazard
 			}
 		});
 	}
-	void ScriptEngine::SetDebugCallback(ScriptMessageCallback callback)
+
+	void ScriptEngine::AddDebugCallback(ScriptMessageCallback callback)
 	{
-		m_MessageCallback = callback;
+		m_MessageCallback.Add(callback);
 
 		for (auto& m : m_QueuedMessages)
-			m_MessageCallback(m);
+			m_MessageCallback.Invoke<ScriptMessage&>(m);
 
 		m_QueuedMessages.clear();
 	}
+
 	void ScriptEngine::InitializeComponent(Ref<World> targetWorld, const Entity& entity)
 	{
 		HZR_PROFILE_FUNCTION();

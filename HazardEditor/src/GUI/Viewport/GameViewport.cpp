@@ -31,18 +31,11 @@ namespace UI
 	void GameViewport::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-        return;
 
 		Ref<World> world = nullptr; // Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		if (!world) return;
-
-		auto [cc, tc] = world->GetWorldCamera();
-		if (cc == nullptr) 
-		{ 
-			m_HasCamera = false;
-			return; 
-		};
-
+		
+		/*
 		m_HasCamera = true;
 		glm::mat4 view = tc->GetTransformNoScale();
 
@@ -59,6 +52,7 @@ namespace UI
 
 		auto renderer = Editor::EditorWorldManager::GetWorldRender();
 		//renderer->SubmitCamera(cameraData);
+		*/
 	}
 	void GameViewport::OnPanelRender()
 	{

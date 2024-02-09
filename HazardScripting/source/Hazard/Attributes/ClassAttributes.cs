@@ -4,11 +4,6 @@ using System.Text;
 
 namespace Hazard
 {
-    [System.AttributeUsage(AttributeTargets.Class)]
-    public class Cached : Attribute 
-    {
-    }
-
     public enum Status
     {
         Done = 0,

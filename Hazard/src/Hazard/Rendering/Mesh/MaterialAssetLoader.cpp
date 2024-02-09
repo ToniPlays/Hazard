@@ -11,12 +11,12 @@ namespace Hazard
         return nullptr;
     }
 
-    Ref<JobGraph> MaterialAssetLoader::Save(Ref<Asset>& asset)
+    Ref<JobGraph> MaterialAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
     {
         return nullptr;
     }
 
-    Ref<JobGraph> MaterialAssetLoader::Create(const std::filesystem::path& path, const std::filesystem::path& internalPath)
+    Ref<JobGraph> MaterialAssetLoader::Create(const CreateAssetSettings& settings)
     {
         return nullptr;
     }

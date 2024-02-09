@@ -53,7 +53,7 @@ namespace Hazard
 
 		m_VertexBuffer->SetData(region);
 
-		Ref<Pipeline> pipeline = AssetManager::GetAsset<AssetPointer>(m_Material->GetPipeline())->Value.As<Pipeline>();
+		Ref<Pipeline> pipeline = m_Material->GetPipeline();
 		pipeline->SetRenderPass(m_RenderPass);
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_CicleBatch->GetIndexCount(), 0);
@@ -182,10 +182,7 @@ namespace Hazard
 
 		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 
-		auto layout = DescriptorSetLayout();
-
-		AssetHandle pipelineHandle = ShaderLibrary::GetPipelineAssetHandle("CircleShader");
-		m_Material = Ref<Material>::Create(pipelineHandle, layout);
+		DescriptorSetLayout layout = {};
 
 		m_RenderPass = renderPass;
 	}

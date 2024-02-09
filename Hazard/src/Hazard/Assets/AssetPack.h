@@ -1,122 +1,46 @@
 #pragma once
-
+#include "Core/Core.h"
 #include "Asset.h"
-#include <spdlog/fmt/fmt.h>
 
 namespace Hazard
 {
-	struct AssetPackHeader
+	enum AssetPackFlags : uint32_t
 	{
-		AssetHandle Handle = INVALID_ASSET_HANDLE;
-		uint64_t ElementCount = 0;
+		ASSET_PACK_HEADER = BIT(0),
+		ASSET_PACK_ELEMENT = BIT(1),
+		ASSET_PACK_CONTAINS_DATA = BIT(2),
+		ASSET_PACK_REFERENCES_FILE = BIT(3)
 	};
 
-	struct AssetPackElementHeader
-	{
-		uint64_t Handle = 0;
-		uint64_t AssetDataSize = 0;
-		uint64_t AssetDataOffset = 0;
-		uint32_t Type = 0;
-		//Store addressable name here
-	};
-	struct AssetPackElement
-	{
-		AssetHandle AssetPackHandle = 0;
-		AssetHandle Handle = 0;
-        AssetType Type;
-		Buffer Data;
-		std::string AddressableName;
-	};
-
-    //Asset packs must contain a single element if editability is desired
-    //Editing asset in a pack with multiple elements is not supported
-
+	//Asset packs support only a single asset at the moment
 	struct AssetPack
 	{
-		AssetHandle Handle = 0;
-		uint64_t ElementCount = 0;
-		std::vector<AssetPackElement> Elements;
+		uint32_t Flags;
+		uint64_t Handle;
+		AssetType Type;
+		std::string SourceFile;
+		Buffer AssetData;
 
-		void Free()
+		CachedBuffer ToBuffer()
 		{
-			for (auto& element : Elements)
-				element.Data.Release();
-		}
-
-		static AssetPack Create(CachedBuffer& buffer)
-		{
-			buffer.ResetCursor();
-
-			if (buffer.GetSize() == 0) 
-				return AssetPack();
-			
-			AssetPackHeader header = buffer.Read<AssetPackHeader>();
-
-			HZR_ASSERT(header.ElementCount < 2000, "Asset pack has too many elements");
-
-            AssetPack pack = {};
-			pack.Handle = header.Handle;
-			pack.ElementCount = header.ElementCount;
-			pack.Elements.resize(header.ElementCount);
-
-			std::vector<AssetPackElementHeader> headers;
-			headers.resize(header.ElementCount);
-
-			for (uint64_t i = 0; i < header.ElementCount; i++)
-			{
-				headers[i] = buffer.Read<AssetPackElementHeader>();
-				AssetPackElement& element = pack.Elements[i];
-				element.Handle = headers[i].Handle;
-				element.Type = (AssetType)headers[i].Type;
-				element.AddressableName = buffer.Read<std::string>();
-			}
-			
-			for (uint64_t i = 0; i < header.ElementCount; i++)
-			{
-				AssetPackElement& element = pack.Elements[i];
-				element.AssetPackHandle = pack.Handle;
-				element.Data = Buffer::Copy(buffer.Read<Buffer>(headers[i].AssetDataSize));
-                
-                if(!element.Data.Data) 
-					fmt::format("Element {0} has no data", element.AddressableName);
-			}
-			
-			return pack;
-		}
-		static CachedBuffer ToBuffer(const AssetPack& pack)
-		{
-			AssetPackHeader header = {};
-			header.Handle = pack.Handle;
-			header.ElementCount = pack.ElementCount;
-
-			uint64_t dataSize = 0;
-
-			for (auto& element : pack.Elements)
-				dataSize += element.Data.Size + sizeof(uint64_t) + element.AddressableName.length() * sizeof(char);
-
-			CachedBuffer buffer(sizeof(AssetPackHeader) + sizeof(AssetPackElementHeader) * pack.ElementCount + dataSize);
-
-			uint64_t dataOffset = 0;
-			buffer.Write(header);
-
-			//Write headers
-			for (auto& element : pack.Elements)
-			{
-				AssetPackElementHeader elementHeader = {};
-				elementHeader.Type = (uint32_t)element.Type;
-				elementHeader.AssetDataSize = element.Data.Size;
-				elementHeader.AssetDataOffset = dataOffset;
-				elementHeader.Handle = element.Handle;
-				buffer.Write(elementHeader);
-				buffer.Write<std::string>(element.AddressableName);
-
-				dataOffset += element.Data.Size;
-			}
-			//Write actual asset data
-			for (auto& element : pack.Elements)
-				buffer.Write(element.Data);
-
+			uint32_t len = SourceFile.length() + sizeof(uint64_t);
+			CachedBuffer buffer(sizeof(uint32_t) + sizeof(uint64_t) + sizeof(AssetType) + len + AssetData.Size);
+			buffer.Write(Flags);
+			buffer.Write(Handle);
+			buffer.Write(Type);
+			buffer.Write(SourceFile);
+			buffer.Write(AssetData);
 			return buffer;
 		}
+		void FromBuffer(CachedBuffer buffer)
+		{
+			Flags = buffer.Read<uint32_t>();
+			Handle = buffer.Read<uint64_t>();
+			Type = buffer.Read<AssetType>();
+			SourceFile = buffer.Read<std::string>();
+			uint64_t dataSize = buffer.GetSize() - buffer.GetCursor();
+			AssetData = Buffer::Copy(buffer.GetData(), dataSize, buffer.GetCursor());
+		}
 	};
+
 }

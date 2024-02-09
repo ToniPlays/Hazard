@@ -34,8 +34,8 @@ namespace Hazard
 
 		AssetType Type = AssetType::Undefined;
 		LoadState LoadState = LoadState::None;
-		std::string Key = "";
-		bool MemoryOnly = false;
+		std::filesystem::path FilePath = "";	//Can be whatever
+		std::filesystem::path SourceFile = "";	//Original asset location
 
 		bool IsValid() { return Handle && Type != AssetType::Undefined; }
 	};
@@ -43,21 +43,22 @@ namespace Hazard
 	class Asset : public RefCount
 	{
 		friend class AssetManager;
-		friend class ImageAssetLoader;
-		friend class WorldAssetLoader;
-	public:
+		friend class AssetLoader;
 
+	public:
 		virtual ~Asset();
 
-		const AssetType GetType() const { return m_Type; }
+		virtual AssetType GetType() const = 0;
 		AssetHandle GetHandle() const { return m_Handle; }
 		uint32_t GetFlags() const { return m_Flags; }
-		bool IsValid() const { return m_Handle != INVALID_ASSET_HANDLE && m_Type != AssetType::Undefined; }
+		const std::filesystem::path& GetSourceFilePath() const { return m_SourceAssetPath; }
+		void SetSourceFilePath(const std::filesystem::path& newPath) { m_SourceAssetPath = newPath; }
+		bool IsValid() const { return m_Handle != INVALID_ASSET_HANDLE && GetType() != AssetType::Undefined; }
 
 	protected:
 		AssetHandle m_Handle = INVALID_ASSET_HANDLE;
-		AssetType m_Type = AssetType::Undefined;
 		uint16_t m_Flags = 0;
+		std::filesystem::path m_SourceAssetPath = "";
 
 	private:
 		void SetHandle(UID handle) { m_Handle = handle; };
@@ -71,14 +72,14 @@ namespace Hazard
 
 		Ref<RefCount> Value = nullptr;
 
+		AssetType GetType() const override { return AssetType::Undefined; }
+
 		static Ref<AssetPointer> Create(Ref<RefCount> value, AssetType type)
 		{
 			Ref<AssetPointer> pointer = Ref<AssetPointer>::Create();
 			pointer->Value = value;
-			pointer->m_Type = type;
 
 			return pointer;
 		}
-
 	};
 }

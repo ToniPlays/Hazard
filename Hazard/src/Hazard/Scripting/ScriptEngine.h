@@ -39,7 +39,7 @@ namespace Hazard
 		};
 
 		void ReloadAssemblies();
-		void SetDebugCallback(ScriptMessageCallback callback);
+		void AddDebugCallback(ScriptMessageCallback callback);
 		void InitializeComponent(Ref<World> targetWorld, const Entity& entity);
 		void RemoveComponent(Ref<World> targetWorld, const Entity& entity);
 
@@ -60,6 +60,6 @@ namespace Hazard
 		std::unordered_map<UID, Ref<World>> m_WorldContext;
 
 		std::unordered_map<HazardScript::ScriptAssembly*, std::vector<IScriptGlue*>> m_ScriptGlue;
-		ScriptMessageCallback m_MessageCallback;
+		Callback<void(HazardScript::ScriptMessage&)> m_MessageCallback;
 	};
 }

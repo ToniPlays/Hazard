@@ -4,30 +4,40 @@
 #include "Utility/YamlUtils.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Physics/PhysicsCommand.h"
-
-#include "UID.h"
-
 #include "Hazard/Assets/AssetEnums.h"
 #include "Hazard/Scripting/ScriptSerializer.h"
 
+#include "UID.h"
+#include "Callback.h"
+
 namespace Hazard
 {
-	using DeserializerProgressHandler = std::function<void(Entity&, uint64_t, uint64_t)>;
+	using DeserializerCallback = Callback<void(uint64_t, uint64_t)>;
 
 	class WorldDeserializer
 	{
 	public:
-		WorldDeserializer(AssetHandle handle) : m_Handle(handle) {}
+		WorldDeserializer() = default;
+		WorldDeserializer(const std::string& source) : m_Source(source) {}
+
+		void SetSource(const std::string& source) { m_Source = source; }
 
 		Ref<World> Deserialize();
+		std::vector<AssetHandle> GetReferencedAssets();
 
-		void SetProgressHandler(DeserializerProgressHandler handler) { m_Handler = handler; }
+		void AddProgressHandler(std::function<void(uint64_t, uint64_t)> callback) 
+		{ 
+			m_Handler.Add(callback); 
+		}
 
 	private:
 		template<typename T>
 		static void TryDeserializeComponent(const char* key, Entity entity, YAML::Node node);
 		template<typename T>
 		static void Deserialize(Entity entity, YAML::Node node);
+
+		template<typename T>
+		static void GetReferencedAssets(const char* key, std::vector<AssetHandle>& handles, YAML::Node node) {}
 
 		template<>
 		static void Deserialize<TagComponent>(Entity entity, YAML::Node comp)
@@ -56,18 +66,18 @@ namespace Hazard
 		template<>
 		static void Deserialize<CameraComponent>(Entity entity, YAML::Node comp)
 		{
-
 			auto& c = entity.AddComponent<CameraComponent>();
 			std::string projection;
-			YamlUtils::Deserialize(comp, "Projection", projection, std::string("Perspective"));
-			c.SetProjection(projection == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
-			c.SetFov(comp["Fov"].as<float>());
-			c.SetSize(comp["Size"].as<float>());
-
 			glm::vec2 clipping;
+
+			YamlUtils::Deserialize(comp, "Projection", projection, std::string("Perspective"));
 			YamlUtils::Deserialize(comp, "Clipping", clipping, glm::vec2(0.03f, 1.0f));
+
+			c.SetProjection(projection == "Orthographic" ? Projection::Orthographic : Projection::Perspective);
 			c.SetZNear(clipping.x);
 			c.SetZFar(clipping.y);
+			c.SetFov(comp["Fov"].as<float>());
+			c.SetSize(comp["Size"].as<float>());
 		};
 
 		template<>
@@ -184,8 +194,7 @@ namespace Hazard
 		}
 
 	private:
-
-		AssetHandle m_Handle;
-		DeserializerProgressHandler m_Handler;
+		std::string m_Source;
+		DeserializerCallback m_Handler;
 	};
 }

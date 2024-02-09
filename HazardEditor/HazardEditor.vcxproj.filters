@@ -25,6 +25,9 @@
     <Filter Include="src\EditorScripting\Bindings">
       <UniqueIdentifier>{33113AD5-1FCC-2981-C883-A2CBB41D7411}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Exporter">
+      <UniqueIdentifier>{950C937C-816F-2221-2AF5-5AD71637EEA3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\GUI">
       <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
     </Filter>
@@ -132,6 +135,9 @@
     <ClInclude Include="src\EditorScripting\EditorScriptGlue.h">
       <Filter>src\EditorScripting</Filter>
     </ClInclude>
+    <ClInclude Include="src\Exporter\ApplicationExporter.h">
+      <Filter>src\Exporter</Filter>
+    </ClInclude>
     <ClInclude Include="src\GUI\AllPanels.h">
       <Filter>src\GUI</Filter>
     </ClInclude>
@@ -234,6 +240,8 @@
     <ClInclude Include="src\Project\ProjectSettingsSchema.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\AssetTools\AssetImporters\IAssetImporter.h" />
+    <ClInclude Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -274,6 +282,9 @@
     </ClCompile>
     <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp">
       <Filter>src\EditorScripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Exporter\ApplicationExporter.cpp">
+      <Filter>src\Exporter</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\AssetTools\AssetImporterPanel.cpp">
       <Filter>src\GUI\AssetTools</Filter>
@@ -347,5 +358,6 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.cpp" />
   </ItemGroup>
 </Project>

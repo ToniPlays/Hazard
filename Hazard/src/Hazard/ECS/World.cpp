@@ -117,21 +117,6 @@ namespace Hazard
 		m_Registry.destroy(entity);
 	}
 
-	std::tuple<CameraComponent*, TransformComponent*> World::GetWorldCamera() {
-
-		auto group = GetEntitiesWith<CameraComponent, TransformComponent>();
-
-		for (auto entity : group) {
-
-			Entity e = GetEntity(entity);
-			if (!e.IsVisible()) continue;
-
-			const auto& [cam, transform] = group.get<CameraComponent, TransformComponent>(entity);
-			return std::tuple(&cam, &e.GetTransform());
-		}
-		return std::tuple(nullptr, nullptr);
-	}
-
 	Ref<World> World::Copy(Ref<World> sourceWorld)
 	{
 		HZR_PROFILE_FUNCTION();

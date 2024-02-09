@@ -25,36 +25,38 @@ void EditorAssetManager::LoadEditorAssets()
 	};
 
 	std::vector<EditorAsset> texturesToLoad = {
-		{ "Default",			"Library/Packed/textureBG.png.hpack"},
-		{ "Folder",				"Library/Packed/folder.png.hpack"},
-		{ "World",				"Library/Packed/world.png.hpack"},
-		{ "Script",				"Library/Packed/csharp.png.hpack"},
-		{ "Camera",				"Library/Packed/camera.png.hpack"},
-		{ "DirectionalLight",	"Library/Packed/directionalLight.png.hpack"}
+		{ "Default",			"res/Icons/textureBG.png"},
+		{ "Folder",				"res/Icons/folder.png"},
+		{ "World",				"res/Icons/world.png"},
+		{ "Script",				"res/Icons/csharp.png"},
+		{ "Camera",				"res/Icons/camera.png"},
+		{ "DirectionalLight",	"res/Icons/directionalLight.png"}
 	};
+
 	std::vector<EditorAsset> meshesToLoad = {
 		//{ "Cube", "Library/cube.obj.hpack"     },
 		//{ "Sphere", "Library/sphere.obj.hpack" }
 	};
 
+	std::vector<JobPromise> promises;
+
 	Timer timer;
 	for (auto& texture : texturesToLoad)
 	{
-		//Get asset pack handle
-		AssetHandle packHandle = AssetManager::GetHandleFromKey(texture.Path);
-		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
-		s_Icons[texture.Key] = pack.Elements[0].Handle;
-		pack.Free();
-	}
+		CreateAssetSettings settings = {};
+		settings.SourcePath = texture.Path;
 
-	for (auto& mesh : meshesToLoad)
-	{
-		//Get asset pack handle
-		AssetHandle packHandle = AssetManager::GetHandleFromKey(mesh.Path);
-		AssetPack pack = AssetManager::OpenAssetPack(packHandle);
-		s_Icons[mesh.Key] = pack.Elements[0].Handle;
-		pack.Free();
+		JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Image, settings);
+		promise.Then([key = texture.Key](JobGraph& graph) {
+			Ref<Texture2DAsset> asset = graph.GetResult<Ref<Texture2DAsset>>();
+			s_Icons[key] = asset->GetHandle();
+			asset->IncRefCount();
+		});
+		promises.push_back(promise);
 	}
+	for (auto& promise : promises)
+		promise.Wait();
+
 }
 
 AssetHandle EditorAssetManager::GetIconHandle(const std::string& name)
@@ -70,80 +72,47 @@ AssetHandle EditorAssetManager::GetDefaultMesh(const std::string& name)
 	return INVALID_ASSET_HANDLE;
 }
 
-void EditorAssetManager::SaveAssetsToPack(const std::string& name, std::vector<AssetPackElement> assets)
-{
-	if (assets.size() == 0) return;
-
-	FileCache cache("Library");
-
-	AssetPack pack = {};
-	pack.Handle = AssetHandle();
-	pack.ElementCount = assets.size();
-	pack.Elements = assets;
-
-	for (auto& e : pack.Elements)
-		e.AssetPackHandle = pack.Handle;
-
-	CachedBuffer buffer = AssetPack::ToBuffer(pack);
-
-	if (!cache.WriteFile("Packed" / std::filesystem::path(name + ".hpack"), buffer.GetData(), buffer.GetSize()))
-		pack.Free();
-}
-
 void EditorAssetManager::ImportEngineAssets()
 {
 	using namespace Hazard;
+
 	HZR_INFO("Importing engine assets");
 
 	Timer timer;
-	FileCache cache("Library/Packed");
+	FileCache cache("Library/Shaders");
 
-	struct LoadingJobs
+	std::vector<JobPromise> promises;
+
+	for (auto& file : Directory::GetAllInDirectory("res/Shaders", true))
 	{
-		std::filesystem::path File;
-		JobPromise Promise;
-	};
+		if (File::GetFileExtension(file) != ".glsl") continue;
+		auto cacheFile = File::GetNameNoExt(file) + ".hasset";
 
-	std::vector<LoadingJobs> promises;
+		if (cache.HasFile(cacheFile))
+		{
+			AssetManager::Import(cache.Get(cacheFile));
+			continue;
+		}
 
-	for (auto& file : Directory::GetAllInDirectory("res", true))
-	{
-		if (File::IsDirectory(file)) continue;
+		CreateAssetSettings settings = {};
+		settings.SourcePath = file;
 
-		auto packPath = File::GetName(file) + ".hpack";
-		if (cache.HasFile(packPath)) continue;
+		JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Shader, settings);
+		promise.Then([cache](JobGraph& graph) {
+			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
 
-		//TODO change
-		auto extension = File::GetFileExtension(file);
-		if (extension == ".glslh") continue;
-		if (extension == ".ttf") continue;
-		if (extension == ".mtl") continue;
-		if (extension == ".txt") continue;
-		if (extension == ".ico") continue;
-		if (extension == ".cs") continue;
+			SaveAssetSettings settings = {};
+			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
+			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
 
-		promises.push_back({ file, AssetManager::DataFromSource(file) });
+			AssetManager::SaveAsset(asset, settings).Wait();
+		});
+
+		promises.push_back(promise);
 	}
 
 	for (auto& promise : promises)
-	{
-		promise.Promise.Wait();
-		auto results = promise.Promise.GetResults<AssetPackElement>();
-		SaveAssetsToPack(File::GetName(promise.File), results);
-	}
-
-	auto files = Directory::GetAllInDirectory(cache.GetCachePath(), true);
-	for (auto& file : files)
-	{
-		if (File::IsDirectory(file)) continue;
-
-		auto packPath = File::GetName(file);
-
-		CachedBuffer buffer = File::ReadBinaryFile(file);
-		AssetPack pack = AssetPack::Create(buffer);
-		AssetManager::ImportAssetPack(pack, file);
-		pack.Free();
-	}
+		promise.Wait();
 
 	HZR_INFO("Engine assets imported in {0} ms", timer.ElapsedMillis());
 }

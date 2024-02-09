@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
@@ -54,61 +54,32 @@
     <Compile Include="source\Hazard\Attributes\ClassAttributes.cs" />
     <Compile Include="source\Hazard\Attributes\FieldAttributes.cs" />
     <Compile Include="source\Hazard\Attributes\MethodAttributes.cs" />
-    <Compile Include="source\Hazard\Audio\AudioMixer.cs" />
     <Compile Include="source\Hazard\Components\AudioSourceComponent.cs" />
     <Compile Include="source\Hazard\Components\CameraComponent.cs" />
     <Compile Include="source\Hazard\Components\InternalCalls.cs" />
-    <Compile Include="source\Hazard\Components\MeshComponent.cs" />
-    <Compile Include="source\Hazard\Components\SkyLightCompnent.cs" />
-    <Compile Include="source\Hazard\Components\SpriteRendererComponent.cs" />
     <Compile Include="source\Hazard\Components\TagComponent.cs" />
     <Compile Include="source\Hazard\Components\TransformComponent.cs" />
     <Compile Include="source\Hazard\Core\Formatter.cs" />
     <Compile Include="source\Hazard\Core\Reference.cs" />
-    <Compile Include="source\Hazard\Coroutines\Coroutine.cs" />
-    <Compile Include="source\Hazard\Coroutines\WaitForInput.cs" />
-    <Compile Include="source\Hazard\Coroutines\WaitForNextFrame.cs" />
-    <Compile Include="source\Hazard\Coroutines\WaitSeconds.cs" />
     <Compile Include="source\Hazard\Debug\Debug.cs" />
     <Compile Include="source\Hazard\Debug\InternalCalls.cs" />
     <Compile Include="source\Hazard\ECS\Component.cs" />
     <Compile Include="source\Hazard\ECS\Entity.cs" />
     <Compile Include="source\Hazard\ECS\InternalCalls.cs" />
-    <Compile Include="source\Hazard\ECS\World.cs" />
-    <Compile Include="source\Hazard\ECS\WorldManager.cs" />
-    <Compile Include="source\Hazard\Input\Input.cs" />
     <Compile Include="source\Hazard\Input\KeyCodes.cs" />
     <Compile Include="source\Hazard\Math\BoundingBox.cs" />
     <Compile Include="source\Hazard\Math\CameraUtils.cs" />
     <Compile Include="source\Hazard\Math\Color.cs" />
     <Compile Include="source\Hazard\Math\InternalCalls.cs" />
     <Compile Include="source\Hazard\Math\Math.cs" />
-    <Compile Include="source\Hazard\Math\Noise.cs" />
-    <Compile Include="source\Hazard\Math\Quaternion.cs" />
     <Compile Include="source\Hazard\Math\Time.cs" />
     <Compile Include="source\Hazard\Math\Vector2.cs" />
     <Compile Include="source\Hazard\Math\Vector3.cs" />
-    <Compile Include="source\Hazard\Physics\Collider2D.cs" />
-    <Compile Include="source\Hazard\Physics\Rigidbody2D.cs" />
     <Compile Include="source\Hazard\Resources\Asset.cs" />
-    <Compile Include="source\Hazard\Resources\AssetMetadata.cs" />
     <Compile Include="source\Hazard\Resources\InternalCalls.cs" />
-    <Compile Include="source\Hazard\Resources\Resources.cs" />
-    <Compile Include="source\Hazard\Resources\Sprite.cs" />
-    <Compile Include="source\Hazard.Rendering\Buffer.cs" />
-    <Compile Include="source\Hazard.Rendering\BufferEnums.cs" />
-    <Compile Include="source\Hazard.Rendering\CubemapTexture.cs" />
-    <Compile Include="source\Hazard.Rendering\EnvironmentMap.cs" />
-    <Compile Include="source\Hazard.Rendering\Image2D.cs" />
     <Compile Include="source\Hazard.Rendering\IndexBuffeCreateInfo.cs" />
-    <Compile Include="source\Hazard.Rendering\IndexBuffer.cs" />
     <Compile Include="source\Hazard.Rendering\InternalCalls.cs" />
-    <Compile Include="source\Hazard.Rendering\Material.cs" />
     <Compile Include="source\Hazard.Rendering\Mesh.cs" />
-    <Compile Include="source\Hazard.Rendering\Pipeline.cs" />
-    <Compile Include="source\Hazard.Rendering\Shader.cs" />
-    <Compile Include="source\Hazard.Rendering\Texture.cs" />
-    <Compile Include="source\Hazard.Rendering\VertexBuffer.cs" />
     <Compile Include="source\Hazard.Rendering\VertexBufferCreateInfo.cs" />
   </ItemGroup>
   <ItemGroup>

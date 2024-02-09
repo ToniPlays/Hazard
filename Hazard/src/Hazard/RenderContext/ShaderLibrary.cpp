@@ -16,16 +16,14 @@ namespace Hazard
 	{
 		HZR_PROFILE_SCOPE();
 		HZR_TIMED_FUNCTION();
-
-
+		
 		DescriptorSetLayout setLayout = { { SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
 									   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 									   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 									   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
-
 		{
 			BufferLayout layout = LineVertex::Layout();
-
+			//TODO: Update all the paths
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Debug/LineShader.glsl");
 
 			PipelineSpecification specs = {};
@@ -36,8 +34,7 @@ namespace Hazard
 			specs.Shaders = asset->ShaderCode[api];
 			specs.SetLayouts = { setLayout };
 
-			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			s_LoadedPipelines["LineShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
+			s_LoadedPipelines["LineShader"] = Pipeline::Create(&specs);
 		}
 		{
 			BufferLayout layout = CircleVertex::Layout();
@@ -51,8 +48,7 @@ namespace Hazard
 			specs.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST;
 			specs.Shaders = asset->ShaderCode[api];
 
-			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			s_LoadedPipelines["CircleShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
+			s_LoadedPipelines["CircleShader"] = Pipeline::Create(&specs);
 		}
 		{
 			BufferLayout layout = QuadVertex::Layout();
@@ -70,8 +66,7 @@ namespace Hazard
 			specs.SetLayouts = { setLayout, samplerSet };
 			specs.PushConstants = { { SHADER_STAGE_VERTEX_BIT, sizeof(glm::mat4), 0} };
 
-			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			s_LoadedPipelines["QuadShader"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
+			s_LoadedPipelines["QuadShader"] = Pipeline::Create(&specs);
 		}
 		{
 			BufferLayout layout = Vertex3D::Layout();
@@ -85,8 +80,7 @@ namespace Hazard
 			specs.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE;
 			specs.Shaders = asset->ShaderCode[api];
 
-			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			s_LoadedPipelines["PBR_Static"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
+			s_LoadedPipelines["PBR_Static"] = Pipeline::Create(&specs);
 		}
 		{
 			DescriptorSetLayout skyboxLayout = {
@@ -105,8 +99,7 @@ namespace Hazard
 			specs.SetLayouts = { skyboxLayout };
 			specs.PushConstants = { { SHADER_STAGE_FRAGMENT_BIT, sizeof(float) * 2, 0 } };
 
-			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			s_LoadedPipelines["Skybox"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
+			s_LoadedPipelines["Skybox"] = Pipeline::Create(&specs);
 		}
 		{
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Compute/EquirectangularToCubemap.glsl");
@@ -122,8 +115,7 @@ namespace Hazard
 			specs.Shaders = asset->ShaderCode[api];
 			specs.SetLayouts = { layout };
 
-			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			s_LoadedPipelines["EquirectangularToCubemap"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
+			s_LoadedPipelines["EquirectangularToCubemap"] = Pipeline::Create(&specs);
 		}
 		{
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Compute/EnvironmentIrradiance.glsl");
@@ -140,15 +132,14 @@ namespace Hazard
 			specs.SetLayouts = { layout };
 			specs.PushConstants = { { SHADER_STAGE_COMPUTE_BIT, sizeof(uint32_t), 0 } };
 
-			Ref<AssetPointer> pointer = AssetPointer::Create(Pipeline::Create(&specs), AssetType::Pipeline);
-			s_LoadedPipelines["EnvironmentIrradiance"] = AssetManager::CreateMemoryOnly(AssetType::Pipeline, pointer);
+			s_LoadedPipelines["EnvironmentIrradiance"] = Pipeline::Create(&specs);
 		}
 	}
 
-	AssetHandle ShaderLibrary::GetPipelineAssetHandle(const std::string& name)
+	Ref<HazardRenderer::Pipeline> ShaderLibrary::GetPipeline(const std::string& name)
 	{
 		if (s_LoadedPipelines.find(name) == s_LoadedPipelines.end())
-			return INVALID_ASSET_HANDLE;
+			return nullptr;
 
 		return s_LoadedPipelines[name];
 	}

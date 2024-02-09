@@ -5,14 +5,17 @@ enum class ThreadStatus
 	None,
 	Terminated,
 	Waiting,
-	Executing
+	Executing,
+	Failed,
+	Finished
 };
 
-enum JobFlags
+enum JobGraphFlags
 {
-	JOB_FLAGS_SUCCEEDED = BIT(0),
-	JOB_FLAGS_ABORT_ON_FAILURE = BIT(1),
-	JOB_FLAGS_SILENT_FAILURE = BIT(2)
+	JOB_GRAPH_TERMINATE_ON_ERROR = BIT(0),
+	JOB_GRAPH_TERMINATED = BIT(1),
+	JOB_GRAPH_FAILED = BIT(2),
+	JOB_GRAPH_SUCCEEDED = BIT(3)
 };
 
 enum class JobStatus

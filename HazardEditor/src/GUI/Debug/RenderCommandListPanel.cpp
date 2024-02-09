@@ -37,7 +37,7 @@ namespace UI
 				ImUI::Table<Content> table("WorldRenderer", size);
 				table.SetColumns({ "Type", "Value" });
 				table.RowHeight(24.0f);
-				table.RowContent([](const Content& item) {
+				table.RowContent([](uint32_t, const Content& item) {
 					ImGui::Text("%s", item.Key.c_str());
 					ImGui::TableNextColumn();
 					ImGui::Text("%s", item.Value.c_str());

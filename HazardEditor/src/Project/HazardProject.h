@@ -80,7 +80,7 @@ public:
 		YAML::Node root = YAML::LoadFile(m_Info.ProjectPath.string());
 		YAML::Node node = root["Project"];
 		YamlUtils::Deserialize(node, "Project name", m_Info.ProjectName, std::string("New project"));
-		YamlUtils::Deserialize(node, "Version", m_Info.ProjectVersion, std::string("0"));
+		YamlUtils::Deserialize(node, "Version", m_Info.ProjectVersion, std::string("0.0.0"));
 		YamlUtils::Deserialize(node, "Startup world", m_Info.StartupWorld, std::filesystem::path(""));
 
 		if (!File::IsDirectory(m_Info.ProjectPath))

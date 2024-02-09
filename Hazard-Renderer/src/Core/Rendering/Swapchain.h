@@ -9,7 +9,7 @@ namespace HazardRenderer
 {
 	class Window;
 
-	class Swapchain : public RefCount 
+	class Swapchain : public RefCount
 	{
 	public:
 		virtual void Resize(uint32_t width, uint32_t height) = 0;

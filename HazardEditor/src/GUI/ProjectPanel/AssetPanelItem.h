@@ -27,7 +27,7 @@ namespace UI
 
 		bool IsFolder() { return File::IsDirectory(m_SourcePath); }
 		const Hazard::AssetHandle& GetHandle() { return m_Handle; }
-		const Hazard::AssetMetadata& GetMetadata() { return Hazard::AssetManager::GetMetadata(m_Handle); }
+		const Hazard::AssetMetadata& GetMetadata() const { return Hazard::AssetManager::GetMetadata(m_Handle); }
 		std::string GetName();
 		const AssetType& GetType() { return GetMetadata().Type; }
 

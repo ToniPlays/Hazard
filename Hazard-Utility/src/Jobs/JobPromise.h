@@ -12,14 +12,20 @@ struct JobPromise
 
 public:
 	JobPromise() = default;
-	JobPromise(Ref<Job> job) : m_Job(job) {};
 	JobPromise(Ref<JobGraph> graph) : m_JobGraph(graph) {};
 
     bool Succeeded() const;
     void Wait() const;
-	void Then(const std::function<void()> callback);
+	bool Valid() const { return m_JobGraph != nullptr; }
+	JobPromise Then(const std::function<void(JobGraph&)>& callback);
 	const std::string& GetJobName() const { return m_JobGraph->GetName(); }
 
+	template<typename T>
+	T GetResult() const 
+	{
+		if (!m_JobGraph) return T();
+		return m_JobGraph->GetResult<T>();
+	}
 	template<typename T>
 	std::vector<T> GetResults() const
 	{
@@ -29,5 +35,4 @@ public:
 
 private:
 	Ref<JobGraph> m_JobGraph = nullptr;
-	Ref<Job> m_Job = nullptr;
 };

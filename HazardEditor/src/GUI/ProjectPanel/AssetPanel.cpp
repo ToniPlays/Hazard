@@ -88,11 +88,10 @@ namespace UI
 	void AssetPanel::OpenImport()
 	{
 		std::filesystem::path file = File::OpenFileDialog();
-		if (!file.empty())
-		{
-			auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
-			panel->Open(file);
-		}
+		if (file.empty()) return;
+
+		auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
+		panel->Open(file);
 	}
 	void AssetPanel::DrawToolbar()
 	{
@@ -223,7 +222,7 @@ namespace UI
 
 		for (auto& item : m_CurrentItems)
 		{
-			AssetMetadata metadata = item.GetMetadata();
+			const AssetMetadata& metadata = item.GetMetadata();
 			Ref<Texture2DAsset> itemIcon = m_Icons[metadata.Handle];
 
 			if (!itemIcon) continue;
@@ -278,8 +277,8 @@ namespace UI
 				panel->Open();
 			});
 			ImUI::MenuItem("World", [&]() {
-                auto path = File::FindAvailableName(m_CurrentPath, "world", "hpack");
-				AssetManager::CreateNewAsset(AssetType::World, path, File::Relative(m_RootPath, path));
+				auto path = File::FindAvailableName(m_CurrentPath, "world", "hpack");
+				//AssetManager::CreateNewAsset(AssetType::World, path, File::Relative(m_RootPath, path));
 				changed = true;
 			});
 			ImUI::MenuItem("Material", nullptr);
@@ -299,9 +298,9 @@ namespace UI
 				ImUI::MenuItem("Material", nullptr);
 				ImUI::MenuItem("Shader", nullptr);
 				ImUI::MenuItem("Environment map", [&]() {
-                    auto path = File::FindAvailableName(m_CurrentPath, "Environment", "hpack");
-                    AssetManager::CreateNewAsset(AssetType::EnvironmentMap, path, File::Relative(m_RootPath, path));
-                    changed = true;
+					auto path = File::FindAvailableName(m_CurrentPath, "Environment", "hpack");
+					//AssetManager::CreateNewAsset(AssetType::EnvironmentMap, path, File::Relative(m_RootPath, path));
+					changed = true;
 				});
 			});
 			ImUI::Submenu("Physics", nullptr);
@@ -332,23 +331,16 @@ namespace UI
 	{
 		std::vector<AssetPanelItem> directories;
 		std::vector<AssetPanelItem> files;
+		std::unordered_map<AssetHandle, Ref<Hazard::Texture2DAsset>> icons;
 
-		m_CurrentItems.clear();
-		m_Icons.clear();
 
 		for (auto& item : Directory::GetAllInDirectory(m_CurrentPath))
 		{
-			if (File::GetFileExtension(item) == ".hpack")
+			if (File::GetFileExtension(item) == ".hasset")
 			{
-				CachedBuffer buffer = File::ReadBinaryFile(item);
-				AssetPack pack = AssetPack::Create(buffer);
-
-				for (auto& element : pack.Elements)
-				{
-					AssetPanelItem assetItem = AssetPanelItem(element.Handle, File::GetPathNoExt(item));
-					files.push_back(assetItem);
-				}
-				pack.Free();
+				AssetHandle handle = AssetManager::AssetHandleFromFile(item);
+				AssetPanelItem assetItem = AssetPanelItem(handle, File::GetPathNoExt(item));
+				files.push_back(assetItem);
 			}
 			else if (File::IsDirectory(item))
 			{
@@ -356,18 +348,22 @@ namespace UI
 				directories.push_back(folder);
 			}
 		}
+
+		m_CurrentItems.clear();
+
 		AssetHandle handle = EditorAssetManager::GetIconHandle("Folder");
-		m_Icons[0] = AssetManager::GetAsset<Texture2DAsset>(handle);
+		icons[0] = AssetManager::GetAsset<Texture2DAsset>(handle);
 
 		for (auto& dir : directories)
 			m_CurrentItems.push_back(dir);
 
 		for (auto& f : files)
 		{
-			m_Icons[f.GetHandle()] = GetItemIcon(f.GetMetadata());
+			icons[f.GetHandle()] = GetItemIcon(f.GetMetadata());
 			m_CurrentItems.push_back(f);
 		}
 
+		m_Icons = icons;
 		m_Paths.clear();
 
 		auto path = m_CurrentPath;
@@ -465,7 +461,7 @@ namespace UI
 				if (metadata.LoadState == LoadState::None)
 				{
 					JobPromise promise = AssetManager::GetAssetAsync(metadata.Handle);
-					promise.Then([&]() {
+					promise.Then([&](JobGraph&) {
 						Application::Get().SubmitMainThread([&]() {
 							Refresh();
 						});
@@ -473,6 +469,7 @@ namespace UI
 
 					break;
 				}
+
 				handle = metadata.Handle;
 				break;
 			}

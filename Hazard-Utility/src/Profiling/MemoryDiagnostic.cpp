@@ -4,6 +4,7 @@
 #include <memory>
 #include <mutex>
 #include <Profiling/PerformanceProfiler.h>
+#include <cassert>
 
 namespace Memory
 {
@@ -105,6 +106,11 @@ namespace Memory
 					s_Data->m_AllocationStatsMap[alloc.Category].TotalFreed += alloc.Size;
 
 				s_Data->m_AllocationMap.erase(memory);
+			}
+			else
+			{
+				std::cout << "Allocation for " << memory << " not found" << std::endl;
+				assert(false);
 			}
 		}
         free(memory);

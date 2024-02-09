@@ -4,49 +4,47 @@
 
 #include "spdlog/fmt/fmt.h"
 
-Job::~Job()
+Job::~Job() 
 {
-	if (m_Result)
-		hdelete m_Result;
-}
-Ref<JobGraph> Job::GetJobGraph()
-{
-	return m_Stage->GetGraph();
+	m_DestroyQueue.Invoke();
+	m_DestroyQueue.Clear();
 }
 
 void Job::Execute(JobInfo& info)
 {
 	info.Job = this;
+	info.ParentGraph = m_JobGraph;
 	info.ExecutionID = m_InvocationId;
 
 	m_Status = JobStatus::Executing;
 	Timer timer;
 
-	if (m_JobCallback)
+	if (!m_JobCallback)
 	{
-		try
-		{
-			m_JobCallback(info);
-			m_Status = JobStatus::Success;
-		}
-		catch (JobException e)
-		{
-			std::cout << fmt::format("JobException: {}\n", e.what());
-			m_Status = JobStatus::Failure;
-		}
+		m_Progress = 1.0f;
+		m_Status = JobStatus::Success;
+		m_JobGraph->OnJobFinished(this);
+		return;
+	}
+
+	try
+	{
+		m_JobCallback(info);
+		m_Status = JobStatus::Success;
+		m_Progress = 1.0f;
+		m_JobGraph->OnJobFinished(this);
+	}
+	catch (JobException e)
+	{
+		m_Status = JobStatus::Failure;
+		m_ExecutionTime = timer.ElapsedMillis();
+
+		m_JobGraph->OnJobFailed(this);
+		throw e;
 	}
 
 	m_ExecutionTime = timer.ElapsedMillis();
 	m_Progress = 1.0f;
-
-	if (m_Stage)
-		m_Stage->OnJobFinished(this);
-}
-
-float Job::WaitForUpdate()
-{
-	m_Progress.wait(m_Progress);
-	return m_Progress;
 }
 
 void Job::Progress(float progress)

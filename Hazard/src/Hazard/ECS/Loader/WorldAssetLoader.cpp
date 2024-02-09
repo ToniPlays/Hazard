@@ -8,91 +8,104 @@
 
 namespace Hazard
 {
-	void SaveWorld(JobInfo& info, Ref<World> world, std::filesystem::path path, std::filesystem::path internalPath)
-	{
-        std::cout << fmt::format("Saving world: {0}", path.string()) << std::endl;
-		WorldSerializer serializer(world);
-		Buffer buffer = serializer.Serialize();
-
-		if (!buffer.Data)
-			throw JobException(fmt::format("World serialization failed: {0}", path.string()));
-
-		const AssetMetadata& metadata = AssetManager::GetMetadata(world->GetHandle());
-		const AssetMetadata& packMetadata = AssetManager::GetMetadata(metadata.AssetPackHandle);
-
-		std::string filePath = packMetadata.Handle != INVALID_ASSET_HANDLE ? packMetadata.Key : path.string();
-        
-		AssetHandle packHandle = metadata.AssetPackHandle != INVALID_ASSET_HANDLE ? metadata.AssetPackHandle : AssetHandle();
-
-		AssetPackElement element = {};
-		element.AssetPackHandle = packHandle;
-		element.Handle = world->GetHandle();
-		element.Type = AssetType::World;
-		element.Data = buffer;
-		element.AddressableName = internalPath.string();
-
-		AssetPack pack = {};
-		pack.Handle = packHandle;
-		pack.ElementCount = 1;
-		pack.Elements = { element };
-
-		CachedBuffer packBuffer = AssetPack::ToBuffer(pack);
-		buffer.Release();
-
-		if (!File::WriteBinaryFile(filePath, packBuffer.GetData(), packBuffer.GetSize()))
-			throw JobException(fmt::format("Saving asset pack failed: {0}", filePath));
-	}
-
-	static void WorldPreprocessJob(JobInfo& info, WorldDeserializer deserializer)
-	{
-		Ref<World> world = deserializer.Deserialize();
-
-		//Process all entities and get required assets to be loaded
-		for (auto& entity : world->GetEntitiesWith<SpriteRendererComponent>())
-		{
-			Entity e = { entity, world.Raw() };
-			auto& comp = e.GetComponent<SpriteRendererComponent>();
-		}
-		info.Job->SetResult(world);
-	}
-
 	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata)
 	{
 		HZR_PROFILE_FUNCTION();
 
-		WorldDeserializer deserializer(metadata.Handle);
+		Ref<Job> preprocessJob = Ref<Job>::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle);
+		Ref<Job> finalizeJob = Ref<Job>::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
 
-		Ref<Job> preprocessJob = Ref<Job>::Create("Preprocessing world", WorldPreprocessJob, deserializer);
+		JobGraphInfo pipeline = {};
+		pipeline.Name = "World load";
+		pipeline.Stages = { { "Preprocess", 0.1f, { preprocessJob } },
+							{ "Asset load", 0.8f, { } },
+							{ "Finalize",   0.1f, { finalizeJob } },
+		};
 
-		Ref<JobGraph> graph = Ref<JobGraph>::Create("World load", 1);
-		graph->GetStage(0)->QueueJobs({ preprocessJob });
-		graph->GetStage(0)->SetWeight(1.0f);
+		pipeline.Flags |= JOB_GRAPH_TERMINATE_ON_ERROR;
 
-		return graph;
+		return Ref<JobGraph>::Create(pipeline);
 	}
-	Ref<JobGraph> WorldAssetLoader::Save(Ref<Asset>& asset)
+	Ref<JobGraph> WorldAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		AssetMetadata& metadata = AssetManager::GetMetadata(asset->GetHandle());
-		auto world = asset.As<World>();
+		Ref<World> world = asset.As<World>();
+		WorldSerializer serializer(world);
 
-        AssetMetadata& packMetadata = AssetManager::GetMetadata(metadata.AssetPackHandle);
-        
-		Ref<Job> job = Ref<Job>::Create("Save world", SaveWorld, world, packMetadata.Key, metadata.Key);
-		Ref<JobGraph> graph = Ref<JobGraph>::Create("World save", 1);
-		graph->GetStage(0)->QueueJobs({ job });
+		Ref<Job> contentJob = Ref<Job>::Create("GetWorldContent", GetWorldContent, serializer, settings.Flags);
 
-		return graph;
+		JobGraphInfo pipeline = {};
+		pipeline.Name = "World save";
+		pipeline.Stages = {
+			{ "Processing", 1.0f, { contentJob } },
+		};
+		pipeline.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+
+		return Ref<JobGraph>::Create(pipeline);
 	}
-	Ref<JobGraph> WorldAssetLoader::Create(const std::filesystem::path& base, const std::filesystem::path& internalPath)
+	Ref<JobGraph> WorldAssetLoader::Create(const CreateAssetSettings& settings)
 	{
-		AssetHandle handle = AssetHandle();
-		Ref<World> world = Ref<World>::Create(std::to_string(handle));
-		world->m_Handle = handle;
+		auto& file = settings.SourcePath;
 
-		Ref<Job> job = Ref<Job>::Create("Save world", SaveWorld, world, base, internalPath);
-		Ref<JobGraph> graph = Ref<JobGraph>::Create("World save", 1);
-		graph->GetStage(0)->QueueJobs({ job });
+		Ref<Job> createJob = Ref<Job>::Create("GetWorldContent", CreateWorld, file);
 
-		return graph;
+		JobGraphInfo pipeline = {};
+		pipeline.Name = "World create";
+		pipeline.Stages = {
+			{ "Create", 0.8f, { createJob } },
+		};
+		pipeline.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+
+		return Ref<JobGraph>::Create(pipeline);
+	}
+	void WorldAssetLoader::GetWorldContent(JobInfo& info, WorldSerializer serializer, uint32_t assetSaveFlags)
+	{
+		std::string result = serializer.Serialize();
+		Buffer buffer = Buffer::Copy(result.c_str(), result.length() * sizeof(char));
+		info.Job->SetResult(buffer);
+	}
+	void WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle)
+	{
+		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+		std::string source;
+
+		if (!metadata.SourceFile.empty())
+			source = File::ReadFile(metadata.SourceFile);
+
+		WorldDeserializer deserializer(source);
+
+		deserializer.AddProgressHandler([job = info.Job](uint64_t index, uint64_t count) mutable {
+			job->Progress((float)index / (float)count);
+		});
+
+		std::vector<AssetHandle> assets = deserializer.GetReferencedAssets();
+		std::vector<Ref<Job>> assetJobs;
+		assetJobs.reserve(assets.size());
+		
+		for (auto& handle : assets)
+			assetJobs.push_back(Ref<Job>::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, handle));
+
+		info.ParentGraph->ContinueWith(assetJobs);
+	}
+	void WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)
+	{
+		info.Job->SetResult(AssetManager::GetAsset<Asset>(handle));
+	}
+	void WorldAssetLoader::FinalizeWorld(JobInfo& info, AssetHandle handle)
+	{
+		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+		std::string source;
+
+		if (!metadata.SourceFile.empty())
+			source = File::ReadFile(metadata.SourceFile);
+
+		WorldDeserializer deserializer(source);
+
+		Ref<World> world = deserializer.Deserialize();
+		info.Job->SetResult(world);
+	}
+	void WorldAssetLoader::CreateWorld(JobInfo& info, const std::filesystem::path& file)
+	{
+		Ref<World> world = Ref<World>::Create(file.string());
+		info.Job->SetResult(world);
 	}
 }

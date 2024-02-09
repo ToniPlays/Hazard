@@ -19,10 +19,10 @@ namespace UI
 		table.SetColumns({ "Path", "Type", "Pack handle", "Handle" });
 		table.Reserve(AssetManager::GetMetadataRegistry().size());
 		table.RowHeight(24.0f);
-		table.RowContent([&](const AssetMetadata& metadata) {
+		table.RowContent([&](uint32_t, const AssetMetadata& metadata) {
 			ImUI::Separator({ 4.0, 24.0f }, GetLoadStateColor(metadata.LoadState));
 			ImGui::SameLine();
-			ImGui::Text("%s", metadata.Key.c_str());
+			ImGui::Text("%s", metadata.FilePath.string().c_str());
 			ImGui::TableNextColumn();
 			ImUI::ShiftX(4.0f);
 			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(metadata.Type));
@@ -36,8 +36,7 @@ namespace UI
 
 		for (auto& [key, metadata] : AssetManager::GetMetadataRegistry())
 		{
-			if (metadata.Type == AssetType::Undefined || metadata.MemoryOnly) continue;
-			if (!StringUtil::Contains(metadata.Key, m_SearchValue) && !StringUtil::Contains(std::to_string(metadata.Handle), m_SearchValue)) continue;
+			if (!StringUtil::Contains(metadata.FilePath.string(), m_SearchValue) && !StringUtil::Contains(std::to_string(metadata.Handle), m_SearchValue)) continue;
 
 			table.AddRow(metadata);
 		}

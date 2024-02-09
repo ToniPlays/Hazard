@@ -8,16 +8,12 @@ namespace Hazard
 {
 	Ref<World> WorldDeserializer::Deserialize()
 	{
-		Ref<World> world = Ref<World>::Create(std::to_string(m_Handle));
-
-		Buffer buffer = AssetManager::GetAssetData(m_Handle);
-		std::string source = std::string((char*)buffer.Data, buffer.Size);
-		YAML::Node root = YAML::Load(source.c_str());
-
-		buffer.Release();
+		YAML::Node root = YAML::Load(m_Source.c_str());
 
 		if (!root["World"])
-			return world;
+			return Ref<World>::Create("New world");
+
+		Ref<World> world = Ref<World>::Create(root["World"].as<std::string>());
 
 		//Loop entities
 		auto entities = root["Entities"];
@@ -47,9 +43,47 @@ namespace Hazard
 				TryDeserializeComponent<BoxCollider2DComponent>("BoxCollider2DComponent", entity, node);
 				TryDeserializeComponent<CircleCollider2DComponent>("CircleCollider2DComponent", entity, node);
 
+				m_Handler.Invoke(entities.size() - i, entities.size());
 			}
 		}
 		return world;
+	}
+
+	std::vector<AssetHandle> WorldDeserializer::GetReferencedAssets()
+	{
+		std::vector<AssetHandle> handles;
+		YAML::Node root = YAML::Load(m_Source.c_str());
+
+		if (!root["World"])
+			return handles;
+
+		auto entities = root["Entities"];
+		if (entities)
+		{
+			for (size_t i = entities.size(); i > 0; --i)
+			{
+				auto node = entities[i - 1];
+
+				//Deserialize components
+				GetReferencedAssets<CameraComponent>("CameraComponent", handles, node);
+				GetReferencedAssets<ScriptComponent>("ScriptComponent", handles, node);
+
+				GetReferencedAssets<SkyLightComponent>("SkyLightComponent", handles, node);
+				GetReferencedAssets<DirectionalLightComponent>("DirectionalLightComponent", handles, node);
+				GetReferencedAssets<PointLightComponent>("PointLightComponent", handles, node);
+
+				GetReferencedAssets<MeshComponent>("MeshComponent", handles, node);
+				GetReferencedAssets<SpriteRendererComponent>("SpriteRendererComponent", handles, node);
+
+				GetReferencedAssets<Rigidbody2DComponent>("Rigidbody2DComponent", handles, node);
+				GetReferencedAssets<BoxCollider2DComponent>("BoxCollider2DComponent", handles, node);
+				GetReferencedAssets<CircleCollider2DComponent>("CircleCollider2DComponent", handles, node);
+
+				m_Handler.Invoke(entities.size() - i, entities.size());
+			}
+		}
+
+		return handles;
 	}
 
 	template<typename T>

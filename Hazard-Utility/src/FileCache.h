@@ -18,6 +18,10 @@ public:
 	{ 
 		return File::Exists(m_Path / file) && !File::IsDirectory(m_Path / file);
 	}
+	std::filesystem::path Get(const std::string& file)
+	{
+		return GetCachePath() / file;
+	}
 	bool WriteFile(const std::filesystem::path& file, void* data, uint64_t size)
 	{
 		auto filePath = m_Path / file;

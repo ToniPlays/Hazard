@@ -57,8 +57,8 @@ namespace Hazard
 	private:
 		Batch<QuadVertex>* m_QuadBatch = nullptr;
 		QuadRendererData m_Data;
-
 		Ref<Material> m_Material;
+
 		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer;
 		Ref<HazardRenderer::GPUBuffer> m_IndexBuffer;
 		Ref<HazardRenderer::RenderPass> m_RenderPass;

@@ -13,6 +13,8 @@ namespace Hazard
 		ShaderAsset() = default;
 		~ShaderAsset() = default;
 
+		AssetType GetType() const override { return AssetType::Shader; }
+
 	public:
 		std::unordered_map<HazardRenderer::RenderAPI, std::unordered_map<uint32_t, std::string>> ShaderCode;
 	};

@@ -254,39 +254,7 @@ namespace UI
 	}
 	void Viewport::OnMouseClicked(const glm::vec2& mousePos)
 	{
-		return;
 
-		ImageCopyRegion region = {};
-		region.Extent.Width = 1;
-		region.Extent.Height = 1;
-		region.X = mousePos.x * ((float)m_FrameBuffer->GetWidth() / (float)m_Width);
-		region.Y = mousePos.y * ((float)m_FrameBuffer->GetHeight() / (float)m_Height);
-
-		//Invert region
-		region.Y = m_FrameBuffer->GetHeight() - region.Y;
-
-		m_MouseClickBuffer.Release();
-		m_MouseClickBuffer = m_FrameBuffer->GetImage(1)->ReadPixels(region);
-
-		Application::Get().SubmitMainThread([&]() mutable {
-			if (m_MouseClickBuffer.Size == 0) return;
-
-			int val = (int)m_MouseClickBuffer.Read<int>() - 1;
-
-			auto world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
-
-			Entity entity = { (entt::entity)val, world.Raw() };
-			if (entity.IsValid())
-			{
-				Events::SelectionContextChange e({ entity });
-				HazardLoop::GetCurrent().OnEvent(e);
-			}
-			else
-			{
-				Events::SelectionContextChange e({});
-				HazardLoop::GetCurrent().OnEvent(e);
-			}
-		});
 	}
 
 	void Viewport::DrawStatsWindow()

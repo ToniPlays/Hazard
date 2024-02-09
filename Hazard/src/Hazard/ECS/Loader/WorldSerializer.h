@@ -25,12 +25,10 @@ namespace Hazard
 			if (entity.HasComponent<T>())
 				SerializeComponent(entity, entity.GetComponent<T>(), out);
 		}
-		Buffer Serialize();
+		std::string Serialize();
 		void SerializeEntity(Entity& entity, YAML::Emitter& out);
 		template<typename T>
 		void SerializeComponent(Entity& entity, T& component, YAML::Emitter& out) {};
-
-		bool SerializeRuntime(const std::string& file);
 
 	private:
 		Ref<World> m_World;

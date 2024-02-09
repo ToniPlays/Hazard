@@ -15,7 +15,7 @@ namespace Hazard {
 	class ScriptEngine;
 
 	using ScriptBindCallback = std::function<void(ScriptEngine*)>;
-	using ScriptMessageCallback = std::function<void(HazardScript::ScriptMessage)>;
+	using ScriptMessageCallback = std::function<void(const HazardScript::ScriptMessage&)>;
 
 	struct ApplicationCreateInfo 
 	{

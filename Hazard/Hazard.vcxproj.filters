@@ -426,16 +426,10 @@
     <ClInclude Include="src\Hazard\Scripting\Bindings\MathBindings.h">
       <Filter>src\Hazard\Scripting\Bindings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\HScript.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\IScriptGlue.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\InternalCalls.h">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Scripting\ScriptAssetLoader.h">
       <Filter>src\Hazard\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\ScriptEngine.h">
@@ -628,12 +622,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Renderers\WorldRenderer.cpp">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\HScript.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\Scripting\ScriptAssetLoader.cpp">
-      <Filter>src\Hazard\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
       <Filter>src\Hazard\Scripting</Filter>

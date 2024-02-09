@@ -28,9 +28,11 @@ public:
 	{
 		m_DataBuffer = other.m_DataBuffer;
 		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
+		m_OwnsData = true;
 
 		other.m_DataBuffer = Buffer();
 		other.m_CurrentBufferOffset = 0;
+		other.m_OwnsData = false;
 	}
 
 	~CachedBuffer()
@@ -57,9 +59,11 @@ public:
 	{
 		m_DataBuffer = other.m_DataBuffer;
 		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
+		m_OwnsData = true;
 
 		other.m_DataBuffer = Buffer();
 		other.m_CurrentBufferOffset = 0;
+		other.m_OwnsData = false;
 
 		return *this;
 	}
@@ -88,9 +92,9 @@ public:
 	{
 		if (m_DataBuffer.Size < m_CurrentBufferOffset + size) assert(false);
 
-		uint32_t* start = (uint32_t*)m_DataBuffer.Data + m_CurrentBufferOffset;
+		T* start = (T*)m_DataBuffer.Data + m_CurrentBufferOffset;
 		m_CurrentBufferOffset += size;
-		return std::vector<uint32_t>(start, start + size);
+		return std::vector<T>(start, start + size);
 	}
 
 	template<>
@@ -127,10 +131,10 @@ public:
 		m_DataBuffer.Write(&length, sizeof(uint64_t), m_CurrentBufferOffset);
 		m_CurrentBufferOffset += sizeof(uint64_t);
 
-		m_DataBuffer.Write(value.c_str(), value.length() * sizeof(char), m_CurrentBufferOffset);
-		m_CurrentBufferOffset += value.length() * sizeof(char);
+		m_DataBuffer.Write(value.c_str(), length * sizeof(char), m_CurrentBufferOffset);
+		m_CurrentBufferOffset += length * sizeof(char);
 
-		return sizeof(uint64_t) + (value.length() * sizeof(char));
+		return sizeof(uint64_t) + (length * sizeof(char));
 	}
 
 	template<typename T>
@@ -163,5 +167,5 @@ private:
 	Buffer m_DataBuffer;
 	uint64_t m_CurrentBufferOffset = 0;
 	uint32_t m_RefCount = 0;
-	bool m_OwnsData = true;
+	bool m_OwnsData = false;
 };

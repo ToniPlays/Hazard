@@ -54,7 +54,7 @@ namespace Hazard
 			hdelete (uint8_t*)dataPtr;
 			});
 		
-		AssetManager::CreateMemoryOnly(AssetType::Buffer, asset);
+		//AssetManager::CreateMemoryOnly(AssetType::Buffer, asset);
 		return asset->GetHandle();
 	}
 	static void VertexBuffer_Destroy_Native(uint64_t handle) 
@@ -85,7 +85,7 @@ namespace Hazard
 			hdelete dataPtr;
 			});
 
-		AssetManager::CreateMemoryOnly(AssetType::Buffer, asset);
+		//AssetManager::CreateMemoryOnly(AssetType::Buffer, asset);
 		return asset->GetHandle();
 	}
 	static void IndexBuffer_Destroy_Native(uint64_t handle)
@@ -100,7 +100,7 @@ namespace Hazard
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create(vbo, ibo, nullptr);
 
-		AssetManager::CreateMemoryOnly(AssetType::Mesh, mesh);
+		//AssetManager::CreateMemoryOnly(AssetType::Mesh, mesh);
 		return mesh->GetHandle();
 	}
 	static void Mesh_Destroy_Native(uint64_t handle)

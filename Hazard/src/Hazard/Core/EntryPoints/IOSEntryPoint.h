@@ -12,7 +12,7 @@ static void IOSInitApplication()
     using namespace Hazard;
     
     Application* app = CreateApplication();
-    loop = new HazardLoop(app);
+    loop = hnew HazardLoop(app);
     loop->Start();
 }
 

@@ -28,8 +28,11 @@ namespace Hazard::ImUI
 		void Reserve(uint64_t count) { m_Rows.reserve(count); }
 		void AddRow(const T& row) { m_Rows.push_back(row); }
 		const std::vector<T> GetRows() { return m_Rows; }
+		void ClearRows() { m_Rows.clear(); }
+		void Size(const ImVec2& size) { m_Size = size; }
+		void SetName(const std::string& name) { m_Name = name; }
 
-		void RowContent(const std::function<void(T&)> content) { m_Content = content; }
+		void RowContent(const std::function<void(uint32_t, T&)> content) { m_Content = content; }
 
 		bool DidSelect() const { return m_DidClick != 0; }
 		uint64_t SelectedRow() const { return m_DidClick - 1; }
@@ -101,7 +104,7 @@ namespace Hazard::ImUI
 					ImGui::TableNextColumn();
 				}
 
-				m_Content(m_Rows[i]);
+				m_Content(i, m_Rows[i]);
 				ImGui::PopID();
 			}
 
@@ -112,12 +115,12 @@ namespace Hazard::ImUI
 
 		std::string m_Name;
 		ImVec2 m_Size;
-		uint32_t m_DidClick = 0;
+		uint64_t m_DidClick = 0;
 		float m_RowHeight;
 		bool m_IsClickable = true;
 
 		std::vector<std::string> m_Columns;
 		std::vector<T> m_Rows;
-		std::function<void(T&)> m_Content;
+		std::function<void(uint32_t, T&)> m_Content;
 	};
 }

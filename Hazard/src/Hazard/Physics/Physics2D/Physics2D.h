@@ -64,7 +64,6 @@ namespace Hazard::Physics
 		void Step(float timeStep);
 		void End();
 
-
 		void* CreatePhysicsObject(Physics2DObjectCreateInfo* createInfo);
 		void* CreateCollider(PhysicsCollider2DCreateInfo* createInfo);
 		void AddContactCallback(ContactCallback callback) { m_Callbacks.push_back(callback); };

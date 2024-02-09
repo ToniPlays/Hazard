@@ -21,7 +21,7 @@ namespace HazardRenderer
 		ImageFormat Format = ImageFormat::None;
 	};
 
-	class Texture : public RefCount 
+	class Texture : public RefCount
 	{
 	public:
 

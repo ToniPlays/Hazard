@@ -87,7 +87,7 @@ namespace HazardRenderer
 		virtual const WindowProps& GetWindowInfo() = 0;
 		virtual GraphicsContext* GetContext() const = 0;
 		virtual Ref<Swapchain> GetSwapchain() = 0;
-		virtual void SetDebugCallback(const RendererMessageCallback& callback) = 0;
+		virtual void AddDebugCallback(const RendererMessageCallback& callback) = 0;
 
 		static Window* Create(HazardRendererCreateInfo* info);
 		static bool IsRenderAPISupported(const RenderAPI& api);

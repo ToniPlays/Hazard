@@ -14,7 +14,7 @@ namespace HazardScript
 	}
 	std::string ScriptMetadata::GetName()
 	{
-		return std::string(m_ReflectionType->GetName());
+		return m_ReflectionType->GetFullName();
 	}
 }
 

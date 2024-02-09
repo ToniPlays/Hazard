@@ -5,6 +5,19 @@
 #include "Event.h"
 #include "Editor/EditorScriptManager.h"
 
+inline static std::string GetBuildType()
+{
+#ifdef HZR_DEBUG
+	return "Debug";
+#elif HZR_DIST
+	return "Distribution";
+#elif HZR_RELEASE
+	return "Release";
+#else
+	return "Unknown";
+#endif
+}
+
 
 class HazardEditorApplication : public Hazard::Application {
 
@@ -18,6 +31,8 @@ public:
 	bool OnEvent(Event& e) override;
 
 	Editor::EditorScriptManager& GetScriptManager() { return m_ScriptManager; };
+private:
+	void InitDefaultHooks();
 
 private:
 	Editor::EditorScriptManager m_ScriptManager;

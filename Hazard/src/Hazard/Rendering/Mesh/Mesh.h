@@ -46,6 +46,8 @@ namespace Hazard
 		Mesh(Ref<HazardRenderer::GPUBuffer> vertexBuffer, Ref<HazardRenderer::GPUBuffer> indexBuffer, Ref<AssetPointer> pipeline);
 		~Mesh() = default;
 
+		AssetType GetType() const override { return AssetType::Mesh; }
+
 		bool IsValid() { return m_VertexBuffer && m_IndexBuffer; }
 		uint64_t GetIndexCount() { return m_IndexBuffer->GetSize() / 3; }
 

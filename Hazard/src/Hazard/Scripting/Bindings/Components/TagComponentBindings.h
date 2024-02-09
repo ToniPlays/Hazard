@@ -9,13 +9,13 @@ namespace Hazard
 {
 	using namespace HazardScript;
 
-	static Coral::NativeString TagComponent_GetName_Native(uint64_t id)
+	static Coral::String TagComponent_GetName_Native(uint64_t id)
 	{
 		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
 		auto& tag = entity.GetComponent<TagComponent>();
-		return Coral::NativeString(tag.Tag);
+		return Coral::String();
 	}
-	static void TagComponent_SetName_Native(uint64_t id, Coral::NativeString tag)
+	static void TagComponent_SetName_Native(uint64_t id, Coral::String tag)
 	{
 		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
 		entity.GetTag().Tag = tag;

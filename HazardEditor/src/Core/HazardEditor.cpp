@@ -21,19 +21,6 @@
 using namespace Hazard;
 using namespace HazardScript;
 
-static std::string GetBuildType()
-{
-#ifdef HZR_DEBUG
-	return "Debug";
-#elif HZR_DIST
-	return "Distribution";
-#elif HZR_RELEASE
-	return "Release";
-#else
-	return "Unknown";
-#endif
-}
-
 
 void HazardEditorApplication::PreInit()
 {
@@ -43,8 +30,8 @@ void HazardEditorApplication::PreInit()
 		std::filesystem::current_path(workingDir);
 		HZR_INFO("Working directory: {0} ", std::filesystem::current_path().string());
 	}
-    
-    std::filesystem::path projectPath = CommandLineArgs::Get<std::filesystem::path>("hprj");
+
+	std::filesystem::path projectPath = CommandLineArgs::Get<std::filesystem::path>("hprj");
 
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
@@ -70,12 +57,13 @@ void HazardEditorApplication::PreInit()
 	entity.StartupFile = "world.hpack";
 
 	std::string dllFile = File::GetName(projectPath) + ".dll";
+	std::filesystem::path coreAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / "HazardScripting.dll";
 	std::filesystem::path appAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / dllFile;
 
 	ScriptEngineCreateInfo scriptEngine = {};
-	scriptEngine.CoreAssemblyPath = "../HazardScripting/bin/Debug/net7.0/HazardScripting.dll";
+	scriptEngine.CoreAssemblyPath = coreAssemblyPath.string();
 	scriptEngine.AppAssemblyPath = appAssemblyPath.string();
-	scriptEngine.CoralDirectory = "../HazardScripting/bin/Debug/net7.0/";	
+	scriptEngine.CoralDirectory = (projectPath.parent_path() / "Library" / "Scripts" / "Binaries").string();
 
 	HazardCreateInfo createInfo = {};
 	createInfo.AppInfo = &appInfo;
@@ -83,11 +71,12 @@ void HazardEditorApplication::PreInit()
 	createInfo.RendererInfo = &rendererInfo;
 	createInfo.ScriptEngineInfo = &scriptEngine;
 	createInfo.EntityComponent = &entity;
-    
+
 	CreateApplicationStack(&createInfo);
-    
-    HazardProject project = PushModule<ProjectManager>().LoadProjectFromFile(projectPath);
-    EditorAssetManager::Init();
+	InitDefaultHooks();
+
+	HazardProject project = PushModule<ProjectManager>().LoadProjectFromFile(projectPath);
+	EditorAssetManager::Init();
 
 	auto& engine = GetModule<Hazard::ScriptEngine>();
 	Ref<ScriptAssembly> assembly = engine.GetLoadedAssembly("HazardScripting");
@@ -95,33 +84,12 @@ void HazardEditorApplication::PreInit()
 }
 void HazardEditorApplication::Init()
 {
-    EditorAssetManager::LoadEditorAssets();
-    
+	EditorAssetManager::LoadEditorAssets();
+
 	Editor::EditorWorldManager::Init();
 	PushModule<GUIManager>();
 
-	auto& window = GetModule<RenderContextManager>().GetWindow();
 	auto& scriptEngine = GetModule<ScriptEngine>();
-	window.SetDebugCallback([](const RenderMessage& message) {
-
-		auto& manager = Application::GetModule<GUIManager>();
-		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
-		if (!console) return;
-
-		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
-		console->AddMessage({ message.Description, message.StackTrace, messageFlags });
-
-		std::cout << fmt::format("RenderMessage: {}\n - {}", message.Description, message.StackTrace) << std::endl;
-	});
-
-	scriptEngine.SetDebugCallback([](ScriptMessage message) {
-		auto& manager = Application::GetModule<GUIManager>();
-		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
-		if (!console) return;
-
-		uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
-		console->AddMessage({ message.Message, message.StackTrace, messageFlags });
-	});
 	scriptEngine.ReloadAssemblies();
 
 	m_ScriptManager.Init();
@@ -136,6 +104,30 @@ void HazardEditorApplication::Update()
 bool HazardEditorApplication::OnEvent(Event& e)
 {
 	return m_ScriptManager.OnEvent(e);
+}
+
+void HazardEditorApplication::InitDefaultHooks()
+{
+	JobSystem& system = Application::Get().GetJobSystem();
+	system.Hook(JobSystem::Failure, [](Ref<JobGraph> graph) {
+		HZR_ERROR("Job graph {} has failed at {}", graph->GetName(), graph->GetCurrentStageInfo().Name);
+	});
+
+	system.Hook(JobSystem::Message, [](Severity severity, const std::string& message) {
+		if (severity == Severity::Error)
+			HZR_ERROR("Message: {}", message);
+	});
+
+	system.Hook(JobSystem::Status, [](Ref<Thread> thread, ThreadStatus status) {
+		switch (status)
+		{
+			case ThreadStatus::Failed:
+			{
+				HZR_ERROR("Thread {} failed: {}", thread->GetThreadID(), thread->GetCurrentJob()->GetName());
+			}
+			default: break;
+		}
+	});
 }
 
 Hazard::Application* Hazard::CreateApplication()

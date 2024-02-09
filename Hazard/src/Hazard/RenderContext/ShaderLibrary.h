@@ -8,9 +8,9 @@ namespace Hazard
 	{
 	public:
 		static void Init(HazardRenderer::RenderAPI api);
-		static AssetHandle GetPipelineAssetHandle(const std::string& name);
+		static Ref<HazardRenderer::Pipeline> GetPipeline(const std::string& name);
 
 	private:
-		inline static std::unordered_map<std::string, AssetHandle> s_LoadedPipelines;
+		inline static std::unordered_map<std::string, Ref<HazardRenderer::Pipeline>> s_LoadedPipelines;
 	};
 }

@@ -4,6 +4,8 @@
 #include "Metadata/ScriptAssembly.h"
 #include "Coral/HostInstance.hpp"
 
+#include "Callback.h"
+
 namespace HazardScript 
 {
 	struct CoralData
@@ -13,7 +15,7 @@ namespace HazardScript
 		Ref<ScriptAssembly> CoreAssembly;
 		Ref<ScriptAssembly> AppAssembly;
 
-		BindingCallback BindingCallback;
+		std::function<void(Ref<ScriptAssembly>)> BindingCallback;
 		bool LoadAssembliesOnInit = true;
 	};
 
@@ -51,12 +53,12 @@ namespace HazardScript
 		Coral::HostInstance m_HostInstance;
 		Coral::AssemblyLoadContext m_LoadContext;
 
-		ScriptDebugCallback m_DebugCallback;
+		Callback<void(const ScriptMessage&)> m_DebugCallbacks;
+
 		CoralData m_CoralData;
 		std::vector<Ref<ScriptAssembly>> m_Assemblies;
 
 		std::mutex m_ReloadMutex;
-
 		inline static HazardScriptEngine* s_Instance;
 
 	};

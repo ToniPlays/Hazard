@@ -42,8 +42,17 @@ namespace Hazard
 		m_Window->Show();
 
 		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
-		//AssetManager::RegisterLoader<PipelineAssetLoader>(AssetType::Pipeline);
 		AssetManager::RegisterLoader<ShaderAssetLoader>(AssetType::Shader);
+
+		m_Window->AddDebugCallback([this](const RenderMessage& message) {
+			switch (message.Severity)
+			{
+				case Severity::Error:
+					HZR_CORE_ERROR("Validation error: {}", message.Description);
+					HZR_CORE_ERROR("Details: {}", message.StackTrace);
+					break;
+			}
+		});
 	}
 
 	void RenderContextManager::PreRender()

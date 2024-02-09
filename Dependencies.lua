@@ -88,11 +88,7 @@ Dependencies = {
     },
     Coral = {
         IncludeDir = "%{wks.location}/Hazard/vendor/Coral/Coral.Native/Include",
-        LibraryDir = "%{wks.location}/Hazard/vendor/Coral/NetCore/7.0.7",
-        CommonLib = "Coral.Native",
-        WindowsLibs = {
-            Debug = { "%{wks.location}/Hazard/vendor/Coral/NetCore/7.0.7/nethost.lib", "%{wks.location}/Hazard/vendor/Coral/NetCore/7.0.7/nethost.dll" }
-        }
+        CommonLib = "Coral.Native"
     },
     HazardUtility = {
         IncludeDir = "%{wks.location}/Hazard-Utility/src",

@@ -4,8 +4,6 @@
 #include "Hazard/Assets/Asset.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
-
-#include "Hazard/Assets/AssetPack.h"
 #include "Jobs.h"
 
 enum class MethodImpl 
@@ -28,7 +26,6 @@ public:
 	//---------------------
 	static AssetHandle GetIconHandle(const std::string& name);
     static AssetHandle GetDefaultMesh(const std::string& name);
-	static void SaveAssetsToPack(const std::string& name, std::vector<Hazard::AssetPackElement> assets);
 
 private:
 	static void ImportEngineAssets();

@@ -22,8 +22,6 @@ namespace HazardRenderer::Vulkan
 
 		void Resize_RT(uint32_t width, uint32_t height);
 
-		Buffer ReadPixels(const ImageCopyRegion& region);
-
 		TextureType GetType() const { return TextureType::Image2D; };
 		uint32_t GetWidth() override { return m_Info.Extent.Width; };
 		uint32_t GetHeight() override { return m_Info.Extent.Height; };

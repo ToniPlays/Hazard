@@ -37,7 +37,7 @@ namespace HazardScript
 		{
 			for (auto& type : m_Assembly.GetTypes())
 			{
-				if (type->GetName() == name)
+				if (type->GetFullName() == name)
 					return true;
 			}
 			return false;
@@ -47,7 +47,7 @@ namespace HazardScript
 		{
 			for (auto& type : m_Assembly.GetTypes())
 			{
-				if (type->GetName() == name)
+				if (type->GetFullName() == name)
 					return ScriptMetadata(m_Host, type);
 			}
 			return ScriptMetadata();

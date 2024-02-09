@@ -1,12 +1,14 @@
 #pragma once
 #include "Hazard.h"
+#include "Hazard/ImGUI/UIElements/Table.h"
+#include "Exporter/ApplicationExporter.h"
 
 namespace UI
 {
     class ExportPanel : public Hazard::ImUI::Panel
     {
     public:
-        ExportPanel() : Hazard::ImUI::Panel("Export") { m_Open = false; };
+        ExportPanel();
 
         void Update() override {};
         void OnOpen() override;
@@ -14,6 +16,7 @@ namespace UI
         bool OnEvent(Event& e) override { return false; };
         
     private:
-        std::vector<Hazard::AssetMetadata> m_SelectedScenes;
+        Hazard::ImUI::Table<Hazard::AssetMetadata> m_SelectedWorldTable;
+        Exporter::ApplicationExporter m_Exporter;
     };
 }

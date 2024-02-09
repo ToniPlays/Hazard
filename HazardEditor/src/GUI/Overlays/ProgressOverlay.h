@@ -7,18 +7,28 @@
 
 namespace UI 
 {
+	struct JobGraphProgress
+	{
+		double SubmitTime;
+		double FinishedAt;
+		double RemoveAfter;
+		double TerminatedAt;
+		Ref<JobGraph> Graph;
+	};
+
 	class ProgressOverlay : public Hazard::ImUI::Overlay
 	{
 	public:
 		ProgressOverlay();
 		~ProgressOverlay() = default;
+
 		void Update() override;
 		bool OnEvent(Event& e) override { return false; };
 		void OnPanelRender() override;
 
-		void DrawProgressCard(const std::string& graphName, const std::string& currentJob, float progress);
+		void DrawProgressCard(Ref<JobGraph> graph);
 
-		//void AddProcesses(const std::string& type, const std::vector<JobGraph>& promises);
-		//void AddProcess(const std::string& type, const JobGraph& promise);
+	private:
+		std::vector<JobGraphProgress> m_JobGraphs;
 	};
 }

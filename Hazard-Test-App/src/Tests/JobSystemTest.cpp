@@ -2,6 +2,19 @@
 #include "JobSystemTest.h"
 #include "Hazard/Core/Application.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
+#include <hzrpch.h>
+
+static void Finalize(JobInfo& info)
+{
+	std::this_thread::sleep_for(1000ms);
+
+	auto results = info.ParentGraph->GetResults<std::string>();
+	std::string returnVal;
+	for (auto& result : results)
+		returnVal += result + "\n";
+
+	info.Job->SetResult(returnVal);
+}
 
 static void AssetLoad(JobInfo& info)
 {
@@ -11,7 +24,13 @@ static void AssetLoad(JobInfo& info)
 		info.Job->Progress((float)i / (float)count);
 		std::this_thread::sleep_for(1ms);
 	}
-	std::string result = fmt::format("{0}: AssetLoad: Invocation {1}", info.Job->GetName(), info.ExecutionID);
+
+	if (info.ExecutionID == 1)
+		info.ParentGraph->Halt();
+
+	std::string result = fmt::format("AssetLoad: Invocation {0}", info.ExecutionID);
+
+	HZR_CORE_INFO(result);
 	info.Job->SetResult(result);
 }
 
@@ -26,28 +45,16 @@ static void Preprocess(JobInfo& info, int num)
 
 	std::vector<Ref<Job>> jobs;
 	jobs.resize(100);
+
 	for (uint32_t i = 0; i < jobs.size(); i++)
-		jobs[i] = Ref<Job>::Create("Preprocessor kicked job", AssetLoad);
+		jobs[i] = Ref<Job>::Create("AssetLoad", AssetLoad);
 
-	info.NextStage->QueueJobs(jobs);
-}
-
-static std::string GetStatus(const ThreadStatus& status)
-{
-	switch (status)
-	{
-		case ThreadStatus::None:		return "None";
-		case ThreadStatus::Waiting:		return "Waiting";
-		case ThreadStatus::Executing:	return "Executing";
-		case ThreadStatus::Terminated:	return "Terminated";
-	}
-	return "";
+	info.ParentGraph->ContinueWith(jobs);
 }
 
 void JobGraphTest::Reset()
 {
 	delete m_JobSystem;
-	m_Graph = nullptr;
 	m_JobSystem = nullptr;
 }
 
@@ -57,39 +64,66 @@ void JobGraphTest::Init()
 
 	m_JobSystem = hnew JobSystem();
 
-	Ref<Job> loadingJob = hnew Job("World loading", Preprocess, 100);
-	m_Graph = Ref<JobGraph>::Create("World loader", 2);
+	m_JobSystem->Hook(JobSystem::Submit, [](Ref<JobGraph> graph) {
+		HZR_INFO("Graph {} submitted", graph->GetName());
+	});
 
-	Ref<GraphStage> loading = m_Graph->GetStage(0);
-	loading->SetWeight(0.40f);
-	loading->QueueJobs({ loadingJob });
-	m_Graph->GetStage(1)->SetWeight(0.60f);
+	m_JobSystem->Hook(JobSystem::Finished, [](Ref<JobGraph> graph) {
+		HZR_INFO("Graph {} finished", graph->GetName());
+	});
+	m_JobSystem->Hook(JobSystem::Failure, [](Ref<JobGraph> graph) {
+		HZR_ERROR("Graph {} ({}) has failed, stopping", graph->GetName(), graph->GetCurrentStageInfo().Name);
+	});
 
-	m_JobSystem->QueueGraph(m_Graph);
+	m_JobSystem->Hook(JobSystem::Status, [](Ref<Thread> thread, ThreadStatus status) {
+		switch (status)
+		{
+			case ThreadStatus::Failed:
+			{
+				HZR_ERROR("Thread {0} failed executing: {1}", thread->GetThreadID(), thread->GetCurrentJob()->GetName());
+				break;
+			}
+		}
+	});
+
+	m_JobSystem->Hook(JobSystem::Message, [](Severity severity, const std::string& message) {
+		switch (severity)
+		{
+			case Severity::Error:
+				HZR_ERROR("JobSystem: {}", message);
+				break;
+			case Severity::Warning:
+				HZR_WARN("JobSystem: {}", message);
+				break;
+		}
+	});
+
+
+	Ref<Job> loadingJob = Ref<Job>::Create("Preprocess", Preprocess, 100);
+	Ref<Job> finalizeJob = Ref<Job>::Create("Finalize", Finalize);
+
+	JobGraphInfo graphInfo = {};
+	graphInfo.Name = "World load";
+	graphInfo.Stages = {
+		{ "Preprocess", 0.2f, { loadingJob } },
+		{ "Asset load", 0.6f, {} },
+		{ "Finalize", 0.2f, { finalizeJob } }
+	};
+	graphInfo.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+
+	m_Graph = Ref<JobGraph>::Create(graphInfo);
+	JobPromise promise = m_JobSystem->QueueGraph(m_Graph);
+
+	promise.Then([](JobGraph& graph) {
+		std::string result = graph.GetResult<std::string>();
+		HZR_TRACE("Computed result: {0}", result);
+	});
 }
 
 void JobGraphTest::Run()
 {
-	if (!m_Graph) return;
-
-	static float progress = 0.0f;
-
-	static Timer timer;
-	if (!m_Graph->HasFinished())
-	{
-		progress = m_Graph->GetProgress();
-		std::cout << fmt::format("{} progress: {}%", m_Graph->GetName(), progress * 100.0f) << std::endl;
-	}
-	else
-	{
-		std::cout << fmt::format("Total time {} ms", timer.ElapsedMillis()) << std::endl;
-		std::vector<std::string> results = m_Graph->GetResults<std::string>();
-
-		for (auto& result : results)
-			std::cout << fmt::format("Job {0} completed with {1}\n", "", result);
-
-		m_Graph = nullptr;
-	}
+	if (Input::IsKeyDown(Key::Enter))
+		m_Graph->Continue();
 }
 void JobGraphTest::Terminate()
 {

@@ -7,7 +7,7 @@ namespace Hazard
 	{
 	public:
 		inline static double s_DeltaTime = 0.0f;
-		inline static long double s_Time = 0.0f;
+		inline static double s_Time = 0.0f;
 		inline static double s_UnscaledDeltaTime = 0.0f;
 		inline static float s_TimeScale = 1.0f;
 

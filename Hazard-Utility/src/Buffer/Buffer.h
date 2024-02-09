@@ -21,7 +21,7 @@ struct Buffer
 		if (size == 0)
 			return;
         
-		Data = new uint8_t[size];
+		Data = hnew uint8_t[size];
 		Size = size;
 	}
 
@@ -48,25 +48,25 @@ struct Buffer
 	}
 
 	template<typename T>
-	T Read(uint64_t offset = 0) 
+	T Read(uint64_t offset = 0) const
 	{
 		if(sizeof(T) + offset > Size) assert(false);
 		return *(T*)((uint8_t*)Data + offset);
 	}
 
 	template<>
-	std::string Read(uint64_t offset)
+	std::string Read(uint64_t offset) const
 	{
 		uint64_t length = Read<uint64_t>(offset);
 		return std::string((char*)Data + offset + sizeof(uint64_t), length);
 	}
 
-    void* Read(uint64_t size, uint64_t offset = 0)
+    void* Read(uint64_t size, uint64_t offset = 0) const
     {
         return ((uint8_t*)Data + offset);
     }
 
-	uint8_t* ReadBytes(uint64_t size, uint64_t offset) 
+	uint8_t* ReadBytes(uint64_t size, uint64_t offset) const
 	{
 		if (offset + size > Size) assert(false);
         

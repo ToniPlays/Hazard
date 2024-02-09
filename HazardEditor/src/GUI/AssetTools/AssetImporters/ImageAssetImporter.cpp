@@ -1,0 +1,73 @@
+#include "ImageAssetImporter.h"
+
+#include "Hazard/Assets/AssetManager.h"
+#include "Hazard/ImGUI/UILibrary.h"
+#include "Core/GUIManager.h"
+#include "GUI/ProjectPanel/AssetPanel.h"
+#include <Hazard/RenderContext/ImageAssetLoader.h>
+
+ImageAssetImporter::ImageAssetImporter()
+{
+	using namespace Hazard;
+
+	m_ResolutionDropdown = ImUI::Dropdown("Maximum resolution", 150.0f);
+	m_AdvancedTreenode = ImUI::Treenode("Advanced settings", true);
+}
+
+void ImageAssetImporter::Init(AssetHandle handle)
+{
+	m_Handle = handle;
+	InitializeSettings();
+}
+void ImageAssetImporter::Init(const std::filesystem::path& sourceFile)
+{
+	m_SourcePath = sourceFile;
+	InitializeSettings();
+}
+
+void ImageAssetImporter::RenderUI()
+{
+	using namespace Hazard;
+	m_ResolutionDropdown.Render();
+	ImUI::ShiftY(8.0f);
+	m_AdvancedTreenode.Content([]() {
+		ImGui::Text("Filters");
+		ImUI::ShiftY(8.0f);
+	});
+	m_AdvancedTreenode.Render();
+}
+
+bool ImageAssetImporter::Import()
+{
+	using namespace Hazard;
+	ImageAssetLoaderSettings imageSettings = {};
+	imageSettings.Resolution = BIT(m_ResolutionDropdown.GetSelected() + 6);
+
+	CreateAssetSettings settings = {};
+	settings.SourcePath = m_SourcePath;
+	settings.Settings = &imageSettings;
+
+	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Image, settings);
+
+	auto assetPanel = Application::Get().GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>();
+	auto path = assetPanel->GetOpenDirectory() / (File::GetNameNoExt(m_SourcePath) + ".hasset");
+
+
+	promise.Then([path](JobGraph& graph) {
+		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
+
+		SaveAssetSettings settings = {};
+		settings.TargetPath = path;
+		settings.Flags |= ASSET_MANAGER_COMBINE_ASSET;
+
+		AssetManager::SaveAsset(asset, settings);
+	});
+
+	return promise.Valid();
+}
+
+void ImageAssetImporter::InitializeSettings()
+{
+	m_ResolutionDropdown.SetOptions({ "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" });
+	m_ResolutionDropdown.SetSelected(6);
+}

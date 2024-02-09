@@ -12,7 +12,8 @@ namespace UI {
 		uint32_t Flags;
 	};
 
-	class Console : public Hazard::ImUI::Panel {
+	class Console : public Hazard::ImUI::Panel 
+	{
 	public:
 		Console();
 		~Console() = default;
@@ -24,19 +25,22 @@ namespace UI {
 
 		void AddMessage(const ConsoleMessage& message) 
 		{
+			std::scoped_lock lock(m_MessageMutex);
 			m_Messages.push_back(message);
 		}
+
 		void Clear(bool force = false);
 		const char* GetMessageType(const ConsoleMessage& message);
 
-		bool ClearOnPlay() { return m_ClearOnPlay; }
-		bool ClearOnBuild() { return m_ClearOnBuild; }
+		bool ClearOnPlay() const { return m_ClearOnPlay; }
+		bool ClearOnBuild() const { return m_ClearOnBuild; }
 
 	private:
 		void DrawToolbar(const ImVec2& size);
 		ImVec4 GetMessageColor(const uint32_t& flag);
 
 	private:
+		std::mutex m_MessageMutex;
 		std::vector<ConsoleMessage> m_Messages;
 		uint32_t m_DisplayFlags = 0;
 		bool m_DetailedPanelOpen = false;

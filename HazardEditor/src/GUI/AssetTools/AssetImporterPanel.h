@@ -4,130 +4,31 @@
 #include "Hazard/Assets/Asset.h"
 #include "Hazard/Rendering/Mesh/MeshCreateInfo.h"
 #include "Utility/YamlUtils.h"
+#include "AssetImporters/IAssetImporter.h"
 
 namespace UI
 {
-    struct ImageImportSettings
-    {
-        HazardRenderer::FilterMode MinFilter;
-        HazardRenderer::FilterMode MagFilter;
-        HazardRenderer::ImageWrap Wrapping;
-        bool GenerateMips;
-        bool FlipOnLoad;
-        AssetHandle Handle;
-    };
-    struct MeshImportSettings
-    {
-        float Scale = 1.0;
-        AssetHandle Handle;
-    };
-    struct MaterialImportSettings
-    {
-        AssetHandle Handle;
-        AssetHandle PipelineHandle;
-    };
-
     class AssetImporterPanel : public Hazard::ImUI::Modal
     {
     public:
         AssetImporterPanel();
         ~AssetImporterPanel() = default;
 
-        void Open(const std::filesystem::path& path);
-        void OpenExisting(const std::filesystem::path& path, AssetHandle handle);
-        AssetHandle GetCurrentAssetHandle() { return m_AssetHandle; }
-
         void Update() override {};
         bool OnEvent(Event& e) override { return false; };
         void OnPanelRender() override;
 
-    private:
-        void DrawBottomBar();
-        void DrawImageImportSettings();
-        void DrawMeshImportSettings();
-        void DrawEnvironmentMapImportSettings();
+        void Open(AssetHandle handle);
+        void Open(const std::filesystem::path& sourceFile);
 
-        void InitializeData();
-
-        //Import jobs
-        static void ImportImage(std::filesystem::path filePath, std::filesystem::path destination, ImageImportSettings settings);
-        static void ImportMesh(std::filesystem::path filePath, std::filesystem::path destination, MeshImportSettings settings);
-
-        template<typename T>
-        static T GetImportSettings(const std::filesystem::path& path)
+        template<typename T, typename... Args>
+        void RegisterImporter(AssetType type, Args&&... args)
         {
-            HZR_ASSERT(false, "AssetImporterPanel::GetImportSettings<T>");
-        }
-
-        template<>
-        static ImageImportSettings GetImportSettings(const std::filesystem::path& path)
-        {
-            using namespace HazardRenderer;
-
-            ImageImportSettings settings = {};
-
-            if (!File::Exists(path.lexically_normal().string() + ".meta"))
-            {
-                settings.MinFilter = FilterMode::Linear;
-                settings.MagFilter = FilterMode::Linear;
-                settings.Wrapping = ImageWrap::ClampBorder;
-                settings.FlipOnLoad = true;
-                settings.GenerateMips = false;
-                return settings;
-            }
-
-            YAML::Node root = YAML::LoadFile(path.lexically_normal().string() + ".meta");
-
-
-            if (root["Importer"])
-            {
-                auto node = root["Importer"];
-                uint32_t wrapping, minFilter, magFilter;
-
-                YamlUtils::Deserialize(node, "WrapMode", wrapping, (uint32_t)ImageWrap::ClampBorder);
-                YamlUtils::Deserialize(node, "MinFilter", minFilter, (uint32_t)FilterMode::Linear);
-                YamlUtils::Deserialize(node, "MagFilter", magFilter, (uint32_t)FilterMode::Linear);
-                YamlUtils::Deserialize(node, "Mipmaps", settings.GenerateMips, false);
-                YamlUtils::Deserialize(node, "FlipOnLoad", settings.FlipOnLoad, true);
-
-                settings.Wrapping = (ImageWrap)wrapping;
-                settings.MinFilter = (FilterMode)minFilter;
-                settings.MagFilter = (FilterMode)magFilter;
-            }
-            return settings;
-        }
-        template<>
-        static MeshImportSettings GetImportSettings(const std::filesystem::path& path)
-        {
-            using namespace HazardRenderer;
-
-            MeshImportSettings settings = {};
-
-            if (!File::Exists(path.lexically_normal().string() + ".meta"))
-            {
-                settings.Scale = 1.0f;
-                return settings;
-            }
-
-            YAML::Node root = YAML::LoadFile(path.lexically_normal().string() + ".meta");
-
-            if (root["Importer"])
-            {
-                auto node = root["Importer"];
-                YamlUtils::Deserialize(node, "Scale", settings.Scale, 1.0f);
-            }
-            return settings;
+            m_Importers[type] = CreateScope<T>(std::forward<Args>(args)...);
         }
 
     private:
-        std::filesystem::path m_CurrentFilePath;
-        AssetType m_AssetType = AssetType::Undefined;
-
-        Buffer m_ImportDataBuffer;
-        AssetHandle m_AssetHandle;
-        std::unordered_map<std::string, std::vector<Hazard::AssetMetadata>> m_SelectableAssets;
-
-        bool m_Import = false;
-        bool m_IsImportingNew = false;
+        std::unordered_map<AssetType, Scope<IAssetImporter>> m_Importers;
+        AssetType m_CurrentImportType;
     };
 }

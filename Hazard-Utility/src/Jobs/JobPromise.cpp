@@ -3,18 +3,18 @@
 
 bool JobPromise::Succeeded() const
 {
-    if (!m_JobGraph) return false;
-
-    return m_JobGraph->GetFlags() & JOB_FLAGS_SUCCEEDED;
+	return m_JobGraph->GetFlags() & JOB_GRAPH_SUCCEEDED;
 }
 
 void JobPromise::Wait() const
 {
-    if (m_JobGraph)
-        m_JobGraph->Wait();
+	if (!m_JobGraph) return;
+
+	m_JobGraph->WaitUntilFinished();
 }
-void JobPromise::Then(const std::function<void()> callback)
+JobPromise JobPromise::Then(const std::function<void(JobGraph&)>& callback)
 {
-    if (m_JobGraph)
-        m_JobGraph->AddOnFinished(callback);
+	if (m_JobGraph)
+		m_JobGraph->AddOnCompleted(callback);
+	return *this;
 }

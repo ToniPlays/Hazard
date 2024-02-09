@@ -108,9 +108,13 @@ namespace HazardRenderer
 
 		virtual void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region) = 0;
 		virtual void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region) = 0;
+		virtual void CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> targetImage, const BufferCopyRegion& region) = 0;
+		virtual void CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> targetBuffer, const ImageCopyRegion& region) = 0;
 		virtual void BlitImage(const BlitImageInfo& blitInfo) = 0;
 
 		virtual void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory) = 0;
+
+		virtual void OnCompleted(std::function<void()> callback) = 0;
 
 		virtual uint32_t GetFrameIndex() = 0;
 		virtual bool IsRecording() = 0;

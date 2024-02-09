@@ -4,33 +4,25 @@
 #include "Component.h"
 #include "UID.h"
 #include "Ref.h"
-
+#include "Hazard/Assets/Asset.h"
 #include "Jobs.h"
 
 namespace Hazard
 {
-	struct WorldAsyncAssetPromise
-	{
-		AssetType Type;
-		//JobPromise Promise;
-	};
-	struct WorldAsyncPromises
-	{
-		//JobPromise WorldPromise;
-		std::vector<WorldAsyncAssetPromise> AssetPromises;
-	};
-
 	class Entity;
 
 	class World : public Asset
 	{
 		friend class Entity;
+		friend class WorldAssetLoader;
 		friend class WorldDeserializer;
 
 	public:
 		World(const std::string& debugName);
 		World(World& other) = delete;
 		~World();
+
+		AssetType GetType() const override { return AssetType::World; }
 
 		Entity CreateEntity(const std::string& name);
 		Entity CreateEntity(UID id, const std::string& name);
@@ -43,8 +35,6 @@ namespace Hazard
 		void DestroyEntity(Entity& entity);
 
 		entt::registry& GetWorldRegistry() { return m_Registry; }
-
-		std::tuple<CameraComponent*, TransformComponent*> GetWorldCamera();
 
 		template<typename... T>
 		auto GetEntitiesWith()

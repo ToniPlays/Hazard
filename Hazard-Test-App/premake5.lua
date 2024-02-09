@@ -33,6 +33,7 @@ project "Hazard-Test-App"
     References("OpenGL")
     References("Vulkan")
     References("Metal")
+    References("VMA")
 
 	filter "system:windows"
         References("GLFW")

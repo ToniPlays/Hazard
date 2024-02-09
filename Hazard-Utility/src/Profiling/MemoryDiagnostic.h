@@ -4,7 +4,7 @@
 #include <mutex>
 
 #if defined(HZR_DEBUG) && defined(HZR_PLATFORM_WINDOWS)
-#define HZR_MEM_DIAG
+//#define HZR_MEM_DIAG
 #endif
 
 #define KB	* 1024

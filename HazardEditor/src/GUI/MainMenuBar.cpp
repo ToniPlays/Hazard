@@ -19,7 +19,7 @@ namespace UI
 		AddMenuItem("File/Open/OpenNew", nullptr);
 		AddMenuItem("File/Save", [&]() {
 			Ref<World> world = Application::GetModule<WorldHandler>().GetCurrentWorld();
-			AssetManager::SaveAsset(world);
+			//AssetManager::SaveAsset(world);
 		});
 		AddMenuItem("File/Save as", nullptr);
 		AddMenuItem("File/Project settings", nullptr);
@@ -74,7 +74,7 @@ namespace UI
 		AddMenuItem("Window/Debug/Console", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<Console>(true);
 		});
-		AddMenuItem("Window/Debug/Asset managed debugger", [&]() {
+		AddMenuItem("Window/Debug/Asset manager debugger", [&]() {
 			Application::GetModule<GUIManager>().SetPanelOpen<AssetManagerDebugPanel>(true);
 		});
 		AddMenuItem("Window/Debug/Render command list", [&]() {
@@ -104,10 +104,24 @@ namespace UI
 			case Key::S:
 			{
 				using namespace Editor;
+				using namespace Hazard;
 				if (EditorModeManager::GetCurrentMode() == EditorMode::Edit)
 				{
 					auto& handler = Application::GetModule<WorldHandler>();
-					Hazard::AssetManager::SaveAsset(handler.GetCurrentWorld());
+					Ref<World> world = handler.GetCurrentWorld();
+					SaveAssetSettings settings = {};
+
+					if (world->GetSourceFilePath().empty())
+					{
+						std::string path = File::SaveFile({ "Hazard world (.hazard)", "*.hazard" });
+						if (path.empty()) break;
+
+						path = File::GetFileExtension(path) != ".hazard" ? path + ".hazard" : path;
+						world->SetSourceFilePath(path);
+						settings.TargetPath = File::GetPathNoExt(path).string() + ".hasset";
+					}
+
+					AssetManager::SaveAsset(world, settings);
 				}
 				return true;
 			}

@@ -24,10 +24,6 @@ void HazardProject::ProcessAssets()
 
 void HazardProject::ProcessAsset(const std::filesystem::path& path)
 {
-	if (File::GetFileExtension(path) != ".hpack") return;
-
-	CachedBuffer buffer = File::ReadBinaryFile(path);
-	AssetPack pack = AssetPack::Create(buffer);
-	AssetManager::ImportAssetPack(pack, path);
-	pack.Free();
+	if (File::GetFileExtension(path) != ".hasset" && File::GetFileExtension(path) != ".hpack") return;
+	AssetManager::Import(path);
 }

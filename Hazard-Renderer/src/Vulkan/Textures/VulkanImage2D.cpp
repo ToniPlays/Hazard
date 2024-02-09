@@ -69,7 +69,7 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		if (!m_Image) return;
 
-		Renderer::SubmitResourceFree([descriptor = m_ImageDescriptor, mips = m_PerMipImageView, layers = m_LayerImageViews, image = m_Image, alloc = m_Allocation]() mutable {
+		Renderer::SubmitResourceFree([descriptor = m_ImageDescriptor, mips = m_PerMipImageView, layers = m_LayerImageViews, image = m_Image, alloc = m_Allocation, name = m_Info.DebugName]() mutable {
 			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
 			vkDestroyImageView(device, descriptor.imageView, nullptr);
@@ -88,7 +88,6 @@ namespace HazardRenderer::Vulkan
 
 			VulkanAllocator allocator("VulkanImage2D");
 			allocator.DestroyImage(image, alloc);
-
 		});
 
 		m_LayerImageViews.clear();
@@ -152,55 +151,6 @@ namespace HazardRenderer::Vulkan
 		m_Info.Extent.Width = width;
 		m_Info.Extent.Height = height;
 		Invalidate_RT();
-	}
-
-	Buffer VulkanImage2D::ReadPixels(const ImageCopyRegion& region)
-	{
-		VulkanAllocator allocator("VulkanImage2D");
-
-		VkBufferCreateInfo stagingInfo = {};
-		stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		stagingInfo.size = region.Extent.Width * region.Extent.Height * region.Extent.Depth * sizeof(uint64_t);
-		stagingInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-		stagingInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-		VkBuffer stagingBuffer;
-		VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
-
-		VkImageSubresourceLayers resource = {};
-		resource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		resource.layerCount = 1;
-		resource.baseArrayLayer = 0;
-		resource.mipLevel = 0;
-
-		VkBufferImageCopy copyRegion = {};
-		copyRegion.imageExtent = { region.Extent.Width, region.Extent.Height, region.Extent.Depth };
-		copyRegion.imageOffset = { (int)region.X, (int)region.Y, (int)region.Z };
-		copyRegion.imageSubresource = resource;
-
-		VkImageSubresourceRange range = {};
-		range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		range.layerCount = 1;
-		range.levelCount = 1;
-		range.baseMipLevel = 0;
-
-		VkCommandBuffer cmdBuffer = VulkanContext::GetLogicalDevice()->GetCommandBuffer(true);
-
-		VkUtils::SetImageLayout(cmdBuffer, m_Image, m_ImageDescriptor.imageLayout, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, range, VK_SHADER_STAGE_FRAGMENT_BIT, VK_SHADER_STAGE_FRAGMENT_BIT);
-		vkCmdCopyImageToBuffer(cmdBuffer, m_Image, m_ImageDescriptor.imageLayout, stagingBuffer, 1, &copyRegion);	//TODO: Fix me
-		VkUtils::SetImageLayout(cmdBuffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_ImageDescriptor.imageLayout, range, VK_SHADER_STAGE_FRAGMENT_BIT, VK_SHADER_STAGE_FRAGMENT_BIT);
-
-		VulkanContext::GetLogicalDevice()->FlushCommandBuffer(cmdBuffer);
-
-		uint8_t* imageData = allocator.MapMemory<uint8_t>(stagingBufferAlloc);
-
-		Buffer buffer;
-		buffer.Allocate(stagingInfo.size);
-		memcpy(buffer.Data, imageData, buffer.Size);
-
-		allocator.UnmapMemory(stagingBufferAlloc);
-		allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
-		return buffer;
 	}
 
 	void VulkanImage2D::Invalidate_RT()

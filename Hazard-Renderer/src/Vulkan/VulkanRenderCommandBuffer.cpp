@@ -300,6 +300,9 @@ namespace HazardRenderer::Vulkan
 			VK_CHECK_RESULT(vkQueueSubmit(instance->m_SubmitQueue, 1, &submitInfo, s_ComputeFence), "");
 			VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX), "");
 
+			instance->m_OnCompletion.Invoke();
+			instance->m_OnCompletion.Clear();
+
 			//instance->GetQueryPoolResults_RT();
 		});
 	}
@@ -656,6 +659,41 @@ namespace HazardRenderer::Vulkan
 				VulkanAllocator allocator("VulkanImage2D");
 				allocator.DestroyBuffer(stagingBuffer, stagingBufferAlloc);
 			});
+		});
+	}
+
+	void VulkanRenderCommandBuffer::CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> targetImage, const BufferCopyRegion& region)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanGPUBuffer> buffer = sourceBuffer.As<VulkanGPUBuffer>();
+		Ref<VulkanImage2D> image = targetImage.As<VulkanImage2D>();
+
+		Renderer::Submit([instance, image, buffer, region]() mutable {
+			__debugbreak();
+		});
+	}
+
+	void VulkanRenderCommandBuffer::CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> targetBuffer, const ImageCopyRegion& region)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanImage2D> image = sourceImage.As<VulkanImage2D>();
+		Ref<VulkanGPUBuffer> buffer = targetBuffer.As<VulkanGPUBuffer>();
+
+		Renderer::Submit([instance, image, buffer, region]() mutable {
+			
+			VkImage srcImage = image->GetVulkanImage();
+			VkBuffer dstBuffer = buffer->GetVulkanBuffer();
+
+			VkBufferImageCopy vkRegion = {};
+			vkRegion.bufferOffset = 0;
+			vkRegion.imageExtent = { region.Extent.Width, region.Extent.Height, region.Extent.Depth };
+			vkRegion.imageOffset = VkOffset3D(region.X, region.Y, region.Z);
+			vkRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			vkRegion.imageSubresource.baseArrayLayer = 0;
+			vkRegion.imageSubresource.layerCount = 1;
+			vkRegion.imageSubresource.mipLevel = 0;
+
+			vkCmdCopyImageToBuffer(instance->m_ActiveCommandBuffer, srcImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dstBuffer, 1, &vkRegion);
 		});
 	}
 

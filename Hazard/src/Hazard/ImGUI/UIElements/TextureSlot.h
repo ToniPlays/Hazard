@@ -36,17 +36,19 @@ namespace Hazard::ImUI
 
 			AssetMetadata& metadata = AssetManager::GetMetadata(m_Handle);
 
-			ImUI::TextField text(metadata.Key.empty() ? "None" : metadata.Key);
+			ImUI::TextField text(metadata.FilePath.empty() ? "None" : metadata.FilePath.string());
 			text.Render();
 
 			ImGui::NextColumn();
 
 			if (metadata.IsValid())
 			{
+				/*
 				if (metadata.LoadState == LoadState::None)
 					JobPromise promise = AssetManager::GetAssetAsync(m_Handle);
 				else if (metadata.LoadState == LoadState::Loading)
 					m_Handle = INVALID_ASSET_HANDLE;
+				*/
 			}
 			else m_Handle = INVALID_ASSET_HANDLE;
 
@@ -61,7 +63,7 @@ namespace Hazard::ImUI
 			}
 			else
 			{
-				ImUI::Image(asset->GetSourceImageAsset()->Value.As<Image2D>(), asset->GetSampler(), { size, size });
+				ImUI::Image(asset->GetSourceImage(), asset->GetSampler(), { size, size });
 			}
 
 			if (!m_DropType.empty())

@@ -1,19 +1,17 @@
 
 #include "Hazard/Assets/IAssetLoader.h"
-
 #include "Core/RenderContextCreateInfo.h"
+
 
 namespace Hazard
 {
-	struct ShaderAssetDataHeader
+	struct ShaderAPIHeader
 	{
-		uint16_t IncludedAPIs = 0;
-		uint16_t Stages = 0;
+		uint32_t ApiFlags;	
+		uint32_t StageFlags;
 	};
-	struct ShaderAPIDataHeader
-	{
-		uint32_t DataSize = 0;
-	};
+
+	class ShaderAsset;
 
 	class ShaderAssetLoader : public IAssetLoader
 	{
@@ -22,15 +20,22 @@ namespace Hazard
 		~ShaderAssetLoader() = default;
 
 		Ref<JobGraph> Load(AssetMetadata& metadata) override;
-		Ref<JobGraph> Save(Ref<Asset>& asset) override;
-		Ref<JobGraph> DataFromSource(const std::filesystem::path& path) override;
-		Ref<JobGraph> Create(const std::filesystem::path& base, const std::filesystem::path& internalPath) override;
-
-		Buffer ToBinary(Ref<Asset> asset) override;
+		Ref<JobGraph> Save(Ref<Asset> asset, const SaveAssetSettings& settings) override;
+		Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 
 	private:
-		static void LoadShader(JobInfo& info, AssetHandle handle);
-		static void LoadSourceCode(JobInfo& info, const std::string& source, uint32_t stage, HazardRenderer::RenderAPI api);
-		static void CreateShaderAsset(JobInfo& info, const std::filesystem::path& path);
+		static void LoadShaderSource(JobInfo& info, const std::filesystem::path& path);
+		static void CompileShaderSourceCode(JobInfo& info, uint32_t api, uint32_t stageFlags);
+		static void CreateShaderAsset(JobInfo& info);
+
+		static void GenerateShaderAssetBinary(JobInfo& info, Ref<ShaderAsset> asset);
+		static void LoadShaderAsset(JobInfo& info, AssetHandle handle);
+
+		struct ShaderCompileResult
+		{
+			uint32_t Flags;
+			uint32_t API;
+			std::string Data;
+		};
 	};
 }

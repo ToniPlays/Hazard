@@ -55,7 +55,7 @@ namespace Hazard
 		for (auto& renderer : m_DrawList)
 		{
 			renderer.WorldRenderer->m_CameraData.clear();
-			renderer.WorldRenderer->m_RendererExtraCalls.clear();
+			renderer.WorldRenderer->m_RendererExtraCalls.Clear();
 		}
 
 		m_DrawList.clear();
@@ -94,7 +94,7 @@ namespace Hazard
 	void RenderEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		ClearDrawLists();
+		
 	}
 	void RenderEngine::Render()
 	{
@@ -138,5 +138,6 @@ namespace Hazard
 			}
 			m_CurrentDrawContext++;
 		}
+		ClearDrawLists();
 	}
 }
