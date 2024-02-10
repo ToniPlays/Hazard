@@ -40,7 +40,7 @@ namespace HazardRenderer::Vulkan
 		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
 		void EndRenderPass() override;
 
-		void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding) override;
+		void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding, uint64_t bufferOffset = 0) override;
 		void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set) override;
 		void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) override;
 		void SetPipeline(Ref<Pipeline> pipeline) override;

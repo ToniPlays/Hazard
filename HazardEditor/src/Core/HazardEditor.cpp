@@ -38,6 +38,7 @@ void HazardEditorApplication::PreInit()
 	ApplicationCreateInfo appInfo;
 	appInfo.AppName = "Hazard Editor";
 	appInfo.BuildVersion = HZR_BUILD_VERSION;
+	appInfo.MaxJobThreads = 8;
 #ifdef HZR_RELEASE
 	appInfo.Logging = false;
 #else
@@ -114,8 +115,12 @@ void HazardEditorApplication::InitDefaultHooks()
 	});
 
 	system.Hook(JobSystem::Message, [](Severity severity, const std::string& message) {
-		if (severity == Severity::Error)
-			HZR_ERROR("Message: {}", message);
+		switch (severity)
+		{
+			case Severity::Error:
+				HZR_ERROR("Error: {}", message);
+				break;
+		}
 	});
 
 	system.Hook(JobSystem::Status, [](Ref<Thread> thread, ThreadStatus status) {

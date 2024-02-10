@@ -37,7 +37,6 @@ namespace HazardRenderer
 		{
 			HZR_PROFILE_FUNCTION();
 			auto& queue = s_CommandQueue;
-			s_IsRendering = true;
 			{
 				HZR_PROFILE_FUNCTION("ResourceCreateQueue::Execute()");
 				queue.ResourceCreateCommandQueue->Excecute();
@@ -45,19 +44,21 @@ namespace HazardRenderer
 			}
 			{
 				HZR_PROFILE_FUNCTION("RenderCommandQueue::Execute()");
+				s_IsRendering = true;
+				s_IsRendering.notify_all();
+
 				queue.RenderCommandQueue->Excecute();
 				queue.RenderCommandQueue->Clear();
+
 				s_RenderedFrames++;
+				s_IsRendering = false;
+				s_IsRendering.notify_all();
 			}
 			{
 				HZR_PROFILE_FUNCTION("ResourceFreeQueue::Execute()");
-				//TODO: Fix resource free queue count
 				queue.ResourceFreeCommandQueue[s_RenderedFrames % FREE_QUEUE_COUNT]->Excecute();
 				queue.ResourceFreeCommandQueue[s_RenderedFrames % FREE_QUEUE_COUNT]->Clear();
 			}
-
-			s_IsRendering = false;
-			s_IsRendering.notify_all();
 		}
 
 		template<typename FuncT>
@@ -70,9 +71,8 @@ namespace HazardRenderer
 			};
 
 			s_IsRendering.wait(true);
-			HZR_ASSERT(!s_IsRendering, "Cannot submit while rendering");
-			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
 
+			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
 			auto& queue = s_CommandQueue;
 			auto storageBuffer = queue.RenderCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
@@ -80,8 +80,6 @@ namespace HazardRenderer
 		template<typename FuncT>
 		static void SubmitResourceCreate(FuncT func)
 		{
-			static_assert(sizeof(FuncT) % 8 == 0);
-
 			auto renderCmd = [](void* ptr) {
 				auto pFunc = (FuncT*)ptr;
 				(*pFunc)();
@@ -125,8 +123,8 @@ namespace HazardRenderer
 	private:
 		static inline GraphicsContext* s_GraphicsContext = nullptr;
 		static inline CommandQueues s_CommandQueue;
+		static inline std::atomic_bool s_IsRendering = false;
 		static inline std::mutex s_ResourceMutex;
-		static inline std::atomic_bool s_IsRendering;
 		static inline uint64_t s_RenderedFrames = 0;
 	};
 }

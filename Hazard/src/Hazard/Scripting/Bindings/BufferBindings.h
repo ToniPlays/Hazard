@@ -95,13 +95,7 @@ namespace Hazard
 	}
 	static uint64_t Mesh_Create_Native(ManagedMeshInfo* info)
 	{
-		Ref<GPUBuffer> vbo = AssetManager::GetAsset<AssetPointer>(info->VertexBuffer)->Value;
-		Ref<GPUBuffer> ibo = AssetManager::GetAsset<AssetPointer>(info->IndexBuffer)->Value;
-
-		Ref<Mesh> mesh = Ref<Mesh>::Create(vbo, ibo, nullptr);
-
-		//AssetManager::CreateMemoryOnly(AssetType::Mesh, mesh);
-		return mesh->GetHandle();
+		return 0;
 	}
 	static void Mesh_Destroy_Native(uint64_t handle)
 	{

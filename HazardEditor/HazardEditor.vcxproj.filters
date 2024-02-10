@@ -242,6 +242,7 @@
     </ClInclude>
     <ClInclude Include="src\GUI\AssetTools\AssetImporters\IAssetImporter.h" />
     <ClInclude Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.h" />
+    <ClInclude Include="src\GUI\AssetTools\AssetImporters\MeshAssetImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -359,5 +360,6 @@
       <Filter>src\Project</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.cpp" />
+    <ClCompile Include="src\GUI\AssetTools\AssetImporters\MeshAssetImporter.cpp" />
   </ItemGroup>
 </Project>

@@ -83,6 +83,13 @@ private:
 	void TerminateGraphJobs(Ref<JobGraph> graph);
 	void OnGraphFinished(Ref<JobGraph> graph);
 
+	void SendMessage(Severity severity, const std::string& message)
+	{
+		std::scoped_lock lock(m_MessageMutex);
+		m_MessageHook.Invoke(severity, message);
+	}
+
+
 	Ref<Job> FindAvailableJob();
 	void ThreadFunc(Ref<Thread> thread);
 
@@ -99,6 +106,7 @@ private:
 	std::mutex m_JobMutex;
 	std::mutex m_RunningJobMutex;
 	std::mutex m_GraphMutex;
+	std::mutex m_MessageMutex;
 	
 	Hooks<JobSystemHook, void(Ref<JobGraph>)> m_Hooks;
 	Callback<void(Severity, const std::string&)> m_MessageHook;

@@ -391,7 +391,7 @@ namespace HazardRenderer::Vulkan
 			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
 		});
 	}
-	void VulkanRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding)
+	void VulkanRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding, uint64_t bufferOffset)
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(vertexBuffer->GetUsageFlags() & BUFFER_USAGE_VERTEX_BUFFER_BIT, "Invalid buffer flags");
@@ -399,13 +399,12 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanGPUBuffer> buffer = vertexBuffer.As<VulkanGPUBuffer>();
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
-		Renderer::Submit([instance, buffer, binding]() mutable {
+		Renderer::Submit([instance, buffer, binding, bufferOffset]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindVertexBuffer");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
-			VkDeviceSize offsets = { 0 };
 
-			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, binding, 1, &vkBuffer, &offsets);
+			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, binding, 1, &vkBuffer, &bufferOffset);
 		});
 	}
 	void VulkanRenderCommandBuffer::SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set)

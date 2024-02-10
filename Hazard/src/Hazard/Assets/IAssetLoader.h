@@ -19,10 +19,7 @@ namespace Hazard
 		virtual ~IAssetLoader() = default;
 
 		virtual Ref<JobGraph> Load(AssetMetadata& path) = 0;
-		
-		//TODO: Maybe a Revert option
 		virtual Ref<JobGraph> Save(Ref<Asset> asset, const SaveAssetSettings& settings) = 0;
-
 		virtual Ref<JobGraph> Create(const CreateAssetSettings& settings) = 0;
 	};
 }

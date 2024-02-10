@@ -73,7 +73,7 @@ namespace Hazard
 		entt::registry& sourceRegistry = other.GetWorld().GetWorldRegistry();
 
 		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
-		entity.GetTag().Uid = other.GetUID();
+		entity.GetTag().Uid = UID();
 
 		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);

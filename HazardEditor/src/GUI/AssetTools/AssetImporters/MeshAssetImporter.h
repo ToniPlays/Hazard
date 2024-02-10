@@ -5,11 +5,11 @@
 #include "Hazard/ImGUI/UIElements/Treenode.h"
 
 
-class ImageAssetImporter : public IAssetImporter
+class MeshAssetImporter : public IAssetImporter
 {
 public:
 
-	ImageAssetImporter();
+	MeshAssetImporter();
 
 	void Init(AssetHandle handle) override;
 	virtual void Init(const std::filesystem::path& sourcePath) override;
@@ -22,10 +22,5 @@ private:
 	bool ReimportExisting();
 
 private:
-
-	AssetHandle m_Handle;
 	std::filesystem::path m_SourcePath;
-
-	Hazard::ImUI::Dropdown m_ResolutionDropdown;
-	Hazard::ImUI::Treenode m_AdvancedTreenode;
 };

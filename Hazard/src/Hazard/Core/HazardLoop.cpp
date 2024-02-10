@@ -42,7 +42,7 @@ namespace Hazard
 		if (m_Application)
 		{
 			m_Application->Close();
-			delete m_Application;
+			hdelete m_Application;
 		}
 		m_Application = app;
 	}
@@ -105,15 +105,7 @@ namespace Hazard
 
 		Time::Update(micros / 1000000.0f);
 
-		auto jobs = m_Application->m_MainJobs;
-
-		for (uint32_t i = 0; i < jobs.size(); i++)
-		{
-			if (jobs[i])
-				jobs[i]();
-		}
-
-		m_Application->m_MainJobs.clear();
+		m_Application->InvokeMainThreadJobs();
 
 		//Update
 		m_ModuleHandler->PreUpdate();

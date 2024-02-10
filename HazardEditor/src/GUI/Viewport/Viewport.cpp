@@ -96,8 +96,8 @@ namespace UI
 					Entity e = { entity, world.Raw() };
 					auto& tc = e.GetComponent<TransformComponent>();
 					auto& mc = e.GetComponent<MeshComponent>();
-					if (mc.MeshHandle != INVALID_ASSET_HANDLE)
-						HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), AssetManager::GetAsset<Mesh>(mc.MeshHandle)->GetBoundingBox());
+					//if (mc.MeshHandle != INVALID_ASSET_HANDLE)
+					//	HRenderer::SubmitBoundingBox(tc.GetTransformMat4(), AssetManager::GetAsset<Mesh>(mc.MeshHandle)->GetBoundingBox());
 				}
 			}
 			if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)

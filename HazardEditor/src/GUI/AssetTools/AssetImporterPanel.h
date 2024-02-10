@@ -2,7 +2,6 @@
 
 #include "Hazard/ImGUI/Modal.h"
 #include "Hazard/Assets/Asset.h"
-#include "Hazard/Rendering/Mesh/MeshCreateInfo.h"
 #include "Utility/YamlUtils.h"
 #include "AssetImporters/IAssetImporter.h"
 

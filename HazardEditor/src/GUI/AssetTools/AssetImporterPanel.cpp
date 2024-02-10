@@ -6,6 +6,7 @@
 #include "Core/GUIManager.h"
 #include "GUI/ProjectPanel/AssetPanel.h"
 #include "AssetImporters/ImageAssetImporter.h"
+#include "AssetImporters/MeshAssetImporter.h"
 
 #include "Hazard/ImGUI/UIElements/Dropdown.h"
 
@@ -14,6 +15,7 @@ namespace UI
 	AssetImporterPanel::AssetImporterPanel() : Hazard::ImUI::Modal("Asset importer", { 500, 600 })
 	{
 		RegisterImporter<ImageAssetImporter>(AssetType::Image);
+		RegisterImporter<MeshAssetImporter>(AssetType::Mesh);
 	}
 	void AssetImporterPanel::OnPanelRender()
 	{
@@ -40,6 +42,8 @@ namespace UI
 	}
 	void AssetImporterPanel::Open(AssetHandle handle)
 	{
+		return;
+
 		using namespace Hazard;
 		AssetMetadata& data = AssetManager::GetMetadata(handle);
 		m_CurrentImportType = data.Type;

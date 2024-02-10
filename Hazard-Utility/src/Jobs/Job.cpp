@@ -4,7 +4,7 @@
 
 #include "spdlog/fmt/fmt.h"
 
-Job::~Job() 
+Job::~Job()
 {
 	m_DestroyQueue.Invoke();
 	m_DestroyQueue.Clear();
@@ -32,6 +32,8 @@ void Job::Execute(JobInfo& info)
 		m_JobCallback(info);
 		m_Status = JobStatus::Success;
 		m_Progress = 1.0f;
+		m_ExecutionTime = timer.ElapsedMillis();
+
 		m_JobGraph->OnJobFinished(this);
 	}
 	catch (JobException e)
@@ -43,7 +45,6 @@ void Job::Execute(JobInfo& info)
 		throw e;
 	}
 
-	m_ExecutionTime = timer.ElapsedMillis();
 	m_Progress = 1.0f;
 }
 

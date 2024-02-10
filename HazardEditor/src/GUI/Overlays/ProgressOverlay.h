@@ -29,6 +29,7 @@ namespace UI
 		void DrawProgressCard(Ref<JobGraph> graph);
 
 	private:
+		std::mutex m_JobMutex;
 		std::vector<JobGraphProgress> m_JobGraphs;
 	};
 }

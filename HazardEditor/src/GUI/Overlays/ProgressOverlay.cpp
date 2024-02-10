@@ -11,10 +11,12 @@ namespace UI
 
 		JobSystem& system = Hazard::Application::Get().GetJobSystem();
 		system.Hook(JobSystem::Submit, [this](Ref<JobGraph> graph) {
+			std::scoped_lock lock(m_JobMutex);
 			m_JobGraphs.push_back({ Time::s_Time, 0.0, 0.0, 0.0, graph });
 		});
 
 		system.Hook(JobSystem::Failure, [this](Ref<JobGraph> graph) {
+			std::scoped_lock lock(m_JobMutex);
 			for (auto& graphs : m_JobGraphs)
 			{
 				if (graphs.Graph != graph) continue;
@@ -23,9 +25,12 @@ namespace UI
 		});
 
 		system.Hook(JobSystem::Finished, [this](Ref<JobGraph> graph) {
+
+			std::scoped_lock lock(m_JobMutex);
 			for (auto& graphs : m_JobGraphs)
 			{
 				if (graphs.Graph != graph) continue;
+				HZR_INFO(graph->GetName());
 
 				graphs.FinishedAt = Time::s_Time;
 				graphs.RemoveAfter = graphs.FinishedAt + 2.5;

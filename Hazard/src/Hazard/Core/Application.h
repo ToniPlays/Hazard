@@ -7,11 +7,11 @@
 #include <Jobs.h>
 #include <Jobs/JobSystem.h>
 
-namespace Hazard 
+namespace Hazard
 {
-	class Application 
+	class Application
 	{
-        friend class HazardLoop;
+		friend class HazardLoop;
 	public:
 		Application() = default;
 		virtual ~Application() = default;
@@ -30,12 +30,13 @@ namespace Hazard
 			return HazardLoop::GetCurrent().GetRenderedFrameCount();
 		}
 		void CreateApplicationStack(HazardCreateInfo* info);
-		JobSystem& GetJobSystem() { return m_JobSystem; }
-        
-        void SubmitMainThread(const std::function<void()>& function)
-        {
-			m_MainJobs.push_back(function);
-        }
+		JobSystem& GetJobSystem() { return *m_JobSystem.get(); }
+
+		void SubmitMainThread(const std::function<void()>& function)
+		{
+			std::scoped_lock lock(m_MainJobMutex);
+			m_MainJobs.Add(function);
+		}
 
 	public:
 		static void Quit();
@@ -49,9 +50,19 @@ namespace Hazard
 		static bool HasModule() { return HazardLoop::GetModuleHandler()->HasModule<T>(); }
 
 	private:
+		void InvokeMainThreadJobs()
+		{
+			m_MainJobs.Invoke();
 
-		JobSystem m_JobSystem = JobSystem(std::thread::hardware_concurrency());
-        std::vector<std::function<void()>> m_MainJobs;
+			m_MainJobMutex.lock();
+			m_MainJobs.Clear();
+			m_MainJobMutex.unlock();
+		}
+	private:
+
+		Scope<JobSystem> m_JobSystem;
+		std::recursive_mutex m_MainJobMutex;
+		Callback<void()> m_MainJobs;
 	};
 
 	Hazard::Application* CreateApplication();

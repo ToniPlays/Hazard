@@ -79,7 +79,7 @@ namespace UI
 		ImUI::ShiftX(edgeOffset);
 
 		ImUI::Image(thumbnailIcon->GetSourceImage(), sampler,
-			ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
+					ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
 
 		if (IsFolder())
 		{
@@ -150,8 +150,17 @@ namespace UI
 			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
 		});
 
-		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered() && !IsFolder() && Input::IsKeyDown(Key::LeftControl))
-			OS::OpenInDefault(GetMetadata().FilePath);
+		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered())
+		{
+			if (!IsFolder() && Input::IsKeyDown(Key::LeftControl))
+				OS::OpenInDefault(GetMetadata().FilePath);
+			else 
+			{
+				auto panel = Application::Get().GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
+				panel->Open(GetMetadata().Handle);
+			}
+		}
+
 
 		if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() && m_Flags == 0)
 		{

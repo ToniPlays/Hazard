@@ -12,7 +12,7 @@ namespace Hazard
 		glm::vec3 Normals   = { 0, 0, 0 };
 		glm::vec3 Tangent   = { 0, 0, 0 };
 		glm::vec3 Binormal  = { 0, 0, 0 };
-		glm::vec2 TexCoords = { 0, 0 };
+		glm::vec3 TexCoords = { 0, 0, 0 };
 
 		static HazardRenderer::BufferLayout Layout() {
 			using namespace HazardRenderer;
@@ -22,7 +22,7 @@ namespace Hazard
 				{ "a_Normal",			ShaderDataType::Float3, PerVertex },
 				{ "a_Tangent",			ShaderDataType::Float3, PerVertex },
 				{ "a_Binormal",			ShaderDataType::Float3, PerVertex },
-				{ "a_TextureCoords",	ShaderDataType::Float2, PerVertex },
+				{ "a_TextureCoords",	ShaderDataType::Float3, PerVertex },
 				//{ "a_MRow0",			ShaderDataType::Float4, PerInstance },
                 //{ "a_MRow0",            ShaderDataType::Float4, PerInstance },
                 //{ "a_MRow0",            ShaderDataType::Float4, PerInstance },

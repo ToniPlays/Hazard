@@ -90,7 +90,7 @@ namespace HazardRenderer
 		virtual void EndRenderPass() = 0;
 
 		//Pipeline resources
-		virtual void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding = 0) = 0;
+		virtual void SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding = 0, uint64_t bufferOffset = 0) = 0;
 		virtual void SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set) = 0;
 		virtual void PushConstants(Buffer buffer, uint32_t offset, uint32_t flags) = 0;
 		virtual void SetPipeline(Ref<Pipeline> pipeline) = 0;

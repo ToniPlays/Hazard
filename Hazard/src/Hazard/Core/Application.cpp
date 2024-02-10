@@ -20,6 +20,8 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_ASSERT(info->AppInfo, "[Hazard]: ApplicationCreateInfo required");
 
+		m_JobSystem = CreateScope<JobSystem>(info->AppInfo->MaxJobThreads);
+
 		if (info->ScriptEngineInfo)
 			PushModule<ScriptEngine>(info->ScriptEngineInfo);
 

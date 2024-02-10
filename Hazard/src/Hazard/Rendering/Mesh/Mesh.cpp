@@ -5,42 +5,47 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "HazardRendererCore.h"
-#include "MeshCreateInfo.h"
 
 namespace Hazard
 {
-	using namespace HazardRenderer;
+    void Mesh::GenerateMesh(const std::vector<MeshImporter::MeshData>& meshData)
+    {
+        uint64_t totalVertexCount = CalculateTotalVertexCount(meshData);
+        uint64_t totalIndexCount = CalculateTotalIndexCount(meshData);
 
-	Mesh::Mesh(MeshCreateInfo* createInfo)
-	{
-		HZR_PROFILE_FUNCTION();
+        BufferCreateInfo vertexBufferInfo = {};
+        vertexBufferInfo.Name = "Mesh vertex buffer";
+        vertexBufferInfo.Size = totalVertexCount * sizeof(Vertex3D);
+        vertexBufferInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
 
-		BufferLayout layout = Vertex3D::Layout();
+        m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
+        
+        BufferCreateInfo indexBufferInfo = {};
+        indexBufferInfo.Name = "Mesh index buffer";
+        indexBufferInfo.Size = totalIndexCount * sizeof(uint32_t);
+        indexBufferInfo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
 
-		BufferCreateInfo vboInfo = {};
-		vboInfo.Name = createInfo->DebugName;
-		vboInfo.Size = createInfo->VertexCount * sizeof(Vertex3D);
-		vboInfo.Data = createInfo->pVertices;
-		vboInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        m_IndexBuffer = GPUBuffer::Create(&indexBufferInfo);
 
-		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
-
-		BufferCreateInfo iboInfo = {};
-		iboInfo.Name = createInfo->DebugName;
-		iboInfo.Size = createInfo->IndexCount * sizeof(uint32_t);
-		iboInfo.Data = createInfo->pIndices;
-		iboInfo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
-
-		m_IndexBuffer = GPUBuffer::Create(&iboInfo);
-		m_BoundingBox = createInfo->BoundingBox;
-
-		m_MaterialHandle = RenderEngine::GetResources().PBRMaterialHandle;
-
-	}
-
-	Mesh::Mesh(Ref<HazardRenderer::GPUBuffer> vertexBuffer, Ref<HazardRenderer::GPUBuffer> indexBuffer, Ref<AssetPointer> pipeline) : m_VertexBuffer(vertexBuffer), m_IndexBuffer(indexBuffer)
-	{
-		HZR_PROFILE_FUNCTION();
-	}
+        IncRefCount();
+        IncRefCount();
+        IncRefCount();
+        IncRefCount();
+        IncRefCount();
+    }
+    uint64_t Mesh::CalculateTotalVertexCount(const std::vector<MeshImporter::MeshData>& meshData)
+    {
+        uint64_t count = 0;
+        for (auto& mesh : meshData)
+            count += mesh.Vertices.size();
+        return count;
+    }
+    uint64_t Mesh::CalculateTotalIndexCount(const std::vector<MeshImporter::MeshData>& meshData)
+    {
+        uint64_t count = 0;
+        for (auto& mesh : meshData)
+            count += mesh.Indices.size();
+        return count;
+    }
 }
 

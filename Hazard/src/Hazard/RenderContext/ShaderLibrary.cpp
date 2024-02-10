@@ -23,7 +23,6 @@ namespace Hazard
 									   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
 		{
 			BufferLayout layout = LineVertex::Layout();
-			//TODO: Update all the paths
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Debug/LineShader.glsl");
 
 			PipelineSpecification specs = {};

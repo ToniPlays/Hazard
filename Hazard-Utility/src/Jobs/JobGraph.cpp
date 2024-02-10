@@ -40,10 +40,10 @@ void JobGraph::Halt()
 	m_JobSystem->TerminateGraphJobs(this);
 
 	std::string msg = fmt::format("Graph {} halted", GetName());
-	m_JobSystem->m_MessageHook.Invoke(Severity::Warning, msg);
+	m_JobSystem->SendMessage(Severity::Warning, msg);
 }
 
-void JobGraph::Continue() 
+void JobGraph::Continue()
 {
 	if (!m_IsHalted) return;
 
@@ -59,11 +59,11 @@ void JobGraph::Continue()
 
 	if (remainingJobs.size() == 0)
 		SubmitNextStage();
-	else 
+	else
 		m_JobSystem->QueueJobs(remainingJobs);
 
 	std::string msg = fmt::format("Graph {} continuing after halt", GetName());
-	m_JobSystem->m_MessageHook.Invoke(Severity::Warning, msg);
+	m_JobSystem->SendMessage(Severity::Warning, msg);
 }
 
 void JobGraph::ContinueWith(const std::vector<Ref<Job>>& jobs)
@@ -119,14 +119,15 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 	m_Info.Flags |= JOB_GRAPH_SUCCEEDED;
 	m_JobSystem->m_Hooks.Invoke(JobSystem::Finished, Ref<JobGraph>(this));
 
-	try {
+	try
+	{
 		m_OnCompleted.Invoke<JobGraph&>(*this);
 	}
 	catch (JobException e)
 	{
 		m_OnCompleted.Clear();
 		std::string msg = fmt::format("Graph {} OnComplete error: {}", m_Info.Name, e.what());
-		m_JobSystem->m_MessageHook.Invoke(Severity::Error, msg);
+		m_JobSystem->SendMessage(Severity::Error, msg);
 	}
 
 	m_JobSystem->OnGraphFinished(Ref<JobGraph>(this));
@@ -151,7 +152,7 @@ void JobGraph::OnJobFailed(Ref<Job> job)
 		{
 			m_OnCompleted.Clear();
 			std::string msg = fmt::format("Graph {} OnComplete error: {}", m_Info.Name, e.what());
-			m_JobSystem->m_MessageHook.Invoke(Severity::Error, msg);
+			m_JobSystem->SendMessage(Severity::Error, msg);
 		}
 
 		m_JobSystem->OnGraphFinished(this);

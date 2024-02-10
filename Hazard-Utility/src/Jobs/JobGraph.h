@@ -101,7 +101,6 @@ public:
 	}
 
 private:
-
 	void OnJobFinished(Ref<Job> job);
 	void OnJobFailed(Ref<Job> job);
 	void SubmitNextStage();

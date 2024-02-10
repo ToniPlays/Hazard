@@ -333,12 +333,6 @@
     <ClInclude Include="src\Hazard\Rendering\Mesh\MeshAssetLoader.h">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshCreateInfo.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Mesh\MeshFactory.h">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
@@ -462,6 +456,8 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Importers\AssimpImporter.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Importers\MeshImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -605,9 +601,6 @@
     <ClCompile Include="src\Hazard\Rendering\Mesh\MeshAssetLoader.cpp">
       <Filter>src\Hazard\Rendering\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Mesh\MeshFactory.cpp">
-      <Filter>src\Hazard\Rendering\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\RenderEngine.cpp">
       <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
@@ -644,5 +637,7 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Mesh\Importers\AssimpImporter.cpp" />
   </ItemGroup>
 </Project>

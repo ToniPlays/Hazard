@@ -104,6 +104,7 @@ namespace UI
 				std::vector<Entity> selections = m_SelectionContext;
 				ClearSelected();
 				Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
+
 				for (auto& entity : selections)
 				{
 					Entity e = world->CreateEntity(entity);

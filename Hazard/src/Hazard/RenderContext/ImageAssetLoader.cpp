@@ -30,6 +30,7 @@ namespace Hazard
 	Ref<JobGraph> ImageAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
 		HZR_PROFILE_FUNCTION();
+		HZR_CORE_ASSERT(settings.Flags & ASSET_MANAGER_COMBINE_ASSET, "Cannot override image source file");
 
 		Ref<Job> readbackJob = Ref<Job>::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
 		Ref<Job> processJob = Ref<Job>::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
@@ -81,24 +82,20 @@ namespace Hazard
 	{
 		TextureHeader header = info.ParentGraph->GetResult<TextureHeader>();
 
-		Image2DCreateInfo spec = {};
-		spec.DebugName = info.Job->GetName();
-		spec.Extent = header.Extent;
-		spec.Data = header.ImageData;
-		spec.Format = header.Format;
-		spec.MaxMips = header.Mips;
-		spec.Usage = ImageUsage::Texture;
+		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
+		asset->SetExtent(header.Extent);
+		asset->SetMaxMipLevels(header.Mips);
+		asset->Invalidate(header.ImageData);
 
-		Ref<Image2D> image = Image2D::Create(&spec);
-		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(image, RenderEngine::GetResources().DefaultImageSampler);
 		info.Job->SetResult(asset);
 	}
 
 	void ImageAssetLoader::ReadImageDataFromGPU(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
 		using namespace HazardRenderer;
+
 		ImageCopyRegion region = {};
-		region.Extent = { image->GetWidth(), image->GetHeight(), 1 };
+		region.Extent = image->GetExtent();
 		region.X = 0;
 		region.Y = 0;
 		region.Z = 0;
@@ -149,11 +146,12 @@ namespace Hazard
 		Buffer imageData = info.ParentGraph->GetResult<Buffer>();
 
 		ImageAssetFileHeader file = {};
-		file.Extent = { image->GetWidth(), image->GetHeight(), 1 };
+		file.Extent = image->GetExtent();
 		file.Format = image->GetFormat();
 
 		Buffer assetData;
 		assetData.Allocate(sizeof(ImageAssetFileHeader) + imageData.Size);
+
 		CachedBuffer buf(assetData.Data, assetData.Size);
 		buf.Write(file);
 		buf.Write(imageData);
@@ -174,19 +172,12 @@ namespace Hazard
 		pack.FromBuffer(buffer);
 
 		CachedBuffer data(pack.AssetData.Data, pack.AssetData.Size);
-
 		ImageAssetFileHeader header = data.Read<ImageAssetFileHeader>();
 
-		Image2DCreateInfo imageInfo = {};
-		imageInfo.DebugName = fmt::format("Image: {}", File::GetName(metadata.FilePath));
-		imageInfo.Extent = header.Extent;
-		imageInfo.Format = header.Format;
-		imageInfo.MaxMips = 1;
-		imageInfo.Data = pack.AssetData;
-		imageInfo.Usage = ImageUsage::Texture;
-
-		Ref<Image2D> image = Image2D::Create(&imageInfo);
-		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create(image, RenderEngine::GetResources().DefaultImageSampler);
+		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
+		asset->SetExtent(header.Extent);
+		asset->SetMaxMipLevels(1);
+		asset->Invalidate(data.Read<Buffer>(data.GetSize() - data.GetCursor()));
 
 		info.Job->SetResult(asset);
 	}

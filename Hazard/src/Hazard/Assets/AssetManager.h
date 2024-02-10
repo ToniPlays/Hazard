@@ -61,6 +61,7 @@ namespace Hazard
 		static JobPromise SaveAsset(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings());
 
 		static void Unload(AssetHandle handle);
+		static JobPromise Reload(AssetHandle handle);
 
 		template<typename T>
 		static Ref<T> GetAsset(const std::filesystem::path& path)

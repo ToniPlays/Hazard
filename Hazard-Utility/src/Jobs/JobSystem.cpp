@@ -90,7 +90,7 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 		catch (JobException e)
 		{
 			std::string msg = fmt::format("JobException: {0} {1}", job->GetName(), e.what());
-			m_MessageHook.Invoke(Severity::Error, msg);
+			SendMessage(Severity::Error, msg);
 			m_StatusHook.Invoke(thread, thread->GetStatus());
 		}
 
@@ -104,7 +104,7 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 	thread->m_Status.notify_all();
 
 	std::string msg = fmt::format("Thread {} terminated", thread->GetThreadID());
-	m_MessageHook.Invoke(Severity::Info, msg);
+	SendMessage(Severity::Info, msg);
 }
 
 bool JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
@@ -119,7 +119,7 @@ bool JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 	m_JobCount.notify_all();
 
 	std::string msg = fmt::format("Queuing {} jobs", jobs.size());
-	m_MessageHook.Invoke(Severity::Info, msg);
+	SendMessage(Severity::Info, msg);
 	return true;
 }
 
@@ -169,7 +169,7 @@ JobPromise JobSystem::QueueGraph(Ref<JobGraph> graph)
 	if (!graph)
 	{
 		std::string msg = "Tried submitting null graph, aborting";
-		m_MessageHook.Invoke(Severity::Warning, msg);
+		SendMessage(Severity::Warning, msg);
 		return JobPromise();
 	}
 

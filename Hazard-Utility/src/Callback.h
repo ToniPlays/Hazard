@@ -31,9 +31,8 @@ public:
 	{
 		if constexpr (!std::is_same<FuncT, void()>::value)
 		{
-			for (auto& cb : m_Callbacks)
-				if (cb)
-					cb(args...);
+			for (uint32_t i = 0; i < m_Callbacks.size(); i++)
+				if (m_Callbacks[i]) m_Callbacks[i](args...);
 		}
 		else assert(false);
 	}
@@ -42,9 +41,8 @@ public:
 	{
 		if constexpr (std::is_same<FuncT, void()>::value)
 		{
-			for (auto& cb : m_Callbacks)
-				if (cb)
-					cb();
+			for(uint32_t i = 0; i < m_Callbacks.size(); i++)
+				if(m_Callbacks[i]) m_Callbacks[i]();
 		}
 		else assert(false);
 	}

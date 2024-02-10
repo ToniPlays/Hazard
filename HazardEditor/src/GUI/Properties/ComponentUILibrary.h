@@ -710,7 +710,7 @@ namespace UI
 			else if (flags & BIT(1))
 				materialName = "---";
 
-			ImUI::TextField meshField("Mesh");
+			ImUI::TextField meshField(meshName);
 			meshField.SetHint("Mesh asset");
 			meshField.Render();
 

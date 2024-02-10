@@ -16,11 +16,15 @@ ImageAssetImporter::ImageAssetImporter()
 
 void ImageAssetImporter::Init(AssetHandle handle)
 {
+	using namespace Hazard;
+
+	m_SourcePath = "";
 	m_Handle = handle;
 	InitializeSettings();
 }
 void ImageAssetImporter::Init(const std::filesystem::path& sourceFile)
 {
+	m_Handle = INVALID_ASSET_HANDLE;
 	m_SourcePath = sourceFile;
 	InitializeSettings();
 }
@@ -38,6 +42,19 @@ void ImageAssetImporter::RenderUI()
 }
 
 bool ImageAssetImporter::Import()
+{
+	if (m_Handle == INVALID_ASSET_HANDLE)
+		return ImportFromNew();
+	return ReimportExisting();
+}
+
+void ImageAssetImporter::InitializeSettings()
+{
+	m_ResolutionDropdown.SetOptions({ "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" });
+	m_ResolutionDropdown.SetSelected(6);
+}
+
+bool ImageAssetImporter::ImportFromNew()
 {
 	using namespace Hazard;
 	ImageAssetLoaderSettings imageSettings = {};
@@ -66,8 +83,21 @@ bool ImageAssetImporter::Import()
 	return promise.Valid();
 }
 
-void ImageAssetImporter::InitializeSettings()
+bool ImageAssetImporter::ReimportExisting()
 {
-	m_ResolutionDropdown.SetOptions({ "64x64", "128x128", "256x256", "512x512", "1024x1024", "2048x2048", "4096x4096", "8192x8192" });
-	m_ResolutionDropdown.SetSelected(6);
+	using namespace Hazard;
+
+	Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(m_Handle);
+	asset->SetMaxResolution(BIT(m_ResolutionDropdown.GetSelected() + 6));
+	asset->SetMaxMipLevels(1);
+
+	SaveAssetSettings settings = {};
+	settings.Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
+
+	JobPromise promise = AssetManager::SaveAsset(asset, settings);
+	promise.Then([handle = asset->GetHandle()](JobGraph&) {
+		AssetManager::Reload(handle).Wait();
+	});
+
+	return promise.Valid();
 }

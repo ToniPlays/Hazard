@@ -22,19 +22,6 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		return nullptr;
-
-		auto pipeline = asset.As<AssetPointer>()->Value.As<Pipeline>();
-		PipelineSpecification specs = pipeline->GetSpecifications();
-
-		PipelineAssetHeader header = {};
-		header.Usage = specs.Usage;
-		header.DepthOperator = specs.DepthOperator;
-		header.ElementCount = 0;
-		header.StageCount = pipeline->GetShader()->GetShaderCode().size();
-		header.ShaderHandle = 0;
-		header.Flags = specs.Flags;
-
-		return nullptr;
 	}
 
 	Ref<JobGraph> PipelineAssetLoader::Create(const CreateAssetSettings& settings)

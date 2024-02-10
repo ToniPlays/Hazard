@@ -5,6 +5,8 @@
 
 namespace HazardRenderer 
 {
+	struct Extent;
+
 	enum class TextureType 
 	{
 		Image2D,
@@ -47,8 +49,7 @@ namespace HazardRenderer
 
 		virtual TextureType GetType() const = 0;
 
-		virtual uint32_t GetWidth() = 0;
-		virtual uint32_t GetHeight() = 0;
+		virtual const Extent& GetExtent() const = 0;
 		virtual uint32_t GetMipLevels() const = 0;
 
 		virtual float GetAspectRatio() = 0;
