@@ -68,6 +68,19 @@ public:
 		return *this;
 	}
 
+	CachedBuffer& operator=(const Buffer& other)
+	{
+		m_DataBuffer = other;
+		m_OwnsData = true;
+		return *this;
+	}
+
+	void Allocate(uint64_t size)
+	{
+		m_DataBuffer.Allocate(size);
+		m_DataBuffer.ZeroInitialize();
+	}
+
 	template<typename T>
 	T Read()
 	{
@@ -166,6 +179,6 @@ private:
 
 	Buffer m_DataBuffer;
 	uint64_t m_CurrentBufferOffset = 0;
-	uint32_t m_RefCount = 0;
+	std::atomic_uint32_t m_RefCount = 0;
 	bool m_OwnsData = false;
 };

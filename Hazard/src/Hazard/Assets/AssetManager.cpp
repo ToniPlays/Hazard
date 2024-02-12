@@ -226,7 +226,7 @@ namespace Hazard
 
 		graph->AddOnCompleted([asset, settings](JobGraph& graph) {
 
-			Buffer result = graph.GetResult<Buffer>();
+			CachedBuffer result = graph.GetResult<CachedBuffer>();
 
 			//Save asset package
 			AssetPack pack = {};
@@ -248,7 +248,7 @@ namespace Hazard
 
 				if (!pack.SourceFile.empty())
 				{
-					if (!File::WriteBinaryFile(pack.SourceFile, result.Data, result.Size))
+					if (!File::WriteBinaryFile(pack.SourceFile, result.GetData(), result.GetSize()))
 						throw JobException(fmt::format("Could not save source file: {}", pack.SourceFile));
 				}
 			}
@@ -260,8 +260,6 @@ namespace Hazard
 			AssetMetadata& metadata = GetMetadata(asset->GetHandle());
 			if (!metadata.IsValid())
 				ImportAsset(settings.TargetPath, pack);
-
-			pack.AssetData.Release();
 		});
 
 		return graph;

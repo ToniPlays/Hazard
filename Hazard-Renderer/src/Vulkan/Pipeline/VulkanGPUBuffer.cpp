@@ -67,11 +67,10 @@ namespace HazardRenderer::Vulkan
 			allocator.DestroyBuffer(buffer, alloc);
 		});
 	}
-	Buffer VulkanGPUBuffer::ReadData(const BufferCopyRegion& copyRegion)
+	CachedBuffer VulkanGPUBuffer::ReadData(const BufferCopyRegion& copyRegion)
 	{
-		Buffer result;
+		CachedBuffer result;
 		result.Allocate(copyRegion.Size);
-		result.ZeroInitialize();
 
 		if (!m_BufferAllocation)
 			return result;
@@ -79,7 +78,7 @@ namespace HazardRenderer::Vulkan
 		VulkanAllocator allocator("VulkanGPUBuffer");
 
 		uint8_t* src = allocator.MapMemory<uint8_t>(m_BufferAllocation);
-		memcpy(result.Data, src + copyRegion.Offset, copyRegion.Size);
+		result.Write(src + copyRegion.Offset, copyRegion.Size);
 		allocator.UnmapMemory(m_BufferAllocation);
 
 		return result;

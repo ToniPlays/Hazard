@@ -19,12 +19,12 @@ namespace Hazard
 		uint64_t Handle;
 		AssetType Type;
 		std::string SourceFile;
-		Buffer AssetData;
+		CachedBuffer AssetData;
 
 		CachedBuffer ToBuffer()
 		{
 			uint32_t len = SourceFile.length() + sizeof(uint64_t);
-			CachedBuffer buffer(sizeof(uint32_t) + sizeof(uint64_t) + sizeof(AssetType) + len + AssetData.Size);
+			CachedBuffer buffer(sizeof(uint32_t) + sizeof(uint64_t) + sizeof(AssetType) + len + AssetData.GetSize());
 			buffer.Write(Flags);
 			buffer.Write(Handle);
 			buffer.Write(Type);

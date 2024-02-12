@@ -161,17 +161,13 @@ namespace Hazard
 
 		Ref<ShaderAsset> shader = Ref<ShaderAsset>::Create();
 
-		CachedBuffer dataBuffer(pack.AssetData.Data, pack.AssetData.Size);
-
-		while (dataBuffer.Available())
+		while (pack.AssetData.Available())
 		{
-			ShaderAPIHeader header = dataBuffer.Read<ShaderAPIHeader>();
-			auto source = dataBuffer.Read<std::string>();
+			ShaderAPIHeader header = pack.AssetData.Read<ShaderAPIHeader>();
+			auto source = pack.AssetData.Read<std::string>();
 			shader->ShaderCode[(RenderAPI)header.ApiFlags][header.StageFlags] = source;
 		}
 
 		info.Job->SetResult(shader);
-
-		pack.AssetData.Release();
 	}
 }

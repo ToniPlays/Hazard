@@ -58,7 +58,7 @@ namespace Hazard
 	void WorldAssetLoader::GetWorldContent(JobInfo& info, WorldSerializer serializer, uint32_t assetSaveFlags)
 	{
 		std::string result = serializer.Serialize();
-		Buffer buffer = Buffer::Copy(result.c_str(), result.length() * sizeof(char));
+		CachedBuffer buffer(Buffer::Copy(result.c_str(), result.length() * sizeof(char)));
 		info.Job->SetResult(buffer);
 	}
 	void WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle)

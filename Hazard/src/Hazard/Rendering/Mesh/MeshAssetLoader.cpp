@@ -149,8 +149,8 @@ namespace Hazard
 		cmdBuffer->OnCompleted([info, vertexReadback, indexReadback]() mutable {
 			struct Result
 			{
-				Buffer Vertex;
-				Buffer Index;
+				CachedBuffer Vertex;
+				CachedBuffer Index;
 			} result;
 
 			BufferCopyRegion vertexRegion = {
@@ -174,8 +174,8 @@ namespace Hazard
 	{
 		struct Result
 		{
-			Buffer Vertex;
-			Buffer Index;
+			CachedBuffer Vertex;
+			CachedBuffer Index;
 		} result = info.ParentGraph->GetResult<Result>();
 
 		auto meshData = mesh->GetSubmeshData();
@@ -184,14 +184,13 @@ namespace Hazard
 		for (auto& [uid, submesh] : meshData)
 			nodeNameLength += submesh.NodeName.length() + sizeof(uint64_t);
 
-		Buffer buffer;
-		buffer.Allocate(sizeof(MeshFileHeader) + sizeof(SubmeshHeader) * meshData.size() + nodeNameLength + result.Vertex.Size + result.Index.Size);
-		CachedBuffer buf(buffer.Data, buffer.Size);
+		CachedBuffer buf;
+		buf.Allocate(sizeof(MeshFileHeader) + sizeof(SubmeshHeader) * meshData.size() + nodeNameLength + result.Vertex.GetSize() + result.Index.GetSize());
 
 		MeshFileHeader meshHeader = {
 			.SubmeshCount = meshData.size(),
-			.VertexCount = result.Vertex.Size / sizeof(Vertex3D),
-			.IndexCount = result.Index.Size / sizeof(uint32_t),
+			.VertexCount = result.Vertex.GetSize() / sizeof(Vertex3D),
+			.IndexCount = result.Index.GetSize() / sizeof(uint32_t),
 		};
 
 		buf.Write(meshHeader);
@@ -217,10 +216,7 @@ namespace Hazard
 		buf.Write(result.Vertex);
 		buf.Write(result.Index);
 
-		result.Vertex.Release();
-		result.Index.Release();
-
-		info.Job->SetResult(buffer);
+		info.Job->SetResult(buf);
 	}
 	void MeshAssetLoader::CreateMeshFromSource(JobInfo& info, AssetHandle handle)
 	{
@@ -233,17 +229,16 @@ namespace Hazard
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
 
-		CachedBuffer data(pack.AssetData.Data, pack.AssetData.Size);
-		MeshFileHeader header = data.Read<MeshFileHeader>();
+		MeshFileHeader header = pack.AssetData.Read<MeshFileHeader>();
 
 		std::unordered_map<uint64_t, SubmeshData> submeshes;
 
 		for (uint32_t i = 0; i < header.SubmeshCount; i++)
 		{
-			SubmeshHeader subHeader = data.Read<SubmeshHeader>();
+			SubmeshHeader subHeader = pack.AssetData.Read<SubmeshHeader>();
 
 			SubmeshData submeshData = {
-				.NodeName = data.Read<std::string>(),
+				.NodeName = pack.AssetData.Read<std::string>(),
 				.NodeID = subHeader.NodeID,
 				.VertexCount = subHeader.VertexCount,
 				.IndexCount = subHeader.IndexCount,
@@ -256,8 +251,8 @@ namespace Hazard
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create();
 
-		Buffer vertices = data.Read<Buffer>(header.VertexCount * sizeof(Vertex3D));
-		Buffer indices = data.Read<Buffer>(header.IndexCount * sizeof(uint32_t));
+		Buffer vertices = pack.AssetData.Read<Buffer>(header.VertexCount * sizeof(Vertex3D));
+		Buffer indices = pack.AssetData.Read<Buffer>(header.IndexCount * sizeof(uint32_t));
 		mesh->GenerateMesh(submeshes, vertices, indices);
 
 		info.Job->SetResult(mesh);

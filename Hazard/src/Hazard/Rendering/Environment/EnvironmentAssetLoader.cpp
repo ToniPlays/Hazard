@@ -102,6 +102,8 @@ namespace Hazard
 
 		Ref<Image2D> image = Image2D::Create(&sourceImage);
 		info.Job->SetResult(image);
+
+		header.ImageData.Release();
 	}
 	void EnvironmentAssetLoader::GenerateEnvironmentMap(JobInfo& info, const CreateSettings& settings)
 	{

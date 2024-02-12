@@ -90,6 +90,8 @@ namespace Hazard
 		asset->Invalidate(header.ImageData);
 
 		info.Job->SetResult(asset);
+
+		header.ImageData.Release();
 	}
 
 	void ImageAssetLoader::ReadImageDataFromGPU(JobInfo& info, Ref<HazardRenderer::Image2D> image)
@@ -139,7 +141,7 @@ namespace Hazard
 				.Offset = 0
 			};
 
-			Buffer data = readbackBuffer->ReadData(region);
+			CachedBuffer data = readbackBuffer->ReadData(region);
 			info.Job->SetResult(data);
 			info.ParentGraph->Continue();
 		});
@@ -149,22 +151,19 @@ namespace Hazard
 
 	void ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
-		Buffer imageData = info.ParentGraph->GetResult<Buffer>();
+		CachedBuffer imageData = info.ParentGraph->GetResult<CachedBuffer>();
 
 		ImageAssetFileHeader file = {
 			.Extent = image->GetExtent(),
 			.Format = image->GetFormat(),
 		};
 
-		Buffer assetData;
-		assetData.Allocate(sizeof(ImageAssetFileHeader) + imageData.Size);
-
-		CachedBuffer buf(assetData.Data, assetData.Size);
+		CachedBuffer buf;
+		buf.Allocate(sizeof(ImageAssetFileHeader) + imageData.GetSize());
 		buf.Write(file);
 		buf.Write(imageData);
 
-		info.Job->SetResult(assetData),
-			imageData.Release();
+		info.Job->SetResult(buf);
 	}
 
 	void ImageAssetLoader::CreateImageFromBinary(JobInfo& info, AssetHandle handle)
@@ -178,13 +177,12 @@ namespace Hazard
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
 
-		CachedBuffer data(pack.AssetData.Data, pack.AssetData.Size);
-		ImageAssetFileHeader header = data.Read<ImageAssetFileHeader>();
+		ImageAssetFileHeader header = pack.AssetData.Read<ImageAssetFileHeader>();
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
 		asset->SetExtent(header.Extent);
 		asset->SetMaxMipLevels(1);
-		asset->Invalidate(data.Read<Buffer>(data.GetSize() - data.GetCursor()));
+		asset->Invalidate(pack.AssetData.Read<Buffer>(pack.AssetData.GetSize() - pack.AssetData.GetCursor()));
 
 		info.Job->SetResult(asset);
 	}
