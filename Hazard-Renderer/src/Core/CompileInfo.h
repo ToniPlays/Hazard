@@ -16,11 +16,11 @@ namespace HazardRenderer
 
 	struct CompileInfo
 	{
+		std::string Name;
 		RenderAPI Renderer;
 		Optimization Optimization;
 		uint32_t Stage;
 		std::string Source;
-		std::string Name;
 		uint64_t DefineCount = 0;
 		ShaderDefine* pDefines = nullptr;
 	};

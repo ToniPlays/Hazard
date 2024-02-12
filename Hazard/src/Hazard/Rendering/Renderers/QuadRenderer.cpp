@@ -57,10 +57,10 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (m_QuadBatch->GetIndexCount() == 0) return;
 
-		BufferCopyRegion region = {};
-		region.Data = m_QuadBatch->GetData();
-		region.Size = m_QuadBatch->GetDataSize();
-		region.Offset = 0;
+		BufferCopyRegion region = {
+			.Size = m_QuadBatch->GetDataSize(),
+			.Data = m_QuadBatch->GetData(),
+		};
 
 		m_VertexBuffer->SetData(region);
 
@@ -95,11 +95,12 @@ namespace Hazard
 
 		for (uint8_t i = 0; i < 4; i++)
 		{
-			QuadVertex vertex = {};
-			vertex.Position = transform * m_Data.QuadVertexPos[i];
-			vertex.Color = color;
-			vertex.TextureCoords = textureCoords[i];
-			vertex.TextureIndex = textureIndex;
+			QuadVertex vertex = {
+				.Position = transform * m_Data.QuadVertexPos[i],
+				.Color = color,
+				.TextureCoords = textureCoords[i],
+				.TextureIndex = textureIndex,
+			};
 
 			m_QuadBatch->Push(vertex);
 		}
@@ -131,13 +132,14 @@ namespace Hazard
 		{
 			const glm::vec3& pos = m_Data.QuadVertexPos[i];
 
-			QuadVertex vertex = {};
-			vertex.Position = transform[3] + size * pos.x * cameraRightVector +
-				size * pos.y * cameraUpVector;
+			QuadVertex vertex = {
+				vertex.Position = transform[3] + size * pos.x * cameraRightVector +
+					size * pos.y * cameraUpVector,
 
-			vertex.Color = color;
-			vertex.TextureCoords = textureCoords[i];
-			vertex.TextureIndex = textureIndex;
+				vertex.Color = color,
+				vertex.TextureCoords = textureCoords[i],
+				vertex.TextureIndex = textureIndex,
+			};
 
 			m_QuadBatch->Push(vertex);
 		}
@@ -178,22 +180,23 @@ namespace Hazard
 				offset += 4;
 			}
 
-			BufferCreateInfo iboInfo = {};
-			iboInfo.Name = "QuadIndexBuffer";
-			iboInfo.Data = indices;
-			iboInfo.Size = m_Data.MaxIndices * sizeof(uint32_t);
-			iboInfo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
+			BufferCreateInfo iboInfo = {
+				.Name = "QuadIndexBuffer",
+				.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT,
+				.Size = m_Data.MaxIndices * sizeof(uint32_t),
+				.Data = indices,
+			};
 
 			m_IndexBuffer = GPUBuffer::Create(&iboInfo);
 
 			hdelete[] indices;
 		}
 
-		BufferCreateInfo vboInfo = {};
-		vboInfo.Name = "QuadVBO";
-		vboInfo.Data = nullptr;
-		vboInfo.Size = m_Data.MaxVertices * sizeof(QuadVertex);
-		vboInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
+		BufferCreateInfo vboInfo = {
+			.Name = "QuadVBO",
+			.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_DYNAMIC,
+			.Size = m_Data.MaxVertices * sizeof(QuadVertex),
+		};
 
 		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 

@@ -73,7 +73,7 @@ namespace Hazard
 	void HazardLoop::Close()
 	{
 		HZR_PROFILE_SESSION_BEGIN("Shutdown", "Logs/HazardProfile-Shutdown.json");
-
+		m_Application->GetJobSystem().WaitForJobsToFinish();
 		m_Application->Close();
 		m_ModuleHandler->Close();
 

@@ -15,6 +15,7 @@ namespace Hazard
 		friend class RenderEngine;
 		friend class QuadRenderer;
 		friend class LineRenderer;
+
 	public:
 		static void SubmitWorldRenderer(const Ref<WorldRenderer>& renderer);
 

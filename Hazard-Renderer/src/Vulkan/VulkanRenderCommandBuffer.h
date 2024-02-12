@@ -46,18 +46,20 @@ namespace HazardRenderer::Vulkan
 		void SetPipeline(Ref<Pipeline> pipeline) override;
 		void SetLineWidth(float width) override;
 
-		void Draw(uint64_t count, Ref<GPUBuffer> indexBuffer = nullptr) override;
-		void DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) override;
+		void Draw(uint64_t count, Ref<GPUBuffer> indexBuffer = nullptr, uint32_t bufferOffset = 0) override;
+		void DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr, uint32_t bufferOffset = 0) override;
 		void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<GPUBuffer> indexBuffer = nullptr) override;
 		void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset = 0, uint32_t maxDraws = 0, Ref<GPUBuffer> indexBuffer = nullptr) override;
 
 		void DispatchCompute(GroupSize globalGroupSize) override;
 		void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
 
-		void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region) override;
-		void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region) override;
-		void CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> targetImage, const BufferCopyRegion& region) override;
-		void CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> targetBuffer, const ImageCopyRegion& region) override;
+		void CopyToBuffer(Ref<GPUBuffer> destinationBuffer, const BufferCopyRegion& region) override;
+		void CopyToImage(Ref<Image> destinationImage, const ImageCopyRegion& region) override;
+
+		void CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> destinationImage, const BufferCopyRegion& region) override;
+		void CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> destinationBuffer, const ImageCopyRegion& region) override;
+		void CopyBufferToBuffer(Ref<GPUBuffer> sourceBuffer, const BufferCopyRegion& sourceRegion, Ref<GPUBuffer> destinationBuffer, const BufferCopyRegion& destinationRegion) override;
 
 		void BlitImage(const BlitImageInfo& blitInfo);
 

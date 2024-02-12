@@ -34,6 +34,7 @@ namespace Hazard::ImUI
 			ImGui::SetNextWindowSize(m_Size);
 			ImGui::SetNextWindowPos({ size.x / 2.0f, size.y / 2.5f }, 0, { 0.5, 0.5 });
 			ImUI::ScopedStyleColor color(ImGuiCol_PopupBg, style.ChildBackgroundColor);
+
 			if (ImGui::BeginPopupModal(m_Title.c_str(), &m_Open, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
 				OnPanelRender();
 				ImGui::EndPopup();

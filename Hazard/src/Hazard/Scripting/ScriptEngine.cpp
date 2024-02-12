@@ -19,35 +19,36 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		HazardScriptCreateInfo createInfo = {};
-		createInfo.CoreAssemblyPath = m_Info.CoreAssemblyPath;
-		createInfo.AppAssemblyPath = m_Info.AppAssemblyPath;
-		createInfo.CoralDirectory = m_Info.CoralDirectory;
+		HazardScriptCreateInfo createInfo = {
+			.CoreAssemblyPath = m_Info.CoreAssemblyPath,
+			.AppAssemblyPath = m_Info.AppAssemblyPath,
+			.CoralDirectory = m_Info.CoralDirectory,
 
-		createInfo.DebugCallback = [&](ScriptMessage message) {
-			if (m_MessageCallback.Count() == 0)
-			{
-				m_QueuedMessages.push_back(message);
-				return;
-			}
+			.DebugCallback = [&](ScriptMessage message) {
+				if (m_MessageCallback.Count() == 0)
+				{
+					m_QueuedMessages.push_back(message);
+					return;
+				}
 
-			for (auto& m : m_QueuedMessages)
-				m_MessageCallback.Invoke<ScriptMessage&>(m);
+				for (auto& m : m_QueuedMessages)
+					m_MessageCallback.Invoke<ScriptMessage&>(m);
 
-			m_QueuedMessages.clear();
-			m_MessageCallback.Invoke<ScriptMessage&>(message);
+				m_QueuedMessages.clear();
+				m_MessageCallback.Invoke<ScriptMessage&>(message);
+			},
+			.BindingCallback = [&](Ref<ScriptAssembly> assembly) {
+				if (!m_ScriptGlue.contains(assembly.Raw())) return;
+
+				for (auto& glue : m_ScriptGlue[assembly.Raw()])
+				{
+					glue->OnAssemblyLoaded(assembly);
+					glue->Register(assembly);
+				}
+				assembly->UploadInternalCalls();
+			},
 		};
 
-		createInfo.BindingCallback = [&](Ref<ScriptAssembly> assembly) {
-			if (!m_ScriptGlue.contains(assembly.Raw())) return;
-
-			for (auto& glue : m_ScriptGlue[assembly.Raw()])
-			{
-				glue->OnAssemblyLoaded(assembly);
-				glue->Register(assembly);
-			}
-			assembly->UploadInternalCalls();
-		};
 		AttributeConstructor::Init();
 
 		m_Engine = HazardScriptEngine::Create(&createInfo);

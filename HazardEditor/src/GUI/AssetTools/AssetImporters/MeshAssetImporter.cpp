@@ -2,7 +2,7 @@
 
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/ImGUI/UILibrary.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "GUI/ProjectPanel/AssetPanel.h"
 #include <Hazard/RenderContext/ImageAssetLoader.h>
 
@@ -51,7 +51,7 @@ bool MeshAssetImporter::ImportFromNew()
 	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Mesh, settings);
 
 	auto assetPanel = Application::Get().GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>();
-	auto path = assetPanel->GetOpenDirectory() / (File::GetNameNoExt(m_SourcePath) + ".hasset");
+	auto path = File::FindAvailableName(assetPanel->GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), "hasset");
 
 	promise.Then([path](JobGraph& graph) {
 		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
@@ -59,7 +59,7 @@ bool MeshAssetImporter::ImportFromNew()
 
 		SaveAssetSettings settings = {};
 		settings.TargetPath = path;
-		settings.Flags |= ASSET_MANAGER_COMBINE_ASSET;
+		settings.Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
 
 		AssetManager::SaveAsset(asset, settings);
 	});

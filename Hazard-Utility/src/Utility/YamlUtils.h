@@ -98,9 +98,14 @@ public:
 	}
 
 	template<typename T>
-	static void Deserialize(YAML::Node node, const std::string& key, T& value, T defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<T>();
+	static bool Deserialize(YAML::Node node, const std::string& key, T& value, T defaultValue) {
+		if (!node[key])
+		{
+			value = defaultValue;
+			return false;
+		}
+		value = node[key].as<T>();
+		return true;
 	}
 
 	template<typename T>
@@ -170,19 +175,40 @@ public:
 
 
 	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, bool& value, bool defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<std::string>() == "True";
+	static bool Deserialize(YAML::Node node, const std::string& key, bool& value, bool defaultValue) 
+	{
+		if (!node[key])
+		{
+			value = defaultValue;
+			return false;
+		}
+		
+		value = node[key].as<std::string>() == "True";
+		return true;
 	}
 	template<>
 	
-	static void Deserialize(YAML::Node node, const std::string& key, Color& value, Color defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = Color::FromGLM(node[key].as<glm::vec4>());
+	static bool Deserialize(YAML::Node node, const std::string& key, Color& value, Color defaultValue) 
+	{
+		if (!node[key])
+		{
+			value = defaultValue;
+			return false;
+		}
+
+		value = Color::FromGLM(node[key].as<glm::vec4>());
+		return true;
 	}
 	template<>
-	static void Deserialize(YAML::Node node, const std::string& key, std::filesystem::path& value, std::filesystem::path defaultValue) {
-		if (!node[key]) value = defaultValue;
-		else value = node[key].as<std::string>();
+	static bool Deserialize(YAML::Node node, const std::string& key, std::filesystem::path& value, std::filesystem::path defaultValue) 
+	{
+		if (!node[key])
+		{
+			value = defaultValue;
+			return false;
+		}
+
+		value = node[key].as<std::string>();
+		return true;
 	}
 };

@@ -19,10 +19,11 @@ namespace Hazard
 
 		Ref<Job> createJob = Ref<Job>::Create(fmt::format("ImageLoad: {}", metadata.FilePath.string()), CreateImageFromBinary, metadata.Handle);
 
-		JobGraphInfo info = {};
-		info.Name = "Image load";
-		info.Stages = { { "Create", 1.0f, { createJob } } };
-		info.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+		JobGraphInfo info = {
+			.Name = "Image load",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = { { "Create", 1.0f, { createJob } } }
+		};
 
 		return Ref<JobGraph>::Create(info);
 	}
@@ -35,12 +36,12 @@ namespace Hazard
 		Ref<Job> readbackJob = Ref<Job>::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
 		Ref<Job> processJob = Ref<Job>::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
 
-		JobGraphInfo info = {};
-		info.Name = "Image save";
-		info.Stages = { { "Readback", 0.5f, { readbackJob } },
-					   { "Process", 0.5f, { processJob } }
+		JobGraphInfo info = {
+			.Name = "Image save",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = { { "Readback", 0.5f, { readbackJob } },
+						{ "Process", 0.5f, { processJob } } }
 		};
-		info.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
 
 		return Ref<JobGraph>::Create(info);
 	}
@@ -49,24 +50,25 @@ namespace Hazard
 	{
 		auto& file = settings.SourcePath;
 
-		ImageAssetLoaderSettings imageSpec = {};
+		CreateSettings imageSpec = {};
 		if (settings.Settings)
-			imageSpec = *(ImageAssetLoaderSettings*)settings.Settings;
+			imageSpec = *(CreateSettings*)settings.Settings;
 
 		Ref<Job> sourceLoad = Ref<Job>::Create(fmt::format("Image data load from: {0}", file.string()), ImageDataLoadFromSource, file, imageSpec);
 		Ref<Job> createImage = Ref<Job>::Create(fmt::format("Image {}", File::GetName(file)), CreateImageFromData, imageSpec);
 
-		JobGraphInfo info = {};
-		info.Name = "Image load";
-		info.Stages = { { "Load data", 0.8f, { sourceLoad } },
-						{ "Create", 0.2f, { createImage } }
+		JobGraphInfo info = {
+			.Name = "Image load",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = { { "Load data", 0.8f, { sourceLoad } },
+							{ "Create", 0.2f, { createImage } }
+			}
 		};
-		info.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
 
 		return Ref<JobGraph>::Create(info);
 	}
 
-	void ImageAssetLoader::ImageDataLoadFromSource(JobInfo& info, const std::filesystem::path& path, ImageAssetLoaderSettings settings)
+	void ImageAssetLoader::ImageDataLoadFromSource(JobInfo& info, const std::filesystem::path& path, CreateSettings settings)
 	{
 		if (!File::Exists(path))
 			throw JobException(fmt::format("Image source file does not exist: {}", path.string()));
@@ -78,7 +80,7 @@ namespace Hazard
 		info.Job->SetResult(header);
 	}
 
-	void ImageAssetLoader::CreateImageFromData(JobInfo& info, ImageAssetLoaderSettings settings)
+	void ImageAssetLoader::CreateImageFromData(JobInfo& info, CreateSettings settings)
 	{
 		TextureHeader header = info.ParentGraph->GetResult<TextureHeader>();
 
@@ -94,27 +96,30 @@ namespace Hazard
 	{
 		using namespace HazardRenderer;
 
-		ImageCopyRegion region = {};
-		region.Extent = image->GetExtent();
-		region.X = 0;
-		region.Y = 0;
-		region.Z = 0;
+		ImageCopyRegion region = {
+			.Extent = image->GetExtent(),
+			.X = 0,
+			.Y = 0,
+			.Z = 0
+		};
 
-		BufferCreateInfo bufferInfo = {};
-		bufferInfo.Name = "Image readback";
-		bufferInfo.Size = region.Extent.Width * region.Extent.Height * region.Extent.Depth * sizeof(float);
-		bufferInfo.UsageFlags = BUFFER_USAGE_STORAGE_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
+		BufferCreateInfo bufferInfo = {
+			.Name = "Image readback",
+			.UsageFlags = BUFFER_USAGE_STORAGE_BUFFER_BIT | BUFFER_USAGE_DYNAMIC,
+			.Size = region.Extent.Width * region.Extent.Height * region.Extent.Depth * sizeof(float),
+		};
 
 		Ref<GPUBuffer> readbackBuffer = GPUBuffer::Create(&bufferInfo);
 
-		ImageMemoryInfo barrier = {};
-		barrier.Image = (Image*)image.Raw();
-		barrier.BaseLayer = 0;
-		barrier.LayerCount = 1;
-		barrier.BaseMip = 0;
-		barrier.MipCount = 1;
-		barrier.SrcLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
-		barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
+		ImageMemoryInfo barrier = {
+			.Image = (Image*)image.Raw(),
+			.BaseLayer = 0,
+			.LayerCount = 1,
+			.BaseMip = 0,
+			.MipCount = 1,
+			.SrcLayout = IMAGE_LAYOUT_SHADER_READ_ONLY,
+			.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC,
+		};
 
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Image readback", DeviceQueue::TransferBit, 1);
 		cmdBuffer->Begin();
@@ -129,9 +134,10 @@ namespace Hazard
 		cmdBuffer->Submit();
 		cmdBuffer->OnCompleted([info, readbackBuffer]() mutable {
 
-			BufferCopyRegion region = {};
-			region.Offset = 0;
-			region.Size = readbackBuffer->GetSize();
+			BufferCopyRegion region = {
+				.Size = readbackBuffer->GetSize(),
+				.Offset = 0
+			};
 
 			Buffer data = readbackBuffer->ReadData(region);
 			info.Job->SetResult(data);
@@ -145,9 +151,10 @@ namespace Hazard
 	{
 		Buffer imageData = info.ParentGraph->GetResult<Buffer>();
 
-		ImageAssetFileHeader file = {};
-		file.Extent = image->GetExtent();
-		file.Format = image->GetFormat();
+		ImageAssetFileHeader file = {
+			.Extent = image->GetExtent(),
+			.Format = image->GetFormat(),
+		};
 
 		Buffer assetData;
 		assetData.Allocate(sizeof(ImageAssetFileHeader) + imageData.Size);

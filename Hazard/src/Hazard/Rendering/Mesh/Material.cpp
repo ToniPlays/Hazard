@@ -11,10 +11,11 @@ namespace Hazard
 	{
 		if (layout.GetElementCount() == 0) return;
 
-		DescriptorSetCreateInfo setInfo = {};
-		setInfo.DebugName = "Material " + pipeline->GetSpecifications().DebugName;
-		setInfo.pLayout = &layout;
-		setInfo.Set = 1;
+		DescriptorSetCreateInfo setInfo = {
+			.DebugName = fmt::format("Material: {}", pipeline->GetSpecifications().DebugName),
+			.Set = 1,
+			.pLayout = &layout,
+		};
 
 		m_DescriptorSet = DescriptorSet::Create(&setInfo);
 	}

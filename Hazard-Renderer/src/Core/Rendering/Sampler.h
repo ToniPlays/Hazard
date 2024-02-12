@@ -6,9 +6,9 @@ namespace HazardRenderer
 	struct SamplerCreateInfo
 	{
 		std::string DebugName;
-		ImageWrap Wrapping = ImageWrap::Repeat;
 		FilterMode MinFilter = FilterMode::Linear;
 		FilterMode MagFilter = FilterMode::Linear;
+		ImageWrap Wrapping = ImageWrap::Repeat;
 	};
 
 	class Sampler : public RefCount

@@ -8,6 +8,7 @@
 #include <MathCore.h>
 
 class JobSystem;
+struct JobPromise;
 
 struct GraphStageInfo 
 {
@@ -19,8 +20,8 @@ struct GraphStageInfo
 struct JobGraphInfo
 {
 	std::string Name;
-	std::vector<GraphStageInfo> Stages;
 	uint32_t Flags = 0;
+	std::vector<GraphStageInfo> Stages;
 };
 
 class JobGraph : public RefCount
@@ -42,11 +43,11 @@ public:
 		return m_Info.Stages[Math::Min<uint64_t>(m_CurrentStage, m_Info.Stages.size() - 1)]; 
 	}
 
-	void Execute(JobSystem* system);
+	bool Execute(JobSystem* system);
 	void Halt();
 	void Continue();
-
 	void ContinueWith(const std::vector<Ref<Job>>& jobs);
+	JobPromise SubGraph(Ref<JobGraph> graph);
 
 	float GetProgress();
 
@@ -97,12 +98,13 @@ public:
 		info.Stages = { { "", 1.0f, { job }} };
 		auto graph = Ref<JobGraph>::Create(info);
 		graph->m_HasFinished = true;
+		graph->m_CurrentStage = 1;
 		return graph;
 	}
 
 private:
 	void OnJobFinished(Ref<Job> job);
-	void OnJobFailed(Ref<Job> job);
+	void OnJobFailed(Ref<Job> job, const char* message);
 	void SubmitNextStage();
 	
 private:
@@ -110,7 +112,7 @@ private:
 	JobGraphInfo m_Info;
 	std::atomic_uint32_t m_CurrentStage = 0;
 	std::atomic_bool m_HasFinished = false;
-	std::atomic_bool m_IsHalted = false;
+	std::atomic_uint32_t m_HaltCount = 0;
 	std::mutex m_StageMutex;
 
 	JobSystem* m_JobSystem = nullptr;

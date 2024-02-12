@@ -17,15 +17,17 @@ void TestFramework::PreInit()
 	appInfo.AppName = "Hazard Test";
 	appInfo.Logging = true;
 
-	RenderContextCreateInfo renderer = {};
-	renderer.Renderer = HazardRenderer::RenderAPI::Auto;
-	renderer.VSync = true;
-	renderer.Width = 1920;
-	renderer.Height = 1080;
+	RenderContextCreateInfo renderer = {
+		.Renderer = HazardRenderer::RenderAPI::Auto,
+		.Width = 1920,
+		.Height = 1080,
+		.VSync = true,
+	};
 
-	HazardCreateInfo info = {};
-	info.AppInfo = &appInfo;
-	info.RenderContextInfo = &renderer;
+	HazardCreateInfo info = {
+		.AppInfo = &appInfo,
+		.RenderContextInfo = &renderer,
+	};
 
 	CreateApplicationStack(&info);
 }
@@ -45,19 +47,21 @@ void TestFramework::Init()
 	mouseGroup.Type = InputDeviceType::Mouse;
 	mouseGroup.Axis[0].KeyCode = Mouse::ButtonLeft;
 
-	InputBinding binding = {};
-	binding.AxisMask = InputAxisDirection_Button;
-	binding.Groups = { kbGroup, mouseGroup };
-	binding.Callback = [&](const InputBinding& binding, uint32_t key) {
-		if (binding.IsPressed()) return;
+	InputBinding binding = {
+		.AxisMask = InputAxisDirection_Button,
+		.Groups = { kbGroup, mouseGroup },
+		.Callback = [&](const InputBinding& binding, uint32_t key) {
+			if (binding.IsPressed()) return;
 
-		m_TestIndex++;
-		RestartTest();
+			m_TestIndex++;
+			RestartTest();
+		}
 	};
 
-	InputSchema schema = {};
-	schema.Bindings = { binding };
-	schema.Enabled = true;
+	InputSchema schema = {
+		.Enabled = true,
+		.Bindings = { binding },
+	};
 
 	Application::GetModule<InputManager>().InvalidateSchema(schema);
 

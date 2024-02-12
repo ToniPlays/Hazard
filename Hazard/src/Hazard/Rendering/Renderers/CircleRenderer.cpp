@@ -46,10 +46,10 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (m_CicleBatch->GetIndexCount() == 0) return;
 
-		BufferCopyRegion region = {};
-		region.Data = m_CicleBatch->GetData();
-		region.Size = m_CicleBatch->GetDataSize();
-		region.Offset = 0;
+		BufferCopyRegion region = {
+			.Size = m_CicleBatch->GetDataSize(),
+			.Data = m_CicleBatch->GetData(),
+		};
 
 		m_VertexBuffer->SetData(region);
 
@@ -73,12 +73,13 @@ namespace Hazard
 
 		for (uint8_t i = 0; i < 4; i++)
 		{
-			CircleVertex vertex = {};
-			vertex.Position = transform * m_Data.CircleVertexPos[i];
-			vertex.LocalPosition = m_Data.CircleVertexPos[i] * 2.0f;
-			vertex.Color = color;
-			vertex.Thickness = thickness;
-			vertex.Fade = fade;
+			CircleVertex vertex = {
+				.Position = transform * m_Data.CircleVertexPos[i],
+				.LocalPosition = m_Data.CircleVertexPos[i] * 2.0f,
+				.Color = color,
+				.Thickness = thickness,
+				.Fade = fade,
+			};
 
 			m_CicleBatch->Push(vertex);
 		}
@@ -107,14 +108,15 @@ namespace Hazard
 		{
 			const glm::vec3& pos = m_Data.CircleVertexPos[i];
 
-			CircleVertex vertex = {};
-			vertex.Position = transform[3] + size * pos.x * cameraRightVector +
-				size * pos.y * cameraUpVector;
+			CircleVertex vertex = {
+				.Position = transform[3] + size * pos.x * cameraRightVector +
+					size * pos.y * cameraUpVector,
 
-			vertex.LocalPosition = m_Data.CircleVertexPos[i];
-			vertex.Color = color;
-			vertex.Thickness = thickness;
-			vertex.Fade = fade;
+				.LocalPosition = m_Data.CircleVertexPos[i],
+				.Color = color,
+				.Thickness = thickness,
+				.Fade = fade,
+			};
 
 			m_CicleBatch->Push(vertex);
 		}
@@ -163,27 +165,25 @@ namespace Hazard
 				offset += 4;
 			}
 
-			BufferCreateInfo iboInfo = {};
-			iboInfo.Name = "CircleIndexBuffer";
-			iboInfo.Data = indices;
-			iboInfo.Size = m_Data.MaxIndices * sizeof(uint32_t);
-			iboInfo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
+			BufferCreateInfo iboInfo = {
+				.Name = "Circle renderer index buffer",
+				.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT,
+				.Size = m_Data.MaxIndices * sizeof(uint32_t),
+				.Data = indices,
+			};
 
 			m_IndexBuffer = GPUBuffer::Create(&iboInfo);
 
 			hdelete[] indices;
 		}
 
-		BufferCreateInfo vboInfo = {};
-		vboInfo.Name = "CircleVBO";
-		vboInfo.Data = nullptr;
-		vboInfo.Size = m_Data.MaxVertices * sizeof(CircleVertex);
-		vboInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
+		BufferCreateInfo vboInfo = {
+			.Name = "Circle renderer vertex buffer",
+			.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_DYNAMIC,
+			.Size = m_Data.MaxVertices * sizeof(CircleVertex),
+		};
 
 		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
-
-		DescriptorSetLayout layout = {};
-
 		m_RenderPass = renderPass;
 	}
 }

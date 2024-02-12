@@ -5,7 +5,7 @@
 #include "MathCore.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Core/EditorAssetManager.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "AssetPanel.h"
 #include "Directory.h"
 
@@ -13,8 +13,8 @@
 #include "GUI/AssetTools/AssetImporterPanel.h"
 
 #include "imgui_internal.h"
-
 #include "Platform/OS.h"
+#include <Editor/EditorWorldManager.h>
 
 using namespace Hazard;
 
@@ -152,20 +152,19 @@ namespace UI
 
 		if (ImGui::IsMouseDoubleClicked(0) && ImGui::IsItemHovered())
 		{
-			if (!IsFolder() && Input::IsKeyDown(Key::LeftControl))
-				OS::OpenInDefault(GetMetadata().FilePath);
-			else 
+			if (!Input::IsKeyDown(Key::LeftControl))
+			{
+				OnItemDoubleClicked();
+			}
+			else
 			{
 				auto panel = Application::Get().GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
 				panel->Open(GetMetadata().Handle);
 			}
 		}
 
-
 		if (ImGui::IsMouseClicked(0) && ImGui::IsItemHovered() && m_Flags == 0)
-		{
 			OnItemClicked();
-		}
 
 		ImGui::PopStyleVar();
 
@@ -243,6 +242,15 @@ namespace UI
 				panel->SetSelectedMaterial(AssetManager::GetAsset<Material>(m_Handle));
 			}
 			default: break;
+		}
+	}
+	void AssetPanelItem::OnItemDoubleClicked()
+	{
+		switch (GetType())
+		{
+			case AssetType::World:
+				Editor::EditorWorldManager::LoadWorld(m_Handle);
+				break;
 		}
 	}
 }

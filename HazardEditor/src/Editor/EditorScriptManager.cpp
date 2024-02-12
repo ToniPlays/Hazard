@@ -6,7 +6,7 @@
 #include "Hazard.h"
 #include "File.h"
 #include "Core/MessageFlags.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 
 #include "Core/HazardEditor.h"
 

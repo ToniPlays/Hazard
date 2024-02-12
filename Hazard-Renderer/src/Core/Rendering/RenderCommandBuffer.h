@@ -97,8 +97,8 @@ namespace HazardRenderer
 		virtual void SetLineWidth(float width) = 0;
 
 		//Draw
-		virtual void Draw(uint64_t count, Ref<GPUBuffer> indexBuffer = nullptr) = 0;
-		virtual void DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr) = 0;
+		virtual void Draw(uint64_t count, Ref<GPUBuffer> indexBuffer = nullptr, uint32_t bufferOffset = 0) = 0;
+		virtual void DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer = nullptr, uint32_t bufferOffset = 0) = 0;
 		virtual void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t drawCount, uint32_t stride, uint32_t offset = 0, Ref<GPUBuffer> indexBuffer = nullptr) = 0;
 		virtual void DrawIndirect(Ref<GPUBuffer> argumentBuffer, uint32_t stride, uint32_t offset, Ref<GPUBuffer> drawCountBuffer, uint32_t drawCountOffset = 0, uint32_t maxDraws = 0, Ref<GPUBuffer> indexBuffer = nullptr) = 0;
 
@@ -106,10 +106,16 @@ namespace HazardRenderer
 		virtual void DispatchCompute(GroupSize GlobalGroupSize) = 0;
 		virtual void TraceRays(const TraceRaysInfo& traceRaysInfo) = 0;
 
-		virtual void CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region) = 0;
-		virtual void CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region) = 0;
-		virtual void CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> targetImage, const BufferCopyRegion& region) = 0;
-		virtual void CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> targetBuffer, const ImageCopyRegion& region) = 0;
+		//Copy between CPU and GPU
+		virtual void CopyToBuffer(Ref<GPUBuffer> destinationBuffer, const BufferCopyRegion& region) = 0;
+		virtual void CopyToImage(Ref<Image> destinationImage, const ImageCopyRegion& region) = 0;
+
+		//Copy within GPU
+		virtual void CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> destinationImage, const BufferCopyRegion& region) = 0;
+		virtual void CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> destinationBuffer, const ImageCopyRegion& region) = 0;
+
+		virtual void CopyBufferToBuffer(Ref<GPUBuffer> sourceBuffer, const BufferCopyRegion& sourceRegion, Ref<GPUBuffer> destinationBuffer, const BufferCopyRegion& targetRegion) = 0;
+
 		virtual void BlitImage(const BlitImageInfo& blitInfo) = 0;
 
 		virtual void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory) = 0;

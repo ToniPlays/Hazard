@@ -23,6 +23,10 @@ namespace HazardRenderer
 		const char* Platform;
         RenderAPI SelectedAPI = RenderAPI::Auto;
 
+		uint32_t Width = 0;
+		uint32_t Height = 0;
+		float RefreshRate = 0.0f;
+
 		bool VSync = false;
 		bool focus = true;
 		bool Maximized = false;
@@ -30,9 +34,6 @@ namespace HazardRenderer
 		bool Fullscreen = false;
 		bool HasTitleBar = true;
 
-		int Width = 0;
-		int Height = 0;
-		float RefreshRate = 0.0f;
 		uint32_t ImagesInFlight = 0;
         glm::vec2 FramebufferScale = { 1.0f, 1.0f };
 		Window* Window;
@@ -43,8 +44,8 @@ namespace HazardRenderer
 
 	struct Resolution 
 	{
-		float Width;
-		float Height;
+		uint32_t Width;
+		uint32_t Height;
 		float RefreshRate;
 	};
 

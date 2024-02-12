@@ -2,7 +2,7 @@
 #include "AssetPanel.h"
 #include "Core/EditorAssetManager.h"
 #include "Editor/EditorScriptManager.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "GUI/AllPanels.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/ImGUI/UIElements/Treenode.h"
@@ -12,6 +12,7 @@
 #include "imgui.h"
 #include <Directory.h>
 #include <Platform/OS.h>
+#include <Editor/EditorWorldManager.h>
 
 namespace UI
 {
@@ -277,8 +278,8 @@ namespace UI
 				panel->Open();
 			});
 			ImUI::MenuItem("World", [&]() {
-				auto path = File::FindAvailableName(m_CurrentPath, "world", "hpack");
-				//AssetManager::CreateNewAsset(AssetType::World, path, File::Relative(m_RootPath, path));
+				Ref<World> world = AssetManager::CreateAsset(AssetType::World, CreateAssetSettings()).As<World>();
+				Editor::EditorWorldManager::SetWorld(world);
 				changed = true;
 			});
 			ImUI::MenuItem("Material", nullptr);
@@ -298,7 +299,7 @@ namespace UI
 				ImUI::MenuItem("Material", nullptr);
 				ImUI::MenuItem("Shader", nullptr);
 				ImUI::MenuItem("Environment map", [&]() {
-					auto path = File::FindAvailableName(m_CurrentPath, "Environment", "hpack");
+					auto path = File::FindAvailableName(m_CurrentPath, "Environment", "hasset");
 					//AssetManager::CreateNewAsset(AssetType::EnvironmentMap, path, File::Relative(m_RootPath, path));
 					changed = true;
 				});
@@ -332,7 +333,6 @@ namespace UI
 		std::vector<AssetPanelItem> directories;
 		std::vector<AssetPanelItem> files;
 		std::unordered_map<AssetHandle, Ref<Hazard::Texture2DAsset>> icons;
-
 
 		for (auto& item : Directory::GetAllInDirectory(m_CurrentPath))
 		{
@@ -445,13 +445,6 @@ namespace UI
 		{
 			case AssetType::EnvironmentMap:
 			{
-				Ref<EnvironmentMap> map = AssetManager::GetAsset<Asset>(metadata.Handle);
-				if (map == nullptr) break;
-				if (map->GetSourceImageHandle() != INVALID_ASSET_HANDLE)
-				{
-					AssetMetadata& imageMetadata = AssetManager::GetMetadata(map->GetSourceImageHandle());
-					handle = imageMetadata.Handle != INVALID_ASSET_HANDLE ? map->GetSourceImageHandle() : handle;
-				}
 				break;
 			}
 			case AssetType::Image:

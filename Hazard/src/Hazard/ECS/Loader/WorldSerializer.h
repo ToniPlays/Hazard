@@ -69,14 +69,6 @@ namespace Hazard
 			YamlUtils::Map(out, "ScriptComponent", [&]() {
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "ModuleName", component.ModuleName);
-
-				if (component.m_Handle)
-				{
-					YamlUtils::Map(out, "Fields", [&]() {
-						//for (auto& [name, field] : component.m_Handle->GetScript().GetFields())
-						//	ScriptSerializer::SerializeFieldEditor(component.m_Handle, out, field);
-					});
-				}
 			});
 		}
 		template<>

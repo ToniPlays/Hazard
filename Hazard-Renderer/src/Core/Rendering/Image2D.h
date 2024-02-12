@@ -7,11 +7,11 @@ namespace HazardRenderer
 	struct Image2DCreateInfo 
 	{
 		std::string DebugName;
-		Extent Extent;
-		Buffer Data;
-		uint32_t MaxMips = 1;
-		ImageFormat Format;
 		ImageUsage Usage;
+		ImageFormat Format;
+		Extent Extent;
+		uint32_t MaxMips = 1;
+		Buffer Data;
 	};
 
     struct ImageCopyRegion

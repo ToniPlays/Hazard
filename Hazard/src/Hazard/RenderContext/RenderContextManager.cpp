@@ -19,24 +19,25 @@ namespace Hazard
 		//Create window and initialize
 		HZR_CORE_ASSERT(Window::IsRenderAPISupported(createInfo->Renderer), "Selected RenderAPI not supported");
 
-		HazardRendererAppInfo hzrAppInfo = {};
-		hzrAppInfo.AppName = "Hazard";
-		hzrAppInfo.BuildVersion = HZR_BUILD_VERSION;
-		hzrAppInfo.EventCallback = [](Event& e) { HazardLoop::GetCurrent().OnEvent(e); };
+		HazardRendererAppInfo hzrAppInfo = {
+			.AppName = "Hazard",
+			.BuildVersion = HZR_BUILD_VERSION,
+			.EventCallback = [](Event& e) { HazardLoop::GetCurrent().OnEvent(e); }
+		};
 
-		HazardWindowCreateInfo windowInfo = {};
-		windowInfo.Title = createInfo->Title;
-		windowInfo.Extent.Width = createInfo->Width;
-		windowInfo.Extent.Height = createInfo->Height;
-		windowInfo.Color = { 0.0f, 0.0f, 0.0f, 1.0f };
+		HazardWindowCreateInfo windowInfo = {
+			.Title = createInfo->Title,
+			.Extent = { createInfo->Width, createInfo->Height, 1 },
+			.Color = Color::Black,
+		};
 
-		HazardRendererCreateInfo rendererInfo = {};
-		rendererInfo.pAppInfo = &hzrAppInfo;
-		rendererInfo.Logging = appInfo->Logging;
-		rendererInfo.Renderer = createInfo->Renderer;
-		rendererInfo.VSync = createInfo->VSync;
-		rendererInfo.WindowCount = 1;
-		rendererInfo.pWindows = &windowInfo;
+		HazardRendererCreateInfo rendererInfo = {
+			.pAppInfo = &hzrAppInfo,
+			.Renderer = createInfo->Renderer,
+			.WindowCount = 1,
+			.pWindows = &windowInfo,
+			.VSync = createInfo->VSync
+		};
 
 		m_Window = Window::Create(&rendererInfo);
 		m_Window->Show();

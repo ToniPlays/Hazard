@@ -44,10 +44,10 @@ namespace Hazard
 
 		if (!m_LineBatch->GetCount()) return;
 
-		BufferCopyRegion region = {};
-		region.Data = m_LineBatch->GetData();
-		region.Size = m_LineBatch->GetDataSize();
-		region.Offset = 0;
+		BufferCopyRegion region = {
+			.Size = m_LineBatch->GetDataSize(),
+			.Data = m_LineBatch->GetData(),
+		};
 
 		m_VertexBuffer->SetData(region);
 
@@ -68,16 +68,17 @@ namespace Hazard
 			BeginBatch();
 		}
 
-		LineVertex startVertex = {};
-		startVertex.Position = startPos;
-		startVertex.Color = color;
+		LineVertex startVertex = {
+			.Position = startPos,
+			.Color = color,
+		};
+
+		LineVertex endVertex = {
+			.Position = endPos,
+			.Color = color,
+		};
 
 		m_LineBatch->Push(startVertex);
-
-		LineVertex endVertex = {};
-		endVertex.Position = endPos;
-		endVertex.Color = color;
-
 		m_LineBatch->Push(endVertex);
 	}
 
@@ -95,15 +96,14 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
 
-		BufferCreateInfo vertexBufferInfo = {};
-		vertexBufferInfo.Name = "LineRendererVertexBuffer";
-		vertexBufferInfo.Size = m_Data.MaxVertices * sizeof(LineVertex);
-		vertexBufferInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_DYNAMIC;
+		BufferCreateInfo vertexBufferInfo = {
+			.Name = "LineRendererVertexBuffer",
+			.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_DYNAMIC,
+			.Size = m_Data.MaxVertices * sizeof(LineVertex),
+		};
 
 		m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("LineShader"));
-
 		m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
-
 		m_RenderPass = renderPass;
 	}
 }

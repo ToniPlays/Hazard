@@ -2,6 +2,7 @@
 
 #include "Hazard/Assets/IAssetLoader.h"
 #include "Importers/MeshImporter.h"
+#include "Mesh.h"
 
 namespace Hazard 
 {
@@ -18,6 +19,23 @@ namespace Hazard
 	{
 		uint32_t Flags;
 	};
+	
+	struct MeshFileHeader
+	{
+		uint64_t SubmeshCount;
+		uint64_t VertexCount;
+		uint64_t IndexCount;
+	};
+
+	struct SubmeshHeader
+	{
+		UID NodeID;
+		uint32_t VertexCount;
+		uint32_t IndexCount;
+		uint32_t VertexOffset;
+		uint32_t IndexOffset;
+		//Variable name
+	};
 
 	class MeshAssetLoader : public IAssetLoader 
 	{
@@ -31,9 +49,12 @@ namespace Hazard
 
 	private:
 		static void PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer);
-		static void ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, uint32_t meshIndex);
+		static void ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh);
 		static void FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer);
 
-		static void SaveMesh(JobInfo& info);
+		static void ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh);
+		static void CompileMesh(JobInfo& info, Ref<Mesh> mesh);
+
+		static void CreateMeshFromSource(JobInfo& info, AssetHandle handle);
 	};
 }

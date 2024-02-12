@@ -16,7 +16,7 @@ namespace UI
     void ExportPanel::OnOpen()
     {
         m_SelectedWorldTable.ClearRows();
-
+        
         /*auto metadatas = AssetManager::GetAllAssetMetadata(AssetType::World);
         m_SelectedWorldTable.Reserve(metadatas.size());
 
@@ -38,10 +38,6 @@ namespace UI
         m_SelectedWorldTable.Size({ ImGui::GetContentRegionAvail().x, 250 });
         m_SelectedWorldTable.Render();
 
-        bool disabled = m_Exporter.IsExporting();
-        if (disabled)
-            ImGui::BeginDisabled();
-
         if (ImGui::Button("Export", { 150, 60 }))
         {
             auto& project = ProjectManager::GetProject();
@@ -52,15 +48,6 @@ namespace UI
 
             for (auto& metadata : m_SelectedWorldTable.GetRows())
                 handles.push_back(metadata.Handle);
-
-            Exporter::ExportSettings settings = {};
-            settings.TargetPath = info.ProjectPath / fmt::format("Builds/{0}-{1}", info.ProjectName, info.ProjectVersion);
-            settings.WorldHandles = handles;
-
-            m_Exporter.Export(settings);
         }
-
-        if (disabled)
-            ImGui::EndDisabled();
     }
 }

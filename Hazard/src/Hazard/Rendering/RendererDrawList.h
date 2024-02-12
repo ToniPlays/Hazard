@@ -23,29 +23,23 @@ namespace Hazard
 
 	struct EnvironmentData
 	{
-		Ref<Pipeline> Pipeline;
-		Ref<DescriptorSet> MaterialDescriptorSet;
-		float Intensity;
-		float LodLevel;
-	};
+		struct SkyboxConstants
+		{
+			float LodLevel;
+			float Intensity;
+		};
 
-	struct GeometryMesh
-	{
-		glm::mat4 Transform;
-		uint64_t Count;
-		Ref<GPUBuffer> VertexBuffer;
-		Ref<GPUBuffer> IndexBuffer;
 		Ref<Pipeline> Pipeline;
-		Ref<DescriptorSet> MaterialDescriptorSet;
+		Ref<DescriptorSet> DescriptorSet;
+		Ref<CubemapTexture> Cubemap;
+		SkyboxConstants Constants;
 	};
 
 	//Draw list for single world context
 	struct RendererDrawList
 	{
 		Ref<WorldRenderer> WorldRenderer;
-
 		EnvironmentData Environment;
-		std::vector<GeometryMesh> GeometryMeshes;
 		DrawListStat Stats;
 	};
 }

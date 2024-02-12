@@ -1,12 +1,11 @@
 #include "MaterialEditor.h"
 #include "Hazard/Assets/AssetManager.h"
-#include "Localization/Localization.h"
 
 namespace UI
 {
 	using namespace Hazard;
 
-	MaterialEditor::MaterialEditor() : Hazard::ImUI::Panel(LBL_MATERIAL_EDITOR_PANEL, false)
+	MaterialEditor::MaterialEditor() : Hazard::ImUI::Panel("Material properties", false)
 	{
 
 	}

@@ -2,7 +2,7 @@
 
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/ImGUI/UILibrary.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "GUI/ProjectPanel/AssetPanel.h"
 #include <Hazard/RenderContext/ImageAssetLoader.h>
 
@@ -57,7 +57,7 @@ void ImageAssetImporter::InitializeSettings()
 bool ImageAssetImporter::ImportFromNew()
 {
 	using namespace Hazard;
-	ImageAssetLoaderSettings imageSettings = {};
+	ImageAssetLoader::CreateSettings imageSettings = {};
 	imageSettings.Resolution = BIT(m_ResolutionDropdown.GetSelected() + 6);
 
 	CreateAssetSettings settings = {};
@@ -67,8 +67,7 @@ bool ImageAssetImporter::ImportFromNew()
 	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Image, settings);
 
 	auto assetPanel = Application::Get().GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>();
-	auto path = assetPanel->GetOpenDirectory() / (File::GetNameNoExt(m_SourcePath) + ".hasset");
-
+	auto path = File::FindAvailableName(assetPanel->GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), "hasset");
 
 	promise.Then([path](JobGraph& graph) {
 		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();

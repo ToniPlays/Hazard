@@ -33,9 +33,9 @@ namespace Hazard
 
 		struct ShaderCompileResult
 		{
-			uint32_t Flags;
 			uint32_t API;
 			std::string Data;
+			uint32_t Flags;
 		};
 	};
 }

@@ -15,10 +15,10 @@ namespace HazardRenderer
 		std::string DebugName;
 		uint32_t Width;
 		uint32_t Height;
-		Buffer Data;
 		uint32_t MaxMips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;
+		Buffer Data;
 	};
 
 	class Texture : public RefCount

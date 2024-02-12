@@ -16,7 +16,7 @@ namespace UI
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
 		ImUI::Table<AssetMetadata> table("AssetPanel", size);
-		table.SetColumns({ "Path", "Type", "Pack handle", "Handle" });
+		table.SetColumns({ "Path", "Source file", "Handle", "Type" });
 		table.Reserve(AssetManager::GetMetadataRegistry().size());
 		table.RowHeight(24.0f);
 		table.RowContent([&](uint32_t, const AssetMetadata& metadata) {
@@ -25,13 +25,15 @@ namespace UI
 			ImGui::Text("%s", metadata.FilePath.string().c_str());
 			ImGui::TableNextColumn();
 			ImUI::ShiftX(4.0f);
-			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(metadata.Type));
-			ImGui::TableNextColumn();
-			ImUI::ShiftX(4.0f);
-			ImGui::Text("%s", std::to_string(metadata.AssetPackHandle).c_str());
+			ImGui::Text("%s", metadata.SourceFile.string().c_str());
+
 			ImGui::TableNextColumn();
 			ImUI::ShiftX(4.0f);
 			ImGui::Text("%s", std::to_string(metadata.Handle).c_str());
+
+			ImGui::TableNextColumn();
+			ImUI::ShiftX(4.0f);
+			ImGui::Text("%s", Hazard::Utils::AssetTypeToString(metadata.Type));
 		});
 
 		for (auto& [key, metadata] : AssetManager::GetMetadataRegistry())

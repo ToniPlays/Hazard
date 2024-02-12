@@ -25,20 +25,22 @@ namespace Hazard
 		AssetManager::RegisterLoader<MaterialAssetLoader>(AssetType::Material);
 		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
 
-		FrameBufferCreateInfo frameBufferInfo = {};
-		frameBufferInfo.DebugName = "RenderEngine";
-		frameBufferInfo.AttachmentCount = 3;
-		frameBufferInfo.Attachments = { { ImageFormat::RGBA, { ImageFormat::RED32I, FramebufferBlendMode::None }, ImageFormat::Depth } };
-		frameBufferInfo.ClearOnLoad = true;
-		frameBufferInfo.Width = 1920;
-		frameBufferInfo.Height = 1080;
-		frameBufferInfo.SwapChainTarget = false;
+		FrameBufferCreateInfo frameBufferInfo = {
+			.DebugName = "RenderEngine",
+			.Width = 1920,
+			.Height = 1080,
+			.AttachmentCount = 3,
+			.Attachments = { { ImageFormat::RGBA, { ImageFormat::RED32I, FramebufferBlendMode::None }, ImageFormat::Depth } },
+			.SwapChainTarget = false,
+			.ClearOnLoad = true,
+		};
 
 		m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
 
-		RenderPassCreateInfo renderPassInfo = {};
-		renderPassInfo.DebugName = "RenderEngine";
-		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
+		RenderPassCreateInfo renderPassInfo = {
+			.DebugName = "RenderEngine",
+			.pTargetFrameBuffer = m_FrameBuffer,
+		};
 
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
 
@@ -94,7 +96,7 @@ namespace Hazard
 	void RenderEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		
+
 	}
 	void RenderEngine::Render()
 	{
@@ -108,32 +110,30 @@ namespace Hazard
 			CollectGeometry();
 
 			//Update common rendergraph resources
-			// 
 			//Render from every camera
 
 			for (auto& camera : worldDrawList.WorldRenderer->GetCameraData())
 			{
-				CameraData data = {};
-				data.Projection = camera.Projection;
-				data.View = camera.View;
-				data.ViewProjection = camera.Projection * camera.View;
-				data.Position = glm::vec4(camera.Position, 1.0);
+				CameraData data = {
+					.ViewProjection = camera.Projection * camera.View,
+					.Projection = camera.Projection,
+					.View = camera.View,
+					.Position = glm::vec4(camera.Position, 1.0),
+				};
 
-				BufferCopyRegion region = {};
-				region.Data = &data;
-				region.Size = sizeof(CameraData);
-				region.Offset = 0;
+				BufferCopyRegion region = {
+					.Size = sizeof(CameraData),
+					.Data = &data,
+				};
 
 				s_Resources->CameraUniformBuffer->SetData(region);
-				if (worldDrawList.Environment.Pipeline)
-					worldDrawList.Environment.Pipeline->SetRenderPass(camera.RenderPass);
 
 				m_RenderGraph->SetStageActive("SkyboxPass", worldDrawList.Environment.Pipeline);
-				m_RenderGraph->SetResource("GeometryPass", worldDrawList.GeometryMeshes.data(), worldDrawList.GeometryMeshes.size() * sizeof(GeometryMesh));
 				m_RenderGraph->SetResource("SkyboxPass", &worldDrawList.Environment, sizeof(EnvironmentData));
+				//m_RenderGraph->SetResource("GeometryPass", worldDrawList.GeometryMeshes.data(), worldDrawList.GeometryMeshes.size() * sizeof(GeometryMesh));
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
-				m_RenderGraph->Execute(commandBuffer);
+				m_RenderGraph->Execute(commandBuffer, camera.RenderPass);
 				commandBuffer->EndRenderPass();
 			}
 			m_CurrentDrawContext++;

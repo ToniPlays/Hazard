@@ -99,7 +99,7 @@
     <ClInclude Include="src\Core\EditorEvent.h">
       <Filter>src\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\GUIManager.h">
+    <ClInclude Include="src\GUI\GUIManager.h">
       <Filter>src\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\HazardEditor.h">
@@ -134,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="src\EditorScripting\EditorScriptGlue.h">
       <Filter>src\EditorScripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Exporter\ApplicationExporter.h">
-      <Filter>src\Exporter</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\AllPanels.h">
       <Filter>src\GUI</Filter>
@@ -213,9 +210,6 @@
     <ClInclude Include="src\GUI\Viewport\Viewport.h">
       <Filter>src\GUI\Viewport</Filter>
     </ClInclude>
-    <ClInclude Include="src\Localization\Localization.h">
-      <Filter>src\Localization</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\EditorGuiPlatform.h">
       <Filter>src\Platform</Filter>
     </ClInclude>
@@ -243,6 +237,7 @@
     <ClInclude Include="src\GUI\AssetTools\AssetImporters\IAssetImporter.h" />
     <ClInclude Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.h" />
     <ClInclude Include="src\GUI\AssetTools\AssetImporters\MeshAssetImporter.h" />
+    <ClInclude Include="src\GUI\AssetTools\AssetImporters\EnvironmentAssetImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -260,7 +255,7 @@
     <ClCompile Include="src\Core\EditorAssetManager.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\GUIManager.cpp">
+    <ClCompile Include="src\GUI\GUIManager.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\HazardEditor.cpp">
@@ -283,9 +278,6 @@
     </ClCompile>
     <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp">
       <Filter>src\EditorScripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Exporter\ApplicationExporter.cpp">
-      <Filter>src\Exporter</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\AssetTools\AssetImporterPanel.cpp">
       <Filter>src\GUI\AssetTools</Filter>
@@ -361,5 +353,6 @@
     </ClCompile>
     <ClCompile Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.cpp" />
     <ClCompile Include="src\GUI\AssetTools\AssetImporters\MeshAssetImporter.cpp" />
+    <ClCompile Include="src\GUI\AssetTools\AssetImporters\EnvironmentAssetImporter.cpp" />
   </ItemGroup>
 </Project>

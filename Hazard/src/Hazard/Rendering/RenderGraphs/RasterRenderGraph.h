@@ -4,58 +4,43 @@
 
 namespace Hazard
 {
-	static Ref<HazardRenderer::RenderGraph> CreateRasterGraph()
-	{
-		using namespace HazardRenderer;
+	using namespace HazardRenderer;
 
-		RenderGraphStage geometryStage = {};
+	static Ref<RenderGraph> CreateRasterGraph()
+	{
+
+		std::vector<RenderGraphStage> stages;
+
+		auto& geometryStage = stages.emplace_back();
 		geometryStage.DebugName = "GeometryPass";
 		geometryStage.Enabled = true;
-		geometryStage.DataSize = sizeof(GeometryMesh);
+		geometryStage.Stride = 4;
+		geometryStage.Execute.Add([](const RenderGraphFuncData& data) {
+			
+		});
 
-		geometryStage.Execute = [](Ref<RenderCommandBuffer> cmdBuffer, void* data) {
-			GeometryMesh& mesh = *(GeometryMesh*)data;
+		auto& skyboxPass = stages.emplace_back();
+		skyboxPass.DebugName = "SkyboxPass";
+		skyboxPass.Enabled = true;
+		skyboxPass.Stride = sizeof(EnvironmentData);
+		skyboxPass.Execute.Add([](const RenderGraphFuncData& data) mutable {
+			EnvironmentData envData = *(EnvironmentData*)data.Data;
+			Ref<RenderCommandBuffer> cmdBuffer = data.CommandBuffer;
 
-			cmdBuffer->SetPipeline(mesh.Pipeline);
-			cmdBuffer->SetDescriptorSet(RenderEngine::GetResources().WorldDescriptor, 0);
-			if (mesh.MaterialDescriptorSet)
-				cmdBuffer->SetDescriptorSet(mesh.MaterialDescriptorSet, 1);
-			cmdBuffer->SetVertexBuffer(mesh.VertexBuffer);
-			cmdBuffer->Draw(mesh.Count, mesh.IndexBuffer);
-		};
+			envData.DescriptorSet->Write(1, 0, envData.Cubemap, RenderEngine::GetResources().DefaultImageSampler);
 
-		RenderGraphStage skyboxStage = {};
-		skyboxStage.DebugName = "SkyboxPass";
-		skyboxStage.Enabled = true;
-		skyboxStage.DataSize = sizeof(EnvironmentData);
-		skyboxStage.Execute = [](Ref<RenderCommandBuffer> cmdBuffer, void* data) {
-			EnvironmentData& env = *(EnvironmentData*)data;
-
-			struct PushConstants
-			{
-				float LodLevel;
-				float Intensity;
-			};
-
-			PushConstants constants;
-			constants.LodLevel = env.LodLevel;
-			constants.Intensity = env.Intensity;
-
-			cmdBuffer->SetPipeline(env.Pipeline);
-			cmdBuffer->SetDescriptorSet(env.MaterialDescriptorSet, 0);
-			cmdBuffer->PushConstants(Buffer(&constants, sizeof(PushConstants)), 0, SHADER_STAGE_FRAGMENT_BIT);
+			envData.Pipeline->SetRenderPass(data.CurrentRenderPass);
+			cmdBuffer->SetPipeline(envData.Pipeline);
+			cmdBuffer->SetDescriptorSet(envData.DescriptorSet, 0);
+			cmdBuffer->PushConstants(Buffer(&envData.Constants, sizeof(EnvironmentData::SkyboxConstants)), 0, SHADER_STAGE_FRAGMENT_BIT);
 			cmdBuffer->Draw(6);
+		});
+
+		RenderGraphCreateInfo info = {
+			.DebugName = "RasterRenderGraph",
+			.StageCount = stages.size(),
+			.pStages = stages.data(),
 		};
-
-
-		std::vector<RenderGraphStage> stages = {
-			skyboxStage, geometryStage
-		};
-
-		RenderGraphCreateInfo info = {};
-		info.DebugName = "RasterRenderGraph";
-		info.StageCount = stages.size();
-		info.pStages = stages.data();
 
 		return RenderGraph::Create(&info);
 	}

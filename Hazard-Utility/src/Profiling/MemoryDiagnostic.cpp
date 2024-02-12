@@ -110,7 +110,6 @@ namespace Memory
 			else
 			{
 				std::cout << "Allocation for " << memory << " not found" << std::endl;
-				assert(false);
 			}
 		}
         free(memory);

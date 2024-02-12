@@ -40,13 +40,13 @@ namespace Hazard::Utils
 }
 
 template<>
-void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue);
+bool YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue);
 
 template<>
 void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType value);
 
 template<>
-void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue);
+bool YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue);
 
 template<>
 void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetHandle value);

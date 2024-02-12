@@ -13,7 +13,7 @@ namespace HazardRenderer
 	public:
 		~RenderGraph() = default;
 
-		void Execute(Ref<RenderCommandBuffer> commandBuffer);
+		void Execute(Ref<RenderCommandBuffer> commandBuffer, Ref<RenderPass> outputRenderpass);
 		float GetExecutionTime() { return m_ExecutionTime; }
 
 		void SetResource(const std::string& name, void* data, uint64_t size);
@@ -23,7 +23,6 @@ namespace HazardRenderer
 
 	private:
 		RenderGraph(RenderGraphCreateInfo* createInfo);
-		void CreateGraphTimeline(RenderGraphCreateInfo* createInfo);
 
 	private:
 		std::string m_DebugName;

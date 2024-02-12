@@ -6,20 +6,26 @@
 #include "Core/Rendering/Pipeline.h"
 #include "Core/Rendering/DescriptorSet.h"
 #include "Core/Rendering/RenderCommandBuffer.h"
-#include <span>
+#include "Callback.h"
 
 namespace HazardRenderer
 {
+	struct RenderGraphFuncData
+	{
+		Ref<RenderCommandBuffer> CommandBuffer;
+		Ref<RenderPass> CurrentRenderPass;
+		bool Enabled;
+		void* Data;
+	};
 	struct RenderGraphStage
 	{
 		std::string DebugName;
+		uint32_t Stride;
 		bool Enabled = true;
-		uint32_t DataSize;
 
-		std::function<void(Ref<RenderCommandBuffer>, void*)> Execute = [](Ref<RenderCommandBuffer>, void*) {};
-		std::function<void(Ref<RenderCommandBuffer>)> OnDisabled = [](Ref<RenderCommandBuffer>) {};
-		std::function<void(Ref<RenderCommandBuffer>)> OnPrepare = [](Ref<RenderCommandBuffer>) {};
-		std::function<void(Ref<RenderCommandBuffer>)> OnFinished = [](Ref<RenderCommandBuffer>) {};
+		Callback<void(const RenderGraphFuncData&)> Execute;
+		Callback<void(const RenderGraphFuncData&)> OnPrepare;
+		Callback<void(const RenderGraphFuncData&)> OnFinished;
 	};
 
 	struct RenderGraphCreateInfo

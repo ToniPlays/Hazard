@@ -9,6 +9,7 @@ namespace Editor
 		static void Init();
 		static void Update();
 		static void LoadWorld(AssetHandle handle);
+		static void SetWorld(Ref<Hazard::World> world);
 		static Ref<Hazard::WorldRenderer> GetWorldRender() { return s_WorldRenderer; }
 
 	private:

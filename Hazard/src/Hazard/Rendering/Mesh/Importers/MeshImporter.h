@@ -31,17 +31,20 @@ namespace Hazard
 		struct MeshMetadata
 		{
 			std::string Name;
+			uint32_t NodeIndex;
 			uint32_t MaterialIndex;
 			uint64_t VertexCount;
 			uint64_t IndexCount;
+			uint64_t VertexOffset;
+			uint64_t IndexOffset;
 			uint32_t BoneCount;
 			uint32_t AnimatedMeshCount;
-			BoundingBox BoundingBox;
 		};
 
 		struct MeshData
 		{
 			std::string Name;
+			BoundingBox BoundingBox;
 			std::vector<Vertex3D> Vertices;
 			std::vector<uint32_t> Indices;
 		};
@@ -55,8 +58,10 @@ namespace Hazard
 		virtual SceneMetadata GetSceneMetadata() = 0;
 		virtual std::vector<TextureData> GetTextures() = 0;
 		virtual std::vector<MeshMetadata> GetMeshes() = 0;
-		virtual MeshData GetMeshData(uint32_t meshIndex, const std::function<void(uint32_t, uint32_t)>& progress = nullptr) = 0;
+		virtual MeshData GetMeshData(const MeshMetadata& mesh, const std::function<void(uint32_t, uint32_t)>& progress = nullptr) = 0;
 		virtual std::vector<AnimationData> GetAnimations() = 0;
+
+		virtual void AddImportProgressCallback(const std::function<void(float)> callback) = 0;
 
 		virtual glm::mat4 GetMeshTransform(uint32_t meshIndex) = 0;
 	};

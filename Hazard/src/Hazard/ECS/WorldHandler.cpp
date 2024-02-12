@@ -16,7 +16,6 @@ namespace Hazard
 	WorldHandler::WorldHandler(EntityComponentCreateInfo* info) : Module::Module("World handler")
 	{
 		AssetManager::RegisterLoader<WorldAssetLoader>(AssetType::World);
-
 		m_World = AssetManager::CreateAsset(AssetType::World, CreateAssetSettings()).As<World>();
 		SetActive(true);
 	}

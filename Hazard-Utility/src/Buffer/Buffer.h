@@ -61,7 +61,7 @@ struct Buffer
 		return std::string((char*)Data + offset + sizeof(uint64_t), length);
 	}
 
-    void* Read(uint64_t size, uint64_t offset = 0) const
+    void* Read(uint64_t offset = 0) const
     {
         return ((uint8_t*)Data + offset);
     }

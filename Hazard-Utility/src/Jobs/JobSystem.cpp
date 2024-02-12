@@ -173,11 +173,12 @@ JobPromise JobSystem::QueueGraph(Ref<JobGraph> graph)
 		return JobPromise();
 	}
 
+	if (!graph->Execute(this))
+		return JobPromise();
+
 	m_GraphMutex.lock();
 	m_QueuedGraphs.push_back(graph);
 	m_GraphMutex.unlock();
-
-	graph->Execute(this);
 
 	m_Hooks.Invoke(JobSystemHook::Submit, graph);
 	return JobPromise(graph);

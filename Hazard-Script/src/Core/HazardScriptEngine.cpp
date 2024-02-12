@@ -85,22 +85,23 @@ namespace HazardScript
 	{
 		std::string coralDir = m_CoralData.CoralDirectory.lexically_normal().string();
 
-		Coral::HostSettings settings = {};
-		settings.CoralDirectory = coralDir;
-		settings.MessageCallback = [&](std::string_view message, Coral::MessageLevel level) {
-			std::string msg = std::string(message);
-			std::string exception = msg.substr(0, msg.find_first_of("\n"));
-			std::string trace = exception.length() + 1 < msg.length() ? msg.substr(exception.length() + 1) : "";
-			m_DebugCallbacks.Invoke<ScriptMessage>({ Severity::Error, exception, trace });
-			std::cout << msg << std::endl;
+		Coral::HostSettings settings = {
+			.CoralDirectory = coralDir,
+			.MessageCallback = [&](std::string_view message, Coral::MessageLevel level) {
+				std::string msg = std::string(message);
+				std::string exception = msg.substr(0, msg.find_first_of("\n"));
+				std::string trace = exception.length() + 1 < msg.length() ? msg.substr(exception.length() + 1) : "";
+				m_DebugCallbacks.Invoke<ScriptMessage>({ Severity::Error, exception, trace });
+				std::cout << msg << std::endl;
+			},
+			.ExceptionCallback = ([&](std::string_view message) {
+				std::string msg = std::string(message);
+				std::string exception = msg.substr(0, msg.find_first_of("\n"));
+				std::string trace = exception.length() + 1 < message.length() ? msg.substr(exception.length() + 1) : "";
+				m_DebugCallbacks.Invoke<ScriptMessage>({ Severity::Error, exception, trace });
+				std::cout << msg << std::endl;
+			}),
 		};
-		settings.ExceptionCallback = ([&](std::string_view message) {
-			std::string msg = std::string(message);
-			std::string exception = msg.substr(0, msg.find_first_of("\n"));
-			std::string trace = exception.length() + 1 < message.length() ? msg.substr(exception.length() + 1) : "";
-			m_DebugCallbacks.Invoke<ScriptMessage>({ Severity::Error, exception, trace });
-			std::cout << msg << std::endl;
-		});
 
 		//HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
 	}

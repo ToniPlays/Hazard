@@ -51,17 +51,18 @@ namespace HazardRenderer
 	struct PipelineSpecification
 	{
 		std::string DebugName;
+		PipelineUsage Usage = PipelineUsage::None;
+
 		BufferLayout* pBufferLayout;
 		Ref<RenderPass> pTargetRenderPass = nullptr;
+		uint32_t MaxRayDepth = 0;
+		uint32_t Flags = 0;
 
-		PipelineUsage Usage = PipelineUsage::None;
 		DepthOp DepthOperator = DepthOp::LessOrEqual;
 
 		std::unordered_map<uint32_t, std::string> Shaders;
 		std::vector<DescriptorSetLayout> SetLayouts;
 		std::vector<PushConstantRange> PushConstants;
-		uint32_t MaxRayDepth = 0;
-		uint32_t Flags = 0;
 	};
 
 	class Pipeline : public RefCount

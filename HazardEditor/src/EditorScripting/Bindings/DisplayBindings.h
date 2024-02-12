@@ -4,7 +4,7 @@
 #include "Hazard/Core/Application.h"
 #include <Editor/EditorModeManager.h>
 #include <Core/HazardEditor.h>
-#include <Core/GUIManager.h>
+#include "GUI/GUIManager.h"
 #include <GUI/Viewport/GameViewport.h>
 
 namespace Editor::Bindings

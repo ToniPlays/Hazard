@@ -12,9 +12,9 @@ namespace HazardRenderer::Vulkan
 {
 	struct QueueFamilyIndices 
 	{
-		int32_t Graphics = -1;
-		int32_t Compute = -1;
-		int32_t Transfer = -1;
+		uint32_t Graphics = UINT32_MAX;
+		uint32_t Compute = UINT32_MAX;
+		uint32_t Transfer = UINT32_MAX;
 	};
 
 
@@ -28,14 +28,13 @@ namespace HazardRenderer::Vulkan
 
 		std::string GetDeviceName() override { return m_Properties.deviceName; };
 		const PhysicalDeviceLimits& GetDeviceLimits() const override { return m_Limits; }
-		const PhysicalDeviceCapabilities& GetDeviceCababilities() const { return m_Capabilities; };
-		bool SupportsRaytracing() const 
+		const PhysicalDeviceCapabilities& GetDeviceCababilities() const override { return m_Capabilities; };
+		bool SupportsRaytracing() const override
 		{ 
 			return m_Capabilities.AccelerationStructures && m_Capabilities.RayQuery && m_Capabilities.RayTracingPipeline; 
 		};
 
 		//Vulkan specific
-
 		VkPhysicalDevice GetVulkanPhysicalDevice() const { return m_PhysicalDevice; }
 		VkFormat GetDepthFormat() const { return m_DepthFormat; }
 		QueueFamilyIndices GetQueueFamilyIndices() const { return m_QueueFamilyIndices; }

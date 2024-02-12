@@ -15,14 +15,14 @@ namespace Hazard
 		Ref<Job> preprocessJob = Ref<Job>::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle);
 		Ref<Job> finalizeJob = Ref<Job>::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
 
-		JobGraphInfo pipeline = {};
-		pipeline.Name = "World load";
-		pipeline.Stages = { { "Preprocess", 0.1f, { preprocessJob } },
-							{ "Asset load", 0.8f, { } },
-							{ "Finalize",   0.1f, { finalizeJob } },
+		JobGraphInfo pipeline = {
+			.Name = "World load",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = { { "Preprocess", 0.1f, { preprocessJob } },
+						{ "Asset load", 0.8f, { } },
+						{ "Finalize",   0.1f, { finalizeJob } },
+			}
 		};
-
-		pipeline.Flags |= JOB_GRAPH_TERMINATE_ON_ERROR;
 
 		return Ref<JobGraph>::Create(pipeline);
 	}
@@ -33,12 +33,11 @@ namespace Hazard
 
 		Ref<Job> contentJob = Ref<Job>::Create("GetWorldContent", GetWorldContent, serializer, settings.Flags);
 
-		JobGraphInfo pipeline = {};
-		pipeline.Name = "World save";
-		pipeline.Stages = {
-			{ "Processing", 1.0f, { contentJob } },
+		JobGraphInfo pipeline = {
+			.Name = "World save",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = {	{ "Processing", 1.0f, { contentJob } } }
 		};
-		pipeline.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
 
 		return Ref<JobGraph>::Create(pipeline);
 	}
@@ -48,12 +47,11 @@ namespace Hazard
 
 		Ref<Job> createJob = Ref<Job>::Create("GetWorldContent", CreateWorld, file);
 
-		JobGraphInfo pipeline = {};
-		pipeline.Name = "World create";
-		pipeline.Stages = {
-			{ "Create", 0.8f, { createJob } },
+		JobGraphInfo pipeline = {
+			.Name = "World create",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = {	{ "Create", 0.8f, { createJob } } }
 		};
-		pipeline.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
 
 		return Ref<JobGraph>::Create(pipeline);
 	}
@@ -74,21 +72,31 @@ namespace Hazard
 		WorldDeserializer deserializer(source);
 
 		deserializer.AddProgressHandler([job = info.Job](uint64_t index, uint64_t count) mutable {
-			job->Progress((float)index / (float)count);
+			job->Progress(((float)index / (float)count) * 0.1f);
 		});
 
-		std::vector<AssetHandle> assets = deserializer.GetReferencedAssets();
+		auto assets = deserializer.GetReferencedAssets();
+
 		std::vector<Ref<Job>> assetJobs;
 		assetJobs.reserve(assets.size());
-		
-		for (auto& handle : assets)
+
+		for (auto& [handle, count] : assets)
 			assetJobs.push_back(Ref<Job>::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, handle));
 
 		info.ParentGraph->ContinueWith(assetJobs);
 	}
 	void WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)
 	{
-		info.Job->SetResult(AssetManager::GetAsset<Asset>(handle));
+		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+		Ref<JobGraph> loadGraph = AssetManager::GetLoadGraph(metadata);
+
+		JobPromise promise = info.ParentGraph->SubGraph(loadGraph);
+
+		promise.Then([info](JobGraph&) mutable {
+			info.ParentGraph->Continue();
+		});
+
+		info.ParentGraph->Halt();
 	}
 	void WorldAssetLoader::FinalizeWorld(JobInfo& info, AssetHandle handle)
 	{

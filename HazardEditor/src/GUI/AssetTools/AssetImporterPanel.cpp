@@ -3,10 +3,11 @@
 #include "Hazard/RenderContext/TextureFactory.h"
 #include <spdlog/fmt/fmt.h>
 
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "GUI/ProjectPanel/AssetPanel.h"
 #include "AssetImporters/ImageAssetImporter.h"
 #include "AssetImporters/MeshAssetImporter.h"
+#include "AssetImporters/EnvironmentAssetImporter.h"
 
 #include "Hazard/ImGUI/UIElements/Dropdown.h"
 
@@ -16,6 +17,7 @@ namespace UI
 	{
 		RegisterImporter<ImageAssetImporter>(AssetType::Image);
 		RegisterImporter<MeshAssetImporter>(AssetType::Mesh);
+		RegisterImporter<EnvironmentAssetImporter>(AssetType::EnvironmentMap);
 	}
 	void AssetImporterPanel::OnPanelRender()
 	{
@@ -42,8 +44,6 @@ namespace UI
 	}
 	void AssetImporterPanel::Open(AssetHandle handle)
 	{
-		return;
-
 		using namespace Hazard;
 		AssetMetadata& data = AssetManager::GetMetadata(handle);
 		m_CurrentImportType = data.Type;

@@ -20,10 +20,11 @@ namespace Hazard
 
 		Ref<Job> loadingJob = Ref<Job>::Create(fmt::format("Shader load: {}", metadata.Handle), LoadShaderAsset, metadata.Handle);
 
-		JobGraphInfo info = {};
-		info.Name = "Shader load";
-		info.Stages = { { "File load", 1.0f, { loadingJob }} };
-		info.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+		JobGraphInfo info = {
+			.Name = "Shader load",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = { { "File load", 1.0f, { loadingJob } } },
+		};
 
 		return Ref<JobGraph>::Create(info);
 	}
@@ -32,10 +33,11 @@ namespace Hazard
 	{
 		Ref<Job> binaryJob = Ref<Job>::Create(fmt::format("{}", settings.TargetPath.string()), GenerateShaderAssetBinary, asset);
 
-		JobGraphInfo info = {};
-		info.Name = "Shader save";
-		info.Stages = { { "", 1.0f, { binaryJob } } };
-		info.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
+		JobGraphInfo info = {
+			.Name = "Shader save",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = { { "", 1.0f, { binaryJob } } },
+		};
 
 		return Ref<JobGraph>::Create(info);
 	}
@@ -47,11 +49,13 @@ namespace Hazard
 		Ref<Job> loadingJob = Ref<Job>::Create(fmt::format("ShaderLoad: {0}", file.string()), LoadShaderSource, file);
 		Ref<Job> createJob = Ref<Job>::Create(fmt::format("Shader create: {0}", file.string()), CreateShaderAsset);
 
-		JobGraphInfo info = {};
-		info.Name = "Shader load";
-		info.Stages = { { "Preprocess", 0.1f, { loadingJob } },
-						{ "Compile", 0.8f, { } },
-						{ "Validate", 0.1f, { createJob } }
+		JobGraphInfo info = {
+			.Name = "Shader load",
+			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+			.Stages = { { "Preprocess", 0.1f, { loadingJob } },
+							{ "Compile", 0.8f, { } },
+							{ "Validate", 0.1f, { createJob } }
+			}
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -84,15 +88,23 @@ namespace Hazard
 		if (!sources.contains(stageFlags))
 			throw JobException("Shader stage load failed");
 
-		auto& source = sources[stageFlags];
-		auto compiled = ShaderCompiler::GetShaderFromSource(stageFlags, source, (RenderAPI)api);
+		try
+		{
+			auto& source = sources[stageFlags];
+			auto compiled = ShaderCompiler::GetShaderFromSource(stageFlags, source, (RenderAPI)api);
 
-		ShaderCompileResult result = {};
-		result.API = api;
-		result.Flags = stageFlags;
-		result.Data = std::move(compiled);
+			ShaderCompileResult result = {
+				.API = api,
+				.Data = std::move(compiled),
+				.Flags = stageFlags
+			};
 
-		info.Job->SetResult(result);
+			info.Job->SetResult(result);
+		}
+		catch (std::exception e)
+		{
+			throw JobException(e.what());
+		}
 	}
 	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info)
 	{
@@ -144,7 +156,7 @@ namespace Hazard
 
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 		CachedBuffer buffer = File::ReadBinaryFile(metadata.FilePath);
-		
+
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
 

@@ -15,13 +15,14 @@ namespace HazardRenderer
 		BUFFER_USAGE_STORAGE_BUFFER_BIT = BIT(3),
 		BUFFER_USAGE_INDIRECT_BIT = BIT(4),
 		BUFFER_USAGE_ACCELERATION_STRUCTURE = BIT(5),
-		BUFFER_USAGE_DYNAMIC = BIT(6)
+		BUFFER_USAGE_DYNAMIC = BIT(6),
+		BUFFER_USAGE_TRANSFER_SRC = BIT(7)
 	};
     struct BufferCreateInfo
     {
         std::string Name;
-		uint64_t Size;
 		uint32_t UsageFlags = 0;
+		uint64_t Size;
 		void* Data = nullptr;
     };
 

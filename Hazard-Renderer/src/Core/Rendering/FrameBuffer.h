@@ -34,6 +34,7 @@ namespace HazardRenderer
 
 	struct FrameBufferCreateInfo
 	{
+		std::string DebugName = "";
 		uint32_t Width = 0, Height = 0;
 		uint32_t Samples = 1;
 		uint32_t AttachmentCount = 0;
@@ -42,7 +43,6 @@ namespace HazardRenderer
 		Ref<FrameBuffer> pFrameBuffer = nullptr;
 		bool SwapChainTarget = false;
 		bool ClearOnLoad = true;
-		std::string DebugName = "";
 	};
 	struct FrameBufferSpecification 
 	{

@@ -188,10 +188,11 @@ namespace HazardRenderer
         for (uint32_t i = 0; i < count; i++)
         {
             const GLFWvidmode mode = modePtr[i];
-            Resolution resolution = {};
-            resolution.Width = mode.width;
-            resolution.Height = mode.height;
-            resolution.RefreshRate = mode.refreshRate;
+            Resolution resolution = {
+                .Width = mode.width;
+                .Height = mode.height;
+                .RefreshRate = mode.refreshRate;
+            };
             result.push_back(resolution);
         }
         return result;

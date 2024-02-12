@@ -10,22 +10,25 @@ using namespace HazardScript;
 
 void HazardLauncher::PreInit()
 {
-	ApplicationCreateInfo appInfo = {};
-	appInfo.AppName = "Hazard Launcher";
-	appInfo.BuildVersion = HZR_BUILD_VERSION;
-	appInfo.Logging = true;
-	appInfo.ThreadCount = 1;
+	ApplicationCreateInfo appInfo = {
+		.AppName = "Hazard Launcher",
+		.BuildVersion = HZR_BUILD_VERSION,
+		.Logging = true,
+		.MaxJobThreads = 1,
+	};
 
-	RenderContextCreateInfo renderContextInfo = {};
-	renderContextInfo.Renderer = RenderAPI::Auto;
-	renderContextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderContextInfo.Renderer);
-	renderContextInfo.Width = 1280;
-	renderContextInfo.Height = 720;
+	RenderContextCreateInfo renderContextInfo = {
+		.Renderer = RenderAPI::Auto,
+		.Title = fmt::format("Hazard Editor | {}", RenderAPIToString(renderContextInfo.Renderer)),
+		.Width = 1280,
+		.Height = 720,
+		.VSync = CommandLineArgs::Get<bool>("VSync"),
+	};
 
-	HazardCreateInfo createInfo = {};
-	createInfo.AppInfo = &appInfo;
-	createInfo.RenderContextInfo = &renderContextInfo;
+	HazardCreateInfo createInfo = {
+		.AppInfo = &appInfo,
+		.RenderContextInfo = &renderContextInfo,
+	};
 
 	CreateApplicationStack(&createInfo);
 }

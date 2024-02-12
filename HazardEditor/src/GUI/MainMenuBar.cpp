@@ -1,6 +1,6 @@
 
 #include "MainMenuBar.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "AllPanels.h"
 #include "Core/HazardEditor.h"
 #include "Editor/EditorModeManager.h"

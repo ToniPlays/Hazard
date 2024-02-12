@@ -36,6 +36,7 @@ namespace UI
 		void RenameTo(const std::string& newName);
         
         void OnItemClicked();
+        void OnItemDoubleClicked();
         
 	private:
 		Hazard::AssetHandle m_Handle;

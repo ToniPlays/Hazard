@@ -451,11 +451,11 @@ namespace HazardRenderer::Vulkan
 			vkCmdSetLineWidth(instance->m_ActiveCommandBuffer, width);
 		});
 	}
-	void VulkanRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer)
+	void VulkanRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer, uint32_t bufferOffset)
 	{
-		DrawInstanced(count, 1, indexBuffer);
+		DrawInstanced(count, 1, indexBuffer, bufferOffset);
 	}
-	void VulkanRenderCommandBuffer::DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
+	void VulkanRenderCommandBuffer::DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer, uint32_t bufferOffset)
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanGPUBuffer> buffer = indexBuffer ? indexBuffer.As<VulkanGPUBuffer>() : nullptr;
@@ -464,17 +464,17 @@ namespace HazardRenderer::Vulkan
 		if (indexBuffer)
 			HZR_ASSERT(buffer->GetUsageFlags() & BUFFER_USAGE_INDEX_BUFFER_BIT, "Invalid buffer flags");
 
-		Renderer::Submit([instance, buffer, count, instanceCount, pipeline = m_CurrentPipeline]() mutable {
+		Renderer::Submit([instance, buffer, count, instanceCount, bufferOffset, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DrawInstanced");
 			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
+
 			auto vkPipeline = pipeline->GetVulkanPipeline();
 			auto shader = pipeline->GetShader().As<VulkanShader>();
 			auto layout = pipeline->GetPipelineLayout();
 
 			if (buffer)
 			{
-				VkDeviceSize offsets = { 0 };
-				vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, buffer->GetVulkanBuffer(), offsets, VK_INDEX_TYPE_UINT32);
+				vkCmdBindIndexBuffer(instance->m_ActiveCommandBuffer, buffer->GetVulkanBuffer(), bufferOffset, VK_INDEX_TYPE_UINT32);
 				vkCmdDrawIndexed(instance->m_ActiveCommandBuffer, count, instanceCount, 0, 0, 0);
 				return;
 			}
@@ -555,10 +555,10 @@ namespace HazardRenderer::Vulkan
 			//fpCmdTraceRaysKHR(instance->m_ActiveCommandBuffer, &raygenTable, &missTable, &closestHitTable, &callableTable, info.Extent.Width, info.Extent.Height, info.Extent.Depth);
 		});
 	}
-	void VulkanRenderCommandBuffer::CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region)
+	void VulkanRenderCommandBuffer::CopyToBuffer(Ref<GPUBuffer> destinationBuffer, const BufferCopyRegion& region)
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
-		Ref<VulkanGPUBuffer> buffer = targetBuffer.As<VulkanGPUBuffer>();
+		Ref<VulkanGPUBuffer> buffer = destinationBuffer.As<VulkanGPUBuffer>();
 		Buffer data = Buffer::Copy(region.Data, region.Size);
 		uint32_t flags = buffer->GetUsageFlags();
 
@@ -580,7 +580,7 @@ namespace HazardRenderer::Vulkan
 
 				auto device = VulkanContext::GetLogicalDevice();
 				VulkanAllocator allocator("VulkanGPUBuffer");
-
+				
 				VkBufferCreateInfo stagingInfo = {};
 				stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 				stagingInfo.size = buffer->GetSize();
@@ -610,17 +610,17 @@ namespace HazardRenderer::Vulkan
 		}
 	}
 
-	void VulkanRenderCommandBuffer::CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region)
+	void VulkanRenderCommandBuffer::CopyToImage(Ref<Image> destinationImage, const ImageCopyRegion& region)
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Buffer buffer = Buffer::Copy(region.Data, region.DataSize);
 
-		Renderer::Submit([instance, targetImage, region, buffer]() mutable {
+		Renderer::Submit([instance, destinationImage, region, buffer]() mutable {
 
 			HZR_PROFILE_FUNCTION();
 			VulkanAllocator allocator("VulkanImage2D");
 
-			VkImage image = targetImage->GetType() == TextureType::Image2D ? targetImage.As<VulkanImage2D>()->GetVulkanImage() : targetImage.As<VulkanCubemapTexture>()->GetVulkanImage();
+			VkImage image = destinationImage->GetType() == TextureType::Image2D ? destinationImage.As<VulkanImage2D>()->GetVulkanImage() : destinationImage.As<VulkanCubemapTexture>()->GetVulkanImage();
 
 			VkBufferCreateInfo stagingInfo = {};
 			stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -661,22 +661,22 @@ namespace HazardRenderer::Vulkan
 		});
 	}
 
-	void VulkanRenderCommandBuffer::CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> targetImage, const BufferCopyRegion& region)
+	void VulkanRenderCommandBuffer::CopyBufferToImage(Ref<GPUBuffer> sourceBuffer, Ref<Image2D> destinationImage, const BufferCopyRegion& region)
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Ref<VulkanGPUBuffer> buffer = sourceBuffer.As<VulkanGPUBuffer>();
-		Ref<VulkanImage2D> image = targetImage.As<VulkanImage2D>();
+		Ref<VulkanImage2D> image = destinationImage.As<VulkanImage2D>();
 
 		Renderer::Submit([instance, image, buffer, region]() mutable {
 			__debugbreak();
 		});
 	}
 
-	void VulkanRenderCommandBuffer::CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> targetBuffer, const ImageCopyRegion& region)
+	void VulkanRenderCommandBuffer::CopyImageToBuffer(Ref<Image2D> sourceImage, Ref<GPUBuffer> destinationBuffer, const ImageCopyRegion& region)
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Ref<VulkanImage2D> image = sourceImage.As<VulkanImage2D>();
-		Ref<VulkanGPUBuffer> buffer = targetBuffer.As<VulkanGPUBuffer>();
+		Ref<VulkanGPUBuffer> buffer = destinationBuffer.As<VulkanGPUBuffer>();
 
 		Renderer::Submit([instance, image, buffer, region]() mutable {
 			
@@ -693,6 +693,26 @@ namespace HazardRenderer::Vulkan
 			vkRegion.imageSubresource.mipLevel = 0;
 
 			vkCmdCopyImageToBuffer(instance->m_ActiveCommandBuffer, srcImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, dstBuffer, 1, &vkRegion);
+		});
+	}
+
+	void VulkanRenderCommandBuffer::CopyBufferToBuffer(Ref<GPUBuffer> sourceBuffer, const BufferCopyRegion& sourceRegion, Ref<GPUBuffer> destinationBuffer, const BufferCopyRegion& destinationRegion)
+	{
+		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanGPUBuffer> src = sourceBuffer.As<VulkanGPUBuffer>();
+		Ref<VulkanGPUBuffer> dst = destinationBuffer.As<VulkanGPUBuffer>();
+
+		Renderer::Submit([instance, src, dst, sourceRegion, destinationRegion]() mutable {
+			
+			VkBuffer srcBuf = src->GetVulkanBuffer();
+			VkBuffer dstBuf = dst->GetVulkanBuffer();
+
+			VkBufferCopy copy = {};
+			copy.srcOffset = sourceRegion.Offset;
+			copy.dstOffset = destinationRegion.Offset;
+			copy.size = destinationRegion.Size;
+
+			vkCmdCopyBuffer(instance->m_ActiveCommandBuffer, srcBuf, dstBuf, 1, &copy);
 		});
 	}
 

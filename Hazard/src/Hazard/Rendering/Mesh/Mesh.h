@@ -9,6 +9,16 @@
 
 namespace Hazard
 {
+	struct SubmeshData
+	{
+		std::string NodeName;
+		uint64_t NodeID;
+		uint32_t VertexCount;
+		uint32_t IndexCount;
+		uint32_t VertexOffset;
+		uint32_t IndexOffset;
+	};
+
 	class Mesh : public Asset
 	{
 	public:
@@ -17,17 +27,23 @@ namespace Hazard
 
 		AssetType GetType() const override { return AssetType::Mesh; }
 		void GenerateMesh(const std::vector<MeshImporter::MeshData>& meshData);
+		void GenerateMesh(const std::unordered_map<uint64_t, SubmeshData>& submeshes, Buffer vertexData, Buffer indexData);
 
-		Ref<HazardRenderer::GPUBuffer> GetVertexBuffer() { return m_VertexBuffer; };
-		Ref<HazardRenderer::GPUBuffer> GetIndexBuffer() { return m_IndexBuffer; }
+		const std::unordered_map<uint64_t, SubmeshData> GetSubmeshData() const { return m_SubmeshData; }
+
+		Ref<HazardRenderer::GPUBuffer> GetVertexBuffer(uint64_t submeshId) const { return m_VertexBuffers.at(submeshId); };
+		Ref<HazardRenderer::GPUBuffer> GetIndexBuffer(uint64_t submeshId) const { return m_IndexBuffers.at(submeshId); }
+
+		uint64_t CalculateTotalVertexCount();
+		uint64_t CalculateTotalIndexCount();
 
 	private:
-		uint64_t CalculateTotalVertexCount(const std::vector<MeshImporter::MeshData>& meshData);
-		uint64_t CalculateTotalIndexCount(const std::vector<MeshImporter::MeshData>& meshData);
+		void CreateSubmeshResources(const SubmeshData& submesh, Buffer vertices, Buffer indices);
 
 	private:
-		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer;
-		Ref<HazardRenderer::GPUBuffer> m_IndexBuffer;
+		std::unordered_map<uint64_t, Ref<HazardRenderer::GPUBuffer>> m_VertexBuffers;
+		std::unordered_map<uint64_t, Ref<HazardRenderer::GPUBuffer>> m_IndexBuffers;
+		std::unordered_map<uint64_t, SubmeshData> m_SubmeshData;
 
 	};
 }

@@ -33,10 +33,11 @@ namespace Hazard
 	{
 		auto& window = Application::GetModule<RenderContextManager>().GetWindow();
 
-		Resolution resolution = {};
-		resolution.Width = window.GetWidth();
-		resolution.Height = window.GetHeight();
-		resolution.RefreshRate = window.GetWindowInfo().RefreshRate;
+		Resolution resolution = {
+			.Width = window.GetWidth(),
+			.Height = window.GetHeight(),
+			.RefreshRate = window.GetWindowInfo().RefreshRate,
+		};
 
 		return resolution;
 	}

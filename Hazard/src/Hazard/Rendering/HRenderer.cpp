@@ -11,8 +11,12 @@ namespace Hazard
 	void HRenderer::SubmitWorldRenderer(const Ref<WorldRenderer>& renderer)
 	{
 		HZR_PROFILE_FUNCTION();
-		RendererDrawList list = {};
-		list.WorldRenderer = renderer;
+
+		RendererDrawList list = {
+			.WorldRenderer = renderer,
+			.Stats = {}
+		};
+
 		s_Engine->GetDrawLists().push_back(list);
 	}
 
@@ -25,11 +29,13 @@ namespace Hazard
 
 		SubmitQuad(tMatrix, color, AssetManager::GetAsset<Texture2DAsset>(spriteRenderer.TextureHandle), id);
 	}
+
 	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, int id)
 	{
 		HZR_PROFILE_FUNCTION();
 		SubmitQuad(transform, color, nullptr, id);
 	}
+
 	void HRenderer::SubmitQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2DAsset> texture, int id)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -39,6 +45,7 @@ namespace Hazard
 
 		s_Engine->GetQuadRenderer().SubmitQuad(transform, color, texture);
 	}
+
 	void HRenderer::SubmitCircle(const glm::mat4& transform, const glm::vec4& color, float thickness, float fade, int id)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -48,10 +55,12 @@ namespace Hazard
 
 		s_Engine->GetCircleRenderer().SubmitCircle(transform, color, thickness, fade);
 	}
+
 	void HRenderer::SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, const Ref<Texture2DAsset>& texture)
 	{
 		s_Engine->GetQuadRenderer().SubmitBillboard(transform, view, color, texture);
 	}
+
 	void HRenderer::SubmitMesh(TransformComponent& transform, const MeshComponent& meshComponent, int id)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -59,70 +68,68 @@ namespace Hazard
 
 		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
 		if (!mesh) return;
-		SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(), mesh->GetIndexBuffer(), nullptr, id);
+
+		for(auto& [uid, submesh] : mesh->GetSubmeshData())
+			SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(uid), mesh->GetIndexBuffer(uid), nullptr, id);
 	}
+
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> material, uint64_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
 		SubmitMesh(transform, vertexBuffer, nullptr, material, count, id);
 	}
+
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, int id)
 	{
 		HZR_PROFILE_FUNCTION();
 		SubmitMesh(transform, vertexBuffer, indexBuffer, material, indexBuffer->GetSize() / sizeof(uint32_t), id);
 	}
+
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-		
-		Ref<Pipeline> pipeline = material->GetPipeline();
 
-		GeometryMesh mesh = {};
-		mesh.Transform = transform;
-		mesh.Count = count;
-		mesh.VertexBuffer = vertexBuffer;
-		mesh.IndexBuffer = indexBuffer;
-		mesh.Pipeline = pipeline;
-		mesh.MaterialDescriptorSet = material->GetDescriptorSet();
+		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("PBR_Static");
+		if (material)
+			pipeline = material->GetPipeline();
 
 		auto& drawList = s_Engine->GetDrawList();
-		drawList.GeometryMeshes.push_back(mesh);
 	}
 
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 	}
+
 	void HRenderer::SubmitPipeline(Ref<Pipeline>& pipeline, uint64_t count)
 	{
 		HZR_PROFILE_FUNCTION();
 	}
+
 	void HRenderer::SubmitSkyLight(const SkyLightComponent& skyLight)
 	{
 		HZR_PROFILE_FUNCTION();
 		AssetHandle handle = skyLight.EnvironmentMapHandle;
 		if (handle == INVALID_ASSET_HANDLE) return;
-		
+
+		JobPromise promise = AssetManager::GetAssetAsync(handle);
+		if (!promise.HasFinished() || !promise.Valid()) return;
+
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
 
-		if (!map) return;
-		if (!map->RadianceMap) return;
-
-		Ref<Image2D> sourceImage = AssetManager::GetAsset<Texture2DAsset>(map->GetSourceImageHandle())->GetSourceImage();
-		Ref<Material> material = AssetManager::GetAsset<Material>(s_Engine->GetResources().SkyboxMaterialHandle);
-
-		auto& drawList = s_Engine->GetDrawList();
-		auto& env = drawList.Environment;
-		env.Pipeline = material->GetPipeline();
-		env.MaterialDescriptorSet = s_Engine->GetResources().SkyboxDescriptor;
-		env.MaterialDescriptorSet->Write(1, 0, map->RadianceMap->Value.As<CubemapTexture>(), s_Engine->GetResources().DefaultImageSampler, false);
-		env.Intensity = skyLight.Intensity;
-		env.LodLevel = skyLight.LodLevel;
+		auto& env = s_Engine->GetDrawList();
+		env.Environment.Pipeline = ShaderLibrary::GetPipeline("Skybox");
+		env.Environment.Cubemap = map->GetCubemap();
+		env.Environment.DescriptorSet = s_Engine->GetResources().SkyboxDescriptor;
+		env.Environment.Constants.LodLevel = skyLight.LodLevel;
+		env.Environment.Constants.Intensity = skyLight.Intensity;
 	}
+
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)
 	{
 		HZR_PROFILE_FUNCTION();
 	}
+
 	void HRenderer::SubmitPointLight(const TransformComponent& transform, PointLightComponent& pointLight)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -186,6 +193,7 @@ namespace Hazard
 			lineRenderer.SubmitLine(linePoints[i + 4] + position, linePoints[((i + 1) % 4) + 4] + position, c);
 
 	}
+
 	void HRenderer::SubmitOrthoCameraFrustum(const glm::vec3 position1, const glm::quat& orientation, const glm::mat4& transform, float size, glm::vec2 clipping, float aspectRatio, const Color& color)
 	{
 		HZR_PROFILE_FUNCTION();

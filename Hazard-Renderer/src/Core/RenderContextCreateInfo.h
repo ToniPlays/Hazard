@@ -57,19 +57,20 @@ namespace HazardRenderer
 	struct HazardWindowCreateInfo
 	{
 		std::string Title;
+		Extent Extent;
+		glm::vec4 Color = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 		bool FullScreen = false;
 		bool Maximized = false;
 		bool Resizable = true;
 		bool HasTitlebar = true;
 
-		glm::vec4 Color = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-		Extent Extent;
 	};
 
 	struct HazardRendererCreateInfo
 	{
+		HazardRendererAppInfo* pAppInfo = nullptr;
 		RenderAPI Renderer = RenderAPI::Auto;
 
 		uint32_t WindowCount = 0;
@@ -79,7 +80,6 @@ namespace HazardRenderer
 		bool Logging = true;
 		bool VSync = false;
 
-		HazardRendererAppInfo* pAppInfo = nullptr;
 	};
 	
 }

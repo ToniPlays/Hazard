@@ -49,11 +49,9 @@ namespace Hazard {
 	
 	struct ScriptEngineCreateInfo 
 	{
-		uint32_t UpdateOrder = 0;
-
-		std::string AppAssemblyPath;
-		std::string CoreAssemblyPath;
-		std::string CoralDirectory;
+		std::filesystem::path CoralDirectory;
+		std::filesystem::path CoreAssemblyPath;
+		std::filesystem::path AppAssemblyPath;
 
 		ScriptMessageCallback MessageCallback;
 	};

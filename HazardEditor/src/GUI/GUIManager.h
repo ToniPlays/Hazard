@@ -35,8 +35,9 @@ private:
 
 private:
 	Hazard::ImUI::PanelManager m_PanelManager;
+	UI::MainMenuBar m_MainMenuBar;
 	EditorGuiPlatform* m_Platform;
+
 	Ref<HazardRenderer::Sampler> m_ImageSampler;
 	HazardRenderer::Window* m_Window;
-	UI::MainMenuBar m_MainMenuBar;
 };

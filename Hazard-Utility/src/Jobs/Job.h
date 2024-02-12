@@ -62,17 +62,18 @@ public:
 	}
 
 private:
+
 	JobCallback m_JobCallback;
+	std::string m_JobName;
 
 	std::atomic<float> m_Progress = 0.0f;
 	std::atomic<float> m_ExecutionTime = 0.0f;
+	
 	uint32_t m_InvocationId = 0;
 	JobGraph* m_JobGraph = nullptr;
 
-	std::string m_JobName;
 	JobStatus m_Status = JobStatus::None;
 
 	void* m_Result = nullptr;
-
 	Callback<void()> m_DestroyQueue;
 };

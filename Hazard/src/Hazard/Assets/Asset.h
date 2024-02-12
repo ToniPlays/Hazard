@@ -21,16 +21,14 @@ namespace Hazard
 		Valid = BIT(1),
 		Missing = BIT(2),
 		Invalid = BIT(3),
-		InvalidInput = BIT(4),
-		MemoryOnly = BIT(5)
 	};
 
 	using AssetHandle = UID;
 
 	struct AssetMetadata
 	{
-		AssetHandle Handle = INVALID_ASSET_HANDLE;
 		AssetHandle AssetPackHandle = INVALID_ASSET_HANDLE;
+		AssetHandle Handle = INVALID_ASSET_HANDLE;
 
 		AssetType Type = AssetType::Undefined;
 		LoadState LoadState = LoadState::None;

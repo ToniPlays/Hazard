@@ -24,16 +24,17 @@ namespace Hazard
 
 		for (auto& [handle, time] : s_UnloadAssetAfter)
 		{
-			if (time <= Time::s_Time)
-			{
-				s_AssetLoadCallback.Add([handle]() {
-					Ref<Asset> asset = s_LoadedAssets[handle];
-					if (!asset) return;
-					if (asset->GetRefCount() == 2)
-						asset->DecRefCount();
+			if (time > Time::s_Time) continue;
 
-				});
-			}
+			s_AssetLoadCallback.Add([handle]() {
+
+				Ref<Asset> asset = s_LoadedAssets[handle];
+				if (!asset) return;
+
+				if (asset->GetRefCount() == 2)
+					asset->DecRefCount();
+
+			});
 		}
 	}
 
@@ -43,9 +44,6 @@ namespace Hazard
 		s_IsInitialized = false;
 
 		std::scoped_lock lock(s_AssetMutex);
-		for (auto& [handle, asset] : s_LoadedAssets)
-			s_LoadedAssets.at(handle) = nullptr;
-
 		s_LoadedAssets.clear();
 	}
 
@@ -69,17 +67,23 @@ namespace Hazard
 	AssetHandle AssetManager::AssetHandleFromFile(const std::filesystem::path& file)
 	{
 		auto path = File::GetFileAbsolutePath(file);
-		if (!s_Registry.Contains(path))
+
+		if (s_Registry.Contains(path))
+			return s_Registry.Get(path).Handle;
+
+		for (auto& [p, metadata] : s_Registry)
 		{
-			for (auto& [p, metadata] : s_Registry)
-			{
-				auto abs = File::GetFileAbsolutePath(metadata.SourceFile);
-				if (abs.compare(path) == 0 && !abs.empty())
-					return metadata.Handle;
-			}
-			return INVALID_ASSET_HANDLE;
+			auto abs = File::GetFileAbsolutePath(metadata.SourceFile);
+			if (abs.compare(path) == 0 && !abs.empty())
+				return metadata.Handle;
 		}
-		return s_Registry.Get(path).Handle;
+
+		return INVALID_ASSET_HANDLE;
+	}
+
+	bool AssetManager::IsAssetLoaded(AssetHandle handle)
+	{
+		return GetMetadata(handle).LoadState == LoadState::Loaded;
 	}
 
 	AssetMetadata& AssetManager::GetMetadata(AssetHandle handle)
@@ -105,32 +109,10 @@ namespace Hazard
 
 	JobPromise AssetManager::CreateAssetAsync(AssetType type, const CreateAssetSettings& settings)
 	{
-		Ref<JobGraph> graph = s_AssetLoader.Create(type, settings);
+		Ref<JobGraph> graph = GetCreateGraph(type, settings);
 		if (!graph) return JobPromise();
 
-		JobPromise promise = Application::Get().GetJobSystem().QueueGraph(graph);
-		promise.Then([source = settings.SourcePath](JobGraph& graph) {
-			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
-			if (!asset) return;
-
-			asset->m_Handle = UID();
-			asset->m_SourceAssetPath = source;
-
-			auto absolutePath = File::GetFileAbsolutePath(source);
-
-			AssetMetadata metadata = {};
-			metadata.AssetPackHandle = 0;
-			metadata.Handle = asset->GetHandle();
-			metadata.Type = asset->GetType();
-			metadata.FilePath = "";
-			metadata.SourceFile = source;
-			metadata.LoadState = LoadState::Loaded;
-
-			std::scoped_lock(s_AssetMutex);
-			s_LoadedAssets[asset->GetHandle()] = asset;
-			s_Registry[absolutePath] = metadata;
-		});
-		return promise;
+		return Application::Get().GetJobSystem().QueueGraph(graph);
 	}
 
 	JobPromise AssetManager::SaveAsset(Ref<Asset> asset, SaveAssetSettings settings)
@@ -139,8 +121,7 @@ namespace Hazard
 		HZR_ASSERT(asset, "Asset cannot be nullptr");
 
 		AssetMetadata& metadata = GetMetadata(asset->GetHandle());
-
-		if (settings.Flags & ASSET_MANAGER_SAVE_AND_UPDATE && !settings.TargetPath.empty())
+		if (settings.Flags & ASSET_MANAGER_SAVE_AND_UPDATE && !settings.TargetPath.empty() && metadata.Handle != INVALID_ASSET_HANDLE)
 			metadata.FilePath = settings.TargetPath;
 
 		if (!metadata.FilePath.empty())
@@ -148,52 +129,10 @@ namespace Hazard
 
 		HZR_CORE_ASSERT(!settings.TargetPath.empty(), "Saving file to null path");
 
-		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);
-
+		Ref<JobGraph> graph = GetSaveGraph(asset, settings);
 		if (!graph) return JobPromise();
 
-		JobPromise promise = Application::Get().GetJobSystem().QueueGraph(graph);
-
-		promise.Then([asset, settings](JobGraph& graph) {
-
-			Buffer result = graph.GetResult<Buffer>();
-
-			//Save asset package
-			AssetPack pack = {};
-			pack.Flags = ASSET_PACK_ELEMENT;
-			pack.Handle = asset->GetHandle();
-			pack.Type = asset->GetType();
-			pack.SourceFile = asset->GetSourceFilePath().string();
-
-			std::scoped_lock lock(s_AssetMutex);
-
-			//Copy save result to 
-			if (settings.Flags & ASSET_MANAGER_COMBINE_ASSET)
-			{
-				pack.Flags |= ASSET_PACK_CONTAINS_DATA;
-				pack.AssetData = result;
-
-				HZR_CORE_WARN("Saved combined asset to {}", settings.TargetPath.string());
-			}
-			else
-			{
-				pack.Flags |= ASSET_PACK_REFERENCES_FILE;
-				if (!pack.SourceFile.empty())
-				{
-					if (!File::WriteBinaryFile(pack.SourceFile, result.Data, result.Size))
-						throw JobException("Could not save source file");
-				}
-				HZR_CORE_WARN("Saved asset to {} and source to {}", settings.TargetPath.string(), pack.SourceFile);
-			}
-
-			auto buffer = pack.ToBuffer();
-			if (!File::WriteBinaryFile(settings.TargetPath, buffer.GetData(), buffer.GetCursor()))
-				throw JobException("Failed to save asset file");
-
-			pack.AssetData.Release();
-		});
-
-		return promise;
+		return Application::Get().GetJobSystem().QueueGraph(graph);
 	}
 
 	void AssetManager::Unload(AssetHandle handle)
@@ -206,6 +145,7 @@ namespace Hazard
 		meta.LoadState = LoadState::None;
 		s_LoadedAssets.erase(handle);
 	}
+
 	JobPromise AssetManager::Reload(AssetHandle handle)
 	{
 		std::scoped_lock(s_AssetMutex);
@@ -217,9 +157,8 @@ namespace Hazard
 		if (!graph) return JobPromise();
 
 		Ref<Asset> oldAsset = s_LoadedAssets[handle];
-		JobPromise promise = Application::Get().GetJobSystem().QueueGraph(graph);
 
-		promise.Then([handle, oldAsset](JobGraph& graph) {
+		graph->AddOnCompleted([handle, oldAsset](JobGraph& graph) {
 			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
 			if (!asset) return;
 
@@ -230,8 +169,9 @@ namespace Hazard
 			s_LoadedAssets[handle] = asset;
 		});
 
-		return promise;
+		return Application::Get().GetJobSystem().QueueGraph(graph);
 	}
+
 	JobPromise AssetManager::GetAssetAsync(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -249,14 +189,21 @@ namespace Hazard
 
 		AssetMetadata& metadata = GetMetadata(handle);
 
-		Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
-		if (!graph) return JobPromise();
+		Ref<JobGraph> graph = GetLoadGraph(metadata);
+
+		if (!graph || metadata.LoadState != LoadState::None)
+			return JobPromise();
 
 		metadata.LoadState = LoadState::Loading;
+		return Application::Get().GetJobSystem().QueueGraph(graph);
+	}
 
-		JobPromise promise = Application::Get().GetJobSystem().QueueGraph(graph);
+	Ref<JobGraph> AssetManager::GetLoadGraph(AssetMetadata& metadata)
+	{
+		Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
+		if (!graph) return nullptr;
 
-		promise.Then([handle](JobGraph& graph) mutable {
+		graph->AddOnCompleted([handle = metadata.Handle](JobGraph& graph) mutable {
 			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
 			if (!asset) return;
 
@@ -266,30 +213,111 @@ namespace Hazard
 			metadata.LoadState = LoadState::Loaded;
 
 			std::scoped_lock lock(s_AssetMutex);
-			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
 			s_LoadedAssets[asset->GetHandle()] = asset;
+			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
+		});
+		return graph;
+	}
+
+	Ref<JobGraph> AssetManager::GetSaveGraph(Ref<Asset> asset, SaveAssetSettings settings)
+	{
+		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);
+		if (!graph) return nullptr;
+
+		graph->AddOnCompleted([asset, settings](JobGraph& graph) {
+
+			Buffer result = graph.GetResult<Buffer>();
+
+			//Save asset package
+			AssetPack pack = {};
+			pack.Flags = ASSET_PACK_ELEMENT;
+			pack.Handle = asset->GetHandle();
+			pack.Type = asset->GetType();
+			pack.SourceFile = asset->GetSourceFilePath().string();
+
+
+			//Copy save result to 
+			if (settings.Flags & ASSET_MANAGER_COMBINE_ASSET)
+			{
+				pack.Flags |= ASSET_PACK_CONTAINS_DATA;
+				pack.AssetData = result;
+			}
+			else
+			{
+				pack.Flags |= ASSET_PACK_REFERENCES_FILE;
+
+				if (!pack.SourceFile.empty())
+				{
+					if (!File::WriteBinaryFile(pack.SourceFile, result.Data, result.Size))
+						throw JobException(fmt::format("Could not save source file: {}", pack.SourceFile));
+				}
+			}
+
+			auto buffer = pack.ToBuffer();
+			if (!File::WriteBinaryFile(settings.TargetPath, buffer.GetData(), buffer.GetCursor()))
+				throw JobException(fmt::format("Could not save asset file: {}", settings.TargetPath.string()));
+
+			AssetMetadata& metadata = GetMetadata(asset->GetHandle());
+			if (!metadata.IsValid())
+				ImportAsset(settings.TargetPath, pack);
+
+			pack.AssetData.Release();
 		});
 
-		return promise;
+		return graph;
 	}
+
+	Ref<JobGraph> AssetManager::GetCreateGraph(AssetType type, CreateAssetSettings settings)
+	{
+		Ref<JobGraph> graph = s_AssetLoader.Create(type, settings);
+		if (!graph) return nullptr;
+
+		graph->AddOnCompleted([source = settings.SourcePath](JobGraph& graph) {
+			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
+			if (!asset) return;
+
+			asset->m_Handle = UID();
+			asset->m_SourceAssetPath = source;
+
+			auto absolutePath = File::GetFileAbsolutePath(source);
+
+			AssetMetadata metadata = {
+				.AssetPackHandle = 0,
+				.Handle = asset->GetHandle(),
+				.Type = asset->GetType(),
+				.LoadState = LoadState::Loaded,
+				.FilePath = "",
+				.SourceFile = source,
+			};
+
+			std::scoped_lock(s_AssetMutex);
+			s_LoadedAssets[asset->GetHandle()] = asset;
+		});
+		return graph;
+	}
+
 	AssetHandle AssetManager::ImportAssetPack(const std::filesystem::path& path, const AssetPack& pack)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_CORE_ASSERT(false, "Asset pack import not supported");
+		HZR_CORE_ASSERT(false, "Asset pack import not yet supported");
+
 		return AssetHandle();
 	}
+
 	AssetHandle AssetManager::ImportAsset(const std::filesystem::path& path, const AssetPack& pack)
 	{
 		auto absolutePath = File::GetFileAbsolutePath(path);
-		AssetMetadata metadata = {};
-		metadata.AssetPackHandle = 0;
-		metadata.Handle = pack.Handle;
-		metadata.Type = pack.Type;
-		metadata.FilePath = absolutePath;
-		metadata.SourceFile = pack.SourceFile;
+
+		AssetMetadata metadata = {
+			.AssetPackHandle = 0,
+			.Handle = pack.Handle,
+			.Type = pack.Type,
+			.LoadState = s_LoadedAssets.contains(pack.Handle) ? LoadState::Loaded : LoadState::None,
+			.FilePath = absolutePath,
+			.SourceFile = pack.SourceFile
+		};
 
 		std::scoped_lock(s_AssetMutex);
-		metadata.LoadState = s_LoadedAssets.contains(pack.Handle) ? LoadState::Loaded : LoadState::None;
 		s_Registry[absolutePath] = metadata;
 
 		return pack.Handle;

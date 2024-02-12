@@ -17,6 +17,7 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 {
 	m_Window = &window;
 	m_Context = (VulkanContext*)window.GetContext();
+
 	Ref<VulkanSwapchain> swapchain = m_Context->GetSwapchain().As<VulkanSwapchain>();
 	auto physicalDevice = m_Context->GetDevice().As<VulkanPhysicalDevice>();
 	auto device = m_Context->GetLogicalDevice();
@@ -37,30 +38,32 @@ EditorPlatformVulkan::EditorPlatformVulkan(HazardRenderer::Window& window)
 		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 100 },
 		{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 100 },
 	};
-	VkDescriptorPoolCreateInfo poolInfo = {};
-	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-	poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-	poolInfo.maxSets = 100 * IM_ARRAYSIZE(poolSizes);
-	poolInfo.poolSizeCount = (uint32_t)IM_ARRAYSIZE(poolSizes);
-	poolInfo.pPoolSizes = poolSizes;
+
+	VkDescriptorPoolCreateInfo poolInfo = {
+		.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+		.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT,
+		.maxSets = 100 * IM_ARRAYSIZE(poolSizes),
+		.poolSizeCount = (uint32_t)IM_ARRAYSIZE(poolSizes),
+		.pPoolSizes = poolSizes,
+	};
 
 	VK_CHECK_RESULT(vkCreateDescriptorPool(device->GetVulkanDevice(), &poolInfo, nullptr, &descriptorPool), "Failed to create descriptor pool");
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)window.GetNativeWindow(), true);
 
-	ImGui_ImplVulkan_InitInfo init_info = {};
-	init_info.Instance = m_Context->GetVulkanInstance();
-	init_info.PhysicalDevice = physicalDevice->GetVulkanPhysicalDevice();
-	init_info.Device = device->GetVulkanDevice();
-	init_info.QueueFamily = physicalDevice->GetQueueFamilyIndices().Graphics;
-	init_info.Queue = device->GetGraphicsQueue();
-	init_info.PipelineCache = m_Context->GetPipelineCache();;
-	init_info.DescriptorPool = descriptorPool;
-	init_info.Allocator = nullptr;
-	init_info.MinImageCount = 2;
-	init_info.ImageCount = m_Context->GetImagesInFlight();
-	init_info.CheckVkResultFn = nullptr;
+	ImGui_ImplVulkan_InitInfo init_info = {
+		.Instance = m_Context->GetVulkanInstance(),
+		.PhysicalDevice = physicalDevice->GetVulkanPhysicalDevice(),
+		.Device = device->GetVulkanDevice(),
+		.QueueFamily = physicalDevice->GetQueueFamilyIndices().Graphics,
+		.Queue = device->GetGraphicsQueue(),
+		.PipelineCache = m_Context->GetPipelineCache(),
+		.DescriptorPool = descriptorPool,
+		.MinImageCount = 2,
+		.ImageCount = m_Context->GetImagesInFlight(),
+		.CheckVkResultFn = nullptr,
+	};
 
 	ImGui_ImplVulkan_Init(&init_info, swapchain->GetVulkanRenderPass());
 	VkCommandBuffer cmdBuffer = device->GetCommandBuffer(true);
@@ -112,45 +115,49 @@ void EditorPlatformVulkan::EndFrame()
 	uint32_t commandBufferIndex = swapchain->GetCurrentBufferIndex();
 	VkCommandBuffer drawCommandBuffer = swapchain->GetCurrentDrawCommandBuffer();
 
-	VkRenderPassBeginInfo renderPassBeginInfo = {};
-	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassBeginInfo.renderPass = swapchain->GetVulkanRenderPass();
-	renderPassBeginInfo.renderArea.offset.x = 0;
-	renderPassBeginInfo.renderArea.offset.y = 0;
-	renderPassBeginInfo.renderArea.extent.width = width;
-	renderPassBeginInfo.renderArea.extent.height = height;
-	renderPassBeginInfo.clearValueCount = 2; // Color + depth
-	renderPassBeginInfo.pClearValues = clearValues;
-	renderPassBeginInfo.framebuffer = swapchain->GetCurrentFramebuffer();
+	VkRenderPassBeginInfo renderPassBeginInfo = {
+		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		.renderPass = swapchain->GetVulkanRenderPass(),
+		.framebuffer = swapchain->GetCurrentFramebuffer(),
+		.renderArea = {
+			.offset = { 0, 0 },
+			.extent = { width, height }
+		},
+		.clearValueCount = 2, // Color + depth
+		.pClearValues = clearValues,
+	};
 
 	vkCmdBeginRenderPass(drawCommandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
 
-	VkCommandBufferInheritanceInfo inheritanceInfo = {};
-	inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-	inheritanceInfo.renderPass = swapchain->GetVulkanRenderPass();
-	inheritanceInfo.framebuffer = swapchain->GetCurrentFramebuffer();
+	VkCommandBufferInheritanceInfo inheritanceInfo = {
+		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO,
+		.renderPass = swapchain->GetVulkanRenderPass(),
+		.framebuffer = swapchain->GetCurrentFramebuffer(),
+	};
 
-	VkCommandBufferBeginInfo cmdBufInfo = {};
-	cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	cmdBufInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT;
-	cmdBufInfo.pInheritanceInfo = &inheritanceInfo;
+	VkCommandBufferBeginInfo cmdBufInfo = {
+		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+		.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT,
+		.pInheritanceInfo = &inheritanceInfo,
+	};
 
 	VK_CHECK_RESULT(vkBeginCommandBuffer(s_ImGuiCommandBuffers[commandBufferIndex], &cmdBufInfo), "");
 
-	VkViewport viewport = {};
-	viewport.x = 0.0f;
-	viewport.y = (float)height;
-	viewport.height = -(float)height;
-	viewport.width = (float)width;
-	viewport.minDepth = 0.0f;
-	viewport.maxDepth = 1.0f;
+	VkViewport viewport = {
+		.x = 0.0f,
+		.y = (float)height,
+		.width = (float)width,
+		.height = -(float)height,
+		.minDepth = 0.0f,
+		.maxDepth = 1.0f,
+	};
 	vkCmdSetViewport(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &viewport);
 
-	VkRect2D scissor = {};
-	scissor.extent.width = width;
-	scissor.extent.height = height;
-	scissor.offset.x = 0;
-	scissor.offset.y = 0;
+	VkRect2D scissor = {
+		.offset = { 0, 0 },
+		.extent = { width, height },
+	};
+
 	vkCmdSetScissor(s_ImGuiCommandBuffers[commandBufferIndex], 0, 1, &scissor);
 
 	ImDrawData* main_draw_data = ImGui::GetDrawData();

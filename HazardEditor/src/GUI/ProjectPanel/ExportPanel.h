@@ -1,7 +1,6 @@
 #pragma once
 #include "Hazard.h"
 #include "Hazard/ImGUI/UIElements/Table.h"
-#include "Exporter/ApplicationExporter.h"
 
 namespace UI
 {
@@ -17,6 +16,5 @@ namespace UI
         
     private:
         Hazard::ImUI::Table<Hazard::AssetMetadata> m_SelectedWorldTable;
-        Exporter::ApplicationExporter m_Exporter;
     };
 }

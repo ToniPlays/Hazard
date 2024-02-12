@@ -30,7 +30,6 @@ namespace UI
 			for (auto& graphs : m_JobGraphs)
 			{
 				if (graphs.Graph != graph) continue;
-				HZR_INFO(graph->GetName());
 
 				graphs.FinishedAt = Time::s_Time;
 				graphs.RemoveAfter = graphs.FinishedAt + 2.5;

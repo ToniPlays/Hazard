@@ -263,9 +263,10 @@ void GUIManager::DrawBottomBar()
 		{
 			if (!m_NewProjectPath.GetValue().empty())
 			{
-				HazardProject project = {};
-				project.Name = m_NewProjectName.GetValue();
-				project.Path = std::filesystem::path(m_NewProjectPath.GetValue()) / project.Name;
+				HazardProject project = {
+					.Name = m_NewProjectName.GetValue(),
+					.Path = std::filesystem::path(m_NewProjectPath.GetValue()) / project.Name,
+				};
 
 				if (m_Manager.CreateProject(project))
 					m_Manager.SaveConfigToFile(CONFIG_PATH);

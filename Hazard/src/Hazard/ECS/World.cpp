@@ -41,8 +41,10 @@ namespace Hazard
 		TagComponent& tag = e.AddComponent<TagComponent>();
 		tag.Uid = {};
 		tag.Tag = name;
+
 		e.AddComponent<TransformComponent>();
 		m_EntityUIDMap[tag.Uid] = e;
+
 		return e;
 	}
 
@@ -52,8 +54,10 @@ namespace Hazard
 		TagComponent& tag = e.AddComponent<TagComponent>();
 		tag.Uid = id;
 		tag.Tag = name;
+
 		e.AddComponent<TransformComponent>();
 		m_EntityUIDMap[tag.Uid] = e;
+
 		return e;
 	}
 

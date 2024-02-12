@@ -10,6 +10,7 @@ static void Finalize(JobInfo& info)
 
 	auto results = info.ParentGraph->GetResults<std::string>();
 	std::string returnVal;
+
 	for (auto& result : results)
 		returnVal += result + "\n";
 
@@ -102,14 +103,15 @@ void JobGraphTest::Init()
 	Ref<Job> loadingJob = Ref<Job>::Create("Preprocess", Preprocess, 100);
 	Ref<Job> finalizeJob = Ref<Job>::Create("Finalize", Finalize);
 
-	JobGraphInfo graphInfo = {};
-	graphInfo.Name = "World load";
-	graphInfo.Stages = {
-		{ "Preprocess", 0.2f, { loadingJob } },
-		{ "Asset load", 0.6f, {} },
-		{ "Finalize", 0.2f, { finalizeJob } }
+	JobGraphInfo graphInfo = {
+		.Name = "World load",
+		.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
+		.Stages = {
+			{ "Preprocess", 0.2f, { loadingJob } },
+			{ "Asset load", 0.6f, {} },
+			{ "Finalize", 0.2f, { finalizeJob } }
+		},
 	};
-	graphInfo.Flags = JOB_GRAPH_TERMINATE_ON_ERROR;
 
 	m_Graph = Ref<JobGraph>::Create(graphInfo);
 	JobPromise promise = m_JobSystem->QueueGraph(m_Graph);

@@ -9,19 +9,16 @@ class Callback
 public:
 
 	Callback() = default;
-	~Callback()
-	{
-		Clear();
-	}
+	~Callback() = default;
 
 	uint32_t Count() const { return m_Callbacks.size(); }
 
-	void Add(const std::function<FuncT>& callback)
+	inline void Add(const std::function<FuncT>& callback)
 	{
 		if (!callback) return;
 		m_Callbacks.push_back(callback);
 	}
-	void Clear()
+	inline void Clear()
 	{
 		m_Callbacks.clear();
 	}
@@ -32,7 +29,7 @@ public:
 		if constexpr (!std::is_same<FuncT, void()>::value)
 		{
 			for (uint32_t i = 0; i < m_Callbacks.size(); i++)
-				if (m_Callbacks[i]) m_Callbacks[i](args...);
+				m_Callbacks[i](args...);
 		}
 		else assert(false);
 	}
@@ -42,7 +39,7 @@ public:
 		if constexpr (std::is_same<FuncT, void()>::value)
 		{
 			for(uint32_t i = 0; i < m_Callbacks.size(); i++)
-				if(m_Callbacks[i]) m_Callbacks[i]();
+				m_Callbacks[i]();
 		}
 		else assert(false);
 	}

@@ -18,37 +18,43 @@ JobGraph::JobGraph(const JobGraphInfo& info)
 	}
 }
 
-void JobGraph::Execute(JobSystem* system)
+bool JobGraph::Execute(JobSystem* system)
 {
+	if (m_CurrentStage >= m_Info.Stages.size())
+		return false;
+
 	m_JobSystem = system;
+
 	auto& jobs = m_Info.Stages[m_CurrentStage].Jobs;
 	if (jobs.size() == 0)
 	{
 		OnJobFinished(nullptr);
-		return;
+		return true;
 	}
 
-	system->QueueJobs(jobs);
+	return system->QueueJobs(jobs);
 }
 
 void JobGraph::Halt()
 {
-	if (m_IsHalted) return;
+	if (m_HaltCount == 0)
+	{
+		m_JobSystem->TerminateGraphJobs(this);
 
-	m_IsHalted = true;
-	m_IsHalted.notify_all();
-	m_JobSystem->TerminateGraphJobs(this);
+		std::string msg = fmt::format("Graph {} halted", GetName());
+		m_JobSystem->SendMessage(Severity::Warning, msg);
+	}
 
-	std::string msg = fmt::format("Graph {} halted", GetName());
-	m_JobSystem->SendMessage(Severity::Warning, msg);
+	m_HaltCount++;
+	m_HaltCount.notify_all();
 }
 
 void JobGraph::Continue()
 {
-	if (!m_IsHalted) return;
+	m_HaltCount--;
+	m_HaltCount.notify_all();
 
-	m_IsHalted = false;
-	m_IsHalted.notify_all();
+	if (m_HaltCount > 0) return;
 
 	std::vector<Ref<Job>> remainingJobs;
 	for (auto& job : GetCurrentStageInfo().Jobs)
@@ -58,7 +64,7 @@ void JobGraph::Continue()
 	}
 
 	if (remainingJobs.size() == 0)
-		SubmitNextStage();
+		OnJobFinished(nullptr);
 	else
 		m_JobSystem->QueueJobs(remainingJobs);
 
@@ -82,12 +88,19 @@ void JobGraph::ContinueWith(const std::vector<Ref<Job>>& jobs)
 	stageJobs.insert(stageJobs.end(), jobs.begin(), jobs.end());
 }
 
+JobPromise JobGraph::SubGraph(Ref<JobGraph> graph)
+{
+	return m_JobSystem->QueueGraph(graph);
+}
+
 float JobGraph::GetProgress()
 {
 	float progress = 0.0;
 
-	for (uint32_t i = 0; i < m_CurrentStage; i++)
+	for (uint32_t i = 0; i <= m_CurrentStage; i++)
 	{
+		if (i >= m_Info.Stages.size()) return progress;
+
 		const GraphStageInfo& info = m_Info.Stages[i];
 		float stageProgress = 0.0f;
 
@@ -104,7 +117,7 @@ float JobGraph::GetProgress()
 
 void JobGraph::OnJobFinished(Ref<Job> job)
 {
-	if (m_IsHalted) return;
+	if (m_HaltCount > 0) return;
 
 	if (m_CurrentStage + 1 < m_Info.Stages.size())
 	{
@@ -133,8 +146,11 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 	m_JobSystem->OnGraphFinished(Ref<JobGraph>(this));
 	m_HasFinished.notify_all();
 }
-void JobGraph::OnJobFailed(Ref<Job> job)
+void JobGraph::OnJobFailed(Ref<Job> job, const char* message)
 {
+	std::string msg = fmt::format("Job {} failed: {}", job->GetName(), message);
+	m_JobSystem->SendMessage(Severity::Error, msg);
+
 	if (m_Info.Flags & JOB_GRAPH_TERMINATE_ON_ERROR)
 	{
 		m_JobSystem->TerminateGraphJobs(this);
@@ -151,7 +167,7 @@ void JobGraph::OnJobFailed(Ref<Job> job)
 		catch (JobException e)
 		{
 			m_OnCompleted.Clear();
-			std::string msg = fmt::format("Graph {} OnComplete error: {}", m_Info.Name, e.what());
+			std::string msg = fmt::format("Graph {0} OnComplete error: {1}", m_Info.Name, e.what());
 			m_JobSystem->SendMessage(Severity::Error, msg);
 		}
 
@@ -160,7 +176,7 @@ void JobGraph::OnJobFailed(Ref<Job> job)
 		return;
 	}
 
-	if (m_IsHalted) return;
+	if (m_HaltCount > 0) return;
 
 	if (m_CurrentStage + 1 < m_Info.Stages.size())
 		SubmitNextStage();

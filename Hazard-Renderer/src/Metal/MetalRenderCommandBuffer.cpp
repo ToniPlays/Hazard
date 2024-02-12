@@ -295,10 +295,10 @@ namespace HazardRenderer::Metal
     };
 
 
-    void MetalRenderCommandBuffer::CopyToBuffer(Ref<GPUBuffer> targetBuffer, const BufferCopyRegion& region)
+    void MetalRenderCommandBuffer::CopyToBuffer(Ref<GPUBuffer> destinationBuffer, const BufferCopyRegion& region)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
-        Ref<MetalGPUBuffer> buffer = targetBuffer.As<MetalGPUBuffer>();
+        Ref<MetalGPUBuffer> buffer = destinationBuffer.As<MetalGPUBuffer>();
         Buffer data = Buffer::Copy(region.Data, region.Size);
         
         Renderer::Submit([instance, buffer, data, offset = region.Offset]() mutable {
@@ -307,15 +307,15 @@ namespace HazardRenderer::Metal
             data.Release();
         });
     }
-    void MetalRenderCommandBuffer::CopyToImage(Ref<Image> targetImage, const ImageCopyRegion& region)
+    void MetalRenderCommandBuffer::CopyToImage(Ref<Image> destinationImage, const ImageCopyRegion& region)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
         Buffer buffer = Buffer::Copy(region.Data, region.DataSize);
         
-        Renderer::Submit([instance, targetImage, region, buffer]() mutable {
+        Renderer::Submit([instance, destinationImage, region, buffer]() mutable {
             HZR_PROFILE_FUNCTION();
             
-            MTL::Texture* texture = targetImage->GetType() == TextureType::Image2D ? targetImage.As<MetalImage2D>()->GetMetalTexture() : targetImage.As<MetalCubemapTexture>()->GetMetalTexture();
+            MTL::Texture* texture = destinationImage->GetType() == TextureType::Image2D ? destinationImage.As<MetalImage2D>()->GetMetalTexture() : destinationImage.As<MetalCubemapTexture>()->GetMetalTexture();
             
             MTL::Region mtlRegion;
             mtlRegion.size.width = region.Extent.Width;

@@ -2,16 +2,15 @@
 #include "ScriptCreatePanel.h"
 #include "Hazard/ImGUI/UILibrary.h"
 #include "Editor/EditorScriptManager.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "GUI/ProjectPanel/AssetPanel.h"
 #include "Core/HazardEditor.h"
-#include "Localization/Localization.h"
 
 using namespace Hazard;
 
 namespace UI
 {
-	ScriptCreatePanel::ScriptCreatePanel() : Hazard::ImUI::Modal(LBL_SCRIPT_CREATE_PANEL, { 600, 700 })
+	ScriptCreatePanel::ScriptCreatePanel() : Hazard::ImUI::Modal("Create script", { 600, 700 })
 	{
 		m_CreateInfo.SetDefaults();
 	}

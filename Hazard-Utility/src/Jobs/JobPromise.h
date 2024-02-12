@@ -16,6 +16,7 @@ public:
 
     bool Succeeded() const;
     void Wait() const;
+	bool HasFinished() const;
 	bool Valid() const { return m_JobGraph != nullptr; }
 	JobPromise Then(const std::function<void(JobGraph&)>& callback);
 	const std::string& GetJobName() const { return m_JobGraph->GetName(); }

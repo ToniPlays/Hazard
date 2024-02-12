@@ -54,6 +54,7 @@ namespace Hazard
 
 		static AssetHandle Import(const std::filesystem::path& path);
 		static AssetHandle AssetHandleFromFile(const std::filesystem::path& file);
+		static bool IsAssetLoaded(AssetHandle handle);
 
 		static AssetMetadata& GetMetadata(AssetHandle handle);
 		static Ref<Asset> CreateAsset(AssetType type, const CreateAssetSettings& settings);
@@ -87,11 +88,17 @@ namespace Hazard
 
 			JobPromise promise = GetAssetAsync(handle);
 			promise.Wait();
+
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
 			return promise.GetResult<Ref<T>>();
 		}
 
 		static JobPromise GetAssetAsync(AssetHandle handle);
+
+
+		static Ref<JobGraph> GetLoadGraph(AssetMetadata& metadata);
+		static Ref<JobGraph> GetSaveGraph(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings());
+		static Ref<JobGraph> GetCreateGraph(AssetType type, CreateAssetSettings settings = CreateAssetSettings());
 
 	private:
 		static AssetHandle ImportAssetPack(const std::filesystem::path& path, const AssetPack& pack);

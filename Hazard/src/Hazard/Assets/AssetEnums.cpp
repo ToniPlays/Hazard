@@ -48,7 +48,7 @@ namespace Hazard::Utils
 		if (ext == ".jpeg")		return AssetType::Image;
 		if (ext == ".jpg")		return AssetType::Image;
 		if (ext == ".png")		return AssetType::Image;
-		if (ext == ".hdr")		return AssetType::Image;
+		if (ext == ".hdr")		return AssetType::EnvironmentMap;
 		if (ext == ".tga")		return AssetType::Image;
 		if (ext == ".mp3")		return AssetType::AudioClip;
 		if (ext == ".ogg")		return AssetType::AudioClip;
@@ -68,10 +68,16 @@ namespace Hazard::Utils
 using namespace Hazard;
 
 template<>
-void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue)
+bool YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetType& value, AssetType defaultValue)
 {
-	if (!node[key]) value = defaultValue;
-	else value = Utils::StringToAssetType(node[key].as<std::string>());
+	if (!node[key])
+	{
+		value = defaultValue;
+		return false;
+	}
+
+	value = Utils::StringToAssetType(node[key].as<std::string>());
+	return true;
 }
 template<>
 void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType value)
@@ -79,10 +85,15 @@ void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetType 
 	out << YAML::Key << key << YAML::Value << Utils::AssetTypeToString(value);
 }
 template<>
-void YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue)
+bool YamlUtils::Deserialize(YAML::Node node, const std::string& key, AssetHandle& value, AssetHandle defaultValue)
 {
-	if (!node[key]) value = defaultValue;
-	else value = node[key].as<uint64_t>();
+	if (!node[key])
+	{
+		value = defaultValue;
+		return false;
+	}
+	value = node[key].as<uint64_t>();
+	return true;
 }
 template<>
 void YamlUtils::Serialize(YAML::Emitter& out, const std::string& key, AssetHandle value)

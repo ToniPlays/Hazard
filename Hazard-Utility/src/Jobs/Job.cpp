@@ -40,8 +40,7 @@ void Job::Execute(JobInfo& info)
 	{
 		m_Status = JobStatus::Failure;
 		m_ExecutionTime = timer.ElapsedMillis();
-
-		m_JobGraph->OnJobFailed(this);
+		m_JobGraph->OnJobFailed(this, e.what());
 		throw e;
 	}
 

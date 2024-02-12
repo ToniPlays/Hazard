@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/Assets/Asset.h"
-#include "Hazard/RenderContext/Texture2D.h"
+#include "HazardRenderer.h"
 
 namespace Hazard
 {
@@ -20,24 +20,13 @@ namespace Hazard
 		~EnvironmentMap() = default;
 
 		AssetType GetType() const override { return AssetType::EnvironmentMap; }
-
-        void Update(uint32_t samples, uint32_t resolution, AssetHandle sourceImage);
-		void Invalidate();
-        
-		AssetHandle GetSourceImageHandle() const { return m_SourceImageHandle; }
 		EnvironmentMapSpec GetSpec() const { return m_Spec; }
+        
+		Ref<HazardRenderer::CubemapTexture> GetCubemap() const { return m_EnvironmentMap; }
 
-		void GenerateRadiance();
-		void GenerateIrradiance(Ref<AssetPointer> radianceMap);
-		void GeneratePreFilter(Ref<AssetPointer> radianceMap);
-        
-		Ref<AssetPointer> RadianceMap = nullptr;
-		Ref<AssetPointer> IrradianceMap = nullptr;
-		Ref<AssetPointer> PreFilterMap = nullptr;
-		Ref<Texture2DAsset> BRDFLut = nullptr;
-        
     private:
-		AssetHandle m_SourceImageHandle;
+
+		Ref<HazardRenderer::CubemapTexture> m_EnvironmentMap;
 		EnvironmentMapSpec m_Spec;
 	};
 }

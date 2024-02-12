@@ -27,46 +27,41 @@ namespace Hazard
 				std::vector<ShaderDefine> defines = { { "VULKAN_API" } };
 
 				//Compile to Vulkan SPV for reflection
-				CompileInfo compileInfoVulkan = {};
-				compileInfoVulkan.Renderer = RenderAPI::Vulkan;
-				compileInfoVulkan.Name = "Shader";
-				compileInfoVulkan.Stage = type;
-				compileInfoVulkan.Source = source;
-				compileInfoVulkan.DefineCount = defines.size();
-				compileInfoVulkan.pDefines = defines.data();
+				CompileInfo compileInfoVulkan = {
+					.Name = "Shader",
+					.Renderer = RenderAPI::Vulkan,
+					.Optimization = Optimization::None,
+					.Stage = type,
+					.Source = source,
+					.DefineCount = defines.size(),
+					.pDefines = defines.data()
+				};
 
 				if (!compiler.Compile(&compileInfoVulkan))
-				{
-					std::cout << compiler.GetErrorMessage() << std::endl;
-					return "";
-				}
+					throw std::exception(compiler.GetErrorMessage().c_str());
 
 				std::vector<ShaderDefine> glDefines = { { "OPENGL_API" } };
 
 				//Compile to Vulkan SPV for OpenGL source
-				CompileInfo compileInfoVkToGL = {};
-				compileInfoVkToGL.Renderer = RenderAPI::Vulkan;
-				compileInfoVkToGL.Name = "VKShader";
-				compileInfoVkToGL.Stage = type;
-				compileInfoVkToGL.Source = source;
-				compileInfoVkToGL.DefineCount = glDefines.size();
-				compileInfoVkToGL.pDefines = glDefines.data();
+				CompileInfo compileInfoVkToGL = {
+					.Name = "VKShader",
+					.Renderer = RenderAPI::Vulkan,
+					.Optimization = Optimization::None,
+					.Stage = type,
+					.Source = source,
+					.DefineCount = glDefines.size(),
+					.pDefines = glDefines.data()
+				};
 
 				if (!compiler.Compile(&compileInfoVkToGL))
-				{
-					std::cout << compiler.GetErrorMessage() << std::endl;
-					return "";
-				}
+					throw std::exception(compiler.GetErrorMessage().c_str());
 
 				compilationTime += compiler.GetCompileTime();
 
 				//Get OpenGL shader source from Vulkan binaries
 				std::string glSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), glSource))
-				{
-					std::cout << compiler.GetErrorMessage() << std::endl;
-					return "";
-				}
+					throw std::exception(compiler.GetErrorMessage().c_str());
 
 				return glSource;
 			}
@@ -76,47 +71,44 @@ namespace Hazard
 				std::vector<ShaderDefine> defines = { { "VULKAN_API" } };
 
 				//Compile to Vulkan SPV
-				CompileInfo compileInfo = {};
-				compileInfo.Renderer = RenderAPI::Vulkan;
-				compileInfo.Name = "VKShader";
-				compileInfo.Stage = type;
-				compileInfo.Source = source;
-				compileInfo.DefineCount = defines.size();
-				compileInfo.pDefines = defines.data();
+				CompileInfo compileInfo = {
+					.Name = "VKShader",
+					.Renderer = RenderAPI::Vulkan,
+					.Optimization = Optimization::None,
+					.Stage = type,
+					.Source = source,
+					.DefineCount = defines.size(),
+					.pDefines = defines.data(),
+				};
 
 				if (!compiler.Compile(&compileInfo))
-				{
-					std::cout << fmt::format("Stage: {0} error: {1}", Utils::ShaderStageToString(compileInfo.Stage), compiler.GetErrorMessage()) << std::endl;
-					return "";
-				}
+					throw std::exception(compiler.GetErrorMessage().c_str());
+
 				return std::string((char*)compiler.GetCompiledBinary().Data, compiler.GetCompiledBinary().Size);
 			}
 			case RenderAPI::Metal:
 			{
-				Metal::MetalShaderCompiler compiler = {};
+				Metal::MetalShaderCompiler compiler;
 				std::vector<ShaderDefine> defines = { { "METAL_API" } };
 
 				//Compile to Vulkan SPV, convert to MSL later
-				CompileInfo compileInfo = {};
-				compileInfo.Renderer = RenderAPI::Vulkan;
-				compileInfo.Name = "MSLShader";
-				compileInfo.Stage = type;
-				compileInfo.Source = source;
-				compileInfo.DefineCount = defines.size();
-				compileInfo.pDefines = defines.data();
+				CompileInfo compileInfo = {
+					.Name  = "MSLShader",
+					.Renderer = RenderAPI::Vulkan,
+					.Optimization = Optimization::None,
+					.Stage = type,
+					.Source = source,
+					.DefineCount = defines.size(),
+					.pDefines = defines.data()
+				};
 
 				if (!compiler.Compile(&compileInfo))
-				{
-					std::cout << fmt::format("Stage: {0} error: {1}", Utils::ShaderStageToString(type), compiler.GetErrorMessage()) << std::endl;
-					return "";
-				}
-                
+					throw std::exception(compiler.GetErrorMessage().c_str());
+
 				std::string mslSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), mslSource))
-				{
-					std::cout << compiler.GetErrorMessage() << std::endl;
-					return "";
-				}
+					throw std::exception(compiler.GetErrorMessage().c_str());
+
 				return mslSource;
 			}
 			default: return "";
@@ -166,6 +158,7 @@ namespace Hazard
 		{
 			std::string value = StringUtil::GetPreprocessor(token.c_str(), source, offset, &offset);
 			if (offset == std::string::npos) continue;
+
 			std::string_view includePath = StringUtil::Between(value, "\"", "\"");
 			std::string line = token + " " + value;
 			std::filesystem::path inclPath = path.parent_path() / includePath;

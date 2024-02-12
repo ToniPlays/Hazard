@@ -78,8 +78,8 @@ namespace HazardRenderer::Vulkan
 
 		VulkanAllocator allocator("VulkanGPUBuffer");
 
-		uint8_t* dst = allocator.MapMemory<uint8_t>(m_BufferAllocation);
-		memcpy(result.Data, dst + copyRegion.Offset, copyRegion.Size);
+		uint8_t* src = allocator.MapMemory<uint8_t>(m_BufferAllocation);
+		memcpy(result.Data, src + copyRegion.Offset, copyRegion.Size);
 		allocator.UnmapMemory(m_BufferAllocation);
 
 		return result;

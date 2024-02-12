@@ -458,6 +458,7 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Mesh\Importers\AssimpImporter.h" />
     <ClInclude Include="src\Hazard\Rendering\Mesh\Importers\MeshImporter.h" />
+    <ClInclude Include="src\Hazard\Rendering\Mesh\Importers\GLTFImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -639,5 +640,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp" />
     <ClCompile Include="src\Hazard\Rendering\Mesh\Importers\AssimpImporter.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Mesh\Importers\GLTFImporter.cpp" />
   </ItemGroup>
 </Project>

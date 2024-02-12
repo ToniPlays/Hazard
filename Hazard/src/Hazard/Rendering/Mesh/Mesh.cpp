@@ -8,44 +8,87 @@
 
 namespace Hazard
 {
-    void Mesh::GenerateMesh(const std::vector<MeshImporter::MeshData>& meshData)
-    {
-        uint64_t totalVertexCount = CalculateTotalVertexCount(meshData);
-        uint64_t totalIndexCount = CalculateTotalIndexCount(meshData);
+	void Mesh::GenerateMesh(const std::vector<MeshImporter::MeshData>& meshData)
+	{
+		HZR_PROFILE_FUNCTION();
+		uint64_t vertexOffset = 0;
+		uint64_t indexOffset = 0;
 
-        BufferCreateInfo vertexBufferInfo = {};
-        vertexBufferInfo.Name = "Mesh vertex buffer";
-        vertexBufferInfo.Size = totalVertexCount * sizeof(Vertex3D);
-        vertexBufferInfo.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT;
+		for (auto& submesh : meshData)
+		{
+			SubmeshData data = {
+				data.NodeName = submesh.Name,
+				data.NodeID = UID(),
+				data.VertexCount = submesh.Vertices.size(),
+				data.IndexCount = submesh.Indices.size(),
+				data.VertexOffset = vertexOffset,
+				data.IndexOffset = indexOffset,
+			};
 
-        m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
-        
-        BufferCreateInfo indexBufferInfo = {};
-        indexBufferInfo.Name = "Mesh index buffer";
-        indexBufferInfo.Size = totalIndexCount * sizeof(uint32_t);
-        indexBufferInfo.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT;
+			Buffer vertices = Buffer((void*)submesh.Vertices.data(), submesh.Vertices.size() * sizeof(Vertex3D));
+			Buffer indices = Buffer((void*)submesh.Indices.data(), submesh.Indices.size() * sizeof(uint32_t));
 
-        m_IndexBuffer = GPUBuffer::Create(&indexBufferInfo);
+			CreateSubmeshResources(data, vertices, indices);
 
-        IncRefCount();
-        IncRefCount();
-        IncRefCount();
-        IncRefCount();
-        IncRefCount();
-    }
-    uint64_t Mesh::CalculateTotalVertexCount(const std::vector<MeshImporter::MeshData>& meshData)
-    {
-        uint64_t count = 0;
-        for (auto& mesh : meshData)
-            count += mesh.Vertices.size();
-        return count;
-    }
-    uint64_t Mesh::CalculateTotalIndexCount(const std::vector<MeshImporter::MeshData>& meshData)
-    {
-        uint64_t count = 0;
-        for (auto& mesh : meshData)
-            count += mesh.Indices.size();
-        return count;
-    }
+			m_SubmeshData[data.NodeID] = data;
+		}
+	}
+
+	void Mesh::GenerateMesh(const std::unordered_map<uint64_t, SubmeshData>& submeshes, Buffer vertexData, Buffer indexData)
+	{
+		m_SubmeshData = submeshes;
+
+		for (auto& [id, submesh] : m_SubmeshData)
+		{
+			Buffer vertices = Buffer((uint8_t*)vertexData.Data + submesh.VertexOffset * sizeof(Vertex3D), submesh.VertexCount * sizeof(Vertex3D));
+			Buffer indices = Buffer((uint8_t*)indexData.Data + submesh.IndexOffset * sizeof(Vertex3D), submesh.IndexCount * sizeof(uint32_t));
+
+			CreateSubmeshResources(submesh, vertices, indices);
+		}
+	}
+
+	uint64_t Mesh::CalculateTotalVertexCount()
+	{
+		HZR_PROFILE_FUNCTION();
+
+		uint64_t count = 0;
+		for (auto& [uid, mesh] : m_SubmeshData)
+			count += mesh.VertexCount;
+
+		return count;
+	}
+
+	uint64_t Mesh::CalculateTotalIndexCount()
+	{
+		HZR_PROFILE_FUNCTION();
+
+		uint64_t count = 0;
+		for (auto& [uid, mesh] : m_SubmeshData)
+			count += mesh.IndexCount;
+
+		return count;
+	}
+	void Mesh::CreateSubmeshResources(const SubmeshData& submesh, Buffer vertices, Buffer indices)
+	{
+		uint64_t handle = submesh.NodeID;
+
+		BufferCreateInfo vertexBufferInfo = {
+			.Name = fmt::format("VertexBuffer {} {}", File::GetName(m_SourceAssetPath), submesh.NodeName),
+			.UsageFlags = BUFFER_USAGE_VERTEX_BUFFER_BIT | BUFFER_USAGE_TRANSFER_SRC,
+			.Size = vertices.Size,
+			.Data = vertices.Data,
+		};
+
+		m_VertexBuffers[handle] = GPUBuffer::Create(&vertexBufferInfo);
+
+		BufferCreateInfo indexBufferInfo = {
+			.Name = fmt::format("IndexBuffer {} {}", File::GetName(m_SourceAssetPath), submesh.NodeName),
+			.UsageFlags = BUFFER_USAGE_INDEX_BUFFER_BIT | BUFFER_USAGE_TRANSFER_SRC,
+			.Size = indices.Size,
+			.Data = indices.Data,
+		};
+
+		m_IndexBuffers[handle] = GPUBuffer::Create(&indexBufferInfo);
+	}
 }
 

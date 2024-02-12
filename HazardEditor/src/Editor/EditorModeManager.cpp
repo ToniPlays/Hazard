@@ -1,6 +1,6 @@
 
 #include "EditorModeManager.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "GUI/AllPanels.h"
 #include "Core/EditorEvent.h"
 #include "EditorWorldManager.h"

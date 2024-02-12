@@ -4,23 +4,18 @@
 
 #include "HazardRendererCore.h"
 #include "Project/ProjectManager.h"
-#include "GUIManager.h"
-#include "GUI/Debug/Console.h"
+#include "GUI/GUIManager.h"
 #include "HazardScript.h"
 #include "Editor/EditorWorldManager.h"
 
-#include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "EditorScripting/EditorScriptGlue.h"
 
 #include "EditorAssetManager.h"
 #include "spdlog/fmt/fmt.h"
 
-#include "MessageFlags.h"
-
 using namespace Hazard;
 using namespace HazardScript;
-
 
 void HazardEditorApplication::PreInit()
 {
@@ -35,43 +30,47 @@ void HazardEditorApplication::PreInit()
 
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
-	ApplicationCreateInfo appInfo;
-	appInfo.AppName = "Hazard Editor";
-	appInfo.BuildVersion = HZR_BUILD_VERSION;
-	appInfo.MaxJobThreads = 8;
+	ApplicationCreateInfo appInfo = {
+		.AppName = "Hazard Editor",
+		.BuildVersion = HZR_BUILD_VERSION,
+		.MaxJobThreads = 8,
+	};
+
 #ifdef HZR_RELEASE
 	appInfo.Logging = false;
 #else
 	appInfo.Logging = true;
 #endif
 
-	RenderContextCreateInfo renderContextInfo = {};
-	renderContextInfo.Renderer = RenderAPI::Auto;
-	renderContextInfo.VSync = CommandLineArgs::Get<bool>("VSync");
-	renderContextInfo.Title = "Hazard Editor | " + RenderAPIToString(renderContextInfo.Renderer) + " | " + GetBuildType();
-	renderContextInfo.Width = 1920;
-	renderContextInfo.Height = 1080;
+	RenderContextCreateInfo renderContextInfo = {
+		.Renderer = RenderAPI::Auto,
+		.Title = fmt::format("Hazard Editor | {} | {}", RenderAPIToString(RenderAPI::Auto), GetBuildType()),
+		.Width = 1920,
+		.Height = 1080,
+		.VSync = CommandLineArgs::Get<bool>("VSync"),
+	};
 
 	RendererCreateInfo rendererInfo = {};
 
 	EntityComponentCreateInfo entity = {};
-	entity.StartupFile = "world.hpack";
 
 	std::string dllFile = File::GetName(projectPath) + ".dll";
 	std::filesystem::path coreAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / "HazardScripting.dll";
 	std::filesystem::path appAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / dllFile;
 
-	ScriptEngineCreateInfo scriptEngine = {};
-	scriptEngine.CoreAssemblyPath = coreAssemblyPath.string();
-	scriptEngine.AppAssemblyPath = appAssemblyPath.string();
-	scriptEngine.CoralDirectory = (projectPath.parent_path() / "Library" / "Scripts" / "Binaries").string();
+	ScriptEngineCreateInfo scriptEngine = {
+		.CoralDirectory = projectPath.parent_path() / "Library" / "Scripts" / "Binaries",
+		.CoreAssemblyPath = coreAssemblyPath,
+		.AppAssemblyPath = appAssemblyPath
+	};
 
-	HazardCreateInfo createInfo = {};
-	createInfo.AppInfo = &appInfo;
-	createInfo.RenderContextInfo = &renderContextInfo;
-	createInfo.RendererInfo = &rendererInfo;
-	createInfo.ScriptEngineInfo = &scriptEngine;
-	createInfo.EntityComponent = &entity;
+	HazardCreateInfo createInfo = {
+		.AppInfo = &appInfo,
+		.RenderContextInfo = &renderContextInfo,
+		.RendererInfo = &rendererInfo,
+		.ScriptEngineInfo = &scriptEngine,
+		.EntityComponent = &entity,
+	};
 
 	CreateApplicationStack(&createInfo);
 	InitDefaultHooks();
@@ -120,6 +119,9 @@ void HazardEditorApplication::InitDefaultHooks()
 			case Severity::Error:
 				HZR_ERROR("Error: {}", message);
 				break;
+			default:
+				HZR_TRACE("Message: {}", message);
+				break;
 		}
 	});
 
@@ -127,10 +129,8 @@ void HazardEditorApplication::InitDefaultHooks()
 		switch (status)
 		{
 			case ThreadStatus::Failed:
-			{
 				HZR_ERROR("Thread {} failed: {}", thread->GetThreadID(), thread->GetCurrentJob()->GetName());
-			}
-			default: break;
+				break;
 		}
 	});
 }

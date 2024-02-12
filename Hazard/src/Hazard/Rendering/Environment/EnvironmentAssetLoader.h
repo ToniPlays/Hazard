@@ -4,12 +4,7 @@
 
 namespace Hazard
 {
-    struct EnvironmentAssetHeader
-    {
-        AssetHandle ImageHandle;
-        uint32_t Resolution;
-        uint32_t Samples;
-    };
+    class EnvironmentMap;
 
     class EnvironmentAssetLoader : public IAssetLoader
     {
@@ -20,6 +15,18 @@ namespace Hazard
         Ref<JobGraph> Load(AssetMetadata& metadata) override;
         Ref<JobGraph> Save(Ref<Asset> asset, const SaveAssetSettings& settings) override;
         Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
+
+        struct CreateSettings
+        {
+            uint32_t Resolution;
+            uint32_t Samples;
+        };
+
+    private:
+        static void SaveEnvironmentAsset(JobInfo& info, Ref<EnvironmentMap> map);
+        static void CreateImageFromSource(JobInfo& info, const std::filesystem::path& sourcePath);
+        static void GenerateEnvironmentMap(JobInfo& info, const CreateSettings& settings);
+        static void CreateEnvironmentAsset(JobInfo& info, uint32_t samples);
     };
 }
 #pragma once

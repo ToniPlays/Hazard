@@ -49,9 +49,9 @@ namespace Hazard
 		return world;
 	}
 
-	std::vector<AssetHandle> WorldDeserializer::GetReferencedAssets()
+	std::unordered_map<AssetHandle, uint32_t> WorldDeserializer::GetReferencedAssets()
 	{
-		std::vector<AssetHandle> handles;
+		std::unordered_map<AssetHandle, uint32_t> handles;
 		YAML::Node root = YAML::Load(m_Source.c_str());
 
 		if (!root["World"])
@@ -65,19 +65,19 @@ namespace Hazard
 				auto node = entities[i - 1];
 
 				//Deserialize components
-				GetReferencedAssets<CameraComponent>("CameraComponent", handles, node);
-				GetReferencedAssets<ScriptComponent>("ScriptComponent", handles, node);
+				TryGetReferencedAssets<CameraComponent>("CameraComponent", handles, node);
+				TryGetReferencedAssets<ScriptComponent>("ScriptComponent", handles, node);
 
-				GetReferencedAssets<SkyLightComponent>("SkyLightComponent", handles, node);
-				GetReferencedAssets<DirectionalLightComponent>("DirectionalLightComponent", handles, node);
-				GetReferencedAssets<PointLightComponent>("PointLightComponent", handles, node);
+				TryGetReferencedAssets<SkyLightComponent>("SkyLightComponent", handles, node);
+				TryGetReferencedAssets<DirectionalLightComponent>("DirectionalLightComponent", handles, node);
+				TryGetReferencedAssets<PointLightComponent>("PointLightComponent", handles, node);
 
-				GetReferencedAssets<MeshComponent>("MeshComponent", handles, node);
-				GetReferencedAssets<SpriteRendererComponent>("SpriteRendererComponent", handles, node);
+				TryGetReferencedAssets<MeshComponent>("MeshComponent", handles, node);
+				TryGetReferencedAssets<SpriteRendererComponent>("SpriteRendererComponent", handles, node);
 
-				GetReferencedAssets<Rigidbody2DComponent>("Rigidbody2DComponent", handles, node);
-				GetReferencedAssets<BoxCollider2DComponent>("BoxCollider2DComponent", handles, node);
-				GetReferencedAssets<CircleCollider2DComponent>("CircleCollider2DComponent", handles, node);
+				TryGetReferencedAssets<Rigidbody2DComponent>("Rigidbody2DComponent", handles, node);
+				TryGetReferencedAssets<BoxCollider2DComponent>("BoxCollider2DComponent", handles, node);
+				TryGetReferencedAssets<CircleCollider2DComponent>("CircleCollider2DComponent", handles, node);
 
 				m_Handler.Invoke(entities.size() - i, entities.size());
 			}
@@ -87,9 +87,15 @@ namespace Hazard
 	}
 
 	template<typename T>
-	void WorldDeserializer::TryDeserializeComponent(const char* key, Entity entity, YAML::Node node)
+	void WorldDeserializer::TryDeserializeComponent(const char* key, Entity entity, const YAML::Node& node)
 	{
 		if (node[key])
 			Deserialize<T>(entity, node[key]);
+	}
+	template<typename T>
+	void WorldDeserializer::TryGetReferencedAssets(const char* key, std::unordered_map<AssetHandle, uint32_t>& handles, const YAML::Node& node)
+	{
+		if (node[key])
+			GetReferencedAssets<T>(handles, node[key]);
 	}
 }

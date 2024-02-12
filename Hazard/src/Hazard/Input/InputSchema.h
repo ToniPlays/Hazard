@@ -61,12 +61,13 @@ namespace Hazard
 
 	struct InputBinding
 	{
+		uint32_t DeviceMask = 0;
+		uint32_t AxisMask = 0;
+
 		std::string Name;
 		std::vector<BindingGroup> Groups;
 		std::function<void(const InputBinding&, uint32_t)> Callback;
 
-		uint32_t DeviceMask = 0;
-		uint32_t AxisMask = 0;
 
 		bool IsPressed() const
 		{

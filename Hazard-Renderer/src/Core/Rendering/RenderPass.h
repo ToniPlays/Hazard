@@ -9,8 +9,8 @@ namespace HazardRenderer
 
 	struct RenderPassCreateInfo
 	{
-		Ref<FrameBuffer> pTargetFrameBuffer = nullptr;
 		std::string DebugName = "";
+		Ref<FrameBuffer> pTargetFrameBuffer = nullptr;
 	};
 
 	struct RenderPassSpecification

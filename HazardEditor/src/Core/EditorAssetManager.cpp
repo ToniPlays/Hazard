@@ -5,7 +5,7 @@
 #include "Utility/YamlUtils.h"
 #include "Hazard.h"
 #include <Hazard/RenderContext/ShaderAsset.h>
-#include <Core/GUIManager.h>
+#include "GUI/GUIManager.h"
 #include <GUI/Overlays/ProgressOverlay.h>
 
 #include <FileCache.h>
@@ -100,6 +100,7 @@ void EditorAssetManager::ImportEngineAssets()
 		JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Shader, settings);
 		promise.Then([cache](JobGraph& graph) {
 			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
+			if (!asset) return;
 
 			SaveAssetSettings settings = {};
 			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;

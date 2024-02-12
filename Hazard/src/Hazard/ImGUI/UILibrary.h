@@ -240,13 +240,7 @@ namespace Hazard::ImUI
 	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D> image, Ref<HazardRenderer::Sampler> sampler)
 	{
 		using namespace HazardRenderer;
-		static std::unordered_map<Image2D*, ImTextureID> cache;
-
-		/*if (cache.find(image.Raw()) != cache.end() && false)
-		{
-			if (cache[image.Raw()] != nullptr)
-				return cache[image.Raw()];
-		}*/
+		
 
 		switch (GraphicsContext::GetRenderAPI())
 		{
@@ -257,7 +251,18 @@ namespace Hazard::ImUI
 			#ifdef HZR_INCLUDE_VULKAN
 			case RenderAPI::Vulkan:
 			{
+
+				static std::unordered_map<VkImage, ImTextureID> cache;
+
 				Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
+				VkImage img = vkImage->GetVulkanImage();
+
+				if (cache.find(img) != cache.end())
+				{
+					if (cache[img] != nullptr)
+						return cache[img];
+				}
+
 				const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
 				const Ref<Vulkan::VulkanSampler>& vkSampler = sampler.As<Vulkan::VulkanSampler>();
 
@@ -265,12 +270,12 @@ namespace Hazard::ImUI
 				{
 					auto& white = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
 					const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();
-					cache[white.Raw()] = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), whiteImageDesc.imageView, whiteImageDesc.imageLayout);
-					return cache[white.Raw()];
+					cache[img] = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), whiteImageDesc.imageView, whiteImageDesc.imageLayout);
+					return cache[img];
 				}
 
 				ImTextureID id = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), imageInfo.imageView, imageInfo.imageLayout);
-				cache[image.Raw()] = id;
+				cache[img] = id;
 				return id;
 
 			}

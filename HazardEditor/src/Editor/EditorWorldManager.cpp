@@ -1,6 +1,6 @@
 #include "EditorWorldManager.h"
 #include "Hazard/ECS/WorldHandler.h"
-#include "Core/GUIManager.h"
+#include "GUI/GUIManager.h"
 #include "GUI/Overlays/ProgressOverlay.h"
 #include "Core/EditorEvent.h"
 #include "Core/HazardEditor.h"
@@ -24,17 +24,23 @@ namespace Editor
 	}
 	void EditorWorldManager::LoadWorld(AssetHandle handle)
 	{
+		Timer timer;
 		JobPromise promise = AssetManager::GetAssetAsync(handle);
-		promise.Then([](JobGraph& graph) {
+		promise.Then([timer](JobGraph& graph) {
 			Ref<World> result = graph.GetResult<Ref<World>>();
 			if (!result) return;
 
-			auto& handler = Application::GetModule<WorldHandler>();
-			handler.SetWorld(result);
-			s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
-
-			Events::SelectionContextChange e({});
-			HazardLoop::GetCurrent().OnEvent(e);
+			SetWorld(result);
+			HZR_INFO("World was loaded in {}ms", timer.ElapsedMillis());
 		});
+	}
+	void EditorWorldManager::SetWorld(Ref<Hazard::World> world)
+	{
+		auto& handler = Application::GetModule<WorldHandler>();
+		handler.SetWorld(world);
+		s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
+
+		Events::SelectionContextChange e({});
+		HazardLoop::GetCurrent().OnEvent(e);
 	}
 }
