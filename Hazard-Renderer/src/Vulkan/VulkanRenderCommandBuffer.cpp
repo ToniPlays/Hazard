@@ -639,7 +639,7 @@ namespace HazardRenderer::Vulkan
 			VkImageSubresourceRange range = {};
 			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			range.baseMipLevel = 0;
-			range.levelCount = 1;
+			range.levelCount = 1; 
 			range.layerCount = region.Extent.Depth;
 
 			VkBufferImageCopy imageCopyRegion = {};

@@ -22,7 +22,7 @@ namespace Hazard {
 		std::string AppName;
 		std::string BuildVersion;
 		bool Logging = false;
-		uint32_t MaxJobThreads = std::thread::hardware_concurrency();
+		uint32_t MaxWorkers = std::thread::hardware_concurrency();
 	};
 
 	struct RenderContextCreateInfo 

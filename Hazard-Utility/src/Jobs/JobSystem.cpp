@@ -164,7 +164,7 @@ void JobSystem::Terminate()
 	m_JobCount.notify_all();
 }
 
-JobPromise JobSystem::QueueGraph(Ref<JobGraph> graph)
+JobPromise JobSystem::QueueGraph(Ref<JobGraph> graph, bool notify)
 {
 	if (!graph)
 	{
@@ -179,8 +179,10 @@ JobPromise JobSystem::QueueGraph(Ref<JobGraph> graph)
 	m_GraphMutex.lock();
 	m_QueuedGraphs.push_back(graph);
 	m_GraphMutex.unlock();
+	
+	if(notify)
+		m_Hooks.Invoke(JobSystemHook::Submit, graph);
 
-	m_Hooks.Invoke(JobSystemHook::Submit, graph);
 	return JobPromise(graph);
 }
 

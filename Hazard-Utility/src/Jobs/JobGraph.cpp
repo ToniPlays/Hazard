@@ -90,7 +90,7 @@ void JobGraph::ContinueWith(const std::vector<Ref<Job>>& jobs)
 
 JobPromise JobGraph::SubGraph(Ref<JobGraph> graph)
 {
-	return m_JobSystem->QueueGraph(graph);
+	return m_JobSystem->QueueGraph(graph, false);
 }
 
 float JobGraph::GetProgress()

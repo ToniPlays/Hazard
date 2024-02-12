@@ -35,11 +35,18 @@ layout(push_constant) uniform PushConstant
 layout(location = 0) out vec4 OutputColor;
 layout(location = 1) out uint EntityID;
 
+#include "Utils/PostProcessing.glslh"
+
+const float gamma = 2.2;
+
 void main()
 {
 	int levelTexels = textureQueryLevels(u_CubeMap);
 	vec3 color = textureLod(u_CubeMap, v_Position, (u_PushConstants.LodLevel * levelTexels)).rgb;
-	OutputColor = vec4(color * u_PushConstants.Intensity, 1.0);
+	color *= u_PushConstants.Intensity;
+    color = GammaCorrect(color, gamma);
+
+	OutputColor = vec4(ACESTonemap(color), 1.0);
 
 	EntityID = 0;
 }

@@ -34,10 +34,13 @@ namespace Hazard
 	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip)
 	{
 		HZR_PROFILE_FUNCTION();
-
+		stbi_set_flip_vertically_on_load(verticalFlip);
+		return File::GetFileExtension(path) == ".hdr" ? LoadFloatTextureFromFile(path) : LoadByteTextureFromFile(path);
+	}
+	TextureHeader TextureFactory::LoadByteTextureFromFile(const std::filesystem::path& path)
+	{
 		int w, h, channels;
 		constexpr int desired = 4;
-		stbi_set_flip_vertically_on_load(verticalFlip);
 
 		CachedBuffer buffer = File::ReadBinaryFile(path);
 
@@ -60,4 +63,32 @@ namespace Hazard
 
 		return header;
 	}
+
+	TextureHeader TextureFactory::LoadFloatTextureFromFile(const std::filesystem::path& path)
+	{
+		int w, h, channels;
+		constexpr int desired = 4;
+
+		CachedBuffer buffer = File::ReadBinaryFile(path);
+
+		float* data = stbi_loadf_from_memory((stbi_uc*)buffer.GetData(), buffer.GetSize(), &w, &h, &channels, desired);
+		HZR_CORE_ASSERT(data, "Data not loaded correctly");
+
+		TextureHeader header = {
+			.Extent = {
+				.Width = (uint32_t)w,
+				.Height = (uint32_t)h,
+				.Depth = 1
+			},
+			.Channels = desired,
+			.Format = HazardRenderer::ImageFormat::RGBA32F,
+			.Mips = 1,
+			.ImageData = Buffer::Copy(data, w * h * desired * sizeof(float)),
+		};
+
+		stbi_image_free(data);
+
+		return header;
+	}
+
 }

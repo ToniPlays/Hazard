@@ -35,11 +35,26 @@ namespace Hazard
 		SkyboxConstants Constants;
 	};
 
+	struct MeshInstance
+	{
+		Ref<GPUBuffer> VertexBuffer;
+		Ref<GPUBuffer> IndexxBuffer;
+	};
+
+	struct MeshInstancesData
+	{
+		Ref<Pipeline> Pipeline;
+		Ref<DescriptorSet> DescriptorSet;
+		std::unordered_map<uint64_t, MeshInstance> Instances;
+	};
+
 	//Draw list for single world context
 	struct RendererDrawList
 	{
 		Ref<WorldRenderer> WorldRenderer;
 		EnvironmentData Environment;
+		//Material handle, instances
+		std::unordered_map<uint64_t, MeshInstancesData> Meshes;
 		DrawListStat Stats;
 	};
 }

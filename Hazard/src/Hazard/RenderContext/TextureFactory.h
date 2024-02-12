@@ -1,4 +1,3 @@
-#pragma once
 
 #include "Core/Core.h"
 #include "Buffer/Buffer.h"
@@ -25,5 +24,9 @@ namespace Hazard
 	public:
 		static TextureHeader LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip = false);
 		static uint32_t PixelSize(const HazardRenderer::ImageFormat& format);
+
+	private:
+		static TextureHeader LoadByteTextureFromFile(const std::filesystem::path& path);
+		static TextureHeader LoadFloatTextureFromFile(const std::filesystem::path& path);
 	};
 }

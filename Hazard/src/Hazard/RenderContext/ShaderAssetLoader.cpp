@@ -73,8 +73,7 @@ namespace Hazard
 		{
 			for (auto& [stage, source] : sources)
 			{
-				uint32_t flags = BIT(stage);
-				Ref<Job> job = Ref<Job>::Create(fmt::format("{} {}", RenderAPIToString((RenderAPI)api), Utils::ShaderStageToString(flags)), CompileShaderSourceCode, api, stage);
+				Ref<Job> job = Ref<Job>::Create(fmt::format("{} {}", RenderAPIToString((RenderAPI)api), Utils::ShaderStageToString(stage)), CompileShaderSourceCode, api, stage);
 				loadingJobs.push_back(job);
 			}
 		}
@@ -103,7 +102,7 @@ namespace Hazard
 		}
 		catch (std::exception e)
 		{
-			throw JobException(e.what());
+			throw JobException(fmt::format("Compile error: {}", e.what()));
 		}
 	}
 	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info)

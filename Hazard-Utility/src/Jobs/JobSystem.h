@@ -62,7 +62,7 @@ public:
 	void WaitForJobsToFinish();
 	void Terminate();
 
-	JobPromise QueueGraph(Ref<JobGraph> graph);
+	JobPromise QueueGraph(Ref<JobGraph> graph, bool notify = true);
 	uint64_t WaitForUpdate();
 
 	void Hook(JobSystemHook hook, const std::function<void(Ref<JobGraph>)>& callback)

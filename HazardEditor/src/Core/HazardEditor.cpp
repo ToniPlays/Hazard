@@ -33,7 +33,7 @@ void HazardEditorApplication::PreInit()
 	ApplicationCreateInfo appInfo = {
 		.AppName = "Hazard Editor",
 		.BuildVersion = HZR_BUILD_VERSION,
-		.MaxJobThreads = 8,
+		.MaxWorkers = 16,
 	};
 
 #ifdef HZR_RELEASE

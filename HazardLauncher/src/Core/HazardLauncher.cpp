@@ -14,7 +14,7 @@ void HazardLauncher::PreInit()
 		.AppName = "Hazard Launcher",
 		.BuildVersion = HZR_BUILD_VERSION,
 		.Logging = true,
-		.MaxJobThreads = 1,
+		.MaxWorkers = 1,
 	};
 
 	RenderContextCreateInfo renderContextInfo = {

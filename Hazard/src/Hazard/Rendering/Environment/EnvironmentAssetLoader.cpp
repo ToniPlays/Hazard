@@ -94,7 +94,7 @@ namespace Hazard
 		Image2DCreateInfo sourceImage = {
 			.DebugName = fmt::format("Env map source: {}", sourcePath.string()),
 			.Usage = ImageUsage::Texture,
-			.Format = ImageFormat::RGBA,
+			.Format = ImageFormat::RGBA32F,
 			.Extent = header.Extent,
 			.MaxMips = 1,
 			.Data = header.ImageData,
@@ -113,7 +113,7 @@ namespace Hazard
 			.Height = settings.Resolution,
 			.MaxMips = 64,
 			.Usage = ImageUsage::Texture,
-			.Format = ImageFormat::RGBA,
+			.Format = ImageFormat::RGBA16F,
 		};
 
 		DescriptorSetLayout layout = { { SHADER_STAGE_COMPUTE_BIT, "o_CubeMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE},
@@ -150,14 +150,9 @@ namespace Hazard
 		cmdBuffer->DispatchCompute({ settings.Resolution / 32, settings.Resolution / 32, 6 });
 		cmdBuffer->End();
 		cmdBuffer->Submit();
-		cmdBuffer->OnCompleted([info]() mutable {
-			info.ParentGraph->Continue();
-		});
 
 		cubemap->RegenerateMips();
-
 		info.Job->SetResult(cubemap);
-		info.ParentGraph->Halt();
 	}
 	void EnvironmentAssetLoader::CreateEnvironmentAsset(JobInfo& info, uint32_t samples)
 	{

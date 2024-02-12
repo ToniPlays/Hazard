@@ -140,8 +140,8 @@ namespace Hazard
 			
 			SamplerCreateInfo samplerInfo = {
 				.DebugName = "DefaultImageSampler",
-				.MinFilter = FilterMode::Linear,
-				.MagFilter = FilterMode::Linear,
+				.MinFilter = FilterMode::LinearMip,
+				.MagFilter = FilterMode::LinearMip,
 				.Wrapping = ImageWrap::Repeat,
 			};
 
