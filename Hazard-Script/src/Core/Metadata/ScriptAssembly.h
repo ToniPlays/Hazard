@@ -4,6 +4,7 @@
 #include "Ref.h"
 #include "Coral/Assembly.hpp"
 #include "Coral/HostInstance.hpp"
+#include "File.h"
 
 namespace HazardScript 
 {

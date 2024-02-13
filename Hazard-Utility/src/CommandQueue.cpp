@@ -41,6 +41,7 @@ void* CommandQueue::Allocate(CommandFn func, uint32_t size)
 	m_CommandCount++;
 	uint32_t dataSize = (uint32_t)((uint8_t*)m_CommandBufferPtr - (uint8_t*)m_CommandBuffer);
 	HZR_ASSERT(dataSize <= m_Size, "CommandQueue overflow");
+
 	return memory;
 }
 

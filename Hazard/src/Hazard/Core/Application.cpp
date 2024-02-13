@@ -6,6 +6,7 @@
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Scripting/ScriptEngine.h"
+#include "Hazard/ImGui/GUIManager.h"
 #include "Hazard/ECS/WorldHandler.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
@@ -33,6 +34,9 @@ namespace Hazard
 
 		if (info->RendererInfo)
 			PushModule<RenderEngine>(info->RendererInfo);
+
+		if (info->GuiInfo)
+			PushModule<GUIManager>(info->GuiInfo);
 
 		PushModule<InputManager>();
 	}

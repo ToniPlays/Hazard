@@ -2,7 +2,6 @@
 #include "AssetPanel.h"
 #include "Core/EditorAssetManager.h"
 #include "Editor/EditorScriptManager.h"
-#include "GUI/GUIManager.h"
 #include "GUI/AllPanels.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/ImGUI/UIElements/Treenode.h"
@@ -13,6 +12,7 @@
 #include <Directory.h>
 #include <Platform/OS.h>
 #include <Editor/EditorWorldManager.h>
+#include <Hazard/ImGUI/GUIManager.h>
 
 namespace UI
 {
@@ -91,7 +91,7 @@ namespace UI
 		std::filesystem::path file = File::OpenFileDialog();
 		if (file.empty()) return;
 
-		auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
+		auto panel = Application::Get().GetModule<Hazard::GUIManager>().GetRenderable<AssetImporterPanel>();
 		panel->Open(file);
 	}
 	void AssetPanel::DrawToolbar()
@@ -273,7 +273,7 @@ namespace UI
 
 			ImUI::MenuHeader("Quick create");
 			ImUI::MenuItem("Script", [&]() {
-				auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+				auto panel = Application::Get().GetModule<GUIManager>().GetRenderable<ScriptCreatePanel>();
 				panel->SetDirectory(GetOpenDirectory());
 				panel->Open();
 			});
@@ -289,7 +289,7 @@ namespace UI
 			ImUI::Submenu("Animation", nullptr);
 			ImUI::Submenu("Scripts", [&]() {
 				ImUI::MenuItem("Entity script", [&]() {
-					ScriptCreatePanel* panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<ScriptCreatePanel>();
+					ScriptCreatePanel* panel = Application::Get().GetModule<GUIManager>().GetRenderable<ScriptCreatePanel>();
 					panel->SetDirectory(GetOpenDirectory());
 					panel->Open();
 				});

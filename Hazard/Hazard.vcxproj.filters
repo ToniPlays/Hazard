@@ -210,9 +210,6 @@
     <ClInclude Include="src\Hazard\ImGUI\Panel.h">
       <Filter>src\Hazard\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\ImGUI\PanelManager.h">
-      <Filter>src\Hazard\ImGUI</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\ImGUI\ScopedVar.h">
       <Filter>src\Hazard\ImGUI</Filter>
     </ClInclude>
@@ -459,6 +456,12 @@
     <ClInclude Include="src\Hazard\Rendering\Mesh\Importers\AssimpImporter.h" />
     <ClInclude Include="src\Hazard\Rendering\Mesh\Importers\MeshImporter.h" />
     <ClInclude Include="src\Hazard\Rendering\Mesh\Importers\GLTFImporter.h" />
+    <ClInclude Include="src\Hazard\ImGUI\GUIManager.h" />
+    <ClInclude Include="src\Hazard\ImGUI\Platform\Metal\GUIPlatformMetal.h" />
+    <ClInclude Include="src\Hazard\ImGUI\Platform\OpenGL\GUIPlatformOpenGL.h" />
+    <ClInclude Include="src\Hazard\ImGUI\Platform\Vulkan\GUIPlatformVulkan.h" />
+    <ClInclude Include="src\Hazard\ImGUI\Platform\GUIPlatform.h" />
+    <ClInclude Include="src\Hazard\ImGUI\Platform\RenderPlatforms.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -510,9 +513,6 @@
       <Filter>src\Hazard\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\Dockspace.cpp">
-      <Filter>src\Hazard\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Hazard\ImGUI\PanelManager.cpp">
       <Filter>src\Hazard\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\StyleManager.cpp">
@@ -641,5 +641,8 @@
     <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp" />
     <ClCompile Include="src\Hazard\Rendering\Mesh\Importers\AssimpImporter.cpp" />
     <ClCompile Include="src\Hazard\Rendering\Mesh\Importers\GLTFImporter.cpp" />
+    <ClCompile Include="src\Hazard\ImGUI\GUIManager.cpp" />
+    <ClCompile Include="src\Hazard\ImGUI\Platform\OpenGL\GUIPlatformOpenGL.cpp" />
+    <ClCompile Include="src\Hazard\ImGUI\Platform\Vulkan\GUIPlatformVulkan.cpp" />
   </ItemGroup>
 </Project>

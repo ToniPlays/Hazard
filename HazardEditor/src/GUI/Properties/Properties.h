@@ -3,6 +3,7 @@
 #include "Hazard.h"
 #include "Core/EditorEvent.h"
 #include "Editor/EditorUtils.h"
+#include "Hazard/ImGUI/Panel.h"
 
 namespace UI
 {
@@ -29,9 +30,11 @@ namespace UI
 		bool canAdd = !AllEntitiesContain<T>(entities);
 
 		if (!canAdd) ImGui::BeginDisabled();
+
 		ImUI::MenuItem(title, [&]() {
 			AddComponentToAll<T>(m_SelectionContext);
 		});
+
 		if (!canAdd) ImGui::EndDisabled();
 	}
 }

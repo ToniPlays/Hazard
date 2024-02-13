@@ -15,10 +15,11 @@ namespace Hazard
 		if (!loadedWorld) 
 			return false;
 
-		auto& handler = Application::GetModule<WorldHandler>();
+		auto& handler = Application::Get().GetModule<WorldHandler>();
 		handler.OnEnd();
 		handler.SetWorld(loadedWorld);
 		handler.OnBegin();
+
 		return true;
 	}
 	static bool WorldManager_LoadWorldFromString_Native(Coral::String name)

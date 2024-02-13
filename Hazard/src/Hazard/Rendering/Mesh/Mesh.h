@@ -13,10 +13,10 @@ namespace Hazard
 	{
 		std::string NodeName;
 		uint64_t NodeID;
-		uint32_t VertexCount;
-		uint32_t IndexCount;
-		uint32_t VertexOffset;
-		uint32_t IndexOffset;
+		uint64_t VertexCount;
+		uint64_t IndexCount;
+		uint64_t VertexOffset;
+		uint64_t IndexOffset;
 	};
 
 	class Mesh : public Asset

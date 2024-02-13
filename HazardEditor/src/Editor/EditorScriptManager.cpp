@@ -6,11 +6,10 @@
 #include "Hazard.h"
 #include "File.h"
 #include "Core/MessageFlags.h"
-#include "GUI/GUIManager.h"
-
 #include "Core/HazardEditor.h"
 
 #include "Platform/OS.h"
+#include <Hazard/ImGUI/GUIManager.h>
 
 namespace Editor
 {
@@ -74,8 +73,8 @@ namespace Editor
 		OS::SysCall(command.c_str());
 		HZR_INFO("Compiled source files");
 
-		auto& manager = Hazard::Application::GetModule<GUIManager>();
-		auto console = manager.GetPanelManager().GetRenderable<UI::Console>();
+		auto& manager = Hazard::Application::Get().GetModule<Hazard::GUIManager>();
+		auto console = manager.GetRenderable<UI::Console>();
 		if (!console) return;
 
 		std::vector<UI::ConsoleMessage> messages = ParseBuildResult(File::ReadFile(buildPath / "build.hlog"));
@@ -86,11 +85,11 @@ namespace Editor
 	void EditorScriptManager::ReloadAssembly()
 	{
 		EditorModeManager::EndPlayMode();
-		Hazard::Application::GetModule<Hazard::ScriptEngine>().ReloadAssemblies();
+		Hazard::Application::Get().GetModule<Hazard::ScriptEngine>().ReloadAssemblies();
 	}
 	void EditorScriptManager::RecompileAndLoad()
 	{
-		auto console = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::Console>();
+		auto console = Application::Get().GetModule<GUIManager>().GetRenderable<UI::Console>();
 
 		if (console->ClearOnBuild())
 			console->Clear(true);

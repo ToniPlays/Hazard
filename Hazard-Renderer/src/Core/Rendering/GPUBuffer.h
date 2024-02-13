@@ -2,6 +2,7 @@
 
 #include "BufferLayout.h"
 #include "Core/Core.h"
+#include "Buffer/Buffer.h"
 
 namespace HazardRenderer
 {
@@ -40,7 +41,7 @@ namespace HazardRenderer
 
 		virtual const std::string& GetDebugName() const = 0;
 
-		virtual CachedBuffer ReadData(const BufferCopyRegion& copyRegion) = 0;
+		virtual Buffer ReadData(const BufferCopyRegion& copyRegion) = 0;
 		virtual void SetData(const BufferCopyRegion& copyRegion) = 0;
 		virtual const uint32_t GetUsageFlags() const = 0;
         virtual const uint64_t GetSize() const = 0;

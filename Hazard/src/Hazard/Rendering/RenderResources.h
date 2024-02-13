@@ -68,8 +68,8 @@ namespace Hazard
 		AssetHandle BRDFLutHandle;
 
 		Ref<Texture2DAsset> BRDFLut;
-		Ref<CubemapTexture> BlackCubemap;
-		Ref<CubemapTexture> WhiteCubemap;
+		Ref<Cubemap> BlackCubemap;
+		Ref<Cubemap> WhiteCubemap;
 		Ref<Sampler> DefaultImageSampler;
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
@@ -109,9 +109,9 @@ namespace Hazard
 			CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
 			WorldDescriptor->Write(0, CameraUniformBuffer, true);
 
-			auto& resources = Application::GetModule<RenderContextManager>().GetDefaultResources();
+			auto& resources = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources();
 
-			CubemapTextureCreateInfo blackCubemap = {
+			CubemapCreateInfo blackCubemap = {
 				.DebugName = "BlackCubemap",
 				.Width = 1,
 				.Height = 1,
@@ -120,13 +120,13 @@ namespace Hazard
 				.Format = ImageFormat::RGBA,
 			};
 
-			BlackCubemap = CubemapTexture::Create(&blackCubemap);
+			BlackCubemap = Cubemap::Create(&blackCubemap);
 
 			Buffer data;
 			data.Allocate(6 * sizeof(uint32_t));
 			data.Initialize(0xFF);
 
-			CubemapTextureCreateInfo whiteCubemap = {
+			CubemapCreateInfo whiteCubemap = {
 				.DebugName = "WhiteCubemap",
 				.Width = 1,
 				.Height = 1,
@@ -135,7 +135,7 @@ namespace Hazard
 				.Data = data,
 			};
 
-			WhiteCubemap = CubemapTexture::Create(&whiteCubemap);
+			WhiteCubemap = Cubemap::Create(&whiteCubemap);
 			data.Release();
 			
 			SamplerCreateInfo samplerInfo = {

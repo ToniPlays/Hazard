@@ -16,7 +16,7 @@ namespace UI
 {
 	using namespace Hazard;
 
-	ProjectSettingsPanel::ProjectSettingsPanel() : Hazard::ImUI::Panel("Project Settings", false)
+	ProjectSettingsPanel::ProjectSettingsPanel() : Hazard::ImUI::Panel("Project Settings")
 	{
 		m_SearchField = ImUI::TextField("");
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
@@ -303,7 +303,7 @@ namespace UI
 	{
 		HazardEditorApplication& app = (HazardEditorApplication&)Application::Get();
 		auto& predefined = app.GetScriptManager().GetPreprocessorDefines();
-		auto& manager = Application::GetModule<ProjectManager>();
+		auto& manager = Application::Get().GetModule<ProjectManager>();
 		auto& project = manager.GetProject();
 
 		DrawScriptDefineList(&project.GetScriptingSettings().Defines);

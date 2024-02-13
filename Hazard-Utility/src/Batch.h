@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
+#include "Buffer/Buffer.h"
 
 template<typename Type>
 class Batch 

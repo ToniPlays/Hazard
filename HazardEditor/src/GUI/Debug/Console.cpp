@@ -9,8 +9,8 @@ namespace UI
 {
 	Console::Console() : Panel("Console")
 	{
-		auto& window = Application::GetModule<RenderContextManager>().GetWindow();
-		auto& scriptEngine = Application::GetModule<ScriptEngine>();
+		auto& window = Application::Get().GetModule<RenderContextManager>().GetWindow();
+		auto& scriptEngine = Application::Get().GetModule<ScriptEngine>();
 
 		window.AddDebugCallback([this](const RenderMessage& message) {
 			uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);

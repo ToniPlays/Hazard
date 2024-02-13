@@ -14,7 +14,7 @@
 
 #include "Textures/VulkanImage2D.h"
 #include "Textures/VulkanSampler.h"
-#include "Textures/VulkanCubemapTexture.h"
+#include "Textures/VulkanCubemap.h"
 
 #include "RTCore/VulkanTopLevelAS.h"
 #include "RTCore/VulkanBottomLevelAS.h"

@@ -7,10 +7,10 @@ namespace HazardRenderer
 {
 	struct Extent;
 
-	enum class TextureType 
+	enum class ImageType 
 	{
 		Image2D,
-		CubemapTexture
+		Cubemap
 	};
 
 	enum class ImageFormat
@@ -44,14 +44,16 @@ namespace HazardRenderer
 	public:
 		virtual ~Image() = default;
 
-		virtual void Invalidate() = 0;
-		virtual void Release() = 0;
 
-		virtual TextureType GetType() const = 0;
+		virtual const std::string& GetDebugName() const = 0;
+		virtual ImageFormat GetFormat() const = 0;
+		virtual ImageType GetType() const = 0;
 
 		virtual const Extent& GetExtent() const = 0;
 		virtual uint32_t GetMipLevels() const = 0;
+		virtual float GetAspectRatio() const = 0;
 
-		virtual float GetAspectRatio() = 0;
+		virtual void Invalidate() = 0;
+		virtual void Release() = 0;
 	};
 }

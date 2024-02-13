@@ -56,8 +56,8 @@ namespace Hazard
 		JobGraphInfo info = {
 			.Name = "Mesh create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Preprocess", 0.6f, { preprocessJob } },
-						{ "Dependency load", 0.3f, { } },
+			.Stages = { { "Preprocess", 0.2f, { preprocessJob } },
+						{ "Dependency load", 0.7f, { } },
 						{ "Finalize", 0.1f, { finalize } }
 			},
 		};
@@ -72,7 +72,11 @@ namespace Hazard
 		});
 
 		auto metadata = importer->GetSceneMetadata();
+		if (metadata.MeshCount == 0)
+			throw JobException("No meshes found in file");
+
 		auto textures = importer->GetTextures();
+		auto materials = importer->GetMaterials();
 		auto meshes = importer->GetMeshes();
 		auto animations = importer->GetAnimations();
 
@@ -149,8 +153,8 @@ namespace Hazard
 		cmdBuffer->OnCompleted([info, vertexReadback, indexReadback]() mutable {
 			struct Result
 			{
-				CachedBuffer Vertex;
-				CachedBuffer Index;
+				Buffer Vertex;
+				Buffer Index;
 			} result;
 
 			BufferCopyRegion vertexRegion = {
@@ -174,8 +178,8 @@ namespace Hazard
 	{
 		struct Result
 		{
-			CachedBuffer Vertex;
-			CachedBuffer Index;
+			Buffer Vertex;
+			Buffer Index;
 		} result = info.ParentGraph->GetResult<Result>();
 
 		auto meshData = mesh->GetSubmeshData();
@@ -184,8 +188,8 @@ namespace Hazard
 		for (auto& [uid, submesh] : meshData)
 			nodeNameLength += submesh.NodeName.length() + sizeof(uint64_t);
 
-		CachedBuffer buf;
-		buf.Allocate(sizeof(MeshFileHeader) + sizeof(SubmeshHeader) * meshData.size() + nodeNameLength + result.Vertex.GetSize() + result.Index.GetSize());
+		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
+		buf->Allocate(sizeof(MeshFileHeader) + sizeof(SubmeshHeader) * meshData.size() + nodeNameLength + result.Vertex.Size + result.Index.Size);
 
 		MeshFileHeader meshHeader = {
 			.SubmeshCount = meshData.size(),
@@ -193,7 +197,7 @@ namespace Hazard
 			.IndexCount = result.Index.GetSize() / sizeof(uint32_t),
 		};
 
-		buf.Write(meshHeader);
+		buf->Write(meshHeader);
 
 		uint32_t progress = 0;
 		for (auto& [uid, submesh] : meshData)
@@ -206,17 +210,19 @@ namespace Hazard
 				.IndexOffset = submesh.IndexOffset,
 			};
 
-			buf.Write(header);
-			buf.Write(submesh.NodeName);
+			buf->Write(header);
+			buf->Write(submesh.NodeName);
 
 			progress++;
 			info.Job->Progress((float)progress / (float)meshData.size());
 		}
 
-		buf.Write(result.Vertex);
-		buf.Write(result.Index);
-
+		buf->Write<Buffer>(result.Vertex);
+		buf->Write<Buffer>(result.Index);
 		info.Job->SetResult(buf);
+
+		result.Vertex.Release();
+		result.Index.Release();
 	}
 	void MeshAssetLoader::CreateMeshFromSource(JobInfo& info, AssetHandle handle)
 	{
@@ -225,20 +231,20 @@ namespace Hazard
 		if (!File::Exists(metadata.FilePath))
 			throw JobException("File does not exist");
 
-		CachedBuffer buffer = File::ReadBinaryFile(metadata.FilePath);
+		Ref<CachedBuffer> buffer = File::ReadBinaryFile(metadata.FilePath);
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
 
-		MeshFileHeader header = pack.AssetData.Read<MeshFileHeader>();
+		MeshFileHeader header = pack.AssetData->Read<MeshFileHeader>();
 
 		std::unordered_map<uint64_t, SubmeshData> submeshes;
 
 		for (uint32_t i = 0; i < header.SubmeshCount; i++)
 		{
-			SubmeshHeader subHeader = pack.AssetData.Read<SubmeshHeader>();
+			SubmeshHeader subHeader = pack.AssetData->Read<SubmeshHeader>();
 
 			SubmeshData submeshData = {
-				.NodeName = pack.AssetData.Read<std::string>(),
+				.NodeName = pack.AssetData->Read<std::string>(),
 				.NodeID = subHeader.NodeID,
 				.VertexCount = subHeader.VertexCount,
 				.IndexCount = subHeader.IndexCount,
@@ -251,8 +257,8 @@ namespace Hazard
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create();
 
-		Buffer vertices = pack.AssetData.Read<Buffer>(header.VertexCount * sizeof(Vertex3D));
-		Buffer indices = pack.AssetData.Read<Buffer>(header.IndexCount * sizeof(uint32_t));
+		Buffer vertices = pack.AssetData->Read<Buffer>(header.VertexCount * sizeof(Vertex3D));
+		Buffer indices = pack.AssetData->Read<Buffer>(header.IndexCount * sizeof(uint32_t));
 		mesh->GenerateMesh(submeshes, vertices, indices);
 
 		info.Job->SetResult(mesh);

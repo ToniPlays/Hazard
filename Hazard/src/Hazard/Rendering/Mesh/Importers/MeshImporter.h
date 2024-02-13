@@ -12,6 +12,21 @@ namespace Hazard
 	{
 	public:
 
+		enum class TextureType
+		{
+			Albedo,
+			Diffuse,
+			Specular,
+			Emission,
+			Metalness,
+			Normal,
+			Height,
+			Shininess,
+			Displacement,
+			Lightmap,
+			Reflection
+		};
+
 		struct SceneMetadata
 		{
 			uint32_t AnimationCount;
@@ -22,10 +37,17 @@ namespace Hazard
 			uint32_t TextureCount;
 		};
 
-		struct TextureData
+		struct TextureMetadata
 		{
-			std::string Filename;
-			Buffer TextureData;
+			std::string Name;
+			uint32_t TextureIndex;
+		};
+
+		struct MaterialMetadata
+		{
+			std::string Name;
+			uint32_t PropertyCount;
+			std::unordered_map<TextureType, uint32_t> Textures;
 		};
 
 		struct MeshMetadata
@@ -56,13 +78,14 @@ namespace Hazard
 		};
 
 		virtual SceneMetadata GetSceneMetadata() = 0;
-		virtual std::vector<TextureData> GetTextures() = 0;
+		virtual std::vector<MeshImporter::TextureMetadata> GetTextures() = 0;
+		virtual std::vector<MaterialMetadata> GetMaterials() = 0;
 		virtual std::vector<MeshMetadata> GetMeshes() = 0;
 		virtual MeshData GetMeshData(const MeshMetadata& mesh, const std::function<void(uint32_t, uint32_t)>& progress = nullptr) = 0;
 		virtual std::vector<AnimationData> GetAnimations() = 0;
+		virtual glm::mat4 GetMeshTransform(uint32_t meshIndex) = 0;
 
 		virtual void AddImportProgressCallback(const std::function<void(float)> callback) = 0;
 
-		virtual glm::mat4 GetMeshTransform(uint32_t meshIndex) = 0;
 	};
 }

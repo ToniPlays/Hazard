@@ -9,7 +9,7 @@
 #include "Pipeline/VulkanGPUBuffer.h"
 #include "Pipeline/VulkanPipeline.h"
 #include "Pipeline/VulkanShader.h"
-#include "Textures/VulkanCubemapTexture.h"
+#include "Textures/VulkanCubemap.h"
 #include "RTCore/VulkanShaderBindingTable.h"
 #include "RTCore/VulkanTopLevelAS.h"
 #include "RTCore/VulkanBottomLevelAS.h"
@@ -620,7 +620,7 @@ namespace HazardRenderer::Vulkan
 			HZR_PROFILE_FUNCTION();
 			VulkanAllocator allocator("VulkanImage2D");
 
-			VkImage image = destinationImage->GetType() == TextureType::Image2D ? destinationImage.As<VulkanImage2D>()->GetVulkanImage() : destinationImage.As<VulkanCubemapTexture>()->GetVulkanImage();
+			VkImage image = destinationImage->GetType() == ImageType::Image2D ? destinationImage.As<VulkanImage2D>()->GetVulkanImage() : destinationImage.As<VulkanCubemap>()->GetVulkanImage();
 
 			VkBufferCreateInfo stagingInfo = {};
 			stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -721,7 +721,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance, blitInfo]() mutable {
 
-			VkImage image = blitInfo.Image->GetType() == TextureType::Image2D ? blitInfo.Image.As<VulkanImage2D>()->GetVulkanImage() : blitInfo.Image.As<VulkanCubemapTexture>()->GetVulkanImage();
+			VkImage image = blitInfo.Image->GetType() == ImageType::Image2D ? blitInfo.Image.As<VulkanImage2D>()->GetVulkanImage() : blitInfo.Image.As<VulkanCubemap>()->GetVulkanImage();
 
 			// Source
 			VkImageBlit blit = {};
@@ -761,7 +761,7 @@ namespace HazardRenderer::Vulkan
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance, imageMemory]() mutable {
-			VkImage image = imageMemory.Image->GetType() == TextureType::Image2D ? imageMemory.Image.As<VulkanImage2D>()->GetVulkanImage() : imageMemory.Image.As<VulkanCubemapTexture>()->GetVulkanImage();
+			VkImage image = imageMemory.Image->GetType() == ImageType::Image2D ? imageMemory.Image.As<VulkanImage2D>()->GetVulkanImage() : imageMemory.Image.As<VulkanCubemap>()->GetVulkanImage();
 
 			VkImageSubresourceRange range = {};
 			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;

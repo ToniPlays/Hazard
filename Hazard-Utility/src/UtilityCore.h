@@ -9,6 +9,7 @@
 #include <chrono>
 #include "HazardRuntimeError.h"
 #include "Profiling/Instrumentor.h"
+#include <cassert>
 
 //#define HZR_PROFILE
 //#define HZR_OPTICK
@@ -19,8 +20,7 @@
 #endif
 
 #define THROW_EXCEPT(x) throw std::runtime_error(std::string("[Hazard-Utility]: " x))
-#define STATIC_ASSERT(x, Type) HZR_THROW("This no use"); 
-//static_assert(x, __FUNCSIG__)
+
 #ifdef HZR_DEBUG
 	#ifndef HZR_ASSERT
 		#define HZR_ASSERT(x, m) if(!(x)) { std::cout << (m) << std::endl; assert(false); }

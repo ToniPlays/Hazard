@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Utility/StringUtil.h"
+#include "File.h"
 
 namespace Hazard
 {

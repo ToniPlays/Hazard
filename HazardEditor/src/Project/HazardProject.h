@@ -6,6 +6,7 @@
 #include "Directory.h"
 
 #include "ProjectSettingsSchema.h"
+#include "File.h"
 
 class HazardProject
 {

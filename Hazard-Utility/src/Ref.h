@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <assert.h>
-
 #include "UtilityCore.h"
 
 class RefCount
@@ -34,14 +33,10 @@ class Ref
 {
 public:
 	Ref()
-		: m_Instance(nullptr)
-	{
-	}
+		: m_Instance(nullptr) {}
 
 	Ref(std::nullptr_t n)
-		: m_Instance(nullptr)
-	{
-	}
+		: m_Instance(nullptr) {}
 
 	Ref(T* instance)
 		: m_Instance(instance)

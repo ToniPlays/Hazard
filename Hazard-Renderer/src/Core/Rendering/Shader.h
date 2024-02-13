@@ -4,6 +4,8 @@
 #include "ShaderDataType.h"
 #include "Core/RTCore/AccelerationStructure.h"
 
+#include "Buffer/Buffer.h"
+
 #include <unordered_map>
 #include <vector>
 

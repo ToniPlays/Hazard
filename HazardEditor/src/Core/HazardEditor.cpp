@@ -2,10 +2,9 @@
 #include "HazardEditor.h"
 #include "Hazard/Core/EntryPoint.h"
 
+#include "HazardScript.h"
 #include "HazardRendererCore.h"
 #include "Project/ProjectManager.h"
-#include "GUI/GUIManager.h"
-#include "HazardScript.h"
 #include "Editor/EditorWorldManager.h"
 
 #include "Hazard/RenderContext/RenderContextManager.h"
@@ -13,6 +12,10 @@
 
 #include "EditorAssetManager.h"
 #include "spdlog/fmt/fmt.h"
+#include <Hazard/ImGUI/GUIManager.h>
+
+#include "GUI/MainMenuBar.h"
+#include "GUI/AllPanels.h"
 
 using namespace Hazard;
 using namespace HazardScript;
@@ -64,12 +67,17 @@ void HazardEditorApplication::PreInit()
 		.AppAssemblyPath = appAssemblyPath
 	};
 
+	GuiCreateInfo guiInfo = {
+		.Title = "Editor",
+	};
+
 	HazardCreateInfo createInfo = {
 		.AppInfo = &appInfo,
 		.RenderContextInfo = &renderContextInfo,
 		.RendererInfo = &rendererInfo,
 		.ScriptEngineInfo = &scriptEngine,
 		.EntityComponent = &entity,
+		.GuiInfo = &guiInfo,
 	};
 
 	CreateApplicationStack(&createInfo);
@@ -85,14 +93,13 @@ void HazardEditorApplication::PreInit()
 void HazardEditorApplication::Init()
 {
 	EditorAssetManager::LoadEditorAssets();
-
 	Editor::EditorWorldManager::Init();
-	PushModule<GUIManager>();
 
 	auto& scriptEngine = GetModule<ScriptEngine>();
 	scriptEngine.ReloadAssemblies();
-
 	m_ScriptManager.Init();
+
+	InitializeGUIPanels();
 }
 
 void HazardEditorApplication::Update()
@@ -119,9 +126,6 @@ void HazardEditorApplication::InitDefaultHooks()
 			case Severity::Error:
 				HZR_ERROR("Error: {}", message);
 				break;
-			default:
-				HZR_TRACE("Message: {}", message);
-				break;
 		}
 	});
 
@@ -133,6 +137,19 @@ void HazardEditorApplication::InitDefaultHooks()
 				break;
 		}
 	});
+}
+
+void HazardEditorApplication::InitializeGUIPanels()
+{
+	auto& manager = GetModule<GUIManager>();
+	manager.SetMenubar<UI::MainMenuBar>();
+	manager.New<UI::Console>();
+	manager.New<UI::AssetPanel>();
+	manager.New<UI::GameViewport>();
+	manager.New<UI::Viewport>();
+	manager.New<UI::Hierarchy>();
+	manager.New<UI::Properties>();
+	manager.New<UI::ProgressOverlay>();
 }
 
 Hazard::Application* Hazard::CreateApplication()

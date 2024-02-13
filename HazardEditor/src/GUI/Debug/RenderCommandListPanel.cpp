@@ -12,7 +12,7 @@ namespace UI
 	void RenderCommandListPanel::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
-		RenderEngine& engine = Application::GetModule<RenderEngine>();
+		RenderEngine& engine = Application::Get().GetModule<RenderEngine>();
 		auto& drawList = engine.GetDrawLists();
 
 		for (auto& list : drawList)

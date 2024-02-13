@@ -1,8 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "Buffer/CachedBuffer.h"
-
+#include "Ref.h"
 #include <fstream>
 #include <cstdlib>
 
@@ -25,6 +24,8 @@ enum class CopyOptions
 	DirectoriesOnly = (int)std::filesystem::copy_options::directories_only
 };
 
+class CachedBuffer;
+
 class File 
 {
 public:
@@ -37,7 +38,7 @@ public:
 	static std::filesystem::path FindAvailableName(const std::filesystem::path& directory, const std::string& name, const std::string& extension);
     static std::filesystem::path Relative(const std::filesystem::path& base, const std::filesystem::path& path);
 
-	static CachedBuffer ReadBinaryFile(const std::filesystem::path& path);
+	static Ref<CachedBuffer> ReadBinaryFile(const std::filesystem::path& path);
 	static std::string ReadFile(const std::filesystem::path& file);
 
 	static bool WriteBinaryFile(const std::filesystem::path& path, void* data, uint64_t size);

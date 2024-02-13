@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Rendering/Texture.h"
+#include "Core/Rendering/Cubemap.h"
 
 #ifdef HZR_INCLUDE_METAL
 
@@ -14,7 +14,7 @@ namespace HazardRenderer::Metal
     {
     public:
         MetalCubemapTexture() = default;
-        MetalCubemapTexture(CubemapTextureCreateInfo* createInfo);
+        MetalCubemapTexture(CubemapCreateInfo* createInfo);
         
         ImageFormat GetFormat() const override { return m_Format; };
         uint32_t GetWidth() const override { return m_Width; };

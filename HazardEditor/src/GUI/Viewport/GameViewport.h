@@ -4,6 +4,7 @@
 #include "TransformationGizmo.h"
 #include "Hazard/Rendering/Renderers/WorldRenderer.h"
 #include "HazardRendererCore.h"
+#include "Hazard/ImGUI/Panel.h"
 
 namespace UI
 {

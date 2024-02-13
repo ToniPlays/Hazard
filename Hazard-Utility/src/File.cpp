@@ -2,6 +2,7 @@
 #include "UtilityCore.h"
 #include "File.h"
 #include "Utility/StringUtil.h"
+#include "Buffer/CachedBuffer.h"
 #include "portable-file-dialogs.h"
 #include <format>
 
@@ -124,21 +125,21 @@ std::string File::ReadFile(const std::filesystem::path& file)
 
 	return result;
 }
-CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
+Ref<CachedBuffer> File::ReadBinaryFile(const std::filesystem::path& path)
 {
 	std::ifstream stream(path, std::ios::binary | std::ios::ate);
 
 	if (!stream.is_open())
-		return CachedBuffer(0);
+		return nullptr;
 
 	auto size = stream.tellg();
 	stream.seekg(0, std::ios::beg);
 
-	if (size == 0) return CachedBuffer();
+	if (size == 0) return nullptr;
 
-	CachedBuffer result((uint32_t)size);
+	Ref<CachedBuffer> result = Ref<CachedBuffer>::Create((uint32_t)size);
 
-	stream.read((char*)result.GetData(), size);
+	stream.read((char*)result->GetData(), size);
 	stream.close();
 	return result;
 }

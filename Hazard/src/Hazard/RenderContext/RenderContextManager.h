@@ -16,7 +16,6 @@ namespace Hazard
 		void PostRender() override;
 
 		HazardRenderer::Window& GetWindow() { return *m_Window; }
-		HazardRenderer::DefaultResources& GetDefaultResources() { return m_Window->GetContext()->GetDefaultResources(); }
 
 	private:
 		HazardRenderer::Window* m_Window;

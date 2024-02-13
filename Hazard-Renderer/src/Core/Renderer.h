@@ -33,6 +33,8 @@ namespace HazardRenderer
 				s_CommandQueue.ResourceFreeCommandQueue[i] = hnew CommandQueue(1 MB);
 		}
 
+		static uint64_t GetRenderedFrameCount() { return s_RenderedFrames; }
+
 		static void WaitAndRender()
 		{
 			HZR_PROFILE_FUNCTION();

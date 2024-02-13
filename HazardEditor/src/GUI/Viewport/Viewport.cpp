@@ -36,7 +36,7 @@ namespace UI
 
 		m_EditorGrid.Invalidate(m_RenderPass);
 
-		m_RaytracingSettings = Application::GetModule<RenderContextManager>().GetWindow().GetContext()->GetDevice()->SupportsRaytracing();
+		m_RaytracingSettings = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDevice()->SupportsRaytracing();
 
 		m_ImageSampler = RenderEngine::GetResources().DefaultImageSampler;
 	}
@@ -280,7 +280,7 @@ namespace UI
 		ImGui::Text("%.2f", 1.0 / Time::s_DeltaTime);
 		ImGui::Columns();
 
-		auto& renderEngine = Application::GetModule<RenderEngine>();
+		auto& renderEngine = Application::Get().GetModule<RenderEngine>();
 		uint32_t flags = renderEngine.GetFlags();
 
 		ImUI::Dropdown shading("Shading", 80);
@@ -303,7 +303,7 @@ namespace UI
 		{
 			RendererSettings settings = renderEngine.GetSettings();
 			if (ImUI::Checkbox("RTX", settings.Raytraced))
-				Application::GetModule<RenderEngine>().GetSettings() = settings;
+				Application::Get().GetModule<RenderEngine>().GetSettings() = settings;
 		}
 
 		ImGui::Columns();

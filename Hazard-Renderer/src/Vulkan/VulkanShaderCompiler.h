@@ -5,6 +5,7 @@
 
 #include "File.h"
 #include "Core/CompileInfo.h"
+#include "Buffer/Buffer.h"
 
 namespace HazardRenderer::Vulkan
 {
@@ -16,9 +17,9 @@ namespace HazardRenderer::Vulkan
 
 		bool Compile(CompileInfo* compileInfo);
 
-		double GetCompileTime() { return m_CompilationTime; }
-		std::string GetErrorMessage() { return m_ErrorMessage; }
-		Buffer GetCompiledBinary() { return m_ResultBinary; }
+		double GetCompileTime() const { return m_CompilationTime; }
+		std::string GetErrorMessage() const { return m_ErrorMessage; }
+		Buffer GetCompiledBinary() const { return m_ResultBinary; }
 
 	private:
 		Buffer m_ResultBinary;

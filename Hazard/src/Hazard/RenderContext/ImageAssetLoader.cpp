@@ -90,7 +90,6 @@ namespace Hazard
 		asset->Invalidate(header.ImageData);
 
 		info.Job->SetResult(asset);
-
 		header.ImageData.Release();
 	}
 
@@ -141,8 +140,8 @@ namespace Hazard
 				.Offset = 0
 			};
 
-			CachedBuffer data = readbackBuffer->ReadData(region);
-			info.Job->SetResult(data);
+			Buffer data = readbackBuffer->ReadData(region);
+			info.Job->SetResult(Ref<CachedBuffer>::Create(data));
 			info.ParentGraph->Continue();
 		});
 
@@ -151,17 +150,17 @@ namespace Hazard
 
 	void ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
-		CachedBuffer imageData = info.ParentGraph->GetResult<CachedBuffer>();
+		Ref<CachedBuffer> imageData = info.ParentGraph->GetResult<Ref<CachedBuffer>>();
 
 		ImageAssetFileHeader file = {
 			.Extent = image->GetExtent(),
 			.Format = image->GetFormat(),
 		};
 
-		CachedBuffer buf;
-		buf.Allocate(sizeof(ImageAssetFileHeader) + imageData.GetSize());
-		buf.Write(file);
-		buf.Write(imageData);
+		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
+		buf->Allocate(sizeof(ImageAssetFileHeader) + imageData->GetSize());
+		buf->Write(file);
+		buf->Write(imageData->GetData(), imageData->GetSize());
 
 		info.Job->SetResult(buf);
 	}
@@ -173,16 +172,16 @@ namespace Hazard
 		if (!File::Exists(metadata.FilePath))
 			throw JobException("File does not exist");
 
-		CachedBuffer buffer = File::ReadBinaryFile(metadata.FilePath);
+		Ref<CachedBuffer> buffer = File::ReadBinaryFile(metadata.FilePath);
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
 
-		ImageAssetFileHeader header = pack.AssetData.Read<ImageAssetFileHeader>();
+		ImageAssetFileHeader header = pack.AssetData->Read<ImageAssetFileHeader>();
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
 		asset->SetExtent(header.Extent);
 		asset->SetMaxMipLevels(1);
-		asset->Invalidate(pack.AssetData.Read<Buffer>(pack.AssetData.GetSize() - pack.AssetData.GetCursor()));
+		asset->Invalidate(pack.AssetData->Read<Buffer>(pack.AssetData->GetSize() - pack.AssetData->GetCursor()));
 
 		info.Job->SetResult(asset);
 	}

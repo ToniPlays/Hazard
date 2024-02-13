@@ -46,7 +46,7 @@ namespace HazardRenderer
 
 		virtual Ref<PhysicalDevice> GetDevice() = 0;
 		virtual Ref<Swapchain> GetSwapchain() = 0;
-		virtual DefaultResources& GetDefaultResources() = 0;
+		virtual const DefaultResources& GetDefaultResources() const = 0;
 
 		static GraphicsContext* Create(WindowProps* props);
 		static RenderAPI GetRenderAPI() { return s_CurrentAPI; }

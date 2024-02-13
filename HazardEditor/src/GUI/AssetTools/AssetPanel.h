@@ -4,6 +4,7 @@
 #include "Project/ProjectManager.h"
 #include "AssetPanelItem.h"
 #include "Hazard/ImGUI/UIElements/TextField.h"
+#include "Hazard/ImGUI/Panel.h"
 
 namespace UI
 {

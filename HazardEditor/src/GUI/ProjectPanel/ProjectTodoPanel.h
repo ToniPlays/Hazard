@@ -2,13 +2,14 @@
 
 #include "Hazard.h"
 #include "Hazard/Scripting/Attributes/ClassAttributes.h"
+#include "Hazard/ImGUI/Panel.h"
 
 namespace UI 
 {
 	class ProjectTodoPanel : public Hazard::ImUI::Panel
 	{
 	public:
-		ProjectTodoPanel() : Hazard::ImUI::Panel("Project") { m_Open = false; };
+		ProjectTodoPanel() : Hazard::ImUI::Panel("Project") {}
 
 		void Update() override {};
 		void OnPanelRender() override;

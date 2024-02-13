@@ -129,7 +129,7 @@ namespace UI
 
 		if (e.HasComponent<ScriptComponent>())
 		{
-			ScriptEngine& engine = Application::GetModule<ScriptEngine>();
+			ScriptEngine& engine = Application::Get().GetModule<ScriptEngine>();
 			auto& sc = e.GetComponent<ScriptComponent>();
 			scriptState = !engine.FindModule(sc.ModuleName);
 		}

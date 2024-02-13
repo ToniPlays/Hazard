@@ -5,7 +5,7 @@
 #include "../VulkanContext.h"
 #include "Core/Renderer.h"
 #include "../Textures/VulkanImage2D.h"
-#include "../Textures/VulkanCubemapTexture.h"
+#include "../Textures/VulkanCubemap.h"
 #include "../Textures/VulkanSampler.h"
 #include "VulkanGPUBuffer.h"
 #include "../VKUtils.h"
@@ -37,9 +37,9 @@ namespace HazardRenderer::Vulkan
 			auto device = VulkanContext::GetLogicalDevice();
 			VkDescriptorImageInfo imageDescriptor;
 
-			if (image->GetType() == TextureType::Image2D)
+			if (image->GetType() == ImageType::Image2D)
 				imageDescriptor = image.As<VulkanImage2D>()->GetImageDescriptor();
-			else imageDescriptor = image.As<VulkanCubemapTexture>()->GetImageDescriptor();
+			else imageDescriptor = image.As<VulkanCubemap>()->GetImageDescriptor();
 
 			if (vkSampler)
 				imageDescriptor.sampler = vkSampler->GetVulkanSampler();

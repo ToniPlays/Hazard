@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Rendering/Texture.h"
+#include "Core/Rendering/Cubemap.h"
 #ifdef HZR_INCLUDE_VULKAN
 
 #include <vulkan/vulkan.h>
@@ -8,21 +8,26 @@
 
 namespace HazardRenderer::Vulkan
 {
-	class VulkanCubemapTexture : public CubemapTexture {
+	class VulkanCubemap : public Cubemap {
 		friend class VulkanRenderCommandBuffer;
 
 	public:
-		VulkanCubemapTexture() = delete;
-		VulkanCubemapTexture(CubemapTextureCreateInfo* createInfo);
-		~VulkanCubemapTexture();
+		VulkanCubemap() = delete;
+		VulkanCubemap(CubemapCreateInfo* createInfo);
+		~VulkanCubemap();
 
-		TextureType GetType() const { return TextureType::CubemapTexture; };
+
+		const std::string& GetDebugName() const override { return m_DebugName; }
+		ImageType GetType() const override { return ImageType::Cubemap; };
 
 		ImageFormat GetFormat() const override { return m_Format; };
-		uint32_t GetWidth() const override { return m_Width; };
-		uint32_t GetHeight() const override { return m_Height; }
-		glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
+		const Extent& GetExtent() const override { return m_Extent; };
 		uint32_t GetMipLevels() const override { return m_MipLevels; };
+		float GetAspectRatio() const { return (float)m_Extent.Width / (float)m_Extent.Height; }
+
+		void Invalidate() override;
+		void Release() override;
+
 		void RegenerateMips() override;
 
 		//Vulkan specific
@@ -40,8 +45,7 @@ namespace HazardRenderer::Vulkan
 	private:
 		ImageFormat m_Format = ImageFormat::None;
 		ImageUsage m_Usage = ImageUsage::None;
-		uint32_t m_Width = 0;
-		uint32_t m_Height = 0;
+		Extent m_Extent;
 		uint32_t m_MipLevels = 0;
 
 		std::string m_DebugName = "";

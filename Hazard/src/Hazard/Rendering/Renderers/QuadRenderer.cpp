@@ -24,7 +24,7 @@ namespace Hazard
 		m_QuadBatch = hnew Batch<QuadVertex>(m_Data.MaxVertices);
 		m_Data.TextureSlots.resize(m_Data.Samplers);
 
-		Ref<Image2D> whiteTexture = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
+		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)
 			m_Data.TextureSlots[i] = whiteTexture;

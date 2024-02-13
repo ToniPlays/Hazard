@@ -20,7 +20,7 @@ namespace HazardRenderer::Metal
         const std::string& GetDebugName() const override { return m_DebugName; };
         
         const uint64_t GetSize() const override { return m_Size; }
-        CachedBuffer ReadData(const BufferCopyRegion& region) override { return Buffer(); }
+        Buffer ReadData(const BufferCopyRegion& region) override { return Buffer(); }
         
         void SetData(const BufferCopyRegion& copyRegion) override;
         const uint32_t GetUsageFlags() const override { return m_UsageFlags; }

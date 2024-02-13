@@ -2,7 +2,7 @@
 
 #include "Hazard.h"
 #include "Core/EditorEvent.h"
-
+#include "Hazard/ImGUI/Panel.h"
 
 namespace UI {
 

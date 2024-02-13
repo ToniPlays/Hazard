@@ -1,5 +1,6 @@
 
-#include "EditorPlatformOpenGL.h"
+#include "GUIPlatformOpenGL.h"
+
 #ifdef HZR_INCLUDE_OPENGL
 #include "Backend/Core/Renderer.h"
 #include "Backend/OpenGL/OpenGLCore.h"

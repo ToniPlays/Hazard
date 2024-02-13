@@ -1,15 +1,10 @@
-#include "AssetImporterPanel.h"
-#include "Core/EditorAssetManager.h"
-#include "Hazard/RenderContext/TextureFactory.h"
-#include <spdlog/fmt/fmt.h>
 
-#include "GUI/GUIManager.h"
-#include "GUI/ProjectPanel/AssetPanel.h"
+#include "AssetImporterPanel.h"
+
+#include "GUI/AssetTools/AssetPanel.h"
 #include "AssetImporters/ImageAssetImporter.h"
 #include "AssetImporters/MeshAssetImporter.h"
 #include "AssetImporters/EnvironmentAssetImporter.h"
-
-#include "Hazard/ImGUI/UIElements/Dropdown.h"
 
 namespace UI
 {

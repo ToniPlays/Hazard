@@ -1,6 +1,5 @@
 #include "EditorWorldManager.h"
 #include "Hazard/ECS/WorldHandler.h"
-#include "GUI/GUIManager.h"
 #include "GUI/Overlays/ProgressOverlay.h"
 #include "Core/EditorEvent.h"
 #include "Core/HazardEditor.h"
@@ -14,7 +13,7 @@ namespace Editor
 		WorldRendererSpec spec = {};
 		spec.Geometry = Geometry_All;
 		spec.DebugName = "MainWorld";
-		spec.TargetWorld = Application::GetModule<WorldHandler>().GetCurrentWorld();
+		spec.TargetWorld = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
 		s_WorldRenderer = Ref<WorldRenderer>::Create(&spec);
 	}
 	void EditorWorldManager::Update()
@@ -36,7 +35,7 @@ namespace Editor
 	}
 	void EditorWorldManager::SetWorld(Ref<Hazard::World> world)
 	{
-		auto& handler = Application::GetModule<WorldHandler>();
+		auto& handler = Application::Get().GetModule<WorldHandler>();
 		handler.SetWorld(world);
 		s_WorldRenderer->SetTargetWorld(handler.GetCurrentWorld());
 

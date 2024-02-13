@@ -18,7 +18,7 @@ namespace UI
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-		Hazard::ScriptEngine& engine = Application::GetModule<Hazard::ScriptEngine>();
+		Hazard::ScriptEngine& engine = Application::Get().GetModule<Hazard::ScriptEngine>();
 
 		for (auto& assembly : engine.GetAssemblies())
 		{

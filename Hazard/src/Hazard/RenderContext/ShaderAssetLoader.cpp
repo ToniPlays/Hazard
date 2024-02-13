@@ -65,7 +65,6 @@ namespace Hazard
 	{
 		using namespace HazardRenderer;
 		std::unordered_map<uint32_t, std::string> sources = ShaderCompiler::GetShaderSources(path);
-		info.Job->SetResult(sources);
 
 		std::vector<Ref<Job>> loadingJobs;
 
@@ -77,6 +76,8 @@ namespace Hazard
 				loadingJobs.push_back(job);
 			}
 		}
+
+		info.Job->SetResult(sources);
 		info.ParentGraph->ContinueWith(loadingJobs);
 	}
 	void ShaderAssetLoader::CompileShaderSourceCode(JobInfo& info, uint32_t api, uint32_t stageFlags)
@@ -136,35 +137,33 @@ namespace Hazard
 			}
 		}
 
-		Buffer buffer;
-		buffer.Allocate(headers.size() * sizeof(ShaderAPIHeader) + totalCodeSize);
-
-		CachedBuffer buf(buffer.Data, buffer.Size);
+		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
+		buf->Allocate(headers.size() * sizeof(ShaderAPIHeader) + totalCodeSize);
 
 		for (auto& header : headers)
 		{
-			buf.Write(header);
-			buf.Write(code[(RenderAPI)header.ApiFlags][header.StageFlags]);
+			buf->Write(header);
+			buf->Write(code[(RenderAPI)header.ApiFlags][header.StageFlags]);
 		}
 
-		info.Job->SetResult(buffer);
+		info.Job->SetResult(buf);
 	}
 	void ShaderAssetLoader::LoadShaderAsset(JobInfo& info, AssetHandle handle)
 	{
 		using namespace HazardRenderer;
 
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-		CachedBuffer buffer = File::ReadBinaryFile(metadata.FilePath);
+		Ref<CachedBuffer> buffer = File::ReadBinaryFile(metadata.FilePath);
 
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
 
 		Ref<ShaderAsset> shader = Ref<ShaderAsset>::Create();
 
-		while (pack.AssetData.Available())
+		while (pack.AssetData->Available())
 		{
-			ShaderAPIHeader header = pack.AssetData.Read<ShaderAPIHeader>();
-			auto source = pack.AssetData.Read<std::string>();
+			ShaderAPIHeader header = pack.AssetData->Read<ShaderAPIHeader>();
+			auto source = pack.AssetData->Read<std::string>();
 			shader->ShaderCode[(RenderAPI)header.ApiFlags][header.StageFlags] = source;
 		}
 

@@ -61,7 +61,7 @@ namespace Hazard
 			if (sc.m_Handle)
 				sc.m_Handle->TryInvoke("OnDestroy()", nullptr);
 		}
-		Application::GetModule<WorldHandler>().GetCurrentWorld()->DestroyEntity(e);
+		Application::Get().GetModule<WorldHandler>().GetCurrentWorld()->DestroyEntity(e);
 	}
 	static bool Entity_IsUpdated_Native(uint64_t id)
 	{

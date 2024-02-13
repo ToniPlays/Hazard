@@ -6,6 +6,7 @@
 
 #include "Core/CompileInfo.h"
 #include "File.h"
+#include "Buffer/Buffer.h"
 
 namespace HazardRenderer::OpenGL
 {
@@ -18,9 +19,9 @@ namespace HazardRenderer::OpenGL
 		bool Compile(CompileInfo* compileInfo);
 		bool Decompile(Buffer binary, std::string& result);
 
-		double GetCompileTime() { return m_CompilationTime; }
-		std::string GetErrorMessage() { return m_ErrorMessage; }
-		Buffer GetCompiledBinary() { return m_ResultBinary; }
+		double GetCompileTime() const { return m_CompilationTime; }
+		std::string GetErrorMessage() const { return m_ErrorMessage; }
+		Buffer GetCompiledBinary() const { return m_ResultBinary; }
 	private:
 		Buffer m_ResultBinary;
 		std::string m_ErrorMessage;

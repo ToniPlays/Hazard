@@ -45,7 +45,7 @@ namespace Hazard
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
 
 		s_Resources = hnew RenderResources();
-		m_RenderContextManager = &Application::GetModule<RenderContextManager>();
+		m_RenderContextManager = &Application::Get().GetModule<RenderContextManager>();
 
 		m_RenderGraph = CreateRasterGraph();
 	}

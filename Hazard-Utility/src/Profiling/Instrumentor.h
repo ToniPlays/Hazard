@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Profiling/MemoryDiagnostic.h"
-#include "File.h"
 
 #include <algorithm>
 #include <chrono>

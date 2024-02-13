@@ -3,49 +3,57 @@
 #include "GUIRenderable.h"
 #include "UILibrary.h"
 #include "ScopedVar.h"
+#include "GUIManager.h"
 #include <imgui.h>
 
 namespace Hazard::ImUI
 {
-	class Panel : public GUIRenderable {
+	class Panel : public GUIRenderable
+	{
 	public:
 
 		Panel() = default;
-		Panel(const std::string& title, bool open = true) : m_Title(title), m_Open(open) {}
+		Panel(const std::string& title) : m_Title(title) {}
 
 		virtual ~Panel() = default;
 
-        void Open() { m_Open = true; OnOpen(); };
-        void Close() { m_Open = false; OnClose(); };
-        
-        virtual void OnOpen() {}
-        virtual void OnClose() {}
-
-		//<summary>
-		// This renders the panel
-		//</summary>
-
-		void Render() override 
+		void Render() override
 		{
-			if (!m_Open) return;
+			bool open = true;
+			if (!ImGui::Begin(m_Title.c_str(), &open))
 			{
-				//ScopedStyleStack padding(ImGuiStyleVar_FramePadding, ImVec2(0, 8), ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-				ImGui::Begin(m_Title.c_str(), &m_Open);
-
-				m_Hovered = MouseOverWindow();
-				//float width = Math::Max(ImGui::GetContentRegionAvailWidth(), 150.0f);
-				//ShiftY(-5.0f);
-				//Separator({ width, 1.0f }, style.Frame.FrameHovered);
+				ImGui::End();
+				return;
 			}
-			OnPanelRender();
+
+			ImGuiWindow* window = ImGui::GetCurrentWindow();
+
+			if (open && !window->Viewport->PlatformRequestClose)
+			{
+				m_Hovered = MouseOverWindow();
+				OnPanelRender();
+			}
+			else
+			{
+				//Remove panel from list
+				auto& manager = Application::Get().GetModule<GUIManager>();
+				manager.Destroy(this);
+			}
 			ImGui::End();
 		};
 
+		void BringToFront()
+		{
+			ImGuiWindow* window = ImGui::FindWindowByName(m_Title.c_str());
+			if (!window) return;
+			ImGui::BringWindowToFocusFront(window);
+		}
+
 		bool MouseOverWindow()
 		{
-			if(GImGui->CurrentWindow == nullptr)
+			if (GImGui->CurrentWindow == nullptr)
 				return false;
-			
+
 			ImVec2 cursorPos = ImGui::GetCursorPos();
 			ImVec2 windowPos = ImGui::GetWindowPos();
 			ImVec2 windowSize = ImGui::GetWindowSize();
@@ -64,7 +72,6 @@ namespace Hazard::ImUI
 
 	protected:
 		std::string m_Title = "Undefined panel";
-		bool m_Open = true;
 		bool m_Hovered = false;
 	};
 }

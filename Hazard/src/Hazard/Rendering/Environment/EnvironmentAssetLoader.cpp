@@ -16,12 +16,12 @@ namespace Hazard
 		if (!File::Exists(metadata.FilePath))
 			return nullptr;
 
-		CachedBuffer data = File::ReadBinaryFile(metadata.FilePath);
+		Ref<CachedBuffer> data = File::ReadBinaryFile(metadata.FilePath);
 
 		AssetPack pack = {};
 		pack.FromBuffer(data);
 
-		CreateSettings create = pack.AssetData.Read<CreateSettings>();
+		CreateSettings create = pack.AssetData->Read<CreateSettings>();
 
 		Ref<Job> loadJob = Ref<Job>::Create("Environment map source load", CreateImageFromSource, metadata.SourceFile);
 		Ref<Job> genJob = Ref<Job>::Create("Environment map generate", GenerateEnvironmentMap, create);
@@ -109,7 +109,7 @@ namespace Hazard
 	{
 		using namespace HazardRenderer;
 
-		CubemapTextureCreateInfo cubemapSpec = {
+		CubemapCreateInfo cubemapSpec = {
 			.DebugName = fmt::format("Env map"),
 			.Width = settings.Resolution,
 			.Height = settings.Resolution,
@@ -128,7 +128,7 @@ namespace Hazard
 		};
 
 		Ref<Image2D> image = info.ParentGraph->GetResult<Ref<Image2D>>();
-		Ref<CubemapTexture> cubemap = CubemapTexture::Create(&cubemapSpec);
+		Ref<Cubemap> cubemap = Cubemap::Create(&cubemapSpec);
 		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("EquirectangularToCubemap");
 		Ref<DescriptorSet> computeSet = DescriptorSet::Create(&setInfo);
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Equirectangular to cubemap", DeviceQueue::ComputeBit, 1);
@@ -159,11 +159,11 @@ namespace Hazard
 	void EnvironmentAssetLoader::CreateEnvironmentAsset(JobInfo& info, uint32_t samples)
 	{
 		using namespace HazardRenderer;
-		Ref<CubemapTexture> cubemap = info.ParentGraph->GetResult<Ref<CubemapTexture>>();
+		Ref<Cubemap> cubemap = info.ParentGraph->GetResult<Ref<Cubemap>>();
 
 		Ref<EnvironmentMap> asset = Ref<EnvironmentMap>::Create();
 		asset->m_EnvironmentMap = cubemap;
-		asset->m_Spec.Resolution = cubemap->GetWidth();
+		asset->m_Spec.Resolution = cubemap->GetExtent().Width;
 		asset->m_Spec.Samples = samples;
 
 		info.Job->SetResult(asset);

@@ -5,7 +5,6 @@
 #include "MathCore.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Core/EditorAssetManager.h"
-#include "GUI/GUIManager.h"
 #include "AssetPanel.h"
 #include "Directory.h"
 
@@ -15,6 +14,7 @@
 #include "imgui_internal.h"
 #include "Platform/OS.h"
 #include <Editor/EditorWorldManager.h>
+#include <Hazard/ImGUI/GUIManager.h>
 
 using namespace Hazard;
 
@@ -58,11 +58,15 @@ namespace UI
 
 		if (!IsFolder())
 		{
+			auto color = style.BackgroundColor;
+			if (ImGui::ItemHoverable(ImRect(topLeft, bottomRight), ImGui::GetID(&m_Handle)))
+				color = style.MenuBarBackground;
+
 			auto* drawList = ImGui::GetWindowDrawList();
 			drawShadow(topLeft, bottomRight, false);
 
-			drawList->AddRectFilled(topLeft, thumbBottomRight, ImGui::ColorConvertFloat4ToU32(style.BackgroundColor), 4.0f, ImDrawFlags_RoundCornersTop);
-			drawList->AddRectFilled(infoTopLeft, bottomRight, ImGui::ColorConvertFloat4ToU32(style.BackgroundColor), 4.0f, ImDrawFlags_RoundCornersBottom);
+			drawList->AddRectFilled(topLeft, thumbBottomRight, ImGui::ColorConvertFloat4ToU32(color), 4.0f, ImDrawFlags_RoundCornersTop);
+			drawList->AddRectFilled(infoTopLeft, bottomRight, ImGui::ColorConvertFloat4ToU32(color), 4.0f, ImDrawFlags_RoundCornersBottom);
 		}
 		else if (ImGui::ItemHoverable(ImRect(topLeft, bottomRight), ImGui::GetID(&m_Handle)))
 		{
@@ -80,19 +84,6 @@ namespace UI
 
 		ImUI::Image(thumbnailIcon->GetSourceImage(), sampler,
 					ImVec2(thumbnailSize - edgeOffset * 2.0, thumbnailSize - edgeOffset * 2.0));
-
-		if (IsFolder())
-		{
-			for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
-			{
-				ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
-					AssetMetadata& data = AssetManager::GetMetadata(m_Handle);
-					//EditorAssetManager::MoveAssetToFolder(handle, data.Key);
-					Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
-				});
-			}
-		}
-
 
 		ImUI::ShiftY(edgeOffset);
 		ImUI::Separator({ thumbnailSize, 2.0f }, style.Colors.AxisX);
@@ -158,7 +149,7 @@ namespace UI
 			}
 			else
 			{
-				auto panel = Application::Get().GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetImporterPanel>();
+				auto panel = Application::Get().GetModule<Hazard::GUIManager>().GetRenderable<AssetImporterPanel>();
 				panel->Open(GetMetadata().Handle);
 			}
 		}
@@ -229,7 +220,7 @@ namespace UI
 			metadata.FilePath = newName;
 		}
 
-		Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<AssetPanel>()->Refresh();
+		Application::Get().GetModule<GUIManager>().GetRenderable<AssetPanel>()->Refresh();
 	}
 	void AssetPanelItem::OnItemClicked()
 	{
@@ -237,7 +228,7 @@ namespace UI
 		{
 			case AssetType::Material:
 			{
-				auto panel = Application::GetModule<GUIManager>().GetPanelManager().GetRenderable<MaterialEditor>();
+				auto panel = Application::Get().GetModule<GUIManager>().GetRenderable<MaterialEditor>();
 
 				panel->SetSelectedMaterial(AssetManager::GetAsset<Material>(m_Handle));
 			}

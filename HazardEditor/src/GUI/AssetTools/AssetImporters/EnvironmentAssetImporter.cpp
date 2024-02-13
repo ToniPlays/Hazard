@@ -2,9 +2,9 @@
 
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/ImGUI/UILibrary.h"
-#include "GUI/GUIManager.h"
-#include "GUI/ProjectPanel/AssetPanel.h"
+#include "GUI/AssetTools/AssetPanel.h"
 #include <Hazard/Rendering/Environment/EnvironmentAssetLoader.h>
+#include <Hazard/ImGUI/GUIManager.h>
 
 EnvironmentAssetImporter::EnvironmentAssetImporter()
 {
@@ -62,7 +62,7 @@ bool EnvironmentAssetImporter::ImportFromNew()
 
 	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::EnvironmentMap, settings);
 
-	auto assetPanel = Application::Get().GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>();
+	auto assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetRenderable<UI::AssetPanel>();
 	auto path = File::FindAvailableName(assetPanel->GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), "hasset");
 
 	promise.Then([path](JobGraph& graph) {

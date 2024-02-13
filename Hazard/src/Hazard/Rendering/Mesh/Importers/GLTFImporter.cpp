@@ -12,9 +12,14 @@ namespace Hazard
 		return MeshImporter::SceneMetadata();
 	}
 
-	std::vector<MeshImporter::TextureData> GLTFImporter::GetTextures()
+	std::vector<MeshImporter::TextureMetadata> GLTFImporter::GetTextures()
 	{
-		return std::vector<MeshImporter::TextureData>();
+		return std::vector<MeshImporter::TextureMetadata>();
+	}
+
+	std::vector<MeshImporter::MaterialMetadata> GLTFImporter::GetMaterials()
+	{
+		return std::vector<MaterialMetadata>();
 	}
 
 	std::vector<MeshImporter::MeshMetadata> GLTFImporter::GetMeshes()

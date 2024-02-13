@@ -7,14 +7,12 @@
 
 #include "Core/Rendering/Shader.h"
 #include "Core/Rendering/GPUBuffer.h"
-#include "Core/Rendering/Texture.h"
+#include "Core/Rendering/Cubemap.h"
 #include "VulkanDescriptorSet.h"
 #include <vulkan/vulkan.h>
 
 namespace HazardRenderer::Vulkan
 {
-	class VulkanImage2D;
-
 	class VulkanShader : public Shader
 	{
 	public:
@@ -28,7 +26,6 @@ namespace HazardRenderer::Vulkan
 		};
 
 		std::unordered_map<uint32_t, Buffer> GetShaderCode() const override { return m_ShaderCode; };
-		
 
 		//Vulkan specific
 		const std::vector<VkPipelineShaderStageCreateInfo>& GetShaderStageCreateInfos() const { return m_ShaderStageCreateInfos;  }
@@ -38,9 +35,8 @@ namespace HazardRenderer::Vulkan
 		void CreateShaderModules();
 
 		std::unordered_map<uint32_t, Buffer> m_ShaderCode;
-
-		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStageCreateInfos;
 		std::unordered_map<std::string, PushConstantRange> m_PushConstantRanges;
+		std::vector<VkPipelineShaderStageCreateInfo> m_ShaderStageCreateInfos;
 
 		std::vector<VkShaderModule> m_ShaderModules;
 		std::vector<uint32_t> m_DynamicOffsets;

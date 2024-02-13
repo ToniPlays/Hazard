@@ -1,9 +1,9 @@
 
 #include "MainMenuBar.h"
-#include "GUI/GUIManager.h"
 #include "AllPanels.h"
 #include "Core/HazardEditor.h"
 #include "Editor/EditorModeManager.h"
+#include <Hazard/ImGUI/GUIManager.h>
 
 namespace UI
 {
@@ -18,12 +18,12 @@ namespace UI
 		AddMenuItem("File/New/Project/Crap/BunchOfShit", nullptr);
 		AddMenuItem("File/Open/OpenNew", nullptr);
 		AddMenuItem("File/Save", [&]() {
-			Ref<World> world = Application::GetModule<WorldHandler>().GetCurrentWorld();
+			Ref<World> world = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
 			//AssetManager::SaveAsset(world);
 		});
 		AddMenuItem("File/Save as", nullptr);
 		AddMenuItem("File/Project settings", nullptr);
-		AddMenuItem("File/Quit", Hazard::Application::Quit);
+		AddMenuItem("File/Quit", []() { Hazard::Application::Get().Quit(); });
 
 		AddMenuItem("Edit/Undo", nullptr);
 		AddMenuItem("Edit/Redo", nullptr);
@@ -38,11 +38,11 @@ namespace UI
 		AddMenuItem("Assets/Export", nullptr);
 
 		AddMenuItem("Tools/Project settings", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<ProjectSettingsPanel>(true);
+			//Application::Get().GetModule<Hazard::GUIManager>().SetPanelOpen<ProjectSettingsPanel>(true);
 		});
 
 		AddMenuItem("Tools/Task list", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<ProjectTodoPanel>(true);
+			//Application::Get().GetModule<GUIManager>().SetPanelOpen<ProjectTodoPanel>(true);
 		});
 
 		AddMenuItem("Tools/World", nullptr);
@@ -50,41 +50,51 @@ namespace UI
 		AddMenuItem("Tools/Rendering", nullptr);
 
         AddMenuItem("Build/Export package", [&]() {
-            Application::GetModule<GUIManager>().SetPanelOpen<ExportPanel>(true);
+            //Application::Get().GetModule<GUIManager>().SetPanelOpen<ExportPanel>(true);
         });
 		AddMenuItem("Build/Show build folder", nullptr);
 
 		AddMenuItem("Window/General/Hierarchy", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<Hierarchy>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<Hierarchy>().BringToFront();
 		});
 		AddMenuItem("Window/General/Properties", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<Properties>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<Properties>().BringToFront();
 		});
 		AddMenuItem("Window/General/Asset panel", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<AssetPanel>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<AssetPanel>().BringToFront();
 		});
 
 		AddMenuItem("Window/Rendering/Viewport", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<Viewport>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<Viewport>().BringToFront();
 		});
 		AddMenuItem("Window/Rendering/Game viewport", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<GameViewport>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<GameViewport>().BringToFront();
 		});
 
 		AddMenuItem("Window/Debug/Console", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<Console>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<Console>().BringToFront();
 		});
 		AddMenuItem("Window/Debug/Asset manager debugger", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<AssetManagerDebugPanel>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<AssetManagerDebugPanel>().BringToFront();
 		});
 		AddMenuItem("Window/Debug/Render command list", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<RenderCommandListPanel>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<RenderCommandListPanel>().BringToFront();
 		});
 		AddMenuItem("Window/Debug/World debugger", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<RendererDebugPanel>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<RendererDebugPanel>().BringToFront();
 		});
 		AddMenuItem("Window/Debug/Performance debugger", [&]() {
-			Application::GetModule<GUIManager>().SetPanelOpen<PerformanceDebugPanel>(true);
+			auto& manager = Application::Get().GetModule<GUIManager>();
+			manager.GetExistingOrNew<PerformanceDebugPanel>().BringToFront();
 		});
 
 		AddMenuItem("Help/About");
@@ -107,7 +117,7 @@ namespace UI
 				using namespace Hazard;
 				if (EditorModeManager::GetCurrentMode() == EditorMode::Edit)
 				{
-					auto& handler = Application::GetModule<WorldHandler>();
+					auto& handler = Application::Get().GetModule<WorldHandler>();
 					Ref<World> world = handler.GetCurrentWorld();
 					SaveAssetSettings settings = {};
 

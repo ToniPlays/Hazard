@@ -163,12 +163,12 @@ namespace Hazard
 	template<>
 	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) 
 	{
-		Application::GetModule<ScriptEngine>().InitializeComponent(this, entity);
+		Application::Get().GetModule<ScriptEngine>().InitializeComponent(this, entity);
 	}
 	template<>
 	void World::OnComponentRemoved(Entity& entity, ScriptComponent& component) 
 	{
-		Application::GetModule<ScriptEngine>().RemoveComponent(this, entity);
+		Application::Get().GetModule<ScriptEngine>().RemoveComponent(this, entity);
 	}
 
 	template<>

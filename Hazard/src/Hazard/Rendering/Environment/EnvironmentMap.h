@@ -22,11 +22,11 @@ namespace Hazard
 		AssetType GetType() const override { return AssetType::EnvironmentMap; }
 		EnvironmentMapSpec GetSpec() const { return m_Spec; }
         
-		Ref<HazardRenderer::CubemapTexture> GetCubemap() const { return m_EnvironmentMap; }
+		Ref<HazardRenderer::Cubemap> GetCubemap() const { return m_EnvironmentMap; }
 
     private:
 
-		Ref<HazardRenderer::CubemapTexture> m_EnvironmentMap;
+		Ref<HazardRenderer::Cubemap> m_EnvironmentMap;
 		EnvironmentMapSpec m_Spec;
 	};
 }

@@ -1,5 +1,5 @@
 
-#include "VulkanCubemapTexture.h"
+#include "VulkanCubemap.h"
 #ifdef HZR_INCLUDE_VULKAN
 #include "File.h"
 
@@ -16,7 +16,7 @@
 
 namespace HazardRenderer::Vulkan
 {
-	VulkanCubemapTexture::VulkanCubemapTexture(CubemapTextureCreateInfo* createInfo) : m_Format(createInfo->Format)
+	VulkanCubemap::VulkanCubemap(CubemapCreateInfo* createInfo) : m_Format(createInfo->Format)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -26,15 +26,16 @@ namespace HazardRenderer::Vulkan
 		m_DebugName = createInfo->DebugName;
 		m_Usage = createInfo->Usage;
 
-		m_Width = createInfo->Width;
-		m_Height = createInfo->Height;
+		m_Extent.Width = createInfo->Width;
+		m_Extent.Height = createInfo->Height;
+		m_Extent.Depth = 6;
 
 		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
 		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 
-		m_MipLevels = createInfo->MaxMips == 1 ? 1 : glm::min(Math::GetBaseLog(m_Width), createInfo->MaxMips);
+		m_MipLevels = createInfo->MaxMips == 1 ? 1 : glm::min(Math::GetBaseLog(m_Extent.Width), createInfo->MaxMips);
 
-		Ref<VulkanCubemapTexture> instance = this;
+		Ref<VulkanCubemap> instance = this;
 		Renderer::SubmitResourceCreate([instance]() mutable {
 
 			const auto& device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
@@ -50,8 +51,8 @@ namespace HazardRenderer::Vulkan
 			imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 			imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
 			imageCreateInfo.format = VkUtils::VulkanImageFormat(instance->m_Format);
-			imageCreateInfo.extent.width = instance->m_Width;
-			imageCreateInfo.extent.height = instance->m_Height;
+			imageCreateInfo.extent.width = instance->m_Extent.Width;
+			imageCreateInfo.extent.height = instance->m_Extent.Height;
 			imageCreateInfo.extent.depth = 1;
 			imageCreateInfo.mipLevels = instance->m_MipLevels;
 			imageCreateInfo.arrayLayers = 6;
@@ -87,22 +88,17 @@ namespace HazardRenderer::Vulkan
 				GenerateMipmaps();
 		}
 	}
-	VulkanCubemapTexture::~VulkanCubemapTexture()
+	VulkanCubemap::~VulkanCubemap()
 	{
-		HZR_PROFILE_FUNCTION();
-		Renderer::SubmitResourceFree([image = m_Image, alloc = m_Allocation]() mutable {
-
-			VulkanAllocator allocator("VulkanCubemapTexture");
-			allocator.DestroyImage(image, alloc);
-		});
+		Release();
 	}
-	void VulkanCubemapTexture::UploadImageData(Buffer imageData)
+	void VulkanCubemap::UploadImageData(Buffer imageData)
 	{
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("UploadImage", DeviceQueue::TransferBit, 1);
 		cmdBuffer->Begin();
 
 		ImageCopyRegion region = {};
-		region.Extent = { m_Width, m_Height, 6 };
+		region.Extent = m_Extent;
 		region.X = 0;
 		region.Y = 0;
 		region.Z = 0;
@@ -128,7 +124,7 @@ namespace HazardRenderer::Vulkan
 		cmdBuffer->End();
 		cmdBuffer->Submit();
 	}
-	void VulkanCubemapTexture::CreateImageView_RT()
+	void VulkanCubemap::CreateImageView_RT()
 	{
 		HZR_PROFILE_FUNCTION();
 		const auto& device = VulkanContext::GetInstance()->GetLogicalDevice()->GetVulkanDevice();
@@ -159,11 +155,24 @@ namespace HazardRenderer::Vulkan
 		VK_CHECK_RESULT(vkCreateImageView(device, &viewInfo, nullptr, &m_ImageDescriptor.imageView), "Failed to create VkImageView");
 		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE_VIEW, fmt::format("VkImageView {0}", m_DebugName), m_ImageDescriptor.imageView);
 	}
-	void VulkanCubemapTexture::RegenerateMips()
+	void VulkanCubemap::Invalidate()
+	{
+
+	}
+	void VulkanCubemap::Release()
+	{
+		HZR_PROFILE_FUNCTION();
+		Renderer::SubmitResourceFree([image = m_Image, alloc = m_Allocation]() mutable {
+
+			VulkanAllocator allocator("VulkanCubemapTexture");
+			allocator.DestroyImage(image, alloc);
+		});
+	}
+	void VulkanCubemap::RegenerateMips()
 	{
 		GenerateMipmaps(m_ImageDescriptor.imageLayout);
 	}
-	void VulkanCubemapTexture::GenerateMipmaps(VkImageLayout imageLayout)
+	void VulkanCubemap::GenerateMipmaps(VkImageLayout imageLayout)
 	{
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Image gen mip", DeviceQueue::TransferBit, 1);
 
@@ -199,12 +208,12 @@ namespace HazardRenderer::Vulkan
 			{
 				BlitImageInfo blit = {};
 				blit.Image = (Image*)this;
-				blit.SrcExtent = { m_Width >> (mip - 1), m_Height >> (mip - 1), 1 };
+				blit.SrcExtent = { m_Extent.Width >> (mip - 1), m_Extent.Height >> (mip - 1), 1 };
 				blit.SrcLayer = face;
 				blit.SrcMip = mip - 1;
 				blit.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
 
-				blit.DstExtent = { m_Width >> mip, m_Height >> mip, 1 };
+				blit.DstExtent = { m_Extent.Width >> mip, m_Extent.Height >> mip, 1 };
 				blit.DstLayer = face;
 				blit.DstMip = mip;
 				blit.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;

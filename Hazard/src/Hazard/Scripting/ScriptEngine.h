@@ -45,7 +45,7 @@ namespace Hazard
 
 		static Ref<World> GetTargetWorldForEntity(UID entity)
 		{
-			auto& engine = Application::GetModule<ScriptEngine>();
+			auto& engine = Application::Get().GetModule<ScriptEngine>();
 			HZR_ASSERT(engine.m_Instances.contains(entity), "Entity not found");
 			return engine.m_WorldContext[engine.m_Instances[entity]];
 		}

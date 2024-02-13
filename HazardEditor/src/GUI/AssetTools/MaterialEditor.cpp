@@ -5,7 +5,7 @@ namespace UI
 {
 	using namespace Hazard;
 
-	MaterialEditor::MaterialEditor() : Hazard::ImUI::Panel("Material properties", false)
+	MaterialEditor::MaterialEditor() : Hazard::ImUI::Panel("Material properties")
 	{
 
 	}

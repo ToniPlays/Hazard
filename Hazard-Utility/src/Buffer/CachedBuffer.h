@@ -3,8 +3,9 @@
 #include "Buffer.h"
 #include "UtilityCore.h"
 #include "Profiling/MemoryDiagnostic.h"
+#include "Ref.h"
 
-class CachedBuffer
+class CachedBuffer : public RefCount
 {
 public:
 
@@ -15,64 +16,23 @@ public:
 		m_DataBuffer.Allocate(size);
 		m_DataBuffer.ZeroInitialize();
 	}
+
 	CachedBuffer(void* data, uint64_t size)
 	{
 		m_DataBuffer = Buffer(data, size);
 		m_OwnsData = false;
 	}
 
-	CachedBuffer(const CachedBuffer& other)
-		: m_DataBuffer(other.m_DataBuffer), m_CurrentBufferOffset(other.m_CurrentBufferOffset) {}
-
-	CachedBuffer(CachedBuffer&& other) noexcept
+	CachedBuffer(Buffer buffer)
 	{
-		m_DataBuffer = other.m_DataBuffer;
-		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
+		m_DataBuffer = buffer;
 		m_OwnsData = true;
-
-		other.m_DataBuffer = Buffer();
-		other.m_CurrentBufferOffset = 0;
-		other.m_OwnsData = false;
 	}
 
 	~CachedBuffer()
 	{
 		if (m_OwnsData)
 			m_DataBuffer.Release();
-	}
-
-	CachedBuffer& operator=(std::nullptr_t)
-	{
-		m_DataBuffer = Buffer();
-		m_CurrentBufferOffset = 0;
-		return *this;
-	}
-
-	CachedBuffer& operator=(const CachedBuffer& other)
-	{
-		m_DataBuffer = other.m_DataBuffer;
-		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
-		return *this;
-	}
-
-	CachedBuffer& operator=(CachedBuffer&& other) noexcept
-	{
-		m_DataBuffer = other.m_DataBuffer;
-		m_CurrentBufferOffset = other.m_CurrentBufferOffset;
-		m_OwnsData = true;
-
-		other.m_DataBuffer = Buffer();
-		other.m_CurrentBufferOffset = 0;
-		other.m_OwnsData = false;
-
-		return *this;
-	}
-
-	CachedBuffer& operator=(const Buffer& other)
-	{
-		m_DataBuffer = other;
-		m_OwnsData = true;
-		return *this;
 	}
 
 	void Allocate(uint64_t size)
@@ -160,8 +120,8 @@ public:
 
 	bool Available() const { return m_CurrentBufferOffset < m_DataBuffer.Size; }
 	void* GetData() const { return m_DataBuffer.Data; }
-	uint64_t GetSize() { return m_DataBuffer.Size; }
-	uint64_t GetCursor() { return m_CurrentBufferOffset; }
+	uint64_t GetSize() const { return m_DataBuffer.Size; }
+	uint64_t GetCursor() const { return m_CurrentBufferOffset; }
 	void AddBufferOffset(uint64_t offset) { m_CurrentBufferOffset = offset; }
 	void ResetCursor() { m_CurrentBufferOffset = 0; }
 
@@ -176,9 +136,7 @@ public:
 	}
 
 private:
-
 	Buffer m_DataBuffer;
 	uint64_t m_CurrentBufferOffset = 0;
-	std::atomic_uint32_t m_RefCount = 0;
 	bool m_OwnsData = false;
 };

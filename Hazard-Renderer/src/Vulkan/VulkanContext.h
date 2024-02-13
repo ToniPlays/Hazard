@@ -59,10 +59,10 @@ namespace HazardRenderer::Vulkan {
 
 		Ref<PhysicalDevice> GetDevice() override { return m_VulkanPhysicalDevice; };
 		Ref<Swapchain> GetSwapchain() override { return m_Swapchain; };
+		const DefaultResources& GetDefaultResources() const { return m_DefaultResources; };
 
 		//Vulkan specific
 		VkDescriptorSet RT_AllocateDescriptorSet(VkDescriptorSetAllocateInfo allocInfo);
-		DefaultResources& GetDefaultResources() override { return m_DefaultResources; };
 
 		static VulkanContext* GetInstance() { return s_Instance; }
 		static VkInstance GetVulkanInstance() { return s_Instance->m_VulkanInstance; }

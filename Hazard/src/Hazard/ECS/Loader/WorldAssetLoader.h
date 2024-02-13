@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazard/Assets/IAssetLoader.h"
+#include "Buffer/CachedBuffer.h"
 
 namespace Hazard 
 {
@@ -32,16 +33,15 @@ namespace Hazard
 	{
 		std::string SourcePath;
 
-		CachedBuffer ToBuffer()
+		Ref<CachedBuffer> ToBuffer()
 		{
-			CachedBuffer buf(SourcePath.length() + sizeof(uint64_t));
-			buf.Write(SourcePath);
+			Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create(SourcePath.length() + sizeof(uint64_t));
+			buf->Write(SourcePath);
 			return buf;
 		}
-		void FromBuffer(CachedBuffer buffer)
+		void FromBuffer(Ref<CachedBuffer> buffer)
 		{
-			CachedBuffer buf(buffer);
-			SourcePath = buf.Read<std::string>();
+			SourcePath = buffer->Read<std::string>();
 		}
 	};
 }

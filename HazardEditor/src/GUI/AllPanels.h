@@ -3,6 +3,8 @@
 #include "AssetTools/ScriptCreatePanel.h"
 #include "AssetTools/MaterialEditor.h"
 #include "AssetTools/AssetImporterPanel.h"
+#include "AssetTools/AssetPanel.h"
+#include "AssetTools/AssetEditors/MeshAssetEditorPanel.h"
 
 #include "Debug/RenderCommandListPanel.h"
 #include "Debug/RendererDebugPanel.h"
@@ -12,7 +14,6 @@
 
 #include "Overlays/ProgressOverlay.h"
 
-#include "ProjectPanel/AssetPanel.h"
 #include "ProjectPanel/ProjectTodoPanel.h"
 #include "ProjectPanel/ProjectSettingsPanel.h"
 #include "ProjectPanel/ExportPanel.h"

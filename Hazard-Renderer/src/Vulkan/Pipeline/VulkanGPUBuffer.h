@@ -16,12 +16,11 @@ namespace HazardRenderer::Vulkan
 		const std::string& GetDebugName() const override { return m_DebugName; };
 		const uint64_t GetSize() const { return m_Size; };
 
-		CachedBuffer ReadData(const BufferCopyRegion& copyRegion) override;
+		Buffer ReadData(const BufferCopyRegion& copyRegion) override;
 		void SetData(const BufferCopyRegion& copyRegion);
 		const uint32_t GetUsageFlags() const { return m_UsageFlags; };
 
 		//Vulkan specific
-
 		VkBuffer GetVulkanBuffer() const { return m_VulkanBuffer; }
 		VmaAllocation GetVMAAllocation() const { return m_BufferAllocation; }
 

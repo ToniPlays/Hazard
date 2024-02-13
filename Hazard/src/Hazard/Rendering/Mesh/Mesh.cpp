@@ -17,12 +17,12 @@ namespace Hazard
 		for (auto& submesh : meshData)
 		{
 			SubmeshData data = {
-				data.NodeName = submesh.Name,
-				data.NodeID = UID(),
-				data.VertexCount = submesh.Vertices.size(),
-				data.IndexCount = submesh.Indices.size(),
-				data.VertexOffset = vertexOffset,
-				data.IndexOffset = indexOffset,
+				.NodeName = submesh.Name,
+				.NodeID = UID(),
+				.VertexCount = submesh.Vertices.size(),
+				.IndexCount = submesh.Indices.size(),
+				.VertexOffset = vertexOffset,
+				.IndexOffset = indexOffset,
 			};
 
 			Buffer vertices = Buffer((void*)submesh.Vertices.data(), submesh.Vertices.size() * sizeof(Vertex3D));

@@ -22,13 +22,13 @@ namespace HazardRenderer::Vulkan
 
 		void Resize_RT(uint32_t width, uint32_t height);
 
-		TextureType GetType() const { return TextureType::Image2D; };
+		ImageType GetType() const { return ImageType::Image2D; };
 		const Extent& GetExtent() const override { return m_Info.Extent; };
 		ImageFormat GetFormat() const override { return m_Info.Format; }
 		const std::string& GetDebugName() const override { return m_Info.DebugName; };
 		virtual uint32_t GetMipLevels() const { return m_Info.MaxMips; };
 
-		virtual float GetAspectRatio() override { return (float)m_Info.Extent.Width / (float)m_Info.Extent.Height; };
+		float GetAspectRatio() const override { return (float)m_Info.Extent.Width / (float)m_Info.Extent.Height; };
 
 		//Vulkan specific
 		VkDescriptorImageInfo GetImageDescriptor() { return m_ImageDescriptor; }

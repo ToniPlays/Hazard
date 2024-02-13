@@ -30,10 +30,10 @@ namespace Hazard
 	struct SubmeshHeader
 	{
 		UID NodeID;
-		uint32_t VertexCount;
-		uint32_t IndexCount;
-		uint32_t VertexOffset;
-		uint32_t IndexOffset;
+		uint64_t VertexCount;
+		uint64_t IndexCount;
+		uint64_t VertexOffset;
+		uint64_t IndexOffset;
 		//Variable name
 	};
 

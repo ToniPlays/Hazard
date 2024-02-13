@@ -8,7 +8,6 @@ namespace Hazard::ImUI
 	class GUIRenderable 
 	{
 	public:
-
 		GUIRenderable() = default;
 
 		virtual void Update() {};

@@ -11,7 +11,6 @@ namespace UI
 
 	PerformanceDebugPanel::PerformanceDebugPanel() : Hazard::ImUI::Panel("PerformanceDebugPanel")
 	{
-		m_Open = false;
 		m_SearchField.SetHint("Search...");
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
 	}
@@ -180,4 +179,4 @@ namespace UI
 		}
 		return "";
 	}
-}
+	}

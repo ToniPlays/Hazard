@@ -31,7 +31,7 @@ namespace Hazard
 
 		Ref<Pipeline> Pipeline;
 		Ref<DescriptorSet> DescriptorSet;
-		Ref<CubemapTexture> Cubemap;
+		Ref<Cubemap> Cubemap;
 		SkyboxConstants Constants;
 	};
 

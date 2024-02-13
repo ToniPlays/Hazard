@@ -10,6 +10,8 @@
 #include "Coral/FieldInfo.hpp"
 #include "Coral/StringHelper.hpp"
 
+#include "Buffer/Buffer.h"
+
 #include <unordered_map>
 
 namespace HazardScript

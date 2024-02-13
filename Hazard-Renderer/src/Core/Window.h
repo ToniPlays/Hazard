@@ -90,8 +90,9 @@ namespace HazardRenderer
 		virtual Ref<Swapchain> GetSwapchain() = 0;
 		virtual void AddDebugCallback(const RendererMessageCallback& callback) = 0;
 
-		static Window* Create(HazardRendererCreateInfo* info);
 		static bool IsRenderAPISupported(const RenderAPI& api);
 		static void SendDebugMessage(const RenderMessage& message);
+
+		static Window* Create(HazardRendererCreateInfo* info);
 	};
 }

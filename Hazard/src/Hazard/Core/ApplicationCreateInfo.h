@@ -56,6 +56,11 @@ namespace Hazard {
 		ScriptMessageCallback MessageCallback;
 	};
 
+	struct GuiCreateInfo
+	{
+		std::string Title;
+	};
+
 	struct HazardCreateInfo 
 	{
 		ApplicationCreateInfo* AppInfo = nullptr;
@@ -64,5 +69,6 @@ namespace Hazard {
 		ScriptEngineCreateInfo* ScriptEngineInfo = nullptr;
 		AudioEngineCreateInfo* AudioEngine = nullptr;
 		EntityComponentCreateInfo* EntityComponent = nullptr;
+		GuiCreateInfo* GuiInfo = nullptr;
 	};
 }

@@ -33,6 +33,7 @@ public:
 	Editor::EditorScriptManager& GetScriptManager() { return m_ScriptManager; };
 private:
 	void InitDefaultHooks();
+	void InitializeGUIPanels();
 
 private:
 	Editor::EditorScriptManager m_ScriptManager;

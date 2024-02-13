@@ -50,7 +50,7 @@ namespace Hazard
 	AssetHandle AssetManager::Import(const std::filesystem::path& path)
 	{
 		HZR_PROFILE_FUNCTION();
-		CachedBuffer buffer = File::ReadBinaryFile(path);
+		Ref<CachedBuffer> buffer = File::ReadBinaryFile(path);
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
 
@@ -226,7 +226,7 @@ namespace Hazard
 
 		graph->AddOnCompleted([asset, settings](JobGraph& graph) {
 
-			CachedBuffer result = graph.GetResult<CachedBuffer>();
+			Ref<CachedBuffer> result = graph.GetResult<Ref<CachedBuffer>>();
 
 			//Save asset package
 			AssetPack pack = {};
@@ -248,13 +248,13 @@ namespace Hazard
 
 				if (!pack.SourceFile.empty())
 				{
-					if (!File::WriteBinaryFile(pack.SourceFile, result.GetData(), result.GetSize()))
+					if (!File::WriteBinaryFile(pack.SourceFile, result->GetData(), result->GetSize()))
 						throw JobException(fmt::format("Could not save source file: {}", pack.SourceFile));
 				}
 			}
 
 			auto buffer = pack.ToBuffer();
-			if (!File::WriteBinaryFile(settings.TargetPath, buffer.GetData(), buffer.GetCursor()))
+			if (!File::WriteBinaryFile(settings.TargetPath, buffer->GetData(), buffer->GetSize()))
 				throw JobException(fmt::format("Could not save asset file: {}", settings.TargetPath.string()));
 
 			AssetMetadata& metadata = GetMetadata(asset->GetHandle());

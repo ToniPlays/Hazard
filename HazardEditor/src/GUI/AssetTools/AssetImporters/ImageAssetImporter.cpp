@@ -2,9 +2,9 @@
 
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/ImGUI/UILibrary.h"
-#include "GUI/GUIManager.h"
-#include "GUI/ProjectPanel/AssetPanel.h"
+#include "GUI/AssetTools/AssetPanel.h"
 #include <Hazard/RenderContext/ImageAssetLoader.h>
+#include <Hazard/ImGUI/GUIManager.h>
 
 ImageAssetImporter::ImageAssetImporter()
 {
@@ -66,7 +66,7 @@ bool ImageAssetImporter::ImportFromNew()
 
 	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Image, settings);
 
-	auto assetPanel = Application::Get().GetModule<GUIManager>().GetPanelManager().GetRenderable<UI::AssetPanel>();
+	auto assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetRenderable<UI::AssetPanel>();
 	auto path = File::FindAvailableName(assetPanel->GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), "hasset");
 
 	promise.Then([path](JobGraph& graph) {

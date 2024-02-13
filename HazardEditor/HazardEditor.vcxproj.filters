@@ -99,9 +99,6 @@
     <ClInclude Include="src\Core\EditorEvent.h">
       <Filter>src\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\GUIManager.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\Core\HazardEditor.h">
       <Filter>src\Core</Filter>
     </ClInclude>
@@ -168,10 +165,10 @@
     <ClInclude Include="src\GUI\Overlays\ProgressOverlay.h">
       <Filter>src\GUI\Overlays</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\ProjectPanel\AssetPanel.h">
+    <ClInclude Include="src\GUI\AssetTools\AssetPanel.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\ProjectPanel\AssetPanelItem.h">
+    <ClInclude Include="src\GUI\AssetTools\AssetPanelItem.h">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClInclude>
     <ClInclude Include="src\GUI\ProjectPanel\ExportPanel.h">
@@ -210,21 +207,6 @@
     <ClInclude Include="src\GUI\Viewport\Viewport.h">
       <Filter>src\GUI\Viewport</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\EditorGuiPlatform.h">
-      <Filter>src\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Metal\EditorPlatformMetal.h">
-      <Filter>src\Platform\Metal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\EditorPlatformOpenGL.h">
-      <Filter>src\Platform\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\RenderPlatforms.h">
-      <Filter>src\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\Vulkan\EditorPlatformVulkan.h">
-      <Filter>src\Platform\Vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="src\Project\HazardProject.h">
       <Filter>src\Project</Filter>
     </ClInclude>
@@ -238,6 +220,7 @@
     <ClInclude Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.h" />
     <ClInclude Include="src\GUI\AssetTools\AssetImporters\MeshAssetImporter.h" />
     <ClInclude Include="src\GUI\AssetTools\AssetImporters\EnvironmentAssetImporter.h" />
+    <ClInclude Include="src\GUI\AssetTools\AssetEditors\MeshAssetEditorPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -253,9 +236,6 @@
       <Filter>Hazard\vendor\ImGui_Backend</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\EditorAssetManager.cpp">
-      <Filter>src\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\GUIManager.cpp">
       <Filter>src\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\HazardEditor.cpp">
@@ -309,10 +289,10 @@
     <ClCompile Include="src\GUI\Overlays\ProgressOverlay.cpp">
       <Filter>src\GUI\Overlays</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\ProjectPanel\AssetPanel.cpp">
+    <ClCompile Include="src\GUI\AssetTools\AssetPanel.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\ProjectPanel\AssetPanelItem.cpp">
+    <ClCompile Include="src\GUI\AssetTools\AssetPanelItem.cpp">
       <Filter>src\GUI\ProjectPanel</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\ProjectPanel\ExportPanel.cpp">
@@ -339,12 +319,6 @@
     <ClCompile Include="src\GUI\Viewport\Viewport.cpp">
       <Filter>src\GUI\Viewport</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\EditorPlatformOpenGL.cpp">
-      <Filter>src\Platform\OpenGL</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Platform\Vulkan\EditorPlatformVulkan.cpp">
-      <Filter>src\Platform\Vulkan</Filter>
-    </ClCompile>
     <ClCompile Include="src\Project\HazardProject.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
@@ -354,5 +328,6 @@
     <ClCompile Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.cpp" />
     <ClCompile Include="src\GUI\AssetTools\AssetImporters\MeshAssetImporter.cpp" />
     <ClCompile Include="src\GUI\AssetTools\AssetImporters\EnvironmentAssetImporter.cpp" />
+    <ClCompile Include="src\GUI\AssetTools\AssetEditors\MeshAssetEditorPanel.cpp" />
   </ItemGroup>
 </Project>

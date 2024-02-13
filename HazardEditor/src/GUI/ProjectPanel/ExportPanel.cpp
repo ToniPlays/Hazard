@@ -6,33 +6,13 @@ using namespace Hazard;
 
 namespace UI
 {
-    ExportPanel::ExportPanel() : Hazard::ImUI::Panel("Export", false)
+    ExportPanel::ExportPanel() : Hazard::ImUI::Panel("Export")
     {
         m_SelectedWorldTable.SetName("BuildWorldTable");
         m_SelectedWorldTable.SetColumns({ "Build index", "Name" });
         m_SelectedWorldTable.RowHeight(32);
     }
 
-    void ExportPanel::OnOpen()
-    {
-        m_SelectedWorldTable.ClearRows();
-        
-        /*auto metadatas = AssetManager::GetAllAssetMetadata(AssetType::World);
-        m_SelectedWorldTable.Reserve(metadatas.size());
-
-        for (auto& metadata : metadatas)
-            m_SelectedWorldTable.AddRow(metadata);
-
-        m_SelectedWorldTable.RowContent([](uint32_t index, AssetMetadata& metadata) {
-            ImUI::Shift(4.0f, 4.0f);
-            ImGui::Text("%u", index);
-            ImGui::TableNextColumn();
-
-            ImUI::Shift(4.0f, 4.0f);
-            ImGui::Text("%s", metadata.Key.c_str());
-        });
-        */
-    }
     void ExportPanel::OnPanelRender()
     {
         m_SelectedWorldTable.Size({ ImGui::GetContentRegionAvail().x, 250 });

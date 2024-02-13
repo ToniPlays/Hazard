@@ -1,12 +1,9 @@
 
 #include "EditorAssetManager.h"
 #include "Hazard/Assets/AssetManager.h"
-#include "File.h"
-#include "Utility/YamlUtils.h"
-#include "Hazard.h"
 #include <Hazard/RenderContext/ShaderAsset.h>
-#include "GUI/GUIManager.h"
-#include <GUI/Overlays/ProgressOverlay.h>
+#include "Hazard.h"
+#include "File.h"
 
 #include <FileCache.h>
 

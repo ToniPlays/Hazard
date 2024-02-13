@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Rendering/Texture.h"
+#include "Core/Rendering/Cubemap.h"
 #ifdef HZR_INCLUDE_OPENGL
 
 namespace HazardRenderer::OpenGL 

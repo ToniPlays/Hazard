@@ -8,7 +8,7 @@
 #include "Core/Rendering/DescriptorSet.h"
 #include "Core/Rendering/Pipeline.h"
 #include "Core/Rendering/RenderPass.h"
-#include "Core/Rendering/Texture.h"
+#include "Core/Rendering/Cubemap.h"
 #include "Core/Rendering/Sampler.h"
 #include "Core/Rendering/FrameBuffer.h"
 #include "Core/Events/Events.h"

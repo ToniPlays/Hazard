@@ -251,7 +251,6 @@ namespace Hazard::ImUI
 			#ifdef HZR_INCLUDE_VULKAN
 			case RenderAPI::Vulkan:
 			{
-
 				static std::unordered_map<VkImage, ImTextureID> cache;
 
 				Ref<Vulkan::VulkanImage2D> vkImage = image.As<Vulkan::VulkanImage2D>();
@@ -268,7 +267,7 @@ namespace Hazard::ImUI
 
 				if (!vkImage || !vkSampler->GetVulkanSampler())
 				{
-					auto& white = Application::GetModule<RenderContextManager>().GetDefaultResources().WhiteTexture;
+					auto& white = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 					const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();
 					cache[img] = ImGui_ImplVulkan_AddTexture(vkSampler->GetVulkanSampler(), whiteImageDesc.imageView, whiteImageDesc.imageLayout);
 					return cache[img];

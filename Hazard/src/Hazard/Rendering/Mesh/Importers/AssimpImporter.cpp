@@ -3,6 +3,7 @@
 #include <assimp/postprocess.h>
 #include "Callback.h"
 #include "spdlog/fmt/fmt.h"
+#include <Hooks.h>
 
 namespace Hazard
 {
@@ -19,7 +20,7 @@ namespace Hazard
 			.AnimationCount = scene->mNumAnimations,
 			.CameraCount = scene->mNumCameras,
 			.LightCount = scene->mNumLights,
-			.MeshCount = scene->mRootNode->mNumChildren,
+			.MeshCount = scene->mNumMeshes,
 			.MaterialCount = scene->mNumMaterials,
 			.TextureCount = scene->mNumTextures,
 		};
@@ -29,62 +30,78 @@ namespace Hazard
 		return metadata;
 	}
 
-	std::vector<MeshImporter::TextureData> AssimpImporter::GetTextures()
+	std::vector<MeshImporter::TextureMetadata> AssimpImporter::GetTextures()
 	{
+		std::vector<MeshImporter::TextureMetadata> textures;
 		const aiScene* scene = GetScene();
-		std::vector<MeshImporter::TextureData> textures;
 		textures.reserve(scene->mNumTextures);
 
 		for (uint32_t i = 0; i < scene->mNumTextures; i++)
 		{
 			const aiTexture* texture = scene->mTextures[i];
 			auto& data = textures.emplace_back();
-			data.Filename = texture->mFilename.C_Str();
-			data.TextureData = Buffer(texture->pcData, texture->mWidth);
+			data.Name = texture->mFilename.C_Str();
+			data.TextureIndex = i;
 		}
 		return textures;
+	}
+
+	std::vector<MeshImporter::MaterialMetadata> AssimpImporter::GetMaterials()
+	{
+		const aiScene* scene = GetScene();
+		std::vector<MeshImporter::MaterialMetadata> materials;
+
+		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; materialIndex++)
+		{
+			aiMaterial* mat = scene->mMaterials[materialIndex];
+
+			auto& material = materials.emplace_back();
+			material.Name = mat->GetName().C_Str();
+			material.PropertyCount = mat->mNumProperties;
+			material.Textures = GetMaterialTextures(mat);
+		}
+
+		return materials;
 	}
 
 	std::vector<MeshImporter::MeshMetadata> AssimpImporter::GetMeshes()
 	{
 		const aiScene* scene = GetScene();
 		std::vector<MeshImporter::MeshMetadata> meshes;
-		meshes.reserve(scene->mRootNode->mNumChildren);
+		meshes.reserve(scene->mRootNode->mNumChildren + 1);
 
 		uint64_t vertexOffset = 0;
 		uint64_t indexOffset = 0;
 
-		for (uint32_t i = 0; i < scene->mRootNode->mNumChildren; i++)
 		{
-			const aiNode* node = scene->mRootNode->mChildren[i];
-			if (node->mNumMeshes == 0) continue;
-
-			uint64_t vertexCount = 0;
-			uint64_t indexCount = 0;
-			uint64_t materialIndex = 0;
-
-			for (uint32_t m = 0; m < node->mNumMeshes; m++)
-			{
-				const aiMesh* mesh = scene->mMeshes[node->mMeshes[m]];
-				vertexCount += mesh->mNumVertices;
-				indexCount += mesh->mNumFaces * 3;
-				materialIndex = mesh->mMaterialIndex;
-			}
-
-			auto& data = meshes.emplace_back();
-
-			data.Name = node->mName.C_Str();
-			data.NodeIndex = i;
-			data.MaterialIndex = materialIndex;
-			data.VertexCount = vertexCount;
-			data.IndexCount = indexCount;
+			auto data = GetMeshDataFromNode(scene->mRootNode);
+			data.NodeIndex = 0;
 			data.VertexOffset = vertexOffset;
 			data.IndexOffset = indexOffset;
-			data.BoneCount = 0;
-			data.AnimatedMeshCount = 0;
 
-			vertexOffset += data.VertexCount;
-			indexOffset += data.IndexCount;
+			if (data.IndexCount > 0)
+			{
+				meshes.push_back(data);
+
+				vertexOffset = data.VertexCount;
+				indexOffset = data.IndexCount;
+			}
+		}
+
+		for (uint32_t i = 0; i < scene->mRootNode->mNumChildren; i++)
+		{
+			aiNode* node = scene->mRootNode->mChildren[i];
+			auto data = GetMeshDataFromNode(node);
+
+			data.NodeIndex = i + 1;
+			data.VertexOffset = vertexOffset;
+			data.IndexCount = indexOffset;
+
+			if (data.VertexCount == 0) continue;
+
+			meshes.push_back(data);
+			vertexOffset = data.VertexCount;
+			indexOffset = data.IndexCount;
 		}
 
 		return meshes;
@@ -93,7 +110,7 @@ namespace Hazard
 	MeshImporter::MeshData AssimpImporter::GetMeshData(const MeshMetadata& mesh, const std::function<void(uint32_t, uint32_t)>& progress)
 	{
 		const aiScene* scene = GetScene();
-		const aiNode* node = scene->mRootNode->mChildren[mesh.NodeIndex];
+		const aiNode* node = mesh.NodeIndex == 0 ? scene->mRootNode : scene->mRootNode->mChildren[mesh.NodeIndex - 1];
 
 		MeshData data = {
 			.Name = mesh.Name,
@@ -207,14 +224,14 @@ namespace Hazard
 	{
 		const aiScene* scene = GetScene();
 		const aiMesh* mesh = scene->mMeshes[meshIndex];
-		
+
 		for (uint32_t i = 0; i < root->mNumChildren; i++)
 		{
 			const aiNode* child = root->mChildren[i];
 			for (uint32_t m = 0; m < child->mNumMeshes; m++)
 			{
 				const aiMesh* aiMesh = scene->mMeshes[child->mMeshes[m]];
-				if (aiMesh == mesh) 
+				if (aiMesh == mesh)
 					return child;
 			}
 		}
@@ -243,6 +260,37 @@ namespace Hazard
 		return scene;
 	}
 
+	MeshImporter::MeshMetadata AssimpImporter::GetMeshDataFromNode(aiNode* node)
+	{
+		if (node->mNumMeshes == 0)
+			return MeshImporter::MeshMetadata();
+
+		const aiScene* scene = GetScene();
+
+		uint64_t vertexCount = 0;
+		uint64_t indexCount = 0;
+		uint32_t materialIndex = 0;
+
+		for (uint32_t m = 0; m < node->mNumMeshes; m++)
+		{
+			const aiMesh* mesh = scene->mMeshes[node->mMeshes[m]];
+			vertexCount += mesh->mNumVertices;
+			indexCount += mesh->mNumFaces * 3;
+			materialIndex = mesh->mMaterialIndex;
+		}
+
+		MeshImporter::MeshMetadata data = {
+			.Name = node->mName.C_Str(),
+			.MaterialIndex = materialIndex,
+			.VertexCount = vertexCount,
+			.IndexCount = indexCount,
+			.BoneCount = 0,
+			.AnimatedMeshCount = 0,
+		};
+
+		return data;
+	}
+
 	void AssimpImporter::PrintHierarchy(const aiNode* node, uint32_t level)
 	{
 		const aiScene* scene = GetScene();
@@ -261,6 +309,35 @@ namespace Hazard
 				std::cout << fmt::format("      {}, material: {}", mesh->mName.C_Str(), mesh->mMaterialIndex) << std::endl;
 			}
 		}
+	}
+
+	std::unordered_map<MeshImporter::TextureType, uint32_t> AssimpImporter::GetMaterialTextures(aiMaterial* material)
+	{
+		std::unordered_map<TextureType, uint32_t> result;
+
+		Hooks<aiTextureType, void(uint32_t)> hooks;
+
+		hooks.AddHook(aiTextureType_BASE_COLOR, [&result](uint32_t count) mutable { result[TextureType::Albedo] = count; });
+		hooks.AddHook(aiTextureType_DIFFUSE, [&result](uint32_t count) mutable { result[TextureType::Diffuse] = count; });
+		hooks.AddHook(aiTextureType_SPECULAR, [&result](uint32_t count) mutable { result[TextureType::Specular] = count; });
+		hooks.AddHook(aiTextureType_EMISSION_COLOR, [&result](uint32_t count) mutable { result[TextureType::Emission] = count; });
+		hooks.AddHook(aiTextureType_METALNESS, [&result](uint32_t count) mutable { result[TextureType::Metalness] = count; });
+		hooks.AddHook(aiTextureType_NORMALS, [&result](uint32_t count) mutable { result[TextureType::Normal] = count; });
+		hooks.AddHook(aiTextureType_HEIGHT, [&result](uint32_t count) mutable { result[TextureType::Height] = count; });
+		hooks.AddHook(aiTextureType_SHININESS, [&result](uint32_t count) mutable { result[TextureType::Shininess] = count; });
+		hooks.AddHook(aiTextureType_DISPLACEMENT, [&result](uint32_t count) mutable { result[TextureType::Displacement] = count; });
+		hooks.AddHook(aiTextureType_LIGHTMAP, [&result](uint32_t count) mutable { result[TextureType::Lightmap] = count; });
+		hooks.AddHook(aiTextureType_REFLECTION, [&result](uint32_t count) mutable { result[TextureType::Reflection] = count; });
+
+		for (uint32_t i = aiTextureType_DIFFUSE; i < aiTextureType_UNKNOWN - 1; i++)
+		{
+			uint32_t count = material->GetTextureCount((aiTextureType)i);
+			if (count == 0) continue;
+
+			hooks.Invoke((aiTextureType)i, count);
+		}
+
+		return result;
 	}
 
 	std::vector<MeshImporter::AnimationData> AssimpImporter::GetAnimations()

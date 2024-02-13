@@ -5,7 +5,7 @@
 
 #include "RenderPass.h"
 #include "Pipeline.h"
-#include "Texture.h"
+#include "Cubemap.h"
 #include "DescriptorSet.h"
 
 namespace HazardRenderer
