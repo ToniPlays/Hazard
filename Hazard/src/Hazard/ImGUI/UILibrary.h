@@ -172,6 +172,8 @@ namespace Hazard::ImUI
 	static bool SliderFloat(const char* name, float& value, float clearValue = 0.0f, float min = 0.0, float max = 0.0, bool isMixed = false)
 	{
 		bool modified = false;
+		float fontSize = ImGui::GetFontSize();
+		ShiftY(24.0f - fontSize);
 		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		ImGui::PushID(name);
@@ -190,6 +192,8 @@ namespace Hazard::ImUI
 	static bool Checkbox(const char* name, bool& value, bool isMixed = false)
 	{
 		bool modified = false;
+		float fontSize = ImGui::GetFontSize();
+		ShiftY(24.0f - fontSize);
 		ImGui::Text("%s", name);
 		ImGui::NextColumn();
 		ImGui::PushID(name);
@@ -263,9 +267,9 @@ namespace Hazard::ImUI
 				}
 
 				const VkDescriptorImageInfo& imageInfo = vkImage->GetImageDescriptor();
-				const Ref<Vulkan::VulkanSampler>& vkSampler = sampler.As<Vulkan::VulkanSampler>();
+				Ref<Vulkan::VulkanSampler> vkSampler = sampler.As<Vulkan::VulkanSampler>();
 
-				if (!vkImage || !vkSampler->GetVulkanSampler())
+				if (!imageInfo.imageView)
 				{
 					auto& white = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 					const VkDescriptorImageInfo& whiteImageDesc = white.As<Vulkan::VulkanImage2D>()->GetImageDescriptor();

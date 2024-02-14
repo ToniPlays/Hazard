@@ -61,7 +61,6 @@ namespace Hazard
 	struct RenderResources
 	{
 		Ref<DescriptorSet> WorldDescriptor;
-		Ref<DescriptorSet> SkyboxDescriptor;
 		Ref<GPUBuffer> CameraUniformBuffer;
 
 		AssetHandle WhiteTextureHandle;
@@ -74,18 +73,6 @@ namespace Hazard
 
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
-			DescriptorSetLayout skyboxMaterialLayout = { 
-				{ SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
-				{ SHADER_STAGE_FRAGMENT_BIT, "u_CubeMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE } 
-			};
-
-			DescriptorSetCreateInfo skyboxSetSpec = {
-				.DebugName = "Skybox descriptor",
-				.Set = 0,
-				.pLayout = &skyboxMaterialLayout,
-			};
-
-			SkyboxDescriptor = DescriptorSet::Create(&skyboxSetSpec);
 
 			DescriptorSetLayout layout = { { SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
 										   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
@@ -103,11 +90,11 @@ namespace Hazard
 			BufferCreateInfo cameraUBO = {
 				.Name = "Camera",
 				.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT | BUFFER_USAGE_DYNAMIC,
-				.Size = sizeof(CameraData),
+				.Size = sizeof(CameraData) * 32,
 			};
 
 			CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
-			WorldDescriptor->Write(0, CameraUniformBuffer, true);
+			WorldDescriptor->Write(0, CameraUniformBuffer, sizeof(CameraData), 0, true);
 
 			auto& resources = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources();
 
@@ -146,7 +133,6 @@ namespace Hazard
 			};
 
 			DefaultImageSampler = Sampler::Create(&samplerInfo);
-			SkyboxDescriptor->Write(0, CameraUniformBuffer, true);
 		}
 	};
 }

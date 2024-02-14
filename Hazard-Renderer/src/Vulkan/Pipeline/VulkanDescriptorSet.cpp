@@ -67,18 +67,18 @@ namespace HazardRenderer::Vulkan
 			}
 		});
 	}
-	void VulkanDescriptorSet::Write(uint32_t binding, Ref<GPUBuffer> buffer, bool updateAll)
+	void VulkanDescriptorSet::Write(uint32_t binding, Ref<GPUBuffer> buffer, uint32_t size, uint32_t offset, bool updateAll)
 	{
 		Ref<VulkanDescriptorSet> instance = this;
 		Ref<VulkanGPUBuffer> vkBuffer = buffer.As<VulkanGPUBuffer>();
 
-		Renderer::Submit([instance, vkBuffer, binding, updateAll]() mutable {
+		Renderer::Submit([instance, vkBuffer, binding, size, offset, updateAll]() mutable {
 			auto device = VulkanContext::GetLogicalDevice();
 
 			VkDescriptorBufferInfo bufferInfo = {};
 			bufferInfo.buffer = vkBuffer->GetVulkanBuffer();
-			bufferInfo.range = vkBuffer->GetSize();
-			bufferInfo.offset = 0;
+			bufferInfo.range = size;
+			bufferInfo.offset = offset;
 
 			VkWriteDescriptorSet write = {};
 			write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

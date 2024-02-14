@@ -14,8 +14,8 @@
 #include "spdlog/fmt/fmt.h"
 #include <Hazard/ImGUI/GUIManager.h>
 
-#include "GUI/MainMenuBar.h"
-#include "GUI/AllPanels.h"
+#include "Editor/GUI/MainMenuBar.h"
+#include "Editor/GUI/AllPanels.h"
 
 using namespace Hazard;
 using namespace HazardScript;
@@ -80,20 +80,23 @@ void HazardEditorApplication::PreInit()
 		.GuiInfo = &guiInfo,
 	};
 
+
 	CreateApplicationStack(&createInfo);
 	InitDefaultHooks();
 
 	HazardProject project = PushModule<ProjectManager>().LoadProjectFromFile(projectPath);
-	EditorAssetManager::Init();
 
 	auto& engine = GetModule<Hazard::ScriptEngine>();
 	Ref<ScriptAssembly> assembly = engine.GetLoadedAssembly("HazardScripting");
 	engine.RegisterScriptGlueFor<Editor::Bindings::EditorScriptGlue>(assembly);
+	EditorAssetManager::Init();
 }
+
 void HazardEditorApplication::Init()
 {
 	EditorAssetManager::LoadEditorAssets();
 	Editor::EditorWorldManager::Init();
+	EditorAssetManager::PostInit();
 
 	auto& scriptEngine = GetModule<ScriptEngine>();
 	scriptEngine.ReloadAssemblies();

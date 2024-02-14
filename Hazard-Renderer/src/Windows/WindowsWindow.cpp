@@ -184,7 +184,7 @@ namespace HazardRenderer
 
 		std::vector<Resolution> result;
 
-		for (uint32_t i = 0; i < count; i++)
+		for (int i = 0; i < count; i++)
 		{
 			const GLFWvidmode mode = modePtr[i];
 			Resolution resolution = {};

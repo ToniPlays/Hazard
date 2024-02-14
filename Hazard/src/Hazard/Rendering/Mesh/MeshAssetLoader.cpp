@@ -90,6 +90,16 @@ namespace Hazard
 			generateJobs.push_back(processMeshJob);
 		}
 
+		for (auto& material : materials)
+		{
+			auto mat = importer->GetMaterial(material.MaterialIndex);
+			std::cout << fmt::format("Material: {}", mat.Name) << std::endl;
+
+			for (auto& property : mat.Properties)
+				std::cout << fmt::format(" - Property: {} ({})", property.Name, ShaderDataTypeToString(property.Type)) << std::endl;
+
+		}
+
 		info.ParentGraph->ContinueWith(generateJobs);
 	}
 	void MeshAssetLoader::ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh)

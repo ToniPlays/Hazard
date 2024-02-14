@@ -11,7 +11,6 @@ namespace Editor
 	void EditorWorldManager::Init()
 	{
 		WorldRendererSpec spec = {};
-		spec.Geometry = Geometry_All;
 		spec.DebugName = "MainWorld";
 		spec.TargetWorld = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
 		s_WorldRenderer = Ref<WorldRenderer>::Create(&spec);

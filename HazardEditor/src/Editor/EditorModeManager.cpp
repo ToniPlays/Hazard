@@ -17,10 +17,10 @@ namespace Editor
 		HZR_WARN("BeginPlayMode");
 		auto& manager = Application::Get().GetModule<Hazard::GUIManager>();
 		//entt::entity currentEntity = manager.GetPanelManager().GetRenderable<UI::Viewport>()->GetSelectionContext().GetHandle();
-		auto console = manager.GetRenderable<UI::Console>();
+		auto& console = manager.GetExistingOrNew<UI::Console>();
 
-		if (console->ClearOnPlay())
-			console->Clear();
+		if (console.ClearOnPlay())
+			console.Clear();
 
 		auto& handler = Application::Get().GetModule<WorldHandler>();
 		m_PreviousWorld = handler.GetCurrentWorld();

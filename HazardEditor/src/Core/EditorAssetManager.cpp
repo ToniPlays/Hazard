@@ -11,7 +11,20 @@ using namespace Hazard;
 
 void EditorAssetManager::Init()
 {
-	ImportEngineAssets();
+	std::vector<JobPromise> promises;
+	ImportEngineShaders(promises);
+
+	for (auto& promise : promises)
+		promise.Wait();
+}
+
+void EditorAssetManager::PostInit()
+{
+	std::vector<JobPromise> promises;
+	ImportEngineEnvironments(promises);
+
+	for (auto& promise : promises)
+		promise.Wait();
 }
 void EditorAssetManager::LoadEditorAssets()
 {
@@ -27,7 +40,7 @@ void EditorAssetManager::LoadEditorAssets()
 		{ "World",				"res/Icons/world.png"},
 		{ "Script",				"res/Icons/csharp.png"},
 		{ "Camera",				"res/Icons/camera.png"},
-		{ "DirectionalLight",	"res/Icons/directionalLight.png"}
+		{ "DirectionalLight",	"res/Icons/directionalLight.png" }
 	};
 
 	std::vector<EditorAsset> meshesToLoad = {
@@ -69,16 +82,9 @@ AssetHandle EditorAssetManager::GetDefaultMesh(const std::string& name)
 	return INVALID_ASSET_HANDLE;
 }
 
-void EditorAssetManager::ImportEngineAssets()
+void EditorAssetManager::ImportEngineShaders(std::vector<JobPromise>& promises)
 {
-	using namespace Hazard;
-
-	HZR_INFO("Importing engine assets");
-
-	Timer timer;
 	FileCache cache("Library/Shaders");
-
-	std::vector<JobPromise> promises;
 
 	for (auto& file : Directory::GetAllInDirectory("res/Shaders", true))
 	{
@@ -108,9 +114,41 @@ void EditorAssetManager::ImportEngineAssets()
 
 		promises.push_back(promise);
 	}
-
-	for (auto& promise : promises)
-		promise.Wait();
-
-	HZR_INFO("Engine assets imported in {0} ms", timer.ElapsedMillis());
 }
+
+void EditorAssetManager::ImportEngineEnvironments(std::vector<JobPromise>& promises)
+{
+	FileCache cache("Library/Textures");
+
+	for (auto& file : Directory::GetAllInDirectory("res/Textures", true))
+	{
+		if (File::GetFileExtension(file) != ".hdr") continue;
+
+		auto cacheFile = File::GetNameNoExt(file) + ".hasset";
+
+		if (cache.HasFile(cacheFile))
+		{
+			AssetManager::Import(cache.Get(cacheFile));
+			continue;
+		}
+
+		CreateAssetSettings settings = {};
+		settings.SourcePath = file;
+
+		JobPromise promise = AssetManager::CreateAssetAsync(AssetType::EnvironmentMap, settings);
+
+		promise.Then([cache](JobGraph& graph) {
+			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
+			if (!asset) return;
+
+			SaveAssetSettings settings = {};
+			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
+			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
+
+			AssetManager::SaveAsset(asset, settings).Wait();
+		});
+
+		promises.push_back(promise);
+	}
+}
+

@@ -88,6 +88,8 @@ namespace Hazard
 	void WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+		if (!metadata.IsValid()) return;
+		
 		Ref<JobGraph> loadGraph = AssetManager::GetLoadGraph(metadata);
 
 		JobPromise promise = info.ParentGraph->SubGraph(loadGraph);

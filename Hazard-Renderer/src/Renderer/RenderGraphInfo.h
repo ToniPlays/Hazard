@@ -12,11 +12,23 @@ namespace HazardRenderer
 {
 	struct RenderGraphFuncData
 	{
+		friend class RenderGraph;
+
 		Ref<RenderCommandBuffer> CommandBuffer;
 		Ref<RenderPass> CurrentRenderPass;
+		uint32_t Iteration;
 		bool Enabled;
-		void* Data;
+
+		template<typename T>
+		T& Data() const
+		{
+			return *(T*)DrawData;
+		}
+
+	private:
+		void* DrawData;
 	};
+
 	struct RenderGraphStage
 	{
 		std::string DebugName;

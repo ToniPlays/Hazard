@@ -10,7 +10,6 @@ namespace Hazard
 	struct CameraComponent : ComponentBase {
 
 	public:
-
 		void SetProjection(Projection t);
 		void SetFov(float fov);
 		void SetSize(float size);

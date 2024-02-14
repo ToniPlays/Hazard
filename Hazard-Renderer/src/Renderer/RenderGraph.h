@@ -19,6 +19,10 @@ namespace HazardRenderer
 		void SetResource(const std::string& name, void* data, uint64_t size);
 		void SetStageActive(const std::string& name, bool enabled);
 
+		void Reset() {
+			m_Iterations = 0;
+		}
+
 		static Ref<RenderGraph> Create(RenderGraphCreateInfo* createInfo);
 
 	private:
@@ -29,6 +33,7 @@ namespace HazardRenderer
 		std::vector<RenderGraphStage> m_Stages;
 		std::unordered_map<std::string, Buffer> m_Resources;
 
+		std::atomic_uint32_t m_Iterations = 0;
 		std::atomic<float> m_ExecutionTime = 0.0f;
 	};
 }

@@ -69,18 +69,19 @@ namespace Editor
 		auto& project = ProjectManager::GetProject().GetInfo();
 		std::filesystem::path scriptPath = project.ProjectPath / "Project";
 		std::filesystem::path buildPath = project.ProjectPath / "Library";
+
 		std::string command = (scriptPath / "BuildSolution.bat").string() + " > " + buildPath.string() + "/build.hlog";
 		OS::SysCall(command.c_str());
+
 		HZR_INFO("Compiled source files");
 
 		auto& manager = Hazard::Application::Get().GetModule<Hazard::GUIManager>();
-		auto console = manager.GetRenderable<UI::Console>();
-		if (!console) return;
+		auto& console = manager.GetExistingOrNew<UI::Console>();
 
 		std::vector<UI::ConsoleMessage> messages = ParseBuildResult(File::ReadFile(buildPath / "build.hlog"));
 
 		for (auto& message : messages)
-			console->AddMessage(message);
+			console.AddMessage(message);
 	}
 	void EditorScriptManager::ReloadAssembly()
 	{
@@ -89,10 +90,10 @@ namespace Editor
 	}
 	void EditorScriptManager::RecompileAndLoad()
 	{
-		auto console = Application::Get().GetModule<GUIManager>().GetRenderable<UI::Console>();
+		auto& console = Application::Get().GetModule<GUIManager>().GetExistingOrNew<UI::Console>();
 
-		if (console->ClearOnBuild())
-			console->Clear(true);
+		if (console.ClearOnBuild())
+			console.Clear(true);
 
 		Ref<Job> generateProject = Ref<Job>::Create("Generate C# project", GenerateProjectFilesJob, this);
 		Ref<Job> compileSource = Ref<Job>::Create("Compile C#", CompileSourcesJob, this);

@@ -18,8 +18,8 @@ namespace Hazard
 
         struct CreateSettings
         {
-            uint32_t Resolution;
-            uint32_t Samples;
+            uint32_t Resolution = 2048;
+            uint32_t Samples = 128;
         };
 
     private:

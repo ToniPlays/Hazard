@@ -48,6 +48,7 @@ namespace Hazard
 		m_RenderContextManager = &Application::Get().GetModule<RenderContextManager>();
 
 		m_RenderGraph = CreateRasterGraph();
+
 	}
 
 	void RenderEngine::ClearDrawLists()
@@ -82,6 +83,7 @@ namespace Hazard
 	}
 	void RenderEngine::Init()
 	{
+
 		ShaderLibrary::Init(m_RenderContextManager->GetWindow().GetWindowInfo().SelectedAPI);
 
 		s_Resources->Initialize(m_RenderPass);
@@ -105,6 +107,7 @@ namespace Hazard
 
 		Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
 
+		uint32_t renderingCameraIndex = 0;
 		for (auto& worldDrawList : m_DrawList)
 		{
 			CollectGeometry();
@@ -123,6 +126,7 @@ namespace Hazard
 
 				BufferCopyRegion region = {
 					.Size = sizeof(CameraData),
+					.Offset = sizeof(CameraData) * renderingCameraIndex,
 					.Data = &data,
 				};
 
@@ -135,9 +139,12 @@ namespace Hazard
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				m_RenderGraph->Execute(commandBuffer, camera.RenderPass);
 				commandBuffer->EndRenderPass();
+
+				renderingCameraIndex++;
 			}
 			m_CurrentDrawContext++;
 		}
+		m_RenderGraph->Reset();
 		ClearDrawLists();
 	}
 }

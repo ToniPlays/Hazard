@@ -19,53 +19,41 @@
     <Filter Include="src\Editor">
       <UniqueIdentifier>{C3F37E0D-AFAB-C05A-18B3-99B6048A5B4B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor\GUI">
+      <UniqueIdentifier>{571CA4D7-43EA-97DD-2C7E-080418EB7342}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\AssetTools">
+      <UniqueIdentifier>{D70CBCF5-43CF-EF7F-8C7F-7E0CF880C85D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\AssetTools\AssetEditors">
+      <UniqueIdentifier>{00DFD299-EC30-AA89-D54F-E799C140C372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\AssetTools\AssetImporters">
+      <UniqueIdentifier>{EBF2AD89-D76F-A1CC-00ED-A1E0ECC83D60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\Debug">
+      <UniqueIdentifier>{0DCCFDFC-F95A-87C6-A279-9BC18EE7976C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\Overlays">
+      <UniqueIdentifier>{5B3601F2-C76D-4989-D077-ADAC3C2E7082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\ProjectPanel">
+      <UniqueIdentifier>{2D2C5D98-9939-8B7E-2220-87698E2C5735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\ProjectPanel\ProjectSettings">
+      <UniqueIdentifier>{64664D50-D0CB-E0D6-59A4-82AFC508D645}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\Properties">
+      <UniqueIdentifier>{B386BB3A-1F49-EFC4-68F9-7D51D4FAC7A2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Editor\GUI\Viewport">
+      <UniqueIdentifier>{66D9757F-D210-BE16-DB1A-223A47D1E40F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\EditorScripting">
       <UniqueIdentifier>{16AF639D-8210-41AB-0B7E-875D77DE776A}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\EditorScripting\Bindings">
       <UniqueIdentifier>{33113AD5-1FCC-2981-C883-A2CBB41D7411}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Exporter">
-      <UniqueIdentifier>{950C937C-816F-2221-2AF5-5AD71637EEA3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI">
-      <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\AssetTools">
-      <UniqueIdentifier>{0193BA94-ED76-7BEA-56D7-753D42DA656C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\Debug">
-      <UniqueIdentifier>{F74F3B58-6310-B78E-2C4B-000C98CAFB6A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\Overlays">
-      <UniqueIdentifier>{052A7428-F122-937A-1A55-78FF06AD7286}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\ProjectPanel">
-      <UniqueIdentifier>{D7E415F1-C373-9FBA-6C92-B3B55800B060}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\ProjectPanel\ProjectSettings">
-      <UniqueIdentifier>{0E332638-FA19-E82F-A36A-4E4D8F306196}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\Properties">
-      <UniqueIdentifier>{DD0CBAD9-C9F0-7A2F-3251-75821E5465B1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\GUI\Viewport">
-      <UniqueIdentifier>{10CDE8B5-FCC5-0708-25F8-EC8C1150E713}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Localization">
-      <UniqueIdentifier>{25758DDC-116E-AC2E-3AA0-91B326F88B3A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform">
-      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform\Metal">
-      <UniqueIdentifier>{E34F01F2-CF33-C247-3894-BC9A2497ACC9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform\OpenGL">
-      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Platform\Vulkan">
-      <UniqueIdentifier>{81084748-ED69-2456-76D7-6A08E2375B15}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Project">
       <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
@@ -123,6 +111,96 @@
     <ClInclude Include="src\Editor\EditorWorldManager.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AllPanels.h">
+      <Filter>src\Editor\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetEditors\MeshAssetEditorPanel.h">
+      <Filter>src\Editor\GUI\AssetTools\AssetEditors</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetImporterPanel.h">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetImporters\EnvironmentAssetImporter.h">
+      <Filter>src\Editor\GUI\AssetTools\AssetImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetImporters\IAssetImporter.h">
+      <Filter>src\Editor\GUI\AssetTools\AssetImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetImporters\ImageAssetImporter.h">
+      <Filter>src\Editor\GUI\AssetTools\AssetImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetImporters\MeshAssetImporter.h">
+      <Filter>src\Editor\GUI\AssetTools\AssetImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetPanel.h">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetPanelItem.h">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\MaterialEditor.h">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\ScriptCreatePanel.h">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Debug\AssetManagerDebugPanel.h">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Debug\Console.h">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Debug\PerformanceDebugPanel.h">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Debug\RenderCommandListPanel.h">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Debug\RendererDebugPanel.h">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\MainMenuBar.h">
+      <Filter>src\Editor\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Overlays\ProgressOverlay.h">
+      <Filter>src\Editor\GUI\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\ProjectPanel\ExportPanel.h">
+      <Filter>src\Editor\GUI\ProjectPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\ProjectPanel\ProjectSettings\InputSettings.h">
+      <Filter>src\Editor\GUI\ProjectPanel\ProjectSettings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\ProjectPanel\ProjectSettings\ScriptPreprocessorSettings.h">
+      <Filter>src\Editor\GUI\ProjectPanel\ProjectSettings</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\ProjectPanel\ProjectSettingsPanel.h">
+      <Filter>src\Editor\GUI\ProjectPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\ProjectPanel\ProjectTodoPanel.h">
+      <Filter>src\Editor\GUI\ProjectPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Properties\ComponentUILibrary.h">
+      <Filter>src\Editor\GUI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Properties\Hierarchy.h">
+      <Filter>src\Editor\GUI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Properties\Properties.h">
+      <Filter>src\Editor\GUI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Properties\ScriptFieldUI.h">
+      <Filter>src\Editor\GUI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Viewport\GameViewport.h">
+      <Filter>src\Editor\GUI\Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Viewport\TransformationGizmo.h">
+      <Filter>src\Editor\GUI\Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Editor\GUI\Viewport\Viewport.h">
+      <Filter>src\Editor\GUI\Viewport</Filter>
+    </ClInclude>
     <ClInclude Include="src\EditorScripting\Bindings\ApplicationBindings.h">
       <Filter>src\EditorScripting\Bindings</Filter>
     </ClInclude>
@@ -131,81 +209,6 @@
     </ClInclude>
     <ClInclude Include="src\EditorScripting\EditorScriptGlue.h">
       <Filter>src\EditorScripting</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\AllPanels.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\AssetTools\AssetImporterPanel.h">
-      <Filter>src\GUI\AssetTools</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\AssetTools\MaterialEditor.h">
-      <Filter>src\GUI\AssetTools</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\AssetTools\ScriptCreatePanel.h">
-      <Filter>src\GUI\AssetTools</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Debug\AssetManagerDebugPanel.h">
-      <Filter>src\GUI\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Debug\Console.h">
-      <Filter>src\GUI\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Debug\PerformanceDebugPanel.h">
-      <Filter>src\GUI\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Debug\RenderCommandListPanel.h">
-      <Filter>src\GUI\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Debug\RendererDebugPanel.h">
-      <Filter>src\GUI\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\MainMenuBar.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Overlays\ProgressOverlay.h">
-      <Filter>src\GUI\Overlays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\AssetTools\AssetPanel.h">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\AssetTools\AssetPanelItem.h">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ProjectPanel\ExportPanel.h">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\InputSettings.h">
-      <Filter>src\GUI\ProjectPanel\ProjectSettings</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettings\ScriptPreprocessorSettings.h">
-      <Filter>src\GUI\ProjectPanel\ProjectSettings</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ProjectPanel\ProjectSettingsPanel.h">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ProjectPanel\ProjectTodoPanel.h">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Properties\ComponentUILibrary.h">
-      <Filter>src\GUI\Properties</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Properties\Hierarchy.h">
-      <Filter>src\GUI\Properties</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Properties\Properties.h">
-      <Filter>src\GUI\Properties</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Properties\ScriptFieldUI.h">
-      <Filter>src\GUI\Properties</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Viewport\GameViewport.h">
-      <Filter>src\GUI\Viewport</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Viewport\TransformationGizmo.h">
-      <Filter>src\GUI\Viewport</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\Viewport\Viewport.h">
-      <Filter>src\GUI\Viewport</Filter>
     </ClInclude>
     <ClInclude Include="src\Project\HazardProject.h">
       <Filter>src\Project</Filter>
@@ -216,11 +219,6 @@
     <ClInclude Include="src\Project\ProjectSettingsSchema.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\AssetTools\AssetImporters\IAssetImporter.h" />
-    <ClInclude Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.h" />
-    <ClInclude Include="src\GUI\AssetTools\AssetImporters\MeshAssetImporter.h" />
-    <ClInclude Include="src\GUI\AssetTools\AssetImporters\EnvironmentAssetImporter.h" />
-    <ClInclude Include="src\GUI\AssetTools\AssetEditors\MeshAssetEditorPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -256,68 +254,80 @@
     <ClCompile Include="src\Editor\EditorWorldManager.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetEditors\MeshAssetEditorPanel.cpp">
+      <Filter>src\Editor\GUI\AssetTools\AssetEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetImporterPanel.cpp">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetImporters\EnvironmentAssetImporter.cpp">
+      <Filter>src\Editor\GUI\AssetTools\AssetImporters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetImporters\ImageAssetImporter.cpp">
+      <Filter>src\Editor\GUI\AssetTools\AssetImporters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetImporters\MeshAssetImporter.cpp">
+      <Filter>src\Editor\GUI\AssetTools\AssetImporters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetPanel.cpp">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetPanelItem.cpp">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\MaterialEditor.cpp">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\ScriptCreatePanel.cpp">
+      <Filter>src\Editor\GUI\AssetTools</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Debug\AssetManagerDebugPanel.cpp">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Debug\Console.cpp">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Debug\PerformanceDebugPanel.cpp">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Debug\RenderCommandListPanel.cpp">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Debug\RendererDebugPanel.cpp">
+      <Filter>src\Editor\GUI\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\MainMenuBar.cpp">
+      <Filter>src\Editor\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Overlays\ProgressOverlay.cpp">
+      <Filter>src\Editor\GUI\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\ProjectPanel\ExportPanel.cpp">
+      <Filter>src\Editor\GUI\ProjectPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\ProjectPanel\ProjectSettingsPanel.cpp">
+      <Filter>src\Editor\GUI\ProjectPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\ProjectPanel\ProjectTodoPanel.cpp">
+      <Filter>src\Editor\GUI\ProjectPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Properties\Hierarchy.cpp">
+      <Filter>src\Editor\GUI\Properties</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Properties\Properties.cpp">
+      <Filter>src\Editor\GUI\Properties</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Viewport\GameViewport.cpp">
+      <Filter>src\Editor\GUI\Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Viewport\TransformationGizmo.cpp">
+      <Filter>src\Editor\GUI\Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\Viewport\Viewport.cpp">
+      <Filter>src\Editor\GUI\Viewport</Filter>
+    </ClCompile>
     <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp">
       <Filter>src\EditorScripting</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\AssetTools\AssetImporterPanel.cpp">
-      <Filter>src\GUI\AssetTools</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\AssetTools\MaterialEditor.cpp">
-      <Filter>src\GUI\AssetTools</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\AssetTools\ScriptCreatePanel.cpp">
-      <Filter>src\GUI\AssetTools</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Debug\AssetManagerDebugPanel.cpp">
-      <Filter>src\GUI\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Debug\Console.cpp">
-      <Filter>src\GUI\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Debug\PerformanceDebugPanel.cpp">
-      <Filter>src\GUI\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Debug\RenderCommandListPanel.cpp">
-      <Filter>src\GUI\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Debug\RendererDebugPanel.cpp">
-      <Filter>src\GUI\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\MainMenuBar.cpp">
-      <Filter>src\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Overlays\ProgressOverlay.cpp">
-      <Filter>src\GUI\Overlays</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\AssetTools\AssetPanel.cpp">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\AssetTools\AssetPanelItem.cpp">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\ProjectPanel\ExportPanel.cpp">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\ProjectPanel\ProjectSettingsPanel.cpp">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\ProjectPanel\ProjectTodoPanel.cpp">
-      <Filter>src\GUI\ProjectPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Properties\Hierarchy.cpp">
-      <Filter>src\GUI\Properties</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Properties\Properties.cpp">
-      <Filter>src\GUI\Properties</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Viewport\GameViewport.cpp">
-      <Filter>src\GUI\Viewport</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Viewport\TransformationGizmo.cpp">
-      <Filter>src\GUI\Viewport</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\Viewport\Viewport.cpp">
-      <Filter>src\GUI\Viewport</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\HazardProject.cpp">
       <Filter>src\Project</Filter>
@@ -325,9 +335,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\AssetTools\AssetImporters\ImageAssetImporter.cpp" />
-    <ClCompile Include="src\GUI\AssetTools\AssetImporters\MeshAssetImporter.cpp" />
-    <ClCompile Include="src\GUI\AssetTools\AssetImporters\EnvironmentAssetImporter.cpp" />
-    <ClCompile Include="src\GUI\AssetTools\AssetEditors\MeshAssetEditorPanel.cpp" />
   </ItemGroup>
 </Project>

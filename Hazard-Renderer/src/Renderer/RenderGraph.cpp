@@ -10,11 +10,11 @@ namespace HazardRenderer
 
 		for (auto& stage : m_Stages)
 		{
-			RenderGraphFuncData data = {
-				.CommandBuffer = commandBuffer,
-				.CurrentRenderPass = outputRenderpass,
-				.Enabled = stage.Enabled
-			};
+			RenderGraphFuncData data = {};
+			data.CurrentRenderPass = outputRenderpass;
+			data.Enabled = stage.Enabled;
+			data.CommandBuffer = commandBuffer;
+			data.Iteration = m_Iterations;
 
 			stage.OnPrepare.Invoke(data);
 
@@ -26,7 +26,7 @@ namespace HazardRenderer
 
 			while (buffer.Size > offset)
 			{
-				data.Data = buffer.Read(offset);
+				data.DrawData = buffer.Read(offset);
 				offset += stage.Stride;
 
 				stage.Execute.Invoke(data);
@@ -34,7 +34,7 @@ namespace HazardRenderer
 
 			stage.OnFinished.Invoke(data);
 		}
-
+		m_Iterations++;
 		m_ExecutionTime = timer.ElapsedMillis();
 	}
 

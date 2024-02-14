@@ -20,19 +20,16 @@ public:
 	CachedBuffer(void* data, uint64_t size)
 	{
 		m_DataBuffer = Buffer(data, size);
-		m_OwnsData = false;
 	}
 
 	CachedBuffer(Buffer buffer)
 	{
 		m_DataBuffer = buffer;
-		m_OwnsData = true;
 	}
 
 	~CachedBuffer()
 	{
-		if (m_OwnsData)
-			m_DataBuffer.Release();
+		m_DataBuffer.Release();
 	}
 
 	void Allocate(uint64_t size)
@@ -138,5 +135,4 @@ public:
 private:
 	Buffer m_DataBuffer;
 	uint64_t m_CurrentBufferOffset = 0;
-	bool m_OwnsData = false;
 };

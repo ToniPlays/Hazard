@@ -38,8 +38,8 @@ namespace HazardRenderer
 		uint32_t Width = 0, Height = 0;
 		uint32_t Samples = 1;
 		uint32_t AttachmentCount = 0;
-		glm::vec4 ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		std::vector<FrameBufferAttachment> Attachments;
+		glm::vec4 ClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 		Ref<FrameBuffer> pFrameBuffer = nullptr;
 		bool SwapChainTarget = false;
 		bool ClearOnLoad = true;
@@ -70,6 +70,7 @@ namespace HazardRenderer
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
+		virtual float GetAspectRatio() const = 0;
 
 		virtual uint64_t GetColorAttachmentCount() = 0;
 

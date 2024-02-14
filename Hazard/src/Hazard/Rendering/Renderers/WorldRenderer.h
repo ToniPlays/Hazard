@@ -17,25 +17,13 @@ namespace Hazard
 		uint32_t Height;
 
 		Ref<HazardRenderer::RenderPass> RenderPass;
-		Ref<HazardRenderer::FrameBuffer> OutputFrameBuffer;
 
-		bool IsValid() { return RenderPass && OutputFrameBuffer; }
-	};
-
-	enum GeometryInclude
-	{
-		Geometry_Quad = BIT(0),
-		Geometry_Lines = BIT(1),
-		Geometry_Mesh = BIT(2),
-		Geometry_Text = BIT(3),
-		Geometry_Shadow = BIT(4),
-		Geometry_All = Geometry_Quad | Geometry_Lines | Geometry_Mesh | Geometry_Shadow
+		bool IsValid() { return RenderPass; }
 	};
 
 	struct WorldRendererSpec
 	{
 		std::string DebugName;
-		GeometryInclude Geometry = Geometry_All;
 		Ref<World> TargetWorld = nullptr;
 
 	};
@@ -53,7 +41,7 @@ namespace Hazard
 			m_TargetWorld = world;
 		}
 
-		void SubmitCamera(WorldCameraData camera)
+		void SubmitCamera(const WorldCameraData& camera)
 		{
 			m_CameraData.push_back(camera);
 		}

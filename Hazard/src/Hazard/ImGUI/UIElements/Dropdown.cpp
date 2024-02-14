@@ -10,6 +10,7 @@ namespace Hazard::ImUI
 		const Style& style = StyleManager::GetCurrent();
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, m_Width);
+		ImUI::ShiftY(4.0f);
 		ImGui::Text("%s", m_Title.c_str());
 		ImGui::NextColumn();
 

@@ -23,9 +23,9 @@ namespace Hazard
 		bool OnEvent(Event& e) override;
 
 		template<typename T>
-		T* GetRenderable()
+		T* GetRenderable(uint32_t id)
 		{
-			return FindRenderable<T>();
+			return FindRenderable<T>(id);
 		}
 
 		template<typename T>
@@ -71,13 +71,20 @@ namespace Hazard
 		void InitImGuiPlatform(HazardRenderer::Window& window);
 
 		template<typename T>
-		ImUI::GUIRenderable* FindRenderable(T* renderable)
+		ImUI::GUIRenderable* FindRenderable(uint64_t handle)
 		{
-			if (!renderable) return nullptr;
+			if (handle == 0) 
+				return nullptr;
 
 			auto& panels = m_Renderables[typeid(T).hash_code()];
-			auto it = std::find(panels.begin(), panels.end(), renderable);
-			return it != panels.end() ? panels.at(it) : nullptr;
+
+			for (auto& panel : panels)
+			{
+				if (panel->GetPanelID() == handle) 
+					return panel;
+			}
+
+			return nullptr;
 		}
 
 		template<typename T>

@@ -21,6 +21,7 @@ public:
 	~EditorAssetManager() = default;
 
 	static void Init();
+	static void PostInit();
 	static void LoadEditorAssets();
     
 	//---------------------
@@ -28,7 +29,9 @@ public:
     static AssetHandle GetDefaultMesh(const std::string& name);
 
 private:
-	static void ImportEngineAssets();
+	static void ImportEngineShaders(std::vector<JobPromise>& promises);
+	static void ImportEngineEnvironments(std::vector<JobPromise>& promises);
+
 
 private:
 	inline static std::unordered_map<std::string, AssetHandle> s_Icons;

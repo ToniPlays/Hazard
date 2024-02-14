@@ -46,7 +46,7 @@ namespace Hazard
 		JobGraphInfo info = {
 			.Name = "Environment map save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Save", 0.3f, { saveJob } },
+			.Stages = { { "Save", 1.0f, { saveJob } },
 			}
 		};
 
@@ -83,7 +83,8 @@ namespace Hazard
 			.Samples = map->GetSpec().Samples,
 		};
 
-		Buffer buffer = Buffer::Copy(&create, sizeof(CreateSettings));
+		Buffer buf = Buffer::Copy(&create, sizeof(CreateSettings));
+		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(buf);
 		info.Job->SetResult(buffer);
 	}
 	void EnvironmentAssetLoader::CreateImageFromSource(JobInfo& info, const std::filesystem::path& sourcePath)

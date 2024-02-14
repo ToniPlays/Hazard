@@ -30,6 +30,9 @@ namespace HazardRenderer::Vulkan
 		m_Extent.Height = createInfo->Height;
 		m_Extent.Depth = 6;
 
+		HZR_ASSERT(m_Extent.Width > 0, "Width cannot be 0");
+		HZR_ASSERT(m_Extent.Height > 0, "Height cannot be 0");
+
 		m_ImageDescriptor.imageView = VK_NULL_HANDLE;
 		m_ImageDescriptor.sampler = VK_NULL_HANDLE;
 

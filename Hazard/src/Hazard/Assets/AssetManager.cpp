@@ -4,6 +4,7 @@
 
 #include "Hazard/Core/Application.h"
 #include <Utility/StringUtil.h>
+#include <Directory.h>
 
 namespace Hazard
 {
@@ -188,6 +189,7 @@ namespace Hazard
 		}
 
 		AssetMetadata& metadata = GetMetadata(handle);
+		if (!metadata.IsValid()) return JobPromise();
 
 		Ref<JobGraph> graph = GetLoadGraph(metadata);
 
@@ -227,6 +229,8 @@ namespace Hazard
 		graph->AddOnCompleted([asset, settings](JobGraph& graph) {
 
 			Ref<CachedBuffer> result = graph.GetResult<Ref<CachedBuffer>>();
+			if (!result)
+				throw JobException("Did not receive asset data");
 
 			//Save asset package
 			AssetPack pack = {};
@@ -235,6 +239,10 @@ namespace Hazard
 			pack.Type = asset->GetType();
 			pack.SourceFile = asset->GetSourceFilePath().string();
 
+			auto directoryPath = File::GetDirectoryOf(settings.TargetPath);
+
+			if (!Directory::Exists(directoryPath))
+				Directory::Create(directoryPath);
 
 			//Copy save result to 
 			if (settings.Flags & ASSET_MANAGER_COMBINE_ASSET)
@@ -306,6 +314,10 @@ namespace Hazard
 	{
 		auto absolutePath = File::GetFileAbsolutePath(path);
 
+		std::cout << absolutePath.string() << std::endl;
+
+		std::scoped_lock lock(s_AssetMutex);
+
 		AssetMetadata metadata = {
 			.AssetPackHandle = 0,
 			.Handle = pack.Handle,
@@ -315,7 +327,6 @@ namespace Hazard
 			.SourceFile = pack.SourceFile
 		};
 
-		std::scoped_lock(s_AssetMutex);
 		s_Registry[absolutePath] = metadata;
 
 		return pack.Handle;

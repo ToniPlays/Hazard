@@ -22,6 +22,7 @@ namespace Hazard
 		std::vector<MeshImporter::MeshMetadata> GetMeshes() override;
 		std::vector<MeshImporter::AnimationData> GetAnimations() override;
 		MeshData GetMeshData(const MeshMetadata& mesh, const std::function<void(uint32_t, uint32_t)>& progress) override;
+		MaterialData GetMaterial(uint32_t materialIndex) override;
 		glm::mat4 GetMeshTransform(uint32_t meshIndex) override;
 
 		void AddImportProgressCallback(const std::function<void(float)> callback) override
@@ -38,6 +39,9 @@ namespace Hazard
 
 		void PrintHierarchy(const aiNode* node, uint32_t level);
 		std::unordered_map<TextureType, uint32_t> GetMaterialTextures(aiMaterial* material);
+	private:
+
+		static HazardRenderer::ShaderDataType AiPropertyToShaderType(const aiMaterialProperty& material);
 
 	private:
 		Assimp::Importer m_Importer;

@@ -23,10 +23,12 @@ namespace Hazard
 		EnvironmentMapSpec GetSpec() const { return m_Spec; }
         
 		Ref<HazardRenderer::Cubemap> GetCubemap() const { return m_EnvironmentMap; }
+		Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; }
 
     private:
 
 		Ref<HazardRenderer::Cubemap> m_EnvironmentMap;
+		Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;
 		EnvironmentMapSpec m_Spec;
 	};
 }

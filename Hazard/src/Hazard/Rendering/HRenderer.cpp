@@ -120,7 +120,8 @@ namespace Hazard
 		auto& env = s_Engine->GetDrawList();
 		env.Environment.Pipeline = ShaderLibrary::GetPipeline("Skybox");
 		env.Environment.Cubemap = map->GetCubemap();
-		env.Environment.DescriptorSet = s_Engine->GetResources().SkyboxDescriptor;
+		env.Environment.DescriptorSet = map->GetDescriptorSet();
+		env.Environment.CameraBuffer = s_Engine->GetResources().CameraUniformBuffer;
 		env.Environment.Constants.LodLevel = skyLight.LodLevel;
 		env.Environment.Constants.Intensity = skyLight.Intensity;
 	}

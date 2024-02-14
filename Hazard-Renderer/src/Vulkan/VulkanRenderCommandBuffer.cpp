@@ -413,6 +413,8 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanDescriptorSet> vkSet = descriptorSet.As<VulkanDescriptorSet>();
 		VkPipelineBindPoint bindingPoint = m_DeviceQueue == DeviceQueue::GraphicsBit ? VK_PIPELINE_BIND_POINT_GRAPHICS : VK_PIPELINE_BIND_POINT_COMPUTE;
 
+		HZR_ASSERT(vkSet, "Nullptr descriptor set");
+
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline, set, bindingPoint, vkSet, setIndex = set]() mutable {
 			const VkDescriptorSet set = vkSet->GetVulkanDescriptorSet();
 			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindingPoint, pipeline->GetPipelineLayout(), setIndex, 1, &set, 0, nullptr);

@@ -13,32 +13,35 @@ namespace Hazard::ImUI
 	public:
 
 		Panel() = default;
-		Panel(const std::string& title) : m_Title(title) {}
+		Panel(const std::string& title, bool destroyOnClose = true) : m_Title(title), m_DestroyOnClose(destroyOnClose) {}
 
 		virtual ~Panel() = default;
 
 		void Render() override
 		{
-			bool open = true;
-			if (!ImGui::Begin(m_Title.c_str(), &open))
+			if (!m_IsOpen)
+			{
+				if (m_DestroyOnClose)
+				{
+					//Remove panel from list
+					auto& manager = Application::Get().GetModule<GUIManager>();
+					manager.Destroy(this);
+				}
+				return;
+			}
+
+			if (!ImGui::Begin(m_Title.c_str(), &m_IsOpen))
 			{
 				ImGui::End();
 				return;
 			}
 
-			ImGuiWindow* window = ImGui::GetCurrentWindow();
-
-			if (open && !window->Viewport->PlatformRequestClose)
+			if (m_IsOpen)
 			{
 				m_Hovered = MouseOverWindow();
 				OnPanelRender();
 			}
-			else
-			{
-				//Remove panel from list
-				auto& manager = Application::Get().GetModule<GUIManager>();
-				manager.Destroy(this);
-			}
+
 			ImGui::End();
 		};
 
@@ -46,6 +49,7 @@ namespace Hazard::ImUI
 		{
 			ImGuiWindow* window = ImGui::FindWindowByName(m_Title.c_str());
 			if (!window) return;
+			m_IsOpen = true;
 			ImGui::BringWindowToFocusFront(window);
 		}
 
@@ -73,5 +77,7 @@ namespace Hazard::ImUI
 	protected:
 		std::string m_Title = "Undefined panel";
 		bool m_Hovered = false;
+		bool m_DestroyOnClose = true;
+		bool m_IsOpen = true;
 	};
 }

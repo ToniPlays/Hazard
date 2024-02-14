@@ -31,6 +31,7 @@ namespace Hazard
 
 		Ref<Pipeline> Pipeline;
 		Ref<DescriptorSet> DescriptorSet;
+		Ref<GPUBuffer> CameraBuffer;
 		Ref<Cubemap> Cubemap;
 		SkyboxConstants Constants;
 	};

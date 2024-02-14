@@ -25,7 +25,7 @@ namespace Hazard
 			.TextureCount = scene->mNumTextures,
 		};
 
-		PrintHierarchy(scene->mRootNode, 0);
+		//PrintHierarchy(scene->mRootNode, 0);
 
 		return metadata;
 	}
@@ -57,6 +57,7 @@ namespace Hazard
 
 			auto& material = materials.emplace_back();
 			material.Name = mat->GetName().C_Str();
+			material.MaterialIndex = materialIndex;
 			material.PropertyCount = mat->mNumProperties;
 			material.Textures = GetMaterialTextures(mat);
 		}
@@ -201,6 +202,79 @@ namespace Hazard
 		return data;
 	}
 
+	MeshImporter::MaterialData AssimpImporter::GetMaterial(uint32_t materialIndex)
+	{
+		const aiScene* scene = GetScene();
+		aiMaterial* mat = scene->mMaterials[materialIndex];
+
+		std::vector<MeshImporter::MaterialProperty> properties;
+
+		Hooks<std::string, void(aiMaterialProperty*)> hooks;
+		hooks.AddHook("$clr.ambient", [&properties](aiMaterialProperty* property) {
+			auto& prop = properties.emplace_back();
+			prop.Name = property->mKey.C_Str();
+			prop.Usage = TextureType::Albedo;
+			prop.Type = AiPropertyToShaderType(*property);
+			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+		});
+
+		hooks.AddHook("$clr.diffuse", [&properties](aiMaterialProperty* property) {
+			auto& prop = properties.emplace_back();
+			prop.Name = property->mKey.C_Str();
+			prop.Usage = TextureType::Diffuse;
+			prop.Type = AiPropertyToShaderType(*property);
+			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+		});
+
+		hooks.AddHook("$clr.specular", [&properties](aiMaterialProperty* property) {
+			auto& prop = properties.emplace_back();
+			prop.Name = property->mKey.C_Str();
+			prop.Usage = TextureType::Specular;
+			prop.Type = AiPropertyToShaderType(*property);
+			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+		});
+
+		hooks.AddHook("$clr.emissive", [&properties](aiMaterialProperty* property) {
+			auto& prop = properties.emplace_back();
+			prop.Name = property->mKey.C_Str();
+			prop.Usage = TextureType::Emission;
+			prop.Type = AiPropertyToShaderType(*property);
+			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+		});
+
+		hooks.AddHook("$mat.gltf.pbrMetallicRoughness.metallicFactor", [&properties](aiMaterialProperty* property) {
+			auto& prop = properties.emplace_back();
+			prop.Name = property->mKey.C_Str();
+			prop.Usage = TextureType::Metalness;
+			prop.Type = AiPropertyToShaderType(*property);
+			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+		});
+
+		hooks.AddHook("$mat.gltf.pbrMetallicRoughness.roughnessFactor", [&properties](aiMaterialProperty* property) {
+			auto& prop = properties.emplace_back();
+			prop.Name = property->mKey.C_Str();
+			prop.Usage = TextureType::Metalness;
+			prop.Type = AiPropertyToShaderType(*property);
+			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+		});
+
+		
+		for (uint32_t i = 0; i < mat->mNumProperties; i++)
+		{
+			aiMaterialProperty* property = mat->mProperties[i];
+			std::string key = property->mKey.C_Str();
+			//std::cout << key << std::endl;
+			hooks.Invoke(key, property);
+		}
+
+		MeshImporter::MaterialData data = {
+			.Name = mat->GetName().C_Str(),
+			.Properties = properties
+		};
+		
+		return data;
+	}
+
 	glm::mat4 AssimpImporter::GetMeshTransform(uint32_t nodeIndex)
 	{
 		return glm::mat4(1.0f);
@@ -338,6 +412,36 @@ namespace Hazard
 		}
 
 		return result;
+	}
+
+	HazardRenderer::ShaderDataType AssimpImporter::AiPropertyToShaderType(const aiMaterialProperty& material)
+	{
+		using namespace HazardRenderer;
+
+		switch (material.mType)
+		{
+			case aiPTI_Float: 
+			{
+				switch (material.mDataLength)
+				{
+					case sizeof(float) * 1: return ShaderDataType::Float;
+					case sizeof(float) * 2: return ShaderDataType::Float2;
+					case sizeof(float) * 3: return ShaderDataType::Float3;
+					case sizeof(float) * 4: return ShaderDataType::Float4;
+				}
+			}
+			case aiPTI_Integer:
+			{
+				switch (material.mDataLength)
+				{
+					case sizeof(int) * 1: return ShaderDataType::Int;
+					case sizeof(int) * 2: return ShaderDataType::Int2;
+					case sizeof(int) * 3: return ShaderDataType::Int3;
+					case sizeof(int) * 4: return ShaderDataType::Int4;
+				}
+			}
+		}
+		return ShaderDataType::None;
 	}
 
 	std::vector<MeshImporter::AnimationData> AssimpImporter::GetAnimations()

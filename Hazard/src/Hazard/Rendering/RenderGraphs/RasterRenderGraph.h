@@ -8,7 +8,6 @@ namespace Hazard
 
 	static Ref<RenderGraph> CreateRasterGraph()
 	{
-
 		std::vector<RenderGraphStage> stages;
 
 		auto& geometryStage = stages.emplace_back();
@@ -24,12 +23,13 @@ namespace Hazard
 		skyboxPass.Enabled = true;
 		skyboxPass.Stride = sizeof(EnvironmentData);
 		skyboxPass.Execute.Add([](const RenderGraphFuncData& data) mutable {
-			EnvironmentData envData = *(EnvironmentData*)data.Data;
+
+			EnvironmentData& envData = data.Data<EnvironmentData>();
 			Ref<RenderCommandBuffer> cmdBuffer = data.CommandBuffer;
-
+			envData.DescriptorSet->Write(0, envData.CameraBuffer, sizeof(CameraData), data.Iteration * sizeof(CameraData));
 			envData.DescriptorSet->Write(1, 0, envData.Cubemap, RenderEngine::GetResources().DefaultImageSampler);
-
 			envData.Pipeline->SetRenderPass(data.CurrentRenderPass);
+
 			cmdBuffer->SetPipeline(envData.Pipeline);
 			cmdBuffer->SetDescriptorSet(envData.DescriptorSet, 0);
 			cmdBuffer->PushConstants(Buffer(&envData.Constants, sizeof(EnvironmentData::SkyboxConstants)), 0, SHADER_STAGE_FRAGMENT_BIT);
