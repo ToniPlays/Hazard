@@ -8,11 +8,6 @@ layout(location = 1) in vec4 v_Color;
 
 layout(location = 0) out vec4 f_Color;
 
-layout(push_constant) uniform Transform
-{
-    mat4 Transform;
-} p_Transform;
-
 void main() 
 {
 	f_Color = v_Color;

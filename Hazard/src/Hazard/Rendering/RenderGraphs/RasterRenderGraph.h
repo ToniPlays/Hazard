@@ -6,16 +6,28 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	static Ref<RenderGraph> CreateRasterGraph()
+	static Ref<RenderGraph> CreateRasterGraph(RenderEngine* engine)
 	{
 		std::vector<RenderGraphStage> stages;
 
 		auto& geometryStage = stages.emplace_back();
 		geometryStage.DebugName = "GeometryPass";
 		geometryStage.Enabled = true;
-		geometryStage.Stride = 4;
+		geometryStage.Stride = sizeof(MeshData);
 		geometryStage.Execute.Add([](const RenderGraphFuncData& data) {
-			
+			auto& userData = data.Data<GraphBeginData>();
+			auto& instances = data.DrawData<MeshData>();
+
+			Ref<RenderCommandBuffer> cmdBuffer = userData.GraphicsBuffer;
+			instances.Material->GetPipeline()->SetRenderPass(userData.OutputRenderpass);
+
+			cmdBuffer->SetPipeline(instances.Material->GetPipeline());
+			cmdBuffer->SetVertexBuffer(instances.VertexBuffer);
+			cmdBuffer->SetDescriptorSet(userData.CameraDescriptor, 0);
+			if (instances.Material->GetDescriptorSet())
+				cmdBuffer->SetDescriptorSet(instances.Material->GetDescriptorSet(), 1);
+
+			cmdBuffer->Draw(instances.Count, instances.IndexBuffer, 0);
 		});
 
 		auto& skyboxPass = stages.emplace_back();
@@ -24,14 +36,17 @@ namespace Hazard
 		skyboxPass.Stride = sizeof(EnvironmentData);
 		skyboxPass.Execute.Add([](const RenderGraphFuncData& data) mutable {
 
-			EnvironmentData& envData = data.Data<EnvironmentData>();
-			Ref<RenderCommandBuffer> cmdBuffer = data.CommandBuffer;
-			envData.DescriptorSet->Write(0, envData.CameraBuffer, sizeof(CameraData), data.Iteration * sizeof(CameraData));
-			envData.DescriptorSet->Write(1, 0, envData.Cubemap, RenderEngine::GetResources().DefaultImageSampler);
-			envData.Pipeline->SetRenderPass(data.CurrentRenderPass);
+			auto& userData = data.Data<GraphBeginData>();
+			auto& envData = data.DrawData<EnvironmentData>();
+			if (!envData.Pipeline) return;
+
+			Ref<RenderCommandBuffer> cmdBuffer = userData.GraphicsBuffer;
+
+			envData.Pipeline->SetRenderPass(userData.OutputRenderpass);
 
 			cmdBuffer->SetPipeline(envData.Pipeline);
-			cmdBuffer->SetDescriptorSet(envData.DescriptorSet, 0);
+			cmdBuffer->SetDescriptorSet(userData.CameraDescriptor, 0);
+			cmdBuffer->SetDescriptorSet(envData.DescriptorSet, 1);
 			cmdBuffer->PushConstants(Buffer(&envData.Constants, sizeof(EnvironmentData::SkyboxConstants)), 0, SHADER_STAGE_FRAGMENT_BIT);
 			cmdBuffer->Draw(6);
 		});
@@ -41,6 +56,30 @@ namespace Hazard
 			.StageCount = stages.size(),
 			.pStages = stages.data(),
 		};
+
+		info.OnPrepare.Add([engine](const RenderGraphFuncData& data) {
+			auto& resources = RenderEngine::GetResources();
+			auto& camera = data.Data<GraphBeginData>();
+
+			BufferCopyRegion region = {
+				.Size = sizeof(CameraData),
+				.Offset = sizeof(CameraData) * data.Iteration,
+				.Data = &camera.Camera,
+			};
+			resources.CameraUniformBuffer->SetData(region);
+			camera.CameraDescriptor->Write(0, resources.CameraUniformBuffer, sizeof(CameraData), data.Iteration * sizeof(CameraData), false);
+		});
+
+		info.OnPrepare.Add([engine](const RenderGraphFuncData& data) mutable {
+			auto& userData = data.Data<GraphBeginData>();
+			Ref<RenderCommandBuffer> cmdBuffer = userData.GraphicsBuffer;
+			cmdBuffer->BeginRenderPass(userData.OutputRenderpass);
+		});
+
+		info.OnFinished.Add([](const RenderGraphFuncData& data) mutable {
+			Ref<RenderCommandBuffer> cmdBuffer = data.Data<GraphBeginData>().GraphicsBuffer;
+			cmdBuffer->EndRenderPass();
+		});
 
 		return RenderGraph::Create(&info);
 	}

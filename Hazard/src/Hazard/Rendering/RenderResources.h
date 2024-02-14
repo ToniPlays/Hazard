@@ -50,17 +50,9 @@ namespace Hazard
 		uint32_t Flags = 0;
 	};
 
-	struct InstanceTransform
-	{
-		glm::vec4 MRow0;
-		glm::vec4 MRow1;
-		glm::vec4 MRow2;
-	};
-
 	using namespace HazardRenderer;
 	struct RenderResources
 	{
-		Ref<DescriptorSet> WorldDescriptor;
 		Ref<GPUBuffer> CameraUniformBuffer;
 
 		AssetHandle WhiteTextureHandle;
@@ -74,19 +66,6 @@ namespace Hazard
 		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
 		{
 
-			DescriptorSetLayout layout = { { SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
-										   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-										   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-										   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
-
-			DescriptorSetCreateInfo setInfo = {
-				.DebugName = "WorldDescriptor",
-				.Set = 0,
-				.pLayout = &layout,
-			};
-
-			WorldDescriptor = DescriptorSet::Create(&setInfo);
-
 			BufferCreateInfo cameraUBO = {
 				.Name = "Camera",
 				.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT | BUFFER_USAGE_DYNAMIC,
@@ -94,7 +73,6 @@ namespace Hazard
 			};
 
 			CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
-			WorldDescriptor->Write(0, CameraUniformBuffer, sizeof(CameraData), 0, true);
 
 			auto& resources = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources();
 

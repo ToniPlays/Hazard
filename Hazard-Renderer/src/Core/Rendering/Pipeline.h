@@ -70,8 +70,7 @@ namespace HazardRenderer
 	public:
 		virtual ~Pipeline() = default;
 
-		virtual PipelineSpecification GetSpecifications() = 0;
-		virtual const PipelineSpecification GetSpecifications() const = 0;
+		virtual const PipelineSpecification& GetSpecifications() const = 0;
 
 		virtual Ref<Shader> GetShader() = 0;
 		virtual void SetRenderPass(Ref<RenderPass> renderPass) = 0;

@@ -12,15 +12,12 @@
 
 namespace Hazard 
 {
-	enum RendererFlags : uint32_t
+	struct GraphBeginData
 	{
-		RendererFlags_None = 0,
-		RendererFlags_Overdraw = BIT(0),
-	};
-
-	struct RendererSettings
-	{
-		bool Raytraced = false;
+		CameraData Camera;
+		Ref<HazardRenderer::DescriptorSet> CameraDescriptor;
+		Ref<HazardRenderer::RenderCommandBuffer> GraphicsBuffer;
+		Ref<HazardRenderer::RenderPass> OutputRenderpass;
 	};
 
 	class RenderEngine : public Module 
@@ -35,17 +32,7 @@ namespace Hazard
 		void Render() override;
 
 		void ClearDrawLists();
-
-		/// <summary>
-		/// Get all the geometry for rendering
-		/// </summary>
-		/// <param name="renderer"></param>
 		void CollectGeometry();
-
-		//Not yet implemented, NOT TODO
-
-		uint32_t GetFlags() { return m_Flags; }
-		void SetFlags(uint32_t flags) { m_Flags = flags; }
 
 		QuadRenderer& GetQuadRenderer() { return m_QuadRenderer; }
 		LineRenderer& GetLineRenderer() { return m_LineRenderer; }
@@ -56,15 +43,12 @@ namespace Hazard
 		Ref<HazardRenderer::RenderPass> GetRenderPass() { return m_RenderPass; }
 		
 		static RenderResources& GetResources() { return *s_Resources; }
-		RendererSettings& GetSettings() { return m_Settings; }
 
 	private:
 		std::vector<RendererDrawList> m_DrawList;
         
 		RenderContextManager* m_RenderContextManager;
 		Ref<RenderGraph> m_RenderGraph;
-
-		inline static RenderResources* s_Resources = nullptr;
 
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;
@@ -74,7 +58,7 @@ namespace Hazard
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 
 		uint32_t m_CurrentDrawContext = 0;
-		uint32_t m_Flags = RendererFlags_None;
-		RendererSettings m_Settings;
+
+		inline static RenderResources* s_Resources = nullptr;
 	};
 }

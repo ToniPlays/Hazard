@@ -24,7 +24,7 @@ void main()
 
 layout(location = 0) in vec3 v_Position;
 
-layout(set = 0, binding = 1) uniform samplerCube u_CubeMap;
+layout(set = 1, binding = 0) uniform samplerCube u_CubeMap;
 
 layout(push_constant) uniform PushConstant
 {

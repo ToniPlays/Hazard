@@ -219,6 +219,7 @@
     <ClInclude Include="src\Project\ProjectSettingsSchema.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetEditors\MaterialAssetEditorPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -335,5 +336,6 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetEditors\MaterialAssetEditorPanel.cpp" />
   </ItemGroup>
 </Project>

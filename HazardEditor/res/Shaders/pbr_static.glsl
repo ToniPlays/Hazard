@@ -70,7 +70,6 @@ struct PBRParameters
 
 #include "Uniforms/CameraUniform.glslh"
 
-
 layout(location = 0) out vec4 OutputColor;
 layout(location = 1) out uint EntityID;
 

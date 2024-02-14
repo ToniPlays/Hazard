@@ -4,18 +4,20 @@
 
 namespace HazardRenderer
 {
-	void RenderGraph::Execute(Ref<RenderCommandBuffer> commandBuffer, Ref<RenderPass> outputRenderpass)
+	void RenderGraph::Execute(void* userData)
 	{
 		Timer timer;
 
+		RenderGraphFuncData data = {};
+		data.m_UserData = userData;
+		data.Iteration = m_Iterations;
+		data.Enabled = true;
+
+		m_OnPrepare.Invoke(data);
+
 		for (auto& stage : m_Stages)
 		{
-			RenderGraphFuncData data = {};
-			data.CurrentRenderPass = outputRenderpass;
 			data.Enabled = stage.Enabled;
-			data.CommandBuffer = commandBuffer;
-			data.Iteration = m_Iterations;
-
 			stage.OnPrepare.Invoke(data);
 
 			if (!stage.Enabled)
@@ -26,7 +28,7 @@ namespace HazardRenderer
 
 			while (buffer.Size > offset)
 			{
-				data.DrawData = buffer.Read(offset);
+				data.m_DrawData = buffer.Read(offset);
 				offset += stage.Stride;
 
 				stage.Execute.Invoke(data);
@@ -34,6 +36,9 @@ namespace HazardRenderer
 
 			stage.OnFinished.Invoke(data);
 		}
+
+		m_OnFinished.Invoke(data);
+
 		m_Iterations++;
 		m_ExecutionTime = timer.ElapsedMillis();
 	}
@@ -41,16 +46,6 @@ namespace HazardRenderer
 	void RenderGraph::SetResource(const std::string& name, void* data, uint64_t size)
 	{
 		m_Resources[name] = Buffer(data, size);
-	}
-	void RenderGraph::SetStageActive(const std::string& name, bool enabled)
-	{
-		for (auto& stage : m_Stages)
-		{
-			if (stage.DebugName != name) continue;
-
-			stage.Enabled = enabled;
-			return;
-		}
 	}
 
 	Ref<RenderGraph> RenderGraph::Create(RenderGraphCreateInfo* createInfo)
@@ -62,6 +57,9 @@ namespace HazardRenderer
 	{
 		m_DebugName = createInfo->DebugName;
 		m_Stages.resize(createInfo->StageCount);
+
+		m_OnPrepare = createInfo->OnPrepare;
+		m_OnFinished = createInfo->OnFinished;
 
 		for (uint32_t i = 0; i < createInfo->StageCount; i++)
 		{

@@ -6,7 +6,7 @@
 
 namespace Hazard
 {
-	struct WorldCameraData 
+	struct WorldCameraData
 	{
 		glm::mat4 Projection;
 		glm::mat4 View;
@@ -28,23 +28,16 @@ namespace Hazard
 
 	};
 
-	class WorldRenderer : public RefCount 
+	class WorldRenderer : public RefCount
 	{
 		friend class RenderEngine;
 	public:
 		WorldRenderer() = default;
 		WorldRenderer(WorldRendererSpec* spec);
 
-		void SetTargetWorld(Ref<World> world) 
-		{
-			HZR_CORE_ASSERT(world, "Target world cannot be nullptr");
-			m_TargetWorld = world;
-		}
+		void SetTargetWorld(Ref<World> world);
+		void SubmitCamera(const WorldCameraData& camera);
 
-		void SubmitCamera(const WorldCameraData& camera)
-		{
-			m_CameraData.push_back(camera);
-		}
 		/// <summary>
 		/// Submit to rendering
 		/// </summary>
@@ -54,7 +47,7 @@ namespace Hazard
 		{
 			m_RendererExtraCalls.Add(callback);
 		}
-		void OnRenderExtra() 
+		void OnRenderExtra()
 		{
 			m_RendererExtraCalls.Invoke();
 		}
@@ -63,12 +56,15 @@ namespace Hazard
 		Ref<World> GetTargetWorld() const { return m_TargetWorld; }
 		std::vector<WorldCameraData> GetCameraData() const { return m_CameraData; }
 
+		Ref<HazardRenderer::DescriptorSet> GetCameraDescriptor(uint32_t index) const { return m_CameraDescriptors[index]; };
+
 		bool IsValid() const { return m_TargetWorld; }
 
 	private:
 		WorldRendererSpec m_Spec;
 		Ref<World> m_TargetWorld;
 		std::vector<WorldCameraData> m_CameraData;
+		std::vector<Ref<HazardRenderer::DescriptorSet>> m_CameraDescriptors;
 
 		Callback<void()> m_RendererExtraCalls;
 	};

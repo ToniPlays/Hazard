@@ -16,6 +16,7 @@
 #include <Editor/EditorWorldManager.h>
 #include <Hazard/ImGUI/GUIManager.h>
 #include "AssetEditors/MeshAssetEditorPanel.h"
+#include "AssetEditors/MaterialAssetEditorPanel.h"
 
 using namespace Hazard;
 
@@ -33,6 +34,7 @@ namespace UI
 			m_Flags |= AssetPanelItemFlags_Renaming;
 		}
 	}
+
 	void AssetPanelItem::OnRender(Ref<Hazard::Texture2DAsset> thumbnailIcon, Ref<HazardRenderer::Sampler> sampler, const float& thumbnailSize)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -162,8 +164,8 @@ namespace UI
 			OnItemClicked();
 
 		ImGui::PopStyleVar();
-
 	}
+
 	void AssetPanelItem::EndRender()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -176,6 +178,7 @@ namespace UI
 			m_Flags &= ~AssetPanelItemFlags_EndRename;
 		}
 	}
+
 	std::string AssetPanelItem::GetName()
 	{
 		if (IsFolder())
@@ -184,6 +187,7 @@ namespace UI
 		const AssetMetadata& metadata = GetMetadata();
 		return File::GetNameNoExt(metadata.FilePath);
 	}
+
 	void AssetPanelItem::DrawItemName(const char* name, float edgeOffset)
 	{
 		if (m_Flags & AssetPanelItemFlags_Renaming)
@@ -211,6 +215,7 @@ namespace UI
 				m_Flags |= AssetPanelItemFlags_StartRename;
 		}
 	}
+
 	void AssetPanelItem::RenameTo(const std::string& newName)
 	{
 		if (newName == GetName())
@@ -226,10 +231,12 @@ namespace UI
 
 		Application::Get().GetModule<GUIManager>().GetExistingOrNew<AssetPanel>().Refresh();
 	}
+
 	void AssetPanelItem::OnItemClicked()
 	{
 
 	}
+
 	void AssetPanelItem::OnItemDoubleClicked()
 	{
 		switch (GetType())

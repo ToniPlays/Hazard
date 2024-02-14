@@ -30,23 +30,57 @@ namespace Hazard
 		};
 
 		Ref<Pipeline> Pipeline;
-		Ref<DescriptorSet> DescriptorSet;
 		Ref<GPUBuffer> CameraBuffer;
-		Ref<Cubemap> Cubemap;
+		Ref<DescriptorSet> DescriptorSet;
 		SkyboxConstants Constants;
 	};
 
-	struct MeshInstance
+	struct MeshData
 	{
 		Ref<GPUBuffer> VertexBuffer;
-		Ref<GPUBuffer> IndexxBuffer;
+		Ref<GPUBuffer> IndexBuffer;
+		Ref<Material> Material;
+		uint32_t Count;
 	};
 
-	struct MeshInstancesData
+	struct MeshTransform
 	{
-		Ref<Pipeline> Pipeline;
-		Ref<DescriptorSet> DescriptorSet;
-		std::unordered_map<uint64_t, MeshInstance> Instances;
+		glm::vec4 MRow[3];
+
+		MeshTransform(const glm::mat4& transform)
+		{
+			MRow[0] = {transform[0][0], transform[1][0], transform[2][0], transform[3][0]};
+			MRow[1] = {transform[0][1], transform[1][1], transform[2][1], transform[3][1]};
+			MRow[2] = {transform[0][2], transform[1][2], transform[2][2], transform[3][2]};
+		}
+	};
+
+	struct MeshKey
+	{
+		Ref<GPUBuffer> VertexBuffer;
+		Ref<GPUBuffer> IndexBuffer;
+		Ref<Material> Material;
+		uint32_t Count;
+
+		bool operator<(const MeshKey& other) const
+		{
+			if (VertexBuffer < other.VertexBuffer)
+				return true;
+			if (VertexBuffer > other.VertexBuffer)
+				return false;
+
+			if (IndexBuffer < other.IndexBuffer)
+				return true;
+			if (IndexBuffer > other.IndexBuffer)
+				return false;
+
+			if (Material < other.Material)
+				return true;
+			if (Material > other.Material)
+				return false;
+
+			return Count < other.Count;
+		}
 	};
 
 	//Draw list for single world context
@@ -54,8 +88,10 @@ namespace Hazard
 	{
 		Ref<WorldRenderer> WorldRenderer;
 		EnvironmentData Environment;
-		//Material handle, instances
-		std::unordered_map<uint64_t, MeshInstancesData> Meshes;
+
+		std::map<MeshKey, MeshData> MeshInstances;
+		std::map<MeshKey, std::vector<MeshTransform>> Transforms;
+
 		DrawListStat Stats;
 	};
 }

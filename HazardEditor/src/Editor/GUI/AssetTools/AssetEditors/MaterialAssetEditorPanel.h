@@ -1,16 +1,15 @@
 #pragma once
 
 #include "Hazard/ImGUI/Panel.h"
-#include "Hazard/ECS/Entity.h"
 #include "Hazard/Rendering/Renderers/WorldRenderer.h"
 
 namespace UI
 {
-	class MeshAssetEditorPanel : public Hazard::ImUI::Panel
+	class MaterialAssetEditorPanel : public Hazard::ImUI::Panel
 	{
 	public:
-		MeshAssetEditorPanel();
-		~MeshAssetEditorPanel() = default;
+		MaterialAssetEditorPanel();
+		~MaterialAssetEditorPanel() = default;
 
 		void Update() override;
 		void OnPanelRender() override;

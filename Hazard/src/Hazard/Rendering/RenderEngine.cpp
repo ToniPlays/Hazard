@@ -19,6 +19,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
+
 		HRenderer::s_Engine = this;
 
 		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
@@ -47,7 +48,7 @@ namespace Hazard
 		s_Resources = hnew RenderResources();
 		m_RenderContextManager = &Application::Get().GetModule<RenderContextManager>();
 
-		m_RenderGraph = CreateRasterGraph();
+		m_RenderGraph = CreateRasterGraph(this);
 
 	}
 
@@ -83,7 +84,6 @@ namespace Hazard
 	}
 	void RenderEngine::Init()
 	{
-
 		ShaderLibrary::Init(m_RenderContextManager->GetWindow().GetWindowInfo().SelectedAPI);
 
 		s_Resources->Initialize(m_RenderPass);
@@ -107,7 +107,6 @@ namespace Hazard
 
 		Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
 
-		uint32_t renderingCameraIndex = 0;
 		for (auto& worldDrawList : m_DrawList)
 		{
 			CollectGeometry();
@@ -115,32 +114,33 @@ namespace Hazard
 			//Update common rendergraph resources
 			//Render from every camera
 
+			uint32_t cameraIndex = 0;
 			for (auto& camera : worldDrawList.WorldRenderer->GetCameraData())
 			{
-				CameraData data = {
-					.ViewProjection = camera.Projection * camera.View,
-					.Projection = camera.Projection,
-					.View = camera.View,
-					.Position = glm::vec4(camera.Position, 1.0),
+				GraphBeginData data = {
+					.Camera = {
+						.ViewProjection = camera.Projection * camera.View,
+						.Projection = camera.Projection,
+						.View = camera.View,
+						.Position = glm::vec4(camera.Position, 1.0),
+					},
+					.CameraDescriptor = worldDrawList.WorldRenderer->GetCameraDescriptor(cameraIndex),
+					.GraphicsBuffer = commandBuffer,
+					.OutputRenderpass = camera.RenderPass,
 				};
 
-				BufferCopyRegion region = {
-					.Size = sizeof(CameraData),
-					.Offset = sizeof(CameraData) * renderingCameraIndex,
-					.Data = &data,
-				};
+				std::vector<MeshData> meshes;
+				meshes.reserve(worldDrawList.MeshInstances.size());
 
-				s_Resources->CameraUniformBuffer->SetData(region);
+				for (auto& [key, mesh] : worldDrawList.MeshInstances)
+					meshes.push_back(mesh);
 
-				m_RenderGraph->SetStageActive("SkyboxPass", worldDrawList.Environment.Pipeline);
+				m_RenderGraph->SetResource("GeometryPass", meshes.data(), meshes.size() * sizeof(MeshData));
 				m_RenderGraph->SetResource("SkyboxPass", &worldDrawList.Environment, sizeof(EnvironmentData));
-				//m_RenderGraph->SetResource("GeometryPass", worldDrawList.GeometryMeshes.data(), worldDrawList.GeometryMeshes.size() * sizeof(GeometryMesh));
 
-				commandBuffer->BeginRenderPass(camera.RenderPass);
-				m_RenderGraph->Execute(commandBuffer, camera.RenderPass);
-				commandBuffer->EndRenderPass();
+				m_RenderGraph->Execute(&data);
+				cameraIndex++;
 
-				renderingCameraIndex++;
 			}
 			m_CurrentDrawContext++;
 		}

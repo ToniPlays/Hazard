@@ -13,11 +13,37 @@ namespace Hazard
 		HZR_ASSERT(spec->TargetWorld, "World renderer requires target world");
 		m_TargetWorld = spec->TargetWorld;
 	}
+
+	void WorldRenderer::SetTargetWorld(Ref<World> world)
+	{
+		HZR_CORE_ASSERT(world, "Target world cannot be nullptr");
+		m_TargetWorld = world;
+	}
+
+	void WorldRenderer::SubmitCamera(const WorldCameraData& camera)
+	{
+		m_CameraData.push_back(camera);
+		if (m_CameraData.size() <= m_CameraDescriptors.size()) return;
+
+		//Create descriptor for current camera
+		Ref<Pipeline> pbrShader = ShaderLibrary::GetPipeline("PBR_Static");
+		auto layout = pbrShader->GetSpecifications().SetLayouts[0];
+
+		DescriptorSetCreateInfo setInfo = {
+			.DebugName = "WorldDescriptor",
+			.Set = 0,
+			.pLayout = &layout,
+		};
+
+		m_CameraDescriptors.push_back(DescriptorSet::Create(&setInfo));
+	}
+
 	void WorldRenderer::Submit()
 	{
 		HZR_PROFILE_FUNCTION();
 		HRenderer::SubmitWorldRenderer(this);
 	}
+
 	void WorldRenderer::Render()
 	{
 		HZR_PROFILE_FUNCTION();

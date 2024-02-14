@@ -279,27 +279,6 @@ namespace UI
 		ImGui::NextColumn();
 		ImGui::Text("%.2f", 1.0 / Time::s_DeltaTime);
 		ImGui::Columns();
-
-		auto& renderEngine = Application::Get().GetModule<RenderEngine>();
-		uint32_t flags = renderEngine.GetFlags();
-
-		ImUI::Dropdown shading("Shading", 80);
-		shading.SetOptions({ "Shaded", "Wireframe", "Shaded wireframe", "Overdraw" });
-		shading.SetSelected(flags & RendererFlags_Overdraw ? 3 : 0);
-		shading.Render();
-
-		if (shading.DidChange())
-		{
-			switch (shading.GetSelected())
-			{
-				case 0: flags = 0; break;
-				case 3: flags |= RendererFlags_Overdraw; break;
-				default: flags = 0; break;
-			}
-			renderEngine.SetFlags(flags);
-		}
-
-		ImGui::Columns();
 		ImGui::EndChild();
 	}
 	void Viewport::DrawSettingsWindow()

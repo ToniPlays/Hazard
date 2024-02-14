@@ -3,7 +3,6 @@
 #include "GUIRenderable.h"
 #include "UILibrary.h"
 #include "ScopedVar.h"
-#include "GUIManager.h"
 #include <imgui.h>
 
 namespace Hazard::ImUI
@@ -17,38 +16,15 @@ namespace Hazard::ImUI
 
 		virtual ~Panel() = default;
 
-		void Render() override
-		{
-			if (!m_IsOpen)
-			{
-				if (m_DestroyOnClose)
-				{
-					//Remove panel from list
-					auto& manager = Application::Get().GetModule<GUIManager>();
-					manager.Destroy(this);
-				}
-				return;
-			}
-
-			if (!ImGui::Begin(m_Title.c_str(), &m_IsOpen))
-			{
-				ImGui::End();
-				return;
-			}
-
-			if (m_IsOpen)
-			{
-				m_Hovered = MouseOverWindow();
-				OnPanelRender();
-			}
-
-			ImGui::End();
-		};
+		const std::string& GetTitle() const { return m_Title; }
+		
+		void Render() override;
 
 		void BringToFront()
 		{
 			ImGuiWindow* window = ImGui::FindWindowByName(m_Title.c_str());
 			if (!window) return;
+
 			m_IsOpen = true;
 			ImGui::BringWindowToFocusFront(window);
 		}

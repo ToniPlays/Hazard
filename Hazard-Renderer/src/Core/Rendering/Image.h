@@ -44,7 +44,6 @@ namespace HazardRenderer
 	public:
 		virtual ~Image() = default;
 
-
 		virtual const std::string& GetDebugName() const = 0;
 		virtual ImageFormat GetFormat() const = 0;
 		virtual ImageType GetType() const = 0;

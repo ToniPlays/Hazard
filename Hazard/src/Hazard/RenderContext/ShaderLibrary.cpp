@@ -18,9 +18,10 @@ namespace Hazard
 		HZR_TIMED_FUNCTION();
 
 		DescriptorSetLayout setLayout = { { SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
-									   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-									   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-									   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } };
+		//							   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+		//							   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+		//							   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } 
+		};
 		{
 			BufferLayout layout = LineVertex::Layout();
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Debug/LineShader.glsl");
@@ -88,7 +89,10 @@ namespace Hazard
 		{
 			DescriptorSetLayout skyboxLayout = {
 				{ SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
-				{ SHADER_STAGE_FRAGMENT_BIT, "u_CubeMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE }
+			};
+
+			DescriptorSetLayout skybox = {
+				{ SHADER_STAGE_FRAGMENT_BIT, "u_CubeMap", 0, DESCRIPTOR_TYPE_SAMPLER_CUBE }
 			};
 
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Skybox.glsl");
@@ -96,10 +100,10 @@ namespace Hazard
 			PipelineSpecification specs = {
 				.DebugName = "Pipeline Skybox",
 				.Usage = PipelineUsage::GraphicsBit,
-				.Flags = PIPELINE_DRAW_FILL | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+				.Flags = PIPELINE_DRAW_FILL | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 				.DepthOperator = DepthOp::LessOrEqual,
 				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { skyboxLayout },
+				.SetLayouts = { skyboxLayout, skybox },
 				.PushConstants = { { SHADER_STAGE_FRAGMENT_BIT, sizeof(float) * 2, 0 } },
 			};
 

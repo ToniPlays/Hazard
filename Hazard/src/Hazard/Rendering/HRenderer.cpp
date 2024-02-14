@@ -88,12 +88,21 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-
-		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("PBR_Static");
-		if (material)
-			pipeline = material->GetPipeline();
+		if (!material) return;
 
 		auto& drawList = s_Engine->GetDrawList();
+		MeshKey key = { vertexBuffer, indexBuffer, material, count };
+
+		if (!drawList.MeshInstances.contains(key))
+		{
+			auto& meshData = drawList.MeshInstances[key];
+			meshData.VertexBuffer = vertexBuffer;
+			meshData.IndexBuffer = indexBuffer;
+			meshData.Material = material;
+			meshData.Count = count;
+		}
+
+		drawList.Transforms[key].push_back(MeshTransform(transform));
 	}
 
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count)
@@ -116,11 +125,11 @@ namespace Hazard
 		if (!promise.HasFinished() || !promise.Valid()) return;
 
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
+		Ref<Material> material = map->GetMaterial();
 
 		auto& env = s_Engine->GetDrawList();
 		env.Environment.Pipeline = ShaderLibrary::GetPipeline("Skybox");
-		env.Environment.Cubemap = map->GetCubemap();
-		env.Environment.DescriptorSet = map->GetDescriptorSet();
+		env.Environment.DescriptorSet = material->GetDescriptorSet();
 		env.Environment.CameraBuffer = s_Engine->GetResources().CameraUniformBuffer;
 		env.Environment.Constants.LodLevel = skyLight.LodLevel;
 		env.Environment.Constants.Intensity = skyLight.Intensity;

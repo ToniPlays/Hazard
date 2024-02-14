@@ -6,6 +6,7 @@
 #include "Platform/GUIPlatform.h"
 #include "GUIRenderable.h"
 #include "MenuBar.h"
+#include "Panel.h"
 
 namespace Hazard
 {

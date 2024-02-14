@@ -18,8 +18,7 @@ namespace HazardRenderer::Vulkan
 		VulkanPipeline(PipelineSpecification* specs);
 		~VulkanPipeline();
 
-		PipelineSpecification GetSpecifications() override { return m_Specs; }
-		const PipelineSpecification GetSpecifications() const override { return m_Specs; }
+		const PipelineSpecification& GetSpecifications() const override { return m_Specs; }
 		Ref<Shader> GetShader() override { return m_Shader; }
 		void SetRenderPass(Ref<RenderPass> renderPass) override;
 

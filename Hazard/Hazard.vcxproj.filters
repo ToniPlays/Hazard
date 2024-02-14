@@ -689,5 +689,6 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\Panel.cpp" />
   </ItemGroup>
 </Project>

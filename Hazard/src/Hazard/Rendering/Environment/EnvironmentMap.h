@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Hazard/Assets/Asset.h"
-#include "HazardRenderer.h"
+#include "Core/Rendering/Cubemap.h"
 
 namespace Hazard
 {
+	class Material;
+
 	struct EnvironmentMapSpec
 	{
 		uint32_t Samples;
@@ -23,12 +25,14 @@ namespace Hazard
 		EnvironmentMapSpec GetSpec() const { return m_Spec; }
         
 		Ref<HazardRenderer::Cubemap> GetCubemap() const { return m_EnvironmentMap; }
-		Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; }
+		Ref<Material> GetMaterial() const { return m_Material; }
+
+		void Invalidate();
 
     private:
 
 		Ref<HazardRenderer::Cubemap> m_EnvironmentMap;
-		Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;
+		Ref<Material> m_Material;
 		EnvironmentMapSpec m_Spec;
 	};
 }

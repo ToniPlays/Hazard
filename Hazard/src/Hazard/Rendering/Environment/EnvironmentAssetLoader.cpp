@@ -167,6 +167,8 @@ namespace Hazard
 		asset->m_Spec.Resolution = cubemap->GetExtent().Width;
 		asset->m_Spec.Samples = samples;
 
+		asset->Invalidate();
+
 		info.Job->SetResult(asset);
 	}
 }

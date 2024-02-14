@@ -13,13 +13,13 @@ namespace HazardRenderer
 	public:
 		~RenderGraph() = default;
 
-		void Execute(Ref<RenderCommandBuffer> commandBuffer, Ref<RenderPass> outputRenderpass);
+		void Execute(void* userData = nullptr);
 		float GetExecutionTime() { return m_ExecutionTime; }
 
 		void SetResource(const std::string& name, void* data, uint64_t size);
-		void SetStageActive(const std::string& name, bool enabled);
 
-		void Reset() {
+		void Reset() 
+		{
 			m_Iterations = 0;
 		}
 
@@ -32,6 +32,9 @@ namespace HazardRenderer
 		std::string m_DebugName;
 		std::vector<RenderGraphStage> m_Stages;
 		std::unordered_map<std::string, Buffer> m_Resources;
+		
+		Callback<void(const RenderGraphFuncData&)> m_OnPrepare;
+		Callback<void(const RenderGraphFuncData&)> m_OnFinished;
 
 		std::atomic_uint32_t m_Iterations = 0;
 		std::atomic<float> m_ExecutionTime = 0.0f;

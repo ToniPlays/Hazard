@@ -200,9 +200,7 @@ namespace Hazard
 
 		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 
-		DescriptorSetLayout layout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Texture", 0, 32, DESCRIPTOR_TYPE_SAMPLER_2D } };
-
-		m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("QuadShader"), layout);
+		m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("QuadShader"));
 
 		Ref<Sampler> sampler = RenderEngine::GetResources().DefaultImageSampler;
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();

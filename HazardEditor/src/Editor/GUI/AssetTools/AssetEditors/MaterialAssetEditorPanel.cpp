@@ -1,4 +1,4 @@
-#include "MeshAssetEditorPanel.h"
+#include "MaterialAssetEditorPanel.h"
 #include <Hazard/Rendering/RenderEngine.h>
 #include "Hazard/ECS/Entity.h"
 
@@ -6,7 +6,7 @@ namespace UI
 {
 	using namespace HazardRenderer;
 
-	MeshAssetEditorPanel::MeshAssetEditorPanel() : Hazard::ImUI::Panel("Mesh editor")
+	MaterialAssetEditorPanel::MaterialAssetEditorPanel() : Hazard::ImUI::Panel("Material editor")
 	{
 		FrameBufferCreateInfo frameBufferInfo = {
 			.DebugName = "MeshAssetEditor",
@@ -30,7 +30,7 @@ namespace UI
 
 		m_ImageSampler = Hazard::RenderEngine::GetResources().DefaultImageSampler;
 		m_Projection = glm::perspective<float>(glm::radians(70.0), m_FrameBuffer->GetAspectRatio(), 0.03f, 400.0f);
-		m_View = Math::ToTransformMatrix(m_Position, glm::angleAxis(-30.0f, glm::vec3 { 0, 1 ,0 }));
+		m_View = Math::ToTransformMatrix(m_Position, glm::angleAxis(-30.0f, glm::vec3{ 0, 1 ,0 }));
 
 		m_Width = m_FrameBuffer->GetWidth();
 		m_Height = m_FrameBuffer->GetHeight();
@@ -38,7 +38,7 @@ namespace UI
 		CreateWorldRenderer();
 	}
 
-	void MeshAssetEditorPanel::Update()
+	void MaterialAssetEditorPanel::Update()
 	{
 		using namespace Hazard;
 
@@ -57,7 +57,7 @@ namespace UI
 		m_Renderer->Submit();
 	}
 
-	void MeshAssetEditorPanel::OnPanelRender()
+	void MaterialAssetEditorPanel::OnPanelRender()
 	{
 		using namespace Hazard;
 		ImVec2 corner = ImGui::GetCursorPos();
@@ -73,14 +73,13 @@ namespace UI
 		ImUI::Image(m_FrameBuffer->GetImage(), m_ImageSampler, size);
 	}
 
-	bool MeshAssetEditorPanel::OnEvent(Event& e)
+	bool MaterialAssetEditorPanel::OnEvent(Event& e)
 	{
 		return false;
 	}
-	void MeshAssetEditorPanel::SetMeshHandle(AssetHandle meshHandle)
+	void MaterialAssetEditorPanel::SetMeshHandle(AssetHandle meshHandle)
 	{
 		using namespace Hazard;
-
 		Ref<World> world = m_Renderer->GetTargetWorld();
 		auto view = world->GetEntitiesWith<MeshComponent>();
 
@@ -90,19 +89,19 @@ namespace UI
 			entity.GetComponent<MeshComponent>().MeshHandle = meshHandle;
 		}
 	}
-	void MeshAssetEditorPanel::CreateWorldRenderer()
+	void MaterialAssetEditorPanel::CreateWorldRenderer()
 	{
 		using namespace Hazard;
 
-		Ref<World> world = Ref<World>::Create("Mesh editor world");
+		Ref<World> world = Ref<World>::Create("Material editor world");
 		Entity skylight = world->CreateEntity("Skylight");
 
 		SkyLightComponent& comp = skylight.AddComponent<SkyLightComponent>();
 		comp.EnvironmentMapHandle = AssetManager::AssetHandleFromFile("res/Textures/lythwood_terrace_4k.hdr");
-		comp.Intensity = 1.0f;
-		comp.LodLevel = 0.5f;
+		comp.Intensity = 4.0f;
+		comp.LodLevel = 0.1f;
 
-		Entity mesh = world->CreateEntity("Mesh");
+		Entity mesh = world->CreateEntity("Material Preview");
 		auto& mc = mesh.AddComponent<MeshComponent>();
 		mc.MeshHandle = INVALID_ASSET_HANDLE;
 

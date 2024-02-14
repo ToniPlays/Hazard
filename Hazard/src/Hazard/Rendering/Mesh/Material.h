@@ -13,6 +13,7 @@ namespace Hazard
 {
     struct MaterialParam
     {
+        std::string Name;
         HazardRenderer::ShaderDataType Type;
         uint32_t Offset;
     };
@@ -20,16 +21,18 @@ namespace Hazard
     class Material : public Asset
     {
     public:
-        
-        Material();
-        Material(Ref<HazardRenderer::Pipeline> pipeline, HazardRenderer::DescriptorSetLayout layout = HazardRenderer::DescriptorSetLayout());
+        Material() = default;
+        Material(Ref<HazardRenderer::Pipeline> pipeline);
 
         AssetType GetType() const override { return AssetType::Material; }
         
         Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; };
         Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; };
+
         void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline) { m_Pipeline = pipeline; };
-        
+        void Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap);
+
+
     private:
         Ref<HazardRenderer::Pipeline> m_Pipeline;
         Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;

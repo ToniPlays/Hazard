@@ -14,19 +14,24 @@ namespace HazardRenderer
 	{
 		friend class RenderGraph;
 
-		Ref<RenderCommandBuffer> CommandBuffer;
-		Ref<RenderPass> CurrentRenderPass;
 		uint32_t Iteration;
 		bool Enabled;
-
+		
 		template<typename T>
 		T& Data() const
 		{
-			return *(T*)DrawData;
+			return *(T*)m_UserData;
+		}
+
+		template<typename T>
+		T& DrawData() const
+		{
+			return *(T*)m_DrawData;
 		}
 
 	private:
-		void* DrawData;
+		void* m_UserData;
+		void* m_DrawData;
 	};
 
 	struct RenderGraphStage
@@ -45,5 +50,7 @@ namespace HazardRenderer
 		std::string DebugName;
 		uint64_t StageCount;
 		RenderGraphStage* pStages;
+		Callback<void(const RenderGraphFuncData&)> OnPrepare;
+		Callback<void(const RenderGraphFuncData&)> OnFinished;
 	};
 }
