@@ -16,6 +16,8 @@ namespace Hazard
 
 		for (auto& submesh : meshData)
 		{
+			if (submesh.Vertices.size() == 0) continue;
+
 			SubmeshData data = {
 				.NodeName = submesh.Name,
 				.NodeID = UID(),

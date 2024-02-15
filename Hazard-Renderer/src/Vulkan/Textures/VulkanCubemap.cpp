@@ -64,7 +64,7 @@ namespace HazardRenderer::Vulkan
 			imageCreateInfo.usage = usage;
 			imageCreateInfo.flags |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 
-			instance->m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+			instance->m_ImageDescriptor.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 
 			instance->m_Allocation = allocator.AllocateImage(imageCreateInfo, VMA_MEMORY_USAGE_GPU_ONLY, instance->m_Image);
 			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_IMAGE, fmt::format("VkCubemap {0}", instance->m_DebugName), instance->m_Image);
@@ -187,7 +187,7 @@ namespace HazardRenderer::Vulkan
 			barrier.LayerCount = 6;
 			barrier.BaseMip = 0;
 			barrier.MipCount = 1;
-			barrier.SrcLayout = IMAGE_LAYOUT_GENERAL;
+			barrier.SrcLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
 			barrier.DstLayout = IMAGE_LAYOUT_TRANSFER_SRC;
 
 			cmdBuffer->ImageMemoryBarrier(barrier);
@@ -243,7 +243,7 @@ namespace HazardRenderer::Vulkan
 		barrier.BaseMip = 0;
 		barrier.MipCount = m_MipLevels;
 		barrier.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
-		barrier.DstLayout = IMAGE_LAYOUT_GENERAL;
+		barrier.DstLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
 
 		cmdBuffer->ImageMemoryBarrier(barrier);
 

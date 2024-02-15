@@ -4,21 +4,30 @@
 
 namespace Hazard
 {
+    class Material;
+
     struct MaterialAssetHeader
     {
         AssetHandle PipelineHandle;
-        uint32_t TextureCount;
-        uint32_t ParameterCount;
     };
 
     class MaterialAssetLoader : public IAssetLoader
     {
     public:
+        struct CreateSettings
+        {
+
+        };
+
         MaterialAssetLoader() = default;
         ~MaterialAssetLoader() = default;
         
         Ref<JobGraph> Load(AssetMetadata& metadata) override;
         Ref<JobGraph> Save(Ref<Asset> asset, const SaveAssetSettings& settings) override;
         Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
+
+    private:
+        static void CreateMaterialAsset(JobInfo& info, const CreateSettings& settings);
+        static void SaveMaterialAsset(JobInfo& info, Ref<Material> material);
     };
 }

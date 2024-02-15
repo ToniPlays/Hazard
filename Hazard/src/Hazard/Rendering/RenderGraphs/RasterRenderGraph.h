@@ -24,8 +24,13 @@ namespace Hazard
 			cmdBuffer->SetPipeline(instances.Material->GetPipeline());
 			cmdBuffer->SetVertexBuffer(instances.VertexBuffer);
 			cmdBuffer->SetDescriptorSet(userData.CameraDescriptor, 0);
+
 			if (instances.Material->GetDescriptorSet())
 				cmdBuffer->SetDescriptorSet(instances.Material->GetDescriptorSet(), 1);
+			
+			Buffer constants = instances.Material->GetPushConstantData();
+			if (constants.Data)
+				cmdBuffer->PushConstants(constants, 0, SHADER_STAGE_FRAGMENT_BIT);
 
 			cmdBuffer->Draw(instances.Count, instances.IndexBuffer, 0);
 		});
@@ -66,8 +71,14 @@ namespace Hazard
 				.Offset = sizeof(CameraData) * data.Iteration,
 				.Data = &camera.Camera,
 			};
+
+			AssetHandle brdfhandle = AssetManager::AssetHandleFromFile("res/Textures/BRDF_LUT.tga");
+
 			resources.CameraUniformBuffer->SetData(region);
 			camera.CameraDescriptor->Write(0, resources.CameraUniformBuffer, sizeof(CameraData), data.Iteration * sizeof(CameraData), false);
+			camera.CameraDescriptor->Write(1, 0, resources.WhiteCubemap, resources.DefaultImageSampler, false);
+			camera.CameraDescriptor->Write(2, 0, resources.WhiteCubemap, resources.DefaultImageSampler, false);
+			camera.CameraDescriptor->Write(3, 0, AssetManager::GetAsset<Texture2DAsset>(brdfhandle)->GetSourceImage(), resources.DefaultImageSampler, false);
 		});
 
 		info.OnPrepare.Add([engine](const RenderGraphFuncData& data) mutable {

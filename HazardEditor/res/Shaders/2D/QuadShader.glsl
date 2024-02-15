@@ -8,11 +8,6 @@ layout(location = 0) out vec4 v_Color;
 layout(location = 1) out vec2 v_TextureCoords;
 layout(location = 2) out float v_TextureIndex;
 
-layout(push_constant) uniform Transform
-{
-    mat4 Transform;
-} p_Transform;
-
 void main() 
 {
 	v_Color = a_Color;
@@ -27,10 +22,6 @@ void main()
 layout(location = 0) in vec4 v_Color;
 layout(location = 1) in vec2 v_TextureCoords;
 layout(location = 2) in flat float v_TextureIndex;
-
-layout(set = 0, binding = 1) uniform samplerCube u_RadianceMap;
-layout(set = 0, binding = 2) uniform samplerCube u_IrradianceMap;
-layout(set = 0, binding = 3) uniform sampler2D u_BRDFLut;
 
 layout (set = 1, binding = 0) uniform sampler2D u_Textures[32];
 

@@ -55,10 +55,6 @@ namespace Hazard
 	{
 		Ref<GPUBuffer> CameraUniformBuffer;
 
-		AssetHandle WhiteTextureHandle;
-		AssetHandle BRDFLutHandle;
-
-		Ref<Texture2DAsset> BRDFLut;
 		Ref<Cubemap> BlackCubemap;
 		Ref<Cubemap> WhiteCubemap;
 		Ref<Sampler> DefaultImageSampler;
@@ -95,6 +91,7 @@ namespace Hazard
 				.DebugName = "WhiteCubemap",
 				.Width = 1,
 				.Height = 1,
+				.MaxMips = 1,
 				.Usage = ImageUsage::Texture,
 				.Format = ImageFormat::RGBA,
 				.Data = data,

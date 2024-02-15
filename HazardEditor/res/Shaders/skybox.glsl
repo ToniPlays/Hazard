@@ -32,6 +32,10 @@ layout(push_constant) uniform PushConstant
 	float Intensity;
 } u_PushConstants;
 
+layout(binding = 1, set = 0) uniform samplerCube u_RadianceMap;
+layout(binding = 2, set = 0) uniform samplerCube u_IrradianceMap;
+layout(binding = 3, set = 0) uniform sampler2D u_BRDFLut;
+
 layout(location = 0) out vec4 OutputColor;
 layout(location = 1) out uint EntityID;
 

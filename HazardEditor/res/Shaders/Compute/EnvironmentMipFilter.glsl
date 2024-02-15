@@ -4,7 +4,7 @@
 #include "../Utils/Common.glslh"
 #include "../Utils/EnvironmentMapping.glslh"
 
-const uint Samples = 1024;
+const uint Samples = 512;
 const int MipLevels = 1;
 
 layout(set = 0, binding = 0, rgba16f) restrict writeonly uniform imageCube o_Texture[MipLevels];

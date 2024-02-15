@@ -138,9 +138,6 @@
     <ClInclude Include="src\Editor\GUI\AssetTools\AssetPanelItem.h">
       <Filter>src\Editor\GUI\AssetTools</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\AssetTools\MaterialEditor.h">
-      <Filter>src\Editor\GUI\AssetTools</Filter>
-    </ClInclude>
     <ClInclude Include="src\Editor\GUI\AssetTools\ScriptCreatePanel.h">
       <Filter>src\Editor\GUI\AssetTools</Filter>
     </ClInclude>
@@ -274,9 +271,6 @@
       <Filter>src\Editor\GUI\AssetTools</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\AssetTools\AssetPanelItem.cpp">
-      <Filter>src\Editor\GUI\AssetTools</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\GUI\AssetTools\MaterialEditor.cpp">
       <Filter>src\Editor\GUI\AssetTools</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\AssetTools\ScriptCreatePanel.cpp">

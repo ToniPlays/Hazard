@@ -15,11 +15,6 @@ namespace Hazard
 		MESH_CREATE_INCLUDE_MATERIALS = BIT(4),
 	};
 
-	struct MeshCreationSettings
-	{
-		uint32_t Flags;
-	};
-	
 	struct MeshFileHeader
 	{
 		uint64_t SubmeshCount;
@@ -40,6 +35,14 @@ namespace Hazard
 	class MeshAssetLoader : public IAssetLoader 
 	{
 	public:
+
+		struct CreateSettings
+		{
+			uint32_t Flags;
+			std::filesystem::path MaterialPath;
+		};
+
+	public:
 		MeshAssetLoader() = default;
 		~MeshAssetLoader() = default;
 
@@ -48,8 +51,9 @@ namespace Hazard
 		Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 
 	private:
-		static void PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer);
+		static void PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings);
 		static void ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh);
+		static void ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material);
 		static void FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer);
 
 		static void ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh);

@@ -16,6 +16,8 @@ namespace HazardRenderer::Vulkan
 		m_Size = createInfo->Size;
 		m_UsageFlags = createInfo->UsageFlags;
 
+		HZR_ASSERT(m_Size > 0, "GPUBuffer size cannot be 0");
+
 		Ref<VulkanGPUBuffer> instance = this;
 
 		Renderer::SubmitResourceCreate([instance]() mutable {

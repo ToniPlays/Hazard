@@ -395,6 +395,7 @@ namespace UI
 		{
 
 		}
+
 		ImGui::SameLine(0, 0);
 
 		if (mode != Editor::EditorMode::Edit)

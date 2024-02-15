@@ -8,7 +8,6 @@
 #include "AssetPanel.h"
 #include "Directory.h"
 
-#include "Editor/GUI/AssetTools/MaterialEditor.h"
 #include "Editor/GUI/AssetTools/AssetImporterPanel.h"
 
 #include "imgui_internal.h"
@@ -249,6 +248,13 @@ namespace UI
 				auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<MeshAssetEditorPanel>();
 				panel.BringToFront();
 				panel.SetMeshHandle(m_Handle);
+				break;
+			}
+			case AssetType::Material:
+			{
+				auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<MaterialAssetEditorPanel>();
+				panel.BringToFront();
+				panel.SetMaterialHandle(m_Handle);
 				break;
 			}
 		}

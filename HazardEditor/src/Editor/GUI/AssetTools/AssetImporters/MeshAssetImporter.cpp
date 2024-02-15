@@ -23,17 +23,21 @@ MeshAssetImporter::MeshAssetImporter()
 		ShiftY(4.0f);
 	});
 
-	m_MaterialTreenode.Content([]() {
-		static bool oof = true;
+	m_MaterialTreenode.Content([this]() {
+
+		using namespace Hazard;
+		bool import = m_Settings.Flags & MESH_CREATE_INCLUDE_MATERIALS;
 
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, 125.0f);
-		Checkbox("Import materials", oof, false);
+
+		if (Checkbox("Import materials", import, false))
+			m_Settings.Flags ^= MESH_CREATE_INCLUDE_MATERIALS;
+
 		ImGui::Columns();
 	});
 
 	m_AnimationTreenode.Content([]() {});
-
 
 	m_Translation.ConfigureField(0, "X", style.Colors.AxisX);
 	m_Translation.ConfigureField(1, "Y", style.Colors.AxisY);
@@ -73,21 +77,25 @@ bool MeshAssetImporter::Import()
 
 void MeshAssetImporter::InitializeSettings()
 {
-
+	using namespace Hazard;
+	m_Settings = MeshAssetLoader::CreateSettings();
+	m_Settings.Flags |= MESH_CREATE_INCLUDE_MATERIALS;
 }
 
 bool MeshAssetImporter::ImportFromNew()
 {
 	using namespace Hazard;
 
-
 	CreateAssetSettings settings = {};
 	settings.SourcePath = m_SourcePath;
+	settings.Settings = &m_Settings;
+	
 
 	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Mesh, settings);
 
 	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
 	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory() / File::GetNameNoExt(m_SourcePath), File::GetNameNoExt(m_SourcePath), "hasset");
+	m_Settings.MaterialPath = path / "Materials";
 
 	promise.Then([path, assetPanel](JobGraph& graph) {
 		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();

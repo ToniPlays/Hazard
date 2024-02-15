@@ -1,3 +1,4 @@
+
 vec3 GetCubeMapTextureCoord(vec2 imageSize) 
 {
 	vec2 st = gl_GlobalInvocationID.xy / imageSize;

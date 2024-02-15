@@ -44,27 +44,28 @@ namespace Hazard
 
 	Ref<JobGraph> MeshAssetLoader::Create(const CreateAssetSettings& settings)
 	{
-		MeshCreationSettings importSettings;
+		CreateSettings importSettings;
 		if (settings.Settings != nullptr)
-			importSettings = *(MeshCreationSettings*)settings.Settings;
+			importSettings = *(CreateSettings*)settings.Settings;
 
 		Ref<AssimpImporter> importer = Ref<AssimpImporter>::Create(settings.SourcePath);
 
-		Ref<Job> preprocessJob = Ref<Job>::Create(fmt::format("Mesh: {}", settings.SourcePath.string()), PreprocessDependencies, importer);
+		Ref<Job> preprocessJob = Ref<Job>::Create(fmt::format("Mesh: {}", settings.SourcePath.string()), PreprocessDependencies, importer, importSettings);
 		Ref<Job> finalize = Ref<Job>::Create(fmt::format("Finalize Mesh: {}", settings.SourcePath.string()), FinalizeMesh, importer);
 
 		JobGraphInfo info = {
 			.Name = "Mesh create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Preprocess", 0.2f, { preprocessJob } },
-						{ "Dependency load", 0.7f, { } },
+			.Stages = { { "Preprocess", 0.1f, { preprocessJob } },
+						{ "Dependency load", 0.8f, { } },
 						{ "Finalize", 0.1f, { finalize } }
 			},
 		};
 
 		return Ref<JobGraph>::Create(info);
 	}
-	void MeshAssetLoader::PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer)
+
+	void MeshAssetLoader::PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings)
 	{
 		Job& job = *info.Job.Raw();
 		importer->AddImportProgressCallback([&job](float progress) {
@@ -83,25 +84,24 @@ namespace Hazard
 		std::vector<Ref<Job>> generateJobs;
 		generateJobs.reserve(meshes.size());
 
-		for (uint32_t i = 0; i < meshes.size(); i++)
+		for (auto& mesh : meshes)
 		{
-			auto& mesh = meshes[i];
 			Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Node: {}", mesh.Name), ProcessMeshNode, importer, mesh);
 			generateJobs.push_back(processMeshJob);
 		}
 
-		for (auto& material : materials)
+		if (settings.Flags & MESH_CREATE_INCLUDE_MATERIALS)
 		{
-			auto mat = importer->GetMaterial(material.MaterialIndex);
-			std::cout << fmt::format("Material: {}", mat.Name) << std::endl;
-
-			for (auto& property : mat.Properties)
-				std::cout << fmt::format(" - Property: {} ({})", property.Name, ShaderDataTypeToString(property.Type)) << std::endl;
-
+			for (auto& material : materials)
+			{
+				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", material.Name), ProcessMaterial, importer, material);
+				generateJobs.push_back(processMeshJob);
+			}
 		}
 
 		info.ParentGraph->ContinueWith(generateJobs);
 	}
+
 	void MeshAssetLoader::ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh)
 	{
 		Job& jobRef = *info.Job;
@@ -111,6 +111,24 @@ namespace Hazard
 
 		info.Job->SetResult(data);
 	}
+
+	void MeshAssetLoader::ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material)
+	{
+		CreateAssetSettings settings = {
+			.SourcePath = "",
+			.Settings = nullptr,
+		};
+
+		Ref<JobGraph> loadGraph = AssetManager::GetCreateGraph(AssetType::Material, settings);
+		JobPromise promise = info.ParentGraph->SubGraph(loadGraph);
+
+		promise.Then([info](JobGraph&) mutable {
+			info.ParentGraph->Continue();
+		});
+
+		info.ParentGraph->Halt();
+	}
+
 	void MeshAssetLoader::FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer)
 	{
 		auto results = info.ParentGraph->GetResults<MeshImporter::MeshData>();
@@ -120,6 +138,7 @@ namespace Hazard
 
 		info.Job->SetResult(mesh);
 	}
+
 	void MeshAssetLoader::ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh)
 	{
 		using namespace HazardRenderer;
@@ -184,6 +203,7 @@ namespace Hazard
 
 		info.ParentGraph->Halt();
 	}
+
 	void MeshAssetLoader::CompileMesh(JobInfo& info, Ref<Mesh> mesh)
 	{
 		struct Result
@@ -234,6 +254,7 @@ namespace Hazard
 		result.Vertex.Release();
 		result.Index.Release();
 	}
+
 	void MeshAssetLoader::CreateMeshFromSource(JobInfo& info, AssetHandle handle)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);

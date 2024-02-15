@@ -185,7 +185,6 @@ namespace UI
 			ImUI::Submenu("3D", [&]() {
 				ImUI::MenuItem("Cube", [&]() {
 					auto entity = world->CreateEntity("New Cube");
-					entity.AddComponent<MeshComponent>();
 					SelectEntity(entity);
 				});
 				ImUI::MenuItem("Plane", [&]() {

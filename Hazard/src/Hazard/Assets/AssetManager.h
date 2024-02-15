@@ -28,6 +28,7 @@ namespace Hazard
 		std::filesystem::path TargetPath;
 		uint32_t Flags = ASSET_MANAGER_SAVE_AND_UPDATE;
 	};
+
 	struct CreateAssetSettings
 	{
 		std::filesystem::path SourcePath;
@@ -69,6 +70,7 @@ namespace Hazard
 		{
 			return GetAsset<T>(AssetHandleFromFile(path));
 		}
+
 		template<typename T>
 		static Ref<T> GetAsset(AssetHandle handle)
 		{
@@ -94,7 +96,6 @@ namespace Hazard
 		}
 
 		static JobPromise GetAssetAsync(AssetHandle handle);
-
 
 		static Ref<JobGraph> GetLoadGraph(AssetMetadata& metadata);
 		static Ref<JobGraph> GetSaveGraph(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings());

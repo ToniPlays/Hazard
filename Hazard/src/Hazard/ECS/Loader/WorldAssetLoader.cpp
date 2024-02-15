@@ -91,7 +91,6 @@ namespace Hazard
 		if (!metadata.IsValid()) return;
 		
 		Ref<JobGraph> loadGraph = AssetManager::GetLoadGraph(metadata);
-
 		JobPromise promise = info.ParentGraph->SubGraph(loadGraph);
 
 		promise.Then([info](JobGraph&) mutable {

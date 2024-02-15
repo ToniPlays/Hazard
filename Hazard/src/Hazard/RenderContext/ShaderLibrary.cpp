@@ -17,10 +17,10 @@ namespace Hazard
 		HZR_PROFILE_SCOPE();
 		HZR_TIMED_FUNCTION();
 
-		DescriptorSetLayout setLayout = { { SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
-		//							   { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-		//							   { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-		//							   { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D } 
+		DescriptorSetLayout setLayout = { { SHADER_STAGE_ALL_GRAPHICS, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D }
 		};
 		{
 			BufferLayout layout = LineVertex::Layout();
@@ -64,7 +64,6 @@ namespace Hazard
 				.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST,
 				.Shaders = asset->ShaderCode[api],
 				.SetLayouts = { setLayout, samplerSet },
-				.PushConstants = { { SHADER_STAGE_VERTEX_BIT, sizeof(glm::mat4), 0} },
 			};
 
 			s_LoadedPipelines["QuadShader"] = Pipeline::Create(&specs);
@@ -81,16 +80,14 @@ namespace Hazard
 				.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 				.Shaders = asset->ShaderCode[api],
 				.SetLayouts = { setLayout },
-				.PushConstants = { { SHADER_STAGE_VERTEX_BIT, sizeof(glm::mat4), 0 } },
+				.PushConstants = { { "Metalness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, 0 },
+								   { "Roughness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) } 
+								 },
 			};
 
 			s_LoadedPipelines["PBR_Static"] = Pipeline::Create(&specs);
 		}
 		{
-			DescriptorSetLayout skyboxLayout = {
-				{ SHADER_STAGE_VERTEX_BIT, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
-			};
-
 			DescriptorSetLayout skybox = {
 				{ SHADER_STAGE_FRAGMENT_BIT, "u_CubeMap", 0, DESCRIPTOR_TYPE_SAMPLER_CUBE }
 			};
@@ -103,8 +100,10 @@ namespace Hazard
 				.Flags = PIPELINE_DRAW_FILL | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 				.DepthOperator = DepthOp::LessOrEqual,
 				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { skyboxLayout, skybox },
-				.PushConstants = { { SHADER_STAGE_FRAGMENT_BIT, sizeof(float) * 2, 0 } },
+				.SetLayouts = { setLayout, skybox },
+				.PushConstants = { { "LodLevel", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, 0 },
+								   { "Intensity", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) } 
+								 },
 			};
 
 			s_LoadedPipelines["Skybox"] = Pipeline::Create(&specs);
@@ -122,7 +121,6 @@ namespace Hazard
 				.Usage = PipelineUsage::ComputeBit,
 				.Shaders = asset->ShaderCode[api],
 				.SetLayouts = { layout },
-				.PushConstants = { { SHADER_STAGE_COMPUTE_BIT, sizeof(uint32_t), 0 } }
 			};
 
 			s_LoadedPipelines["EquirectangularToCubemap"] = Pipeline::Create(&specs);
@@ -140,7 +138,7 @@ namespace Hazard
 				.Usage = PipelineUsage::ComputeBit,
 				.Shaders = asset->ShaderCode[api],
 				.SetLayouts = { layout },
-				.PushConstants = { { SHADER_STAGE_COMPUTE_BIT, sizeof(uint32_t), 0 } },
+				.PushConstants = { { "Samples", SHADER_STAGE_COMPUTE_BIT, ShaderDataType::UInt, 0 } },
 			};
 
 			s_LoadedPipelines["EnvironmentIrradiance"] = Pipeline::Create(&specs);

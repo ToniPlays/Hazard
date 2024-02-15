@@ -762,8 +762,19 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::ImageMemoryBarrier(const ImageMemoryInfo& imageMemory)
 	{
 		Ref<VulkanRenderCommandBuffer> instance = this;
+
 		Renderer::Submit([instance, imageMemory]() mutable {
-			VkImage image = imageMemory.Image->GetType() == ImageType::Image2D ? imageMemory.Image.As<VulkanImage2D>()->GetVulkanImage() : imageMemory.Image.As<VulkanCubemap>()->GetVulkanImage();
+			VkImage image;
+
+			if (imageMemory.Image->GetType() == ImageType::Image2D)
+			{
+				image = imageMemory.Image.As<VulkanImage2D>()->GetVulkanImage();
+				imageMemory.Image.As<VulkanImage2D>()->SetImageLayout(VkUtils::GetVulkanImageLayout(imageMemory.DstLayout));
+			}
+			else {
+				image = imageMemory.Image.As<VulkanCubemap>()->GetVulkanImage();
+				imageMemory.Image.As<VulkanCubemap>()->SetImageLayout(VkUtils::GetVulkanImageLayout(imageMemory.DstLayout));
+			}
 
 			VkImageSubresourceRange range = {};
 			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;

@@ -53,8 +53,8 @@ namespace Hazard
 			.Name = "Shader load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
 			.Stages = { { "Preprocess", 0.1f, { loadingJob } },
-							{ "Compile", 0.8f, { } },
-							{ "Validate", 0.1f, { createJob } }
+						{ "Compile", 0.8f, { } },
+						{ "Validate", 0.1f, { createJob } }
 			}
 		};
 
@@ -72,7 +72,7 @@ namespace Hazard
 		{
 			for (auto& [stage, source] : sources)
 			{
-				Ref<Job> job = Ref<Job>::Create(fmt::format("{} {}", RenderAPIToString((RenderAPI)api), Utils::ShaderStageToString(stage)), CompileShaderSourceCode, api, stage);
+				Ref<Job> job = Ref<Job>::Create(fmt::format("{} {} shader {}", RenderAPIToString((RenderAPI)api), Utils::ShaderStageToString(stage), File::GetName(path)), CompileShaderSourceCode, api, stage);
 				loadingJobs.push_back(job);
 			}
 		}

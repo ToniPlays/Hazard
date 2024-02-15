@@ -87,7 +87,6 @@ namespace UI
 
 		std::vector<Ref<Hazard::Texture2DAsset>> m_Textures;
 		std::unordered_map<AssetHandle, Ref<Hazard::Texture2DAsset>> m_Icons;
-		Ref<HazardRenderer::Sampler> m_IconSampler;
 
 		Hazard::ImUI::TextField m_SearchField;
 

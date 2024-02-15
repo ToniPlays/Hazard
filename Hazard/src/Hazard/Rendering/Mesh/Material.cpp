@@ -8,21 +8,21 @@ namespace Hazard
 	Material::Material(Ref<HazardRenderer::Pipeline> pipeline) : m_Pipeline(pipeline)
 	{
 		m_Pipeline = pipeline;
+		Invalidate();
+	}
 
-		//Descriptor set 0 reserved for world info
+	Material::~Material()
+	{
+		m_MaterialParams.clear();
+		m_PushConstants.Release();
+	}
 
-		auto& spec = m_Pipeline->GetSpecifications();
-		if (spec.SetLayouts.size() <= 1) return;
+	void Material::SetPipeline(Ref<HazardRenderer::Pipeline> pipeline)
+	{
+		if (pipeline == m_Pipeline) return;
 
-		auto layout = spec.SetLayouts[1];
-
-		DescriptorSetCreateInfo setInfo = {
-			.DebugName = fmt::format("Material: {}", pipeline->GetSpecifications().DebugName),
-			.Set = 1,
-			.pLayout = &layout,
-		};
-
-		m_DescriptorSet = DescriptorSet::Create(&setInfo);
+		m_Pipeline = pipeline;
+		Invalidate();
 	}
 
 	void Material::Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap)
@@ -35,5 +35,47 @@ namespace Hazard
 			if (binding.Name != name) continue;
 			m_DescriptorSet->Write(binding.Binding, 0, cubemap.As<Image>(), RenderEngine::GetResources().DefaultImageSampler, true);
 		}
+
+		m_PushConstants.Release();
+	}
+
+	void Material::Invalidate()
+	{
+		//Descriptor set 0 reserved for world info
+		auto& spec = m_Pipeline->GetSpecifications();
+		if (spec.SetLayouts.size() > 1)
+		{
+			auto layout = spec.SetLayouts[1];
+			DescriptorSetCreateInfo setInfo = {
+				.DebugName = fmt::format("Material: {}", m_Pipeline->GetSpecifications().DebugName),
+				.Set = 1,
+				.pLayout = &layout,
+			};
+
+			m_DescriptorSet = DescriptorSet::Create(&setInfo);
+		}
+
+		InvalidatePushConstants();
+	}
+
+	void Material::InvalidatePushConstants()
+	{
+		m_PushConstants.Release();
+		m_MaterialParams.clear();
+
+		auto& spec = m_Pipeline->GetSpecifications();
+
+		uint32_t requiredSize = 0;
+		for (auto& range : spec.PushConstants)
+		{
+			auto& param = m_MaterialParams[range.Name];
+			param.Name = range.Name;
+			param.Type = range.Type;
+			param.Offset = range.Offset;
+
+			requiredSize += ShaderDataTypeSize(range.Type);
+		}
+		m_PushConstants.Allocate(requiredSize);
+		m_PushConstants.ZeroInitialize();
 	}
 }

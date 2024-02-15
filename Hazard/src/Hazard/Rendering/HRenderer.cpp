@@ -67,10 +67,11 @@ namespace Hazard
 		HZR_TIMED_FUNCTION();
 
 		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
-		if (!mesh) return;
+		Ref<Material> material = AssetManager::GetAsset<Material>(meshComponent.MaterialHandle);
+		if (!mesh || !material) return;
 
 		for(auto& [uid, submesh] : mesh->GetSubmeshData())
-			SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(uid), mesh->GetIndexBuffer(uid), nullptr, id);
+			SubmitMesh(transform.GetTransformMat4(), mesh->GetVertexBuffer(uid), mesh->GetIndexBuffer(uid), material, id);
 	}
 
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> material, uint64_t count, int id)

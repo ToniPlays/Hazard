@@ -13,6 +13,7 @@
 #include <Platform/OS.h>
 #include <Editor/EditorWorldManager.h>
 #include <Hazard/ImGUI/GUIManager.h>
+#include <Hazard/Rendering/Mesh/MaterialAssetLoader.h>
 
 namespace UI
 {
@@ -20,16 +21,16 @@ namespace UI
 	{
 		SetRootFolder(ProjectManager::GetAssetFolder());
 
-		m_IconSampler = Hazard::RenderEngine::GetResources().DefaultImageSampler;
-
 		m_SearchField = ImUI::TextField("");
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
 		m_SearchField.SetHint("Search...");
 	}
+
 	void AssetPanel::Update()
 	{
 
 	}
+
 	void AssetPanel::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -233,7 +234,7 @@ namespace UI
 			if (!itemIcon) continue;
 
 			item.BeginRender();
-			item.OnRender(itemIcon, m_IconSampler, thumbailSize);
+			item.OnRender(itemIcon, itemIcon->GetSampler(), thumbailSize);
 			item.EndRender();
 		}
 
@@ -287,7 +288,24 @@ namespace UI
 				Editor::EditorWorldManager::SetWorld(world);
 				changed = true;
 			});
-			ImUI::MenuItem("Material", nullptr);
+			ImUI::MenuItem("Material", [&]() {
+				
+				MaterialAssetLoader::CreateSettings matSettings = {};
+				CreateAssetSettings settings = {
+					.SourcePath = "",
+					.Settings = &matSettings
+				};
+
+				Ref<Material> material = AssetManager::CreateAsset(AssetType::Material, settings).As<Material>();
+
+				SaveAssetSettings saveSettings = {
+					.TargetPath = File::FindAvailableName(m_CurrentPath, "New material", "hasset"),
+					.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
+				};
+
+				AssetManager::SaveAsset(material, saveSettings);
+				changed = true;
+			});
 
 			ImUI::MenuHeader("Advanced assets");
 
@@ -304,7 +322,6 @@ namespace UI
 				ImUI::MenuItem("Material", nullptr);
 				ImUI::MenuItem("Shader", nullptr);
 				ImUI::MenuItem("Environment map", [&]() {
-					auto path = File::FindAvailableName(m_CurrentPath, "Environment", "hasset");
 					//AssetManager::CreateNewAsset(AssetType::EnvironmentMap, path, File::Relative(m_RootPath, path));
 					changed = true;
 				});

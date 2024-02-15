@@ -7,7 +7,6 @@
 layout(set = 0, binding = 0, rgba16f) restrict writeonly uniform imageCube o_IrradianceMap;
 layout(set = 0, binding = 1) uniform samplerCube u_RadianceMap;
 
-
 layout(push_constant) uniform Settings
 {
     uint Samples;

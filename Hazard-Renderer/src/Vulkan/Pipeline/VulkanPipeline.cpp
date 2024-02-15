@@ -122,17 +122,26 @@ namespace HazardRenderer::Vulkan
 			}
 		}
 
-		std::vector<VkPushConstantRange> vulkanPushConstantRanges(m_Specs.PushConstants.size());
+			std::unordered_map<uint32_t, VkPushConstantRange> ranges;
 		{
-			uint32_t i = 0;
+			std::unordered_map<uint32_t, uint32_t> offsets;
 			for (auto& range : m_Specs.PushConstants)
 			{
-				auto& vkRange = vulkanPushConstantRanges[i];
+				auto& vkRange = ranges[range.Flags];
 
-				vkRange.stageFlags = VkUtils::GetVulkanShaderStage(range.Flags);
-				vkRange.offset = range.Offset;
-				vkRange.size = range.Size;
+				vkRange.stageFlags |= VkUtils::GetVulkanShaderStage(range.Flags);
+				vkRange.size += ShaderDataTypeSize(range.Type);
+				offsets[range.Flags] = vkRange.size;
 			}
+		}
+
+		std::vector<VkPushConstantRange> vulkanPushConstantRanges;
+		uint32_t offset = 0;
+		for (auto& [stage, range] : ranges)
+		{
+			range.offset = offset;
+			offset += range.size;
+			vulkanPushConstantRanges.push_back(range);
 		}
 
 		VkPipelineLayoutCreateInfo layoutInfo = {};
@@ -343,7 +352,7 @@ namespace HazardRenderer::Vulkan
 
 				vkRange.stageFlags = VkUtils::GetVulkanShaderStage(range.Flags);
 				vkRange.offset = range.Offset;
-				vkRange.size = range.Size;
+				vkRange.size = ShaderDataTypeSize(range.Type);
 			}
 		}
 

@@ -134,23 +134,30 @@ namespace Hazard
 		Ref<DescriptorSet> computeSet = DescriptorSet::Create(&setInfo);
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Equirectangular to cubemap", DeviceQueue::ComputeBit, 1);
 
-		struct ComputeSettings
-		{
-			uint32_t Samples;
+		ImageMemoryInfo barrier = {
+			.Image = cubemap,
+			.BaseLayer = 0,
+			.LayerCount = 6,
+			.BaseMip = 0,
+			.MipCount = cubemap->GetMipLevels(),
+			.SrcLayout = IMAGE_LAYOUT_SHADER_READ_ONLY,
+			.DstLayout = IMAGE_LAYOUT_GENERAL,
 		};
 
-		ComputeSettings constants = {
-			.Samples = settings.Samples
-		};
+		cmdBuffer->Begin();
+		cmdBuffer->ImageMemoryBarrier(barrier);
 
 		computeSet->Write(0, 0, cubemap, RenderEngine::GetResources().DefaultImageSampler, true);
 		computeSet->Write(1, 0, image, RenderEngine::GetResources().DefaultImageSampler, true);
 
-		cmdBuffer->Begin();
 		cmdBuffer->SetPipeline(pipeline);
 		cmdBuffer->SetDescriptorSet(computeSet, 0);
-		cmdBuffer->PushConstants(Buffer(&constants, sizeof(ComputeSettings)), 0, SHADER_STAGE_COMPUTE_BIT);
 		cmdBuffer->DispatchCompute({ settings.Resolution / 32, settings.Resolution / 32, 6 });
+
+		barrier.SrcLayout = IMAGE_LAYOUT_GENERAL;
+		barrier.DstLayout = IMAGE_LAYOUT_SHADER_READ_ONLY;
+
+		cmdBuffer->ImageMemoryBarrier(barrier);
 		cmdBuffer->End();
 		cmdBuffer->Submit();
 

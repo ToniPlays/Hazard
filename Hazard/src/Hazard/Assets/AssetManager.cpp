@@ -104,7 +104,6 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		JobPromise promise = CreateAssetAsync(type, settings);
 		promise.Wait();
-
 		return promise.GetResult<Ref<Asset>>();
 	}
 

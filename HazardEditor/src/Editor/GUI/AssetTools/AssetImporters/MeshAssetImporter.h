@@ -5,6 +5,8 @@
 #include "Hazard/ImGUI/UIElements/Treenode.h"
 #include "Hazard/ImGUI/UIElements/InputFloat.h"
 
+#include "Hazard/Rendering/Mesh/MeshAssetLoader.h"
+
 
 class MeshAssetImporter : public IAssetImporter
 {
@@ -31,4 +33,6 @@ private:
 	Hazard::ImUI::InputFloat m_Rotation = Hazard::ImUI::InputFloat("Rotation", 3);
 
 	std::filesystem::path m_SourcePath;
+
+	Hazard::MeshAssetLoader::CreateSettings m_Settings;
 };

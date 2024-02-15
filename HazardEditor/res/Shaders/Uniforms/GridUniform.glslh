@@ -1,4 +1,4 @@
-layout(std140, set = 2, binding = 0) uniform Grid 
+layout(std140, set = 1, binding = 0) uniform Grid 
 {
 	uniform float Scale;
 	uniform float Zoom;

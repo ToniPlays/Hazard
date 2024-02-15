@@ -43,8 +43,9 @@ namespace HazardRenderer
 
 	struct PushConstantRange
 	{
+		std::string Name;
 		uint32_t Flags;
-		uint32_t Size;
+		ShaderDataType Type;
 		uint32_t Offset;
 	};
 

@@ -49,11 +49,11 @@ namespace HazardRenderer
 		Ref<Image> Image;
 		Extent SrcExtent;
 		Extent DstExtent;
-		uint16_t SrcLayer;
-		uint16_t DstLayer;
+		uint32_t SrcLayer;
+		uint32_t DstLayer;
 
-		uint16_t SrcMip;
-		uint16_t DstMip;
+		uint32_t SrcMip;
+		uint32_t DstMip;
 		uint32_t SrcLayout;
 		uint32_t DstLayout;
 	};
@@ -61,10 +61,10 @@ namespace HazardRenderer
 	struct ImageMemoryInfo
 	{
 		Ref<Image> Image;
-		uint16_t BaseLayer;
-		uint16_t LayerCount;
-		uint16_t BaseMip;
-		uint16_t MipCount;
+		uint32_t BaseLayer;
+		uint32_t LayerCount;
+		uint32_t BaseMip;
+		uint32_t MipCount;
 		uint32_t SrcLayout;
 		uint32_t DstLayout;
 	};

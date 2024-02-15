@@ -15,8 +15,11 @@ namespace UI
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 
-		void SetMeshHandle(AssetHandle meshHandle);
+		void SetMaterialHandle(AssetHandle handle);
+		void SetMeshHandle(AssetHandle handle);
+		
 	private:
+		void RenderToolbar(ImVec2 corner);
 		void CreateWorldRenderer();
 
 	private:
@@ -26,10 +29,12 @@ namespace UI
 
 		glm::mat4 m_Projection;
 		glm::mat4 m_View;
-		glm::vec3 m_Position = { -10, 5, 0 };
+		glm::vec3 m_Position = { 0, 1.2, 3.5 };
 
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
 		Ref<HazardRenderer::Sampler> m_ImageSampler;
+
+		uint32_t m_CurrentMode = 1;
 	};
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AssetTools/ScriptCreatePanel.h"
-#include "AssetTools/MaterialEditor.h"
 #include "AssetTools/AssetImporterPanel.h"
 #include "AssetTools/AssetPanel.h"
 #include "AssetTools/AssetEditors/MeshAssetEditorPanel.h"
