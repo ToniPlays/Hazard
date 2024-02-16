@@ -24,8 +24,6 @@ void main()
 
 layout(location = 0) in vec3 v_Position;
 
-layout(set = 1, binding = 0) uniform samplerCube u_CubeMap;
-
 layout(push_constant) uniform PushConstant
 {
 	float LodLevel;
@@ -45,8 +43,8 @@ const float gamma = 2.2;
 
 void main()
 {
-	int levelTexels = textureQueryLevels(u_CubeMap);
-	vec3 color = textureLod(u_CubeMap, v_Position, (u_PushConstants.LodLevel * levelTexels)).rgb;
+	int levelTexels = textureQueryLevels(u_RadianceMap);
+	vec3 color = textureLod(u_RadianceMap, v_Position, (u_PushConstants.LodLevel * levelTexels)).rgb;
 	color *= u_PushConstants.Intensity;
     color = GammaCorrect(color, gamma);
 

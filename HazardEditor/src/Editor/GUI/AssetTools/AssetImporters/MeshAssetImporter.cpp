@@ -89,14 +89,13 @@ bool MeshAssetImporter::ImportFromNew()
 	CreateAssetSettings settings = {};
 	settings.SourcePath = m_SourcePath;
 	settings.Settings = &m_Settings;
-	
-
-	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Mesh, settings);
 
 	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
-	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory() / File::GetNameNoExt(m_SourcePath), File::GetNameNoExt(m_SourcePath), "hasset");
-	m_Settings.MaterialPath = path / "Materials";
+	std::filesystem::path rootPath = Directory::FindAvailableName(assetPanel.GetOpenDirectory() / File::GetNameNoExt(m_SourcePath), File::GetNameNoExt(m_SourcePath));
+	std::filesystem::path path = rootPath / (File::GetNameNoExt(m_SourcePath) + ".hasset");
+	m_Settings.MaterialPath = rootPath / "Materials";
 
+	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Mesh, settings);
 	promise.Then([path, assetPanel](JobGraph& graph) {
 		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
 		if (!asset) return;

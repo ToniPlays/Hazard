@@ -6,6 +6,8 @@
 
 namespace Hazard 
 {
+	class Material;
+
 	enum MeshCreateFlags
 	{
 		MESH_CREATE_INCLUDE_CAMERA = BIT(0),
@@ -38,7 +40,7 @@ namespace Hazard
 
 		struct CreateSettings
 		{
-			uint32_t Flags;
+			uint32_t Flags = 0;
 			std::filesystem::path MaterialPath;
 		};
 
@@ -53,12 +55,14 @@ namespace Hazard
 	private:
 		static void PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings);
 		static void ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh);
-		static void ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material);
+		static void ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& maetrialRoot);
 		static void FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer);
 
 		static void ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh);
 		static void CompileMesh(JobInfo& info, Ref<Mesh> mesh);
 
 		static void CreateMeshFromSource(JobInfo& info, AssetHandle handle);
+
+		static void SetMaterialProperties(Ref<Material> material, const MeshImporter::MaterialData& materialData);
 	};
 }

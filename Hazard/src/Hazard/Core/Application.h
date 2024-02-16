@@ -59,7 +59,7 @@ namespace Hazard
 	private:
 
 		Scope<JobSystem> m_JobSystem;
-		std::recursive_mutex m_MainJobMutex;
+		std::mutex m_MainJobMutex;
 		Callback<void()> m_MainJobs;
 	};
 

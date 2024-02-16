@@ -126,7 +126,7 @@ public:
 		return m_Instance == other.m_Instance;
 	}
 
-	T* Raw() { return  m_Instance; }
+	T* Raw() { return m_Instance; }
 	const T* Raw() const { return  m_Instance; }
 
 	void Release(T* instance = nullptr)

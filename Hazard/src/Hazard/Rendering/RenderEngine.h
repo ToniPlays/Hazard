@@ -9,17 +9,11 @@
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/Core/ApplicationCreateInfo.h"
 #include "Renderers/CircleRenderer.h"
+#include "Renderers/GeometryRenderer.h"
+#include "Renderers/EnvironmentRenderer.h"
 
 namespace Hazard 
 {
-	struct GraphBeginData
-	{
-		CameraData Camera;
-		Ref<HazardRenderer::DescriptorSet> CameraDescriptor;
-		Ref<HazardRenderer::RenderCommandBuffer> GraphicsBuffer;
-		Ref<HazardRenderer::RenderPass> OutputRenderpass;
-	};
-
 	class RenderEngine : public Module 
 	{
 	public:
@@ -40,23 +34,18 @@ namespace Hazard
 
 		RendererDrawList& GetDrawList() { return m_DrawList[m_CurrentDrawContext]; }
 		std::vector<RendererDrawList>& GetDrawLists() { return m_DrawList; }
-		Ref<HazardRenderer::RenderPass> GetRenderPass() { return m_RenderPass; }
-		
 		static RenderResources& GetResources() { return *s_Resources; }
 
 	private:
 		std::vector<RendererDrawList> m_DrawList;
         
-		RenderContextManager* m_RenderContextManager;
-		Ref<RenderGraph> m_RenderGraph;
-
 		QuadRenderer m_QuadRenderer;
 		LineRenderer m_LineRenderer;
 		CircleRenderer m_CircleRenderer;
+		GeometryRenderer m_GeometryRenderer;
+		EnvironmentRenderer m_EnvironmentRenderer;
 
-		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
-		Ref<HazardRenderer::RenderPass> m_RenderPass;
-
+		RenderContextManager* m_RenderContextManager;
 		uint32_t m_CurrentDrawContext = 0;
 
 		inline static RenderResources* s_Resources = nullptr;

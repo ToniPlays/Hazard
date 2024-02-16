@@ -1,8 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "RenderResources.h"
-#include "Renderers/WorldRenderer.h"
+#include "WorldRenderer.h"
 #include "Core/Rendering/RenderPass.h"
 #include "Core/Rendering/Pipeline.h"
 #include "Core/Rendering/GPUBuffer.h"
@@ -12,6 +11,8 @@
 
 namespace Hazard
 {
+	using namespace HazardRenderer;
+
 	struct DrawListStat
 	{
 		uint64_t QuadCount;
@@ -30,17 +31,8 @@ namespace Hazard
 		};
 
 		Ref<Pipeline> Pipeline;
-		Ref<GPUBuffer> CameraBuffer;
-		Ref<DescriptorSet> DescriptorSet;
+		Ref<Cubemap> RadianceMap;
 		SkyboxConstants Constants;
-	};
-
-	struct MeshData
-	{
-		Ref<GPUBuffer> VertexBuffer;
-		Ref<GPUBuffer> IndexBuffer;
-		Ref<Material> Material;
-		uint32_t Count;
 	};
 
 	struct MeshTransform
@@ -49,11 +41,23 @@ namespace Hazard
 
 		MeshTransform(const glm::mat4& transform)
 		{
-			MRow[0] = {transform[0][0], transform[1][0], transform[2][0], transform[3][0]};
-			MRow[1] = {transform[0][1], transform[1][1], transform[2][1], transform[3][1]};
-			MRow[2] = {transform[0][2], transform[1][2], transform[2][2], transform[3][2]};
+			MRow[0] = { transform[0][0], transform[1][0], transform[2][0], transform[3][0] };
+			MRow[1] = { transform[0][1], transform[1][1], transform[2][1], transform[3][1] };
+			MRow[2] = { transform[0][2], transform[1][2], transform[2][2], transform[3][2] };
 		}
 	};
+
+	struct MeshData
+	{
+		Ref<GPUBuffer> VertexBuffer;
+		Ref<GPUBuffer> IndexBuffer;
+		Ref<Material> Material;
+		uint32_t Count;
+
+		uint32_t TransformOffset;
+		std::vector<MeshTransform> Transforms;
+	};
+
 
 	struct MeshKey
 	{
@@ -89,8 +93,7 @@ namespace Hazard
 		Ref<WorldRenderer> WorldRenderer;
 		EnvironmentData Environment;
 
-		std::map<MeshKey, MeshData> MeshInstances;
-		std::map<MeshKey, std::vector<MeshTransform>> Transforms;
+		std::map<MeshKey, MeshData> GeometryPass;
 
 		DrawListStat Stats;
 	};

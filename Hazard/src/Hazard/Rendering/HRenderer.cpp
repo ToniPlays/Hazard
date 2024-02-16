@@ -1,7 +1,7 @@
 
 #include <hzrpch.h>
 #include "HRenderer.h"
-#include "Renderers/WorldRenderer.h"
+#include "WorldRenderer.h"
 #include "Hazard/Assets/AssetManager.h"
 
 namespace Hazard
@@ -94,16 +94,16 @@ namespace Hazard
 		auto& drawList = s_Engine->GetDrawList();
 		MeshKey key = { vertexBuffer, indexBuffer, material, count };
 
-		if (!drawList.MeshInstances.contains(key))
+		if (!drawList.GeometryPass.contains(key))
 		{
-			auto& meshData = drawList.MeshInstances[key];
+			auto& meshData = drawList.GeometryPass[key];
 			meshData.VertexBuffer = vertexBuffer;
 			meshData.IndexBuffer = indexBuffer;
 			meshData.Material = material;
 			meshData.Count = count;
 		}
 
-		drawList.Transforms[key].push_back(MeshTransform(transform));
+		drawList.GeometryPass[key].Transforms.push_back(MeshTransform(transform));
 	}
 
 	void HRenderer::SubmitShadowMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count)
@@ -129,9 +129,8 @@ namespace Hazard
 		Ref<Material> material = map->GetMaterial();
 
 		auto& env = s_Engine->GetDrawList();
-		env.Environment.Pipeline = ShaderLibrary::GetPipeline("Skybox");
-		env.Environment.DescriptorSet = material->GetDescriptorSet();
-		env.Environment.CameraBuffer = s_Engine->GetResources().CameraUniformBuffer;
+		env.Environment.Pipeline = material->GetPipeline();
+		env.Environment.RadianceMap = map->GetCubemap();
 		env.Environment.Constants.LodLevel = skyLight.LodLevel;
 		env.Environment.Constants.Intensity = skyLight.Intensity;
 	}

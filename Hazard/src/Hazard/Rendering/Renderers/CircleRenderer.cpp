@@ -130,13 +130,10 @@ namespace Hazard
 
 	void CircleRenderer::SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass)
 	{
-		if (renderPass == m_RenderPass) return;
-
 		m_RenderPass = renderPass;
-		CreateResources(renderPass);
 	};
 
-	void CircleRenderer::CreateResources(Ref<RenderPass> renderPass)
+	void CircleRenderer::CreateResources()
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
@@ -184,6 +181,5 @@ namespace Hazard
 		};
 
 		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
-		m_RenderPass = renderPass;
 	}
 }

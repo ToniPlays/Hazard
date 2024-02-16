@@ -88,10 +88,6 @@ namespace Hazard
 			s_LoadedPipelines["PBR_Static"] = Pipeline::Create(&specs);
 		}
 		{
-			DescriptorSetLayout skybox = {
-				{ SHADER_STAGE_FRAGMENT_BIT, "u_CubeMap", 0, DESCRIPTOR_TYPE_SAMPLER_CUBE }
-			};
-
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Skybox.glsl");
 
 			PipelineSpecification specs = {
@@ -100,7 +96,7 @@ namespace Hazard
 				.Flags = PIPELINE_DRAW_FILL | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 				.DepthOperator = DepthOp::LessOrEqual,
 				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { setLayout, skybox },
+				.SetLayouts = { setLayout },
 				.PushConstants = { { "LodLevel", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, 0 },
 								   { "Intensity", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) } 
 								 },

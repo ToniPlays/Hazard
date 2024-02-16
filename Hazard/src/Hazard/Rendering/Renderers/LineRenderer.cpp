@@ -52,8 +52,6 @@ namespace Hazard
 		m_VertexBuffer->SetData(region);
 
 		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("LineShader");
-		pipeline->SetRenderPass(m_RenderPass);
-		
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Material, m_LineBatch->GetCount());
 	}
 
@@ -82,16 +80,7 @@ namespace Hazard
 		m_LineBatch->Push(endVertex);
 	}
 
-	void LineRenderer::SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass)
-	{
-		if (renderPass == m_RenderPass)
-			return;
-
-		m_RenderPass = renderPass;
-		CreateResources(renderPass);
-	}
-
-	void LineRenderer::CreateResources(Ref<RenderPass> renderPass)
+	void LineRenderer::CreateResources()
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
@@ -104,7 +93,6 @@ namespace Hazard
 
 		m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("LineShader"));
 		m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
-		m_RenderPass = renderPass;
 	}
 }
 

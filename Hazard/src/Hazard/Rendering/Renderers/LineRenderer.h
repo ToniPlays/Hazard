@@ -34,8 +34,7 @@ namespace Hazard
 
 		void SubmitLine(const glm::vec3& startPos, const glm::vec3& endPos, const glm::vec4& color);
 
-		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass);
-		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
+		void CreateResources();
 
 	private:
 		Batch<LineVertex>* m_LineBatch = nullptr;
@@ -43,6 +42,5 @@ namespace Hazard
 
 		Ref<Material> m_Material;
 		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer;
-		Ref<HazardRenderer::RenderPass> m_RenderPass;
 	};
 }

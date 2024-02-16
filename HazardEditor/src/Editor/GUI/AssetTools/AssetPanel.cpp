@@ -299,7 +299,7 @@ namespace UI
 				Ref<Material> material = AssetManager::CreateAsset(AssetType::Material, settings).As<Material>();
 
 				SaveAssetSettings saveSettings = {
-					.TargetPath = File::FindAvailableName(m_CurrentPath, "New material", "hasset"),
+					.TargetPath = File::FindAvailableName(m_CurrentPath, "New material", ".hasset"),
 					.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
 				};
 

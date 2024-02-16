@@ -22,9 +22,7 @@ namespace HazardRenderer {
 		BufferElement() = default;
 
 		BufferElement(const std::string& name, ShaderDataType type, Divisor divisor = PerVertex)
-			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), ElementDivisor(divisor)
-		{
-		}
+			: Name(name), Type(type), Size(ShaderDataTypeSize(type)), Offset(0), ElementDivisor(divisor) {}
 
 		uint32_t GetComponentCount() const
 		{

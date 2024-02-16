@@ -27,19 +27,32 @@ namespace Hazard
 
         AssetType GetType() const override { return AssetType::Material; }
         
+        const std::unordered_map<std::string, MaterialParam> GetMaterialParams() const { return m_MaterialParams; }
+        Buffer GetPushConstantData() const { return m_PushConstants; }
+        void SetPushConstantData(Buffer data) { return m_PushConstants.Write(data.Data, data.Size); }
+
         Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; };
         Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; };
-        Buffer GetPushConstantData() const { return m_PushConstants; }
 
         void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline);
         void Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap);
 
         template<typename T>
-        void Set(const std::string& name, T value) {
+        void Set(const std::string& name, T value) 
+        {
             if (!m_MaterialParams.contains(name)) return;
 
             auto& param = m_MaterialParams[name];
-            m_PushConstants.Write(&value, ShaderDataTypeSize(param.Type), param.Offset);
+            if constexpr (std::is_same<T, void*>::value)
+            {
+                m_PushConstants.Write(value, ShaderDataTypeSize(param.Type), param.Offset);
+            }
+            else
+            {
+                m_PushConstants.Write(&value, ShaderDataTypeSize(param.Type), param.Offset);
+            }
+
+            std::cout << fmt::format("Parameter {} set to {}", param.Name, value) << std::endl;
         }
 
     private:

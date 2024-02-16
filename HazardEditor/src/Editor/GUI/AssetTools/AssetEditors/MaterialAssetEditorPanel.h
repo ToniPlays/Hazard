@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hazard/ImGUI/Panel.h"
-#include "Hazard/Rendering/Renderers/WorldRenderer.h"
+#include "Hazard/Rendering/WorldRenderer.h"
 
 namespace UI
 {

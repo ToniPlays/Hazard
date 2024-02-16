@@ -12,7 +12,6 @@ namespace Hazard
 
 	public:
 		Texture2DAsset() = default;
-
 		~Texture2DAsset() = default;
 		AssetType GetType() const override { return AssetType::Image; }
 

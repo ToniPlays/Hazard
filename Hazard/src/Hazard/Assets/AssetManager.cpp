@@ -118,16 +118,6 @@ namespace Hazard
 	JobPromise AssetManager::SaveAsset(Ref<Asset> asset, SaveAssetSettings settings)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(asset, "Asset cannot be nullptr");
-
-		AssetMetadata& metadata = GetMetadata(asset->GetHandle());
-		if (settings.Flags & ASSET_MANAGER_SAVE_AND_UPDATE && !settings.TargetPath.empty() && metadata.Handle != INVALID_ASSET_HANDLE)
-			metadata.FilePath = settings.TargetPath;
-
-		if (!metadata.FilePath.empty())
-			settings.TargetPath = metadata.FilePath;
-
-		HZR_CORE_ASSERT(!settings.TargetPath.empty(), "Saving file to null path");
 
 		Ref<JobGraph> graph = GetSaveGraph(asset, settings);
 		if (!graph) return JobPromise();
@@ -222,6 +212,15 @@ namespace Hazard
 
 	Ref<JobGraph> AssetManager::GetSaveGraph(Ref<Asset> asset, SaveAssetSettings settings)
 	{
+		HZR_ASSERT(asset, "Asset cannot be nullptr");
+
+		AssetMetadata& metadata = GetMetadata(asset->GetHandle());
+		if (settings.Flags & ASSET_MANAGER_SAVE_AND_UPDATE && !settings.TargetPath.empty() && metadata.Handle != INVALID_ASSET_HANDLE)
+			metadata.FilePath = settings.TargetPath;
+
+		if (!metadata.FilePath.empty())
+			settings.TargetPath = metadata.FilePath;
+
 		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);
 		if (!graph) return nullptr;
 
@@ -274,6 +273,7 @@ namespace Hazard
 
 	Ref<JobGraph> AssetManager::GetCreateGraph(AssetType type, CreateAssetSettings settings)
 	{
+		HZR_CORE_ASSERT(!settings.SourcePath.empty() || type != AssetType::Material, "Fuck all of you");
 		Ref<JobGraph> graph = s_AssetLoader.Create(type, settings);
 		if (!graph) return nullptr;
 
@@ -283,8 +283,6 @@ namespace Hazard
 
 			asset->m_Handle = UID();
 			asset->m_SourceAssetPath = source;
-
-			auto absolutePath = File::GetFileAbsolutePath(source);
 
 			AssetMetadata metadata = {
 				.AssetPackHandle = 0,
@@ -312,8 +310,6 @@ namespace Hazard
 	AssetHandle AssetManager::ImportAsset(const std::filesystem::path& path, const AssetPack& pack)
 	{
 		auto absolutePath = File::GetFileAbsolutePath(path);
-
-		std::cout << absolutePath.string() << std::endl;
 
 		std::scoped_lock lock(s_AssetMutex);
 

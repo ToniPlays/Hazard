@@ -11,4 +11,6 @@ public:
 	static bool Create(const std::filesystem::path& dir);
 	static bool Rename(const std::filesystem::path& folder, const std::string& newName);
 	static std::vector<std::filesystem::path> GetAllInDirectory(const std::filesystem::path& path, bool recursive = false);
+
+	static std::filesystem::path FindAvailableName(const std::filesystem::path& directory, const std::string& name);
 };

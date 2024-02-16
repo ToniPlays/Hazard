@@ -57,6 +57,7 @@ namespace UI
 
 	void ProgressOverlay::OnPanelRender()
 	{
+		std::scoped_lock lock(m_JobMutex);
 		for (auto& info : m_JobGraphs)
 		{
 			Ref<JobGraph>& graph = info.Graph;

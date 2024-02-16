@@ -4,7 +4,7 @@
 #include "Hazard/Core/Core.h"
 #include "HazardRenderer.h"
 #include "RenderEngine.h"
-#include "Renderers/WorldRenderer.h"
+#include "WorldRenderer.h"
 #include "Color.h"
 
 namespace Hazard

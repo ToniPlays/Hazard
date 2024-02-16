@@ -4,7 +4,7 @@
 #include "TransformationGizmo.h"
 #include "Editor/EditorCamera.h"
 #include "Editor/EditorGrid.h"
-#include "Hazard/Rendering/Renderers/WorldRenderer.h"
+#include "Hazard/Rendering/WorldRenderer.h"
 #include "Hazard/ImGUI/Panel.h"
 
 namespace UI 

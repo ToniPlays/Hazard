@@ -11,7 +11,6 @@
 namespace HazardRenderer
 {
 	using GroupSize = glm::uvec3;
-	enum class State { Waiting, Record, Finished, Submit };
 	enum class DeviceQueue { GraphicsBit, ComputeBit, TransferBit };
 
 	enum ImageLayout
@@ -123,7 +122,6 @@ namespace HazardRenderer
 		virtual void OnCompleted(std::function<void()> callback) = 0;
 
 		virtual uint32_t GetFrameIndex() = 0;
-		virtual bool IsRecording() = 0;
 
 	public:
 		static Ref<RenderCommandBuffer> Create(const std::string& debugName = "", DeviceQueue queue = DeviceQueue::GraphicsBit, uint32_t count = 0);

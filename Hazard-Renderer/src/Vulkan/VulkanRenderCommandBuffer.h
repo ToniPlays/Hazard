@@ -30,7 +30,6 @@ namespace HazardRenderer::Vulkan
 		~VulkanRenderCommandBuffer();
 
 		uint32_t GetFrameIndex() override { return m_FrameIndex; };
-		bool IsRecording() override { return m_State == State::Record; };
 
 		void Begin() override;
 		void End() override;
@@ -80,8 +79,6 @@ namespace HazardRenderer::Vulkan
 		void BeginPerformanceQuery_RT();
 		void EndPerformanceQuery_RT();
 
-		void SetState(State state) { m_State = state; }
-
 	private:
 		std::string m_DebugName;
 		VkCommandPool m_CommandPool = nullptr;
@@ -105,8 +102,6 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanPipeline> m_CurrentPipeline = nullptr;
 
 		Callback<void()> m_OnCompletion;
-
-		State m_State = State::Waiting;
 		VkQueue m_SubmitQueue = VK_NULL_HANDLE;
 
 		inline static VkFence s_ComputeFence = VK_NULL_HANDLE;

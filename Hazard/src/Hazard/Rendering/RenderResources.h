@@ -8,6 +8,7 @@
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Mesh/Material.h"
+#include "RendererDrawList.h"
 
 namespace Hazard
 {
@@ -50,6 +51,7 @@ namespace Hazard
 		uint32_t Flags = 0;
 	};
 
+
 	using namespace HazardRenderer;
 	struct RenderResources
 	{
@@ -59,9 +61,8 @@ namespace Hazard
 		Ref<Cubemap> WhiteCubemap;
 		Ref<Sampler> DefaultImageSampler;
 
-		void Initialize(Ref<HazardRenderer::RenderPass> renderPass)
+		void Initialize()
 		{
-
 			BufferCreateInfo cameraUBO = {
 				.Name = "Camera",
 				.UsageFlags = BUFFER_USAGE_UNIFORM_BUFFER_BIT | BUFFER_USAGE_DYNAMIC,

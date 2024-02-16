@@ -65,8 +65,6 @@ namespace Hazard
 		m_VertexBuffer->SetData(region);
 
 		Ref<Pipeline> pipeline = m_Material->GetPipeline();
-		pipeline->SetRenderPass(m_RenderPass);
-	
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
@@ -151,7 +149,7 @@ namespace Hazard
 		return true;
 	}
 
-	void QuadRenderer::CreateResources(Ref<RenderPass> renderPass)
+	void QuadRenderer::CreateResources()
 	{
 		HZR_PROFILE_FUNCTION();
 		using namespace HazardRenderer;
@@ -207,8 +205,6 @@ namespace Hazard
 
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)
 			set->Write(0, i, m_Data.TextureSlots[i], sampler, true);
-
-		m_RenderPass = renderPass;
 	}
 
 	float QuadRenderer::GetImageIndex(const Ref<Image2D>& texture)

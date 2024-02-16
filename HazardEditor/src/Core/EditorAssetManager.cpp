@@ -14,6 +14,7 @@ void EditorAssetManager::Init()
 {
 	std::vector<JobPromise> promises;
 	ImportEngineShaders(promises);
+	ImportEngineImages(promises);
 
 	for (auto& promise : promises)
 		promise.Wait();
@@ -24,7 +25,6 @@ void EditorAssetManager::PostInit()
 	std::vector<JobPromise> promises;
 	ImportEngineEnvironments(promises);
 	ImportEngineMeshes(promises);
-	ImportEngineImages(promises);
 
 	for (auto& promise : promises)
 		promise.Wait();

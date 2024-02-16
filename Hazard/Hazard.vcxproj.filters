@@ -375,9 +375,6 @@
     <ClInclude Include="src\Hazard\Rendering\RenderEngine.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\RenderGraphs\RasterRenderGraph.h">
-      <Filter>src\Hazard\Rendering\RenderGraphs</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\RenderResources.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
@@ -393,7 +390,7 @@
     <ClInclude Include="src\Hazard\Rendering\Renderers\QuadRenderer.h">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Renderers\WorldRenderer.h">
+    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Vertices.h">
@@ -495,6 +492,8 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Renderers\GeometryRenderer.h" />
+    <ClInclude Include="src\Hazard\Rendering\Renderers\EnvironmentRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -665,7 +664,7 @@
     <ClCompile Include="src\Hazard\Rendering\Renderers\QuadRenderer.cpp">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\Rendering\Renderers\WorldRenderer.cpp">
+    <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
@@ -690,5 +689,7 @@
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\Panel.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Renderers\GeometryRenderer.cpp" />
+    <ClCompile Include="src\Hazard\Rendering\Renderers\EnvironmentRenderer.cpp" />
   </ItemGroup>
 </Project>

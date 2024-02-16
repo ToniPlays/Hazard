@@ -4,6 +4,8 @@
 #include "Hazard/RenderContext/TextureFactory.h"
 #include <spdlog/fmt/fmt.h>
 
+#include "File.h"
+
 void TexturedQuadTest::Reset()
 {
 

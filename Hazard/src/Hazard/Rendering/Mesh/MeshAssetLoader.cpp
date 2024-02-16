@@ -5,6 +5,8 @@
 #include "Importers/AssimpImporter.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Assets/AssetPack.h"
+#include "MaterialAssetLoader.h"
+#include "Material.h"
 
 #include "Hazard/Core/Application.h"
 #include "Mesh.h"
@@ -94,7 +96,7 @@ namespace Hazard
 		{
 			for (auto& material : materials)
 			{
-				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", material.Name), ProcessMaterial, importer, material);
+				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", material.Name), ProcessMaterial, importer, material, settings.MaterialPath);
 				generateJobs.push_back(processMeshJob);
 			}
 		}
@@ -112,18 +114,34 @@ namespace Hazard
 		info.Job->SetResult(data);
 	}
 
-	void MeshAssetLoader::ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material)
+	void MeshAssetLoader::ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot)
 	{
+		MaterialAssetLoader::CreateSettings mat = {};
+
 		CreateAssetSettings settings = {
-			.SourcePath = "",
-			.Settings = nullptr,
+			.SourcePath = materialRoot / (material.Name + ".hasset"),
+			.Settings = &mat,
 		};
+
+		auto props = importer->GetMaterial(material.MaterialIndex);
 
 		Ref<JobGraph> loadGraph = AssetManager::GetCreateGraph(AssetType::Material, settings);
 		JobPromise promise = info.ParentGraph->SubGraph(loadGraph);
 
-		promise.Then([info](JobGraph&) mutable {
-			info.ParentGraph->Continue();
+		promise.Then([info, path = settings.SourcePath, props](JobGraph& graph) mutable {
+			Ref<Material> material = graph.GetResult<Ref<Material>>();
+			if (!material) return;
+			
+			SetMaterialProperties(material, props);
+
+			SaveAssetSettings saveSettings = {
+				.TargetPath = path,
+				.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
+			};
+
+			info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(material, saveSettings)).Then([info](JobGraph&) mutable {
+				info.ParentGraph->Continue();
+			});
 		});
 
 		info.ParentGraph->Halt();
@@ -293,5 +311,20 @@ namespace Hazard
 		mesh->GenerateMesh(submeshes, vertices, indices);
 
 		info.Job->SetResult(mesh);
+	}
+
+	void MeshAssetLoader::SetMaterialProperties(Ref<Material> material, const MeshImporter::MaterialData& materialData)
+	{
+	#define HZR_SET_MAT_PROP(mat, key, type) if(prop.Name == key) {						\
+												material->Set(type, prop.Data.Data);	\
+												continue;								\
+											}																								
+
+		for (auto& prop : materialData.Properties)
+		{
+			std::cout << prop.Name << std::endl;
+			HZR_SET_MAT_PROP(material, "$mat.gltf.pbrMetallicRoughness.metallicFactor", "Metalness");
+			HZR_SET_MAT_PROP(material, "$mat.gltf.pbrMetallicRoughness.roughnessFactor", "Roughness");
+		}
 	}
 }

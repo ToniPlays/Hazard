@@ -119,6 +119,8 @@ namespace Hazard
 
 		auto transform = GetMeshAiTransform(node);
 
+		uint32_t vertexOffset = 0;
+
 		for (uint32_t m = 0; m < node->mNumMeshes; m++)
 		{
 			const aiMesh* aiMesh = scene->mMeshes[node->mMeshes[m]];
@@ -131,12 +133,14 @@ namespace Hazard
 				vertex.Position.z = pos.z;
 			});
 
-			for (uint32_t channel = 0; channel < AI_MAX_NUMBER_OF_COLOR_SETS; channel++)
+			for (uint32_t channel = 0; channel < aiMesh->GetNumColorChannels(); channel++)
 			{
 				if (aiMesh->HasVertexColors(channel))
 				{
 					loadCallback.Add([aiMesh, channel](Vertex3D& vertex, uint64_t index) mutable {
 						aiColor4D color = aiMesh->mColors[channel][index];
+						if (isnan(color.r) || isnan(color.g) || isnan(color.b) || isnan(color.a)) return;
+
 						vertex.Color.r = color.r;
 						vertex.Color.g = color.g;
 						vertex.Color.b = color.b;
@@ -196,8 +200,11 @@ namespace Hazard
 			{
 				aiFace face = aiMesh->mFaces[f];
 				for (uint32_t index = 0; index < face.mNumIndices; index++)
-					data.Indices.push_back(face.mIndices[index]);
+					data.Indices.push_back(face.mIndices[index] + vertexOffset);
 			}
+
+			vertexOffset += aiMesh->mNumVertices;
+
 		}
 		return data;
 	}

@@ -10,6 +10,10 @@ layout(location = 3) in vec3 a_Tangent;
 layout(location = 4) in vec3 a_Binormal;
 layout(location = 5) in vec3 a_TextureCoords;
 
+layout(location = 6) in vec4 a_MRow0;
+layout(location = 7) in vec4 a_MRow1;
+layout(location = 8) in vec4 a_MRow2;
+
 struct VertexOuput
 {
     vec4 Color;
@@ -24,12 +28,19 @@ layout(location = 7) out int v_EntityID;
 
 void main()
 {
-	vec4 worldPosition = vec4(a_Position, 1.0);
+    mat4 transform = mat4(
+		vec4(a_MRow0.x, a_MRow1.x, a_MRow2.x, 0.0),
+		vec4(a_MRow0.y, a_MRow1.y, a_MRow2.y, 0.0),
+		vec4(a_MRow0.z, a_MRow1.z, a_MRow2.z, 0.0),
+		vec4(a_MRow0.w, a_MRow1.w, a_MRow2.w, 1.0)
+	);
+
+	vec4 worldPosition = transform * vec4(a_Position, 1.0);
 	gl_Position = u_Camera.ViewProjection * worldPosition;
 
 	Output.Color = a_Color;
     Output.Normal = a_Normal;
-    Output.WorldNormal = mat3(a_Tangent, a_Binormal, a_Normal);
+    Output.WorldNormal = mat3(transform) * mat3(a_Tangent, a_Binormal, a_Normal);
     Output.WorldPosition = worldPosition.xyz;
     Output.TextureCoords = a_TextureCoords;
     

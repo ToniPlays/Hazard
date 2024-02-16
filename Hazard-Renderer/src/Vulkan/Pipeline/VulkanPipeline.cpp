@@ -7,6 +7,7 @@
 #include "../VulkanFramebuffer.h"
 #include "../VkUtils.h"
 #include "spdlog/fmt/fmt.h"
+#include "VulkanRenderPass.h"
 
 namespace HazardRenderer::Vulkan
 {
@@ -30,22 +31,26 @@ namespace HazardRenderer::Vulkan
 	VulkanPipeline::~VulkanPipeline()
 	{
 		HZR_PROFILE_FUNCTION();
-		Renderer::SubmitResourceFree([pipeline = m_Pipeline, cache = m_PipelineCache, layout = m_PipelineLayout]() mutable {
-			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-
-			vkDestroyPipeline(device, pipeline, nullptr);
-			vkDestroyPipelineLayout(device, layout, nullptr);
-			vkDestroyPipelineCache(device, cache, nullptr);
-		});
+		Release();
 	}
 	void VulkanPipeline::SetRenderPass(Ref<RenderPass> renderPass)
 	{
 		HZR_PROFILE_FUNCTION();
 
 		if (m_Specs.pTargetRenderPass == renderPass) return;
-
 		m_Specs.pTargetRenderPass = renderPass;
-		Invalidate();
+
+		Ref<VulkanPipeline> instance = this;
+		Renderer::Submit([instance, renderPass]() mutable {
+
+			auto fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
+			instance->m_CurrentRenderpass = fb->GetRenderPass();
+			if (instance->m_Pipelines.contains(instance->m_CurrentRenderpass))
+				return;
+
+			std::cout << "SetRenderPass " << instance->m_Specs.DebugName << " " << renderPass.Raw() << std::endl;
+			instance->Invalidate_RT();
+		});
 	}
 	void VulkanPipeline::Invalidate()
 	{
@@ -60,7 +65,7 @@ namespace HazardRenderer::Vulkan
 	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
 	{
 		auto bindingPoint = GetBindingPoint();
-		vkCmdBindPipeline(commandBuffer, bindingPoint, m_Pipeline);
+		vkCmdBindPipeline(commandBuffer, bindingPoint, m_Pipelines.at(m_CurrentRenderpass));
 
 		if (m_Specs.Flags & PIPELINE_DRAW_LINE)
 			vkCmdSetLineWidth(commandBuffer, 5.0f);
@@ -98,7 +103,6 @@ namespace HazardRenderer::Vulkan
 		auto fb = m_Specs.pTargetRenderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
 		std::vector<VkDescriptorSetLayout> setLayouts(m_Specs.SetLayouts.size());
-
 		{
 			for (uint32_t i = 0; i < setLayouts.size(); i++)
 			{
@@ -122,7 +126,7 @@ namespace HazardRenderer::Vulkan
 			}
 		}
 
-			std::unordered_map<uint32_t, VkPushConstantRange> ranges;
+		std::unordered_map<uint32_t, VkPushConstantRange> ranges;
 		{
 			std::unordered_map<uint32_t, uint32_t> offsets;
 			for (auto& range : m_Specs.PushConstants)
@@ -266,17 +270,7 @@ namespace HazardRenderer::Vulkan
 
 		for (auto& element : m_Layout.GetElements())
 		{
-			if (element.ElementDivisor != PerVertex) continue;
-			inputAttrib[location].binding = PerVertex;
-			inputAttrib[location].location = location;
-			inputAttrib[location].format = VkUtils::ShaderDataTypeToVulkanType(element.Type);
-			inputAttrib[location].offset = element.Offset;
-			location++;
-		}
-		for (auto& element : m_Layout.GetElements())
-		{
-			if (element.ElementDivisor != PerInstance) continue;
-			inputAttrib[location].binding = PerInstance;
+			inputAttrib[location].binding = element.ElementDivisor;
 			inputAttrib[location].location = location;
 			inputAttrib[location].format = VkUtils::ShaderDataTypeToVulkanType(element.Type);
 			inputAttrib[location].offset = element.Offset;
@@ -309,8 +303,8 @@ namespace HazardRenderer::Vulkan
 		pipelineCacheInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheInfo, nullptr, &m_PipelineCache), "Failed to create VK");
 
-		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCache, 1, &pipelineInfo, nullptr, &m_Pipeline), "Failed to create VkPipeline");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipeline);
+		VK_CHECK_RESULT(vkCreateGraphicsPipelines(device, m_PipelineCache, 1, &pipelineInfo, nullptr, &m_Pipelines[m_CurrentRenderpass]), "Failed to create VkPipeline");
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipelines[m_CurrentRenderpass]);
 	}
 	void VulkanPipeline::InvalidateComputePipeline()
 	{
@@ -377,8 +371,8 @@ namespace HazardRenderer::Vulkan
 		pipelineCacheInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 		VK_CHECK_RESULT(vkCreatePipelineCache(device, &pipelineCacheInfo, nullptr, &m_PipelineCache), "Failed to create VK");
 
-		VK_CHECK_RESULT(vkCreateComputePipelines(device, m_PipelineCache, 1, &pipelineInfo, nullptr, &m_Pipeline), "Failed to create VkPipeline");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipeline);
+		VK_CHECK_RESULT(vkCreateComputePipelines(device, m_PipelineCache, 1, &pipelineInfo, nullptr, &m_Pipelines[VK_NULL_HANDLE]), "Failed to create VkPipeline");
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipelines[VK_NULL_HANDLE]);
 	}
 	void VulkanPipeline::InvalidateRaygenPipeline()
 	{
@@ -447,8 +441,19 @@ namespace HazardRenderer::Vulkan
 		createInfo.maxPipelineRayRecursionDepth = m_Specs.MaxRayDepth;
 		createInfo.layout = m_PipelineLayout;
 
-		VK_CHECK_RESULT(fpCreateRayTracingPipelinesKHR(device, VK_NULL_HANDLE, m_PipelineCache, 1, &createInfo, nullptr, &m_Pipeline), "Failed to create RayTracingPipeline");
-		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipeline);
+		VK_CHECK_RESULT(fpCreateRayTracingPipelinesKHR(device, VK_NULL_HANDLE, m_PipelineCache, 1, &createInfo, nullptr, &m_Pipelines[VK_NULL_HANDLE]), "Failed to create RayTracingPipeline");
+		VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_PIPELINE, fmt::format("VkPipeline {0}", m_Specs.DebugName), m_Pipelines[VK_NULL_HANDLE]);
+	}
+	void VulkanPipeline::Release()
+	{
+		/*Renderer::SubmitResourceFree([pipeline = m_Pipeline, cache = m_PipelineCache, layout = m_PipelineLayout]() mutable {
+			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+
+			vkDestroyPipeline(device, pipeline, nullptr);
+			vkDestroyPipelineLayout(device, layout, nullptr);
+			vkDestroyPipelineCache(device, cache, nullptr);
+		});
+		*/
 	}
 }
 

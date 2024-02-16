@@ -42,14 +42,7 @@ namespace Hazard
 		void SubmitQuad(const glm::mat4& transform, const glm::vec4& color, Ref<Texture2DAsset> texture);
 		void SubmitBillboard(const glm::mat4& transform, const glm::mat4& view, const glm::vec4& color, Ref<Texture2DAsset> texture);
 		bool IsVisible(const glm::mat4& transform);
-
-		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass) 
-		{
-			if (renderPass == m_RenderPass) return;
-			m_RenderPass = renderPass;
-			CreateResources(renderPass);
-		};
-		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
+		void CreateResources();
 
 	private:
 		float GetImageIndex(const Ref<HazardRenderer::Image2D>& image);
@@ -57,10 +50,9 @@ namespace Hazard
 	private:
 		Batch<QuadVertex>* m_QuadBatch = nullptr;
 		QuadRendererData m_Data;
-		Ref<Material> m_Material;
 
 		Ref<HazardRenderer::GPUBuffer> m_VertexBuffer;
 		Ref<HazardRenderer::GPUBuffer> m_IndexBuffer;
-		Ref<HazardRenderer::RenderPass> m_RenderPass;
+		Ref<Material> m_Material;;
 	};
 }

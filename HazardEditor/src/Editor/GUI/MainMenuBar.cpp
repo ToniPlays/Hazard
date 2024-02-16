@@ -86,10 +86,6 @@ namespace UI
 		});
 		AddMenuItem("Window/Debug/Render command list", [&]() {
 			auto& manager = Application::Get().GetModule<GUIManager>();
-			manager.GetExistingOrNew<RenderCommandListPanel>().BringToFront();
-		});
-		AddMenuItem("Window/Debug/World debugger", [&]() {
-			auto& manager = Application::Get().GetModule<GUIManager>();
 			manager.GetExistingOrNew<RendererDebugPanel>().BringToFront();
 		});
 		AddMenuItem("Window/Debug/Performance debugger", [&]() {

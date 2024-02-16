@@ -2,7 +2,7 @@
 
 #include "Hazard.h"
 #include "TransformationGizmo.h"
-#include "Hazard/Rendering/Renderers/WorldRenderer.h"
+#include "Hazard/Rendering/WorldRenderer.h"
 #include "HazardRendererCore.h"
 #include "Hazard/ImGUI/Panel.h"
 

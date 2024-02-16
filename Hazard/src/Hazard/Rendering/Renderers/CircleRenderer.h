@@ -40,7 +40,7 @@ namespace Hazard
 		bool IsVisible(const glm::mat4& transform);
 
 		void SetRenderPass(Ref<HazardRenderer::RenderPass> renderPass);
-		void CreateResources(Ref<HazardRenderer::RenderPass> renderPass);
+		void CreateResources();
 
 	private:
 

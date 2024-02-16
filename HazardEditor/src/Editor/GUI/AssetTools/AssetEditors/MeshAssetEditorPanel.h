@@ -2,7 +2,7 @@
 
 #include "Hazard/ImGUI/Panel.h"
 #include "Hazard/ECS/Entity.h"
-#include "Hazard/Rendering/Renderers/WorldRenderer.h"
+#include "Hazard/Rendering/WorldRenderer.h"
 
 namespace UI
 {

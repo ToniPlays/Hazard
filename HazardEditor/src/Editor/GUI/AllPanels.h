@@ -5,7 +5,6 @@
 #include "AssetTools/AssetPanel.h"
 #include "AssetTools/AssetEditors/MeshAssetEditorPanel.h"
 
-#include "Debug/RenderCommandListPanel.h"
 #include "Debug/RendererDebugPanel.h"
 #include "Debug/PerformanceDebugPanel.h"
 #include "Debug/AssetManagerDebugPanel.h"

@@ -4,6 +4,7 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/ShaderLibrary.h"
 #include "Material.h"
+#include "Hazard/Assets/AssetPack.h"
 
 #include "Buffer/CachedBuffer.h"
 
@@ -11,12 +12,13 @@ namespace Hazard
 {
 	Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata)
 	{
-		Ref<Job> createAssetJob = Ref<Job>::Create("Material create", CreateMaterialAsset, CreateSettings());
+		Ref<Job> loadMaterialJob = Ref<Job>::Create(fmt::format("Material {}", metadata.Handle), LoadMaterialAsset, metadata.FilePath);
 
 		JobGraphInfo info = {
 			.Name = "Material load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load", 1.0f, { createAssetJob } } }
+			.Stages = { { "Load", 1.0f, { loadMaterialJob } },
+			},
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -49,18 +51,35 @@ namespace Hazard
 
 		return Ref<JobGraph>::Create(info);
 	}
+
+	void MaterialAssetLoader::LoadMaterialAsset(JobInfo& info, const std::filesystem::path& path)
+	{
+		Ref<CachedBuffer> buffer = File::ReadBinaryFile(path);
+		AssetPack pack = {};
+		pack.FromBuffer(buffer);
+
+		Buffer data(pack.AssetData->GetData(), pack.AssetData->GetSize());
+
+		Ref<Material> material = Ref<Material>::Create(ShaderLibrary::GetPipeline("PBR_Static"));
+		material->SetPushConstantData(data);
+
+		info.Job->SetResult(material);
+	}
+
 	void MaterialAssetLoader::CreateMaterialAsset(JobInfo& info, const CreateSettings& settings)
 	{
 		Ref<Material> material = Ref<Material>::Create();
 		material->SetPipeline(ShaderLibrary::GetPipeline("PBR_Static"));
-		material->Set("Metalness", 1.0f);
-		material->Set("Roughness", 0.0f);
 		info.Job->SetResult(material);
 	}
+
 	void MaterialAssetLoader::SaveMaterialAsset(JobInfo& info, Ref<Material> material)
 	{
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create();
-		buffer->Allocate(sizeof(MaterialAssetHeader));
+		Buffer constants = material->GetPushConstantData();
+
+		buffer->Allocate(constants.Size);
+		buffer->Write(constants.Data, constants.Size);
 
 		info.Job->SetResult(buffer);
 	}

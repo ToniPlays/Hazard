@@ -8,8 +8,6 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Math/Time.h"
 
-#include "RenderGraphs/RasterRenderGraph.h"
-
 #include <glm/glm.hpp>
 #include "Environment/EnvironmentAssetLoader.h"
 
@@ -26,30 +24,13 @@ namespace Hazard
 		AssetManager::RegisterLoader<MaterialAssetLoader>(AssetType::Material);
 		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
 
-		FrameBufferCreateInfo frameBufferInfo = {
-			.DebugName = "RenderEngine",
-			.Width = 1920,
-			.Height = 1080,
-			.AttachmentCount = 3,
-			.Attachments = { { ImageFormat::RGBA, { ImageFormat::RED32I, FramebufferBlendMode::None }, ImageFormat::Depth } },
-			.SwapChainTarget = false,
-			.ClearOnLoad = true,
-		};
-
-		m_FrameBuffer = FrameBuffer::Create(&frameBufferInfo);
-
-		RenderPassCreateInfo renderPassInfo = {
-			.DebugName = "RenderEngine",
-			.pTargetFrameBuffer = m_FrameBuffer,
-		};
-
-		m_RenderPass = RenderPass::Create(&renderPassInfo);
-
 		s_Resources = hnew RenderResources();
 		m_RenderContextManager = &Application::Get().GetModule<RenderContextManager>();
 
-		m_RenderGraph = CreateRasterGraph(this);
+		Ref<RenderCommandBuffer> cmdBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
 
+		m_GeometryRenderer.Init(cmdBuffer);
+		m_EnvironmentRenderer.Init(cmdBuffer);
 	}
 
 	void RenderEngine::ClearDrawLists()
@@ -86,26 +67,30 @@ namespace Hazard
 	{
 		ShaderLibrary::Init(m_RenderContextManager->GetWindow().GetWindowInfo().SelectedAPI);
 
-		s_Resources->Initialize(m_RenderPass);
-
+		s_Resources->Initialize();
 		m_QuadRenderer.Init();
-		m_QuadRenderer.CreateResources(m_RenderPass);
+		m_QuadRenderer.CreateResources();
+
 		m_LineRenderer.Init();
-		m_LineRenderer.CreateResources(m_RenderPass);
+		m_LineRenderer.CreateResources();
+
 		m_CircleRenderer.Init();
-		m_CircleRenderer.CreateResources(m_RenderPass);
+		m_CircleRenderer.CreateResources();
 	}
 	void RenderEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-
+		ClearDrawLists();
 	}
 	void RenderEngine::Render()
 	{
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
 
-		Ref<RenderCommandBuffer> commandBuffer = m_RenderContextManager->GetWindow().GetSwapchain()->GetSwapchainBuffer();
+		auto& window = m_RenderContextManager->GetWindow();
+		Ref<RenderCommandBuffer> commandBuffer = window.GetSwapchain()->GetSwapchainBuffer();
+
+		uint32_t cameraDataOffset = 0;
 
 		for (auto& worldDrawList : m_DrawList)
 		{
@@ -117,34 +102,51 @@ namespace Hazard
 			uint32_t cameraIndex = 0;
 			for (auto& camera : worldDrawList.WorldRenderer->GetCameraData())
 			{
-				GraphBeginData data = {
-					.Camera = {
-						.ViewProjection = camera.Projection * camera.View,
-						.Projection = camera.Projection,
-						.View = camera.View,
-						.Position = glm::vec4(camera.Position, 1.0),
-					},
-					.CameraDescriptor = worldDrawList.WorldRenderer->GetCameraDescriptor(cameraIndex),
-					.GraphicsBuffer = commandBuffer,
-					.OutputRenderpass = camera.RenderPass,
+				CameraData cam = {
+					.ViewProjection = camera.Projection * camera.View,
+					.Projection = camera.Projection,
+					.View = camera.View,
+					.Position = glm::vec4(camera.Position, 1.0),
 				};
 
-				std::vector<MeshData> meshes;
-				meshes.reserve(worldDrawList.MeshInstances.size());
+				BufferCopyRegion camRegion = {
+					.Size = sizeof(CameraData),
+					.Offset = cameraDataOffset,
+					.Data = &cam,
+				};
 
-				for (auto& [key, mesh] : worldDrawList.MeshInstances)
-					meshes.push_back(mesh);
+				s_Resources->CameraUniformBuffer->SetData(camRegion);
 
-				m_RenderGraph->SetResource("GeometryPass", meshes.data(), meshes.size() * sizeof(MeshData));
-				m_RenderGraph->SetResource("SkyboxPass", &worldDrawList.Environment, sizeof(EnvironmentData));
+				Ref<DescriptorSet> cameraDescriptor = worldDrawList.WorldRenderer->GetCameraDescriptor(cameraIndex);
+				cameraDescriptor->Write(0, s_Resources->CameraUniformBuffer, sizeof(CameraData), camRegion.Offset);
 
-				m_RenderGraph->Execute(&data);
+				if (worldDrawList.Environment.Pipeline)
+				{
+					cameraDescriptor->Write(1, 0, worldDrawList.Environment.RadianceMap, s_Resources->DefaultImageSampler, false);
+					cameraDescriptor->Write(2, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
+				}
+				else
+				{
+					cameraDescriptor->Write(1, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
+					cameraDescriptor->Write(2, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
+				}
+
+				cameraDescriptor->Write(3, 0, window.GetContext()->GetDefaultResources().WhiteTexture, s_Resources->DefaultImageSampler, false);
+
+				m_GeometryRenderer.Prepare(worldDrawList.GeometryPass, camera.RenderPass, cameraDescriptor);
+				m_EnvironmentRenderer.Prepare(worldDrawList.Environment, camera.RenderPass);
+
+				commandBuffer->BeginRenderPass(camera.RenderPass);
+				m_GeometryRenderer.Render();
+				m_EnvironmentRenderer.Render();
+
+				commandBuffer->EndRenderPass();
+
 				cameraIndex++;
-
+				cameraDataOffset += camRegion.Size;
 			}
+
 			m_CurrentDrawContext++;
 		}
-		m_RenderGraph->Reset();
-		ClearDrawLists();
 	}
 }

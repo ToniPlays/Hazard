@@ -150,9 +150,6 @@
     <ClInclude Include="src\Editor\GUI\Debug\PerformanceDebugPanel.h">
       <Filter>src\Editor\GUI\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\Debug\RenderCommandListPanel.h">
-      <Filter>src\Editor\GUI\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="src\Editor\GUI\Debug\RendererDebugPanel.h">
       <Filter>src\Editor\GUI\Debug</Filter>
     </ClInclude>
@@ -283,9 +280,6 @@
       <Filter>src\Editor\GUI\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Debug\PerformanceDebugPanel.cpp">
-      <Filter>src\Editor\GUI\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\GUI\Debug\RenderCommandListPanel.cpp">
       <Filter>src\Editor\GUI\Debug</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\Debug\RendererDebugPanel.cpp">

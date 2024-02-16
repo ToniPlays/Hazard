@@ -78,7 +78,6 @@ namespace HazardRenderer
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 
 		virtual void Invalidate() = 0;
-		virtual bool IsValid() const = 0;
 
 		static Ref<Pipeline> Create(PipelineSpecification* specs);
 	};

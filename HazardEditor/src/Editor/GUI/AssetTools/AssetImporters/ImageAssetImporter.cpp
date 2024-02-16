@@ -67,7 +67,7 @@ bool ImageAssetImporter::ImportFromNew()
 	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Image, settings);
 
 	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
-	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), "hasset");
+	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
 
 	promise.Then([path, assetPanel](JobGraph& graph) {
 		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();

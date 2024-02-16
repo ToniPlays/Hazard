@@ -211,7 +211,7 @@ namespace HazardRenderer::Vulkan
 
 		if (m_OwnedBySwapchain)
 		{
-			m_State = State::Record;
+			
 			Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 			uint32_t frameIndex = swapchain->GetCurrentBufferIndex();
 			VkCommandBuffer buffer = swapchain->GetCurrentDrawCommandBuffer();
@@ -231,7 +231,6 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
 			instance->m_TimestampNextAvailQuery = 2;
-			instance->m_State = State::Record;
 
 			VkCommandBuffer buffer = instance->m_CommandBuffers[instance->m_FrameIndex % instance->m_CommandBuffers.size()];
 
@@ -256,16 +255,13 @@ namespace HazardRenderer::Vulkan
 		{
 			//instance->EndPerformanceQuery_RT();
 			vkEndCommandBuffer(m_ActiveCommandBuffer);
-			m_State = State::Finished;
 			return;
 		}
 
 		Renderer::Submit([instance]() mutable {
-			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			//instance->EndPerformanceQuery_RT();
 			VK_CHECK_RESULT(vkEndCommandBuffer(instance->m_ActiveCommandBuffer), "Failed to end command buffer");
 			instance->m_ActiveCommandBuffer = nullptr;
-			instance->m_State = State::Finished;
 		});
 	}
 	void VulkanRenderCommandBuffer::Submit()
@@ -276,8 +272,6 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
 			HZR_TIMED_FUNCTION();
-			HZR_ASSERT(instance->m_State == State::Finished, "Command buffer not in recording state");
-			instance->m_State = State::Submit;
 			auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 
 			if (!s_ComputeFence)
@@ -320,7 +314,6 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear)
 	{
 		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(m_State == State::Record, "Command buffer not in recording state");
 		auto fb = renderPass->GetSpecs().TargetFrameBuffer.As<VulkanFrameBuffer>();
 
 		uint32_t w = fb->GetWidth();
@@ -387,7 +380,6 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::EndRenderPass");
-			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			vkCmdEndRenderPass(instance->m_ActiveCommandBuffer);
 		});
 	}
@@ -401,7 +393,6 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, buffer, binding, bufferOffset]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::BindVertexBuffer");
-			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 			VkBuffer vkBuffer = buffer->GetVulkanBuffer();
 
 			vkCmdBindVertexBuffers(instance->m_ActiveCommandBuffer, binding, 1, &vkBuffer, &bufferOffset);
@@ -415,8 +406,8 @@ namespace HazardRenderer::Vulkan
 
 		HZR_ASSERT(vkSet, "Nullptr descriptor set");
 
-		Renderer::Submit([instance, pipeline = m_CurrentPipeline, set, bindingPoint, vkSet, setIndex = set]() mutable {
-			const VkDescriptorSet set = vkSet->GetVulkanDescriptorSet();
+		Renderer::Submit([instance, pipeline = m_CurrentPipeline, bindingPoint, vkSet, setIndex = set]() mutable {
+			VkDescriptorSet set = vkSet->GetVulkanDescriptorSet();
 			vkCmdBindDescriptorSets(instance->m_ActiveCommandBuffer, bindingPoint, pipeline->GetPipelineLayout(), setIndex, 1, &set, 0, nullptr);
 		});
 	}
@@ -441,7 +432,6 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::SetPipeline");
-			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
 			pipeline->Bind(instance->m_ActiveCommandBuffer);
 		});
@@ -468,7 +458,6 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, buffer, count, instanceCount, bufferOffset, pipeline = m_CurrentPipeline]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DrawInstanced");
-			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
 			auto vkPipeline = pipeline->GetVulkanPipeline();
 			auto shader = pipeline->GetShader().As<VulkanShader>();
@@ -533,9 +522,9 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		Ref<VulkanRenderCommandBuffer> instance = this;
+
 		Renderer::Submit([instance, size = globalGroupSize]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DispatchCompute");
-			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
 			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
 		});
@@ -546,7 +535,6 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance, info = traceRaysInfo]() {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::TraceRays");
-			HZR_ASSERT(instance->m_State == State::Record, "Command buffer not in recording state");
 
 			//auto bindingTable = info.pBindingTable.As<VulkanShaderBindingTable>();
 			//auto raygenTable = bindingTable->GetRaygenTableAddress();
@@ -582,7 +570,7 @@ namespace HazardRenderer::Vulkan
 
 				auto device = VulkanContext::GetLogicalDevice();
 				VulkanAllocator allocator("VulkanGPUBuffer");
-				
+
 				VkBufferCreateInfo stagingInfo = {};
 				stagingInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 				stagingInfo.size = buffer->GetSize();
@@ -641,7 +629,7 @@ namespace HazardRenderer::Vulkan
 			VkImageSubresourceRange range = {};
 			range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			range.baseMipLevel = 0;
-			range.levelCount = 1; 
+			range.levelCount = 1;
 			range.layerCount = region.Extent.Depth;
 
 			VkBufferImageCopy imageCopyRegion = {};
@@ -681,7 +669,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanGPUBuffer> buffer = destinationBuffer.As<VulkanGPUBuffer>();
 
 		Renderer::Submit([instance, image, buffer, region]() mutable {
-			
+
 			VkImage srcImage = image->GetVulkanImage();
 			VkBuffer dstBuffer = buffer->GetVulkanBuffer();
 
@@ -705,7 +693,7 @@ namespace HazardRenderer::Vulkan
 		Ref<VulkanGPUBuffer> dst = destinationBuffer.As<VulkanGPUBuffer>();
 
 		Renderer::Submit([instance, src, dst, sourceRegion, destinationRegion]() mutable {
-			
+
 			VkBuffer srcBuf = src->GetVulkanBuffer();
 			VkBuffer dstBuf = dst->GetVulkanBuffer();
 
@@ -771,7 +759,8 @@ namespace HazardRenderer::Vulkan
 				image = imageMemory.Image.As<VulkanImage2D>()->GetVulkanImage();
 				imageMemory.Image.As<VulkanImage2D>()->SetImageLayout(VkUtils::GetVulkanImageLayout(imageMemory.DstLayout));
 			}
-			else {
+			else
+			{
 				image = imageMemory.Image.As<VulkanCubemap>()->GetVulkanImage();
 				imageMemory.Image.As<VulkanCubemap>()->SetImageLayout(VkUtils::GetVulkanImageLayout(imageMemory.DstLayout));
 			}
@@ -799,8 +788,6 @@ namespace HazardRenderer::Vulkan
 	}
 	void VulkanRenderCommandBuffer::EndPerformanceQuery_RT()
 	{
-		HZR_ASSERT(m_State == State::Record, "Command buffer not in recording state");
-
 		VkCommandBuffer commandBuffer = m_ActiveCommandBuffer;
 		vkCmdWriteTimestamp(commandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, m_TimestampQueryPools[m_FrameIndex], 1);
 		vkCmdEndQuery(commandBuffer, m_PipelineQueryPools[m_FrameIndex], 0);

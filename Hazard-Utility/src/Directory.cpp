@@ -1,6 +1,8 @@
 #include "Directory.h"
 
 #include "portable-file-dialogs.h"
+#include "spdlog/fmt/fmt.h"
+
 #include <File.h>
 
 std::string Directory::OpenFolderDialog(const std::string& title)
@@ -42,4 +44,17 @@ std::vector<std::filesystem::path> Directory::GetAllInDirectory(const std::files
 		result.emplace_back(iter);
 
 	return result;
+}
+
+std::filesystem::path Directory::FindAvailableName(const std::filesystem::path& directory, const std::string& name)
+{
+	std::filesystem::path path = directory.parent_path() / fmt::format("{}{}", name, "");
+	uint64_t index = 0;
+
+	while (Directory::Exists(path))
+	{
+		index++;
+		path = directory.parent_path() / fmt::format("{}{}", name, index);
+	}
+	return path;
 }

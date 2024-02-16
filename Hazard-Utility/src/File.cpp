@@ -41,13 +41,13 @@ bool File::IsDirectory(const std::filesystem::path& path)
 
 std::filesystem::path File::FindAvailableName(const std::filesystem::path& directory, const std::string& name, const std::string& extension)
 {
-	std::filesystem::path path = directory / fmt::format("{}{}.{}", name, "", extension);
+	std::filesystem::path path = directory / fmt::format("{}{}{}", name, "", extension);
 	uint64_t index = 0;
 
 	while (File::Exists(path))
 	{
 		index++;
-		path = directory / fmt::format("{}{}.{}", name, index, extension);
+		path = directory / fmt::format("{}{}{}", name, index, extension);
 	}
 	return path;
 }
