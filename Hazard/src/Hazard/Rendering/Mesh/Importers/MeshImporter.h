@@ -38,12 +38,6 @@ namespace Hazard
 			uint32_t TextureCount;
 		};
 
-		struct TextureMetadata
-		{
-			std::string Name;
-			uint32_t TextureIndex;
-		};
-
 		struct TextureData
 		{
 			std::string Name;
@@ -52,12 +46,19 @@ namespace Hazard
 			Buffer ImageData;
 		};
 
+		struct TextureMetadata
+		{
+			std::string Name;
+			uint32_t TextureIndex;
+			uint32_t Count;
+		};
+
 		struct MaterialMetadata
 		{
 			std::string Name;
 			uint32_t MaterialIndex;
 			uint32_t PropertyCount;
-			std::unordered_map<TextureType, uint32_t> Textures;
+			uint32_t TextureCount;
 		};
 
 		struct MaterialProperty
@@ -72,6 +73,7 @@ namespace Hazard
 		{
 			std::string Name;
 			std::vector<MaterialProperty> Properties;
+			std::unordered_map<TextureType, TextureMetadata> Textures;
 		};
 
 		struct MeshMetadata

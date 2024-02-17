@@ -73,8 +73,7 @@ namespace Hazard
 
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/PBR_Static.glsl");
 
-
-			DescriptorSetLayout materialLayout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Albedo", 0, DESCRIPTOR_TYPE_SAMPLER_2D } };
+			DescriptorSetLayout materialLayout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Albedo", 0, 1, DESCRIPTOR_TYPE_SAMPLER_2D } };
 
 			PipelineSpecification specs = {
 				.DebugName = "Pipeline PBR_Static",

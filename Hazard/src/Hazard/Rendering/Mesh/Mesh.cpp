@@ -37,8 +37,6 @@ namespace Hazard
 
 			vertexOffset += vertices.Size;
 			indexOffset += indices.Size;
-
-			std::cout << fmt::format("{} {} {} {} {} {}", data.NodeName, data.NodeID, data.VertexCount, data.IndexCount, data.VertexOffset, data.IndexCount) << std::endl;
 		}
 	}
 
@@ -49,7 +47,6 @@ namespace Hazard
 			Buffer vertices = Buffer((uint8_t*)vertexData.Data + submesh.VertexOffset, submesh.VertexCount * sizeof(Vertex3D));
 			Buffer indices = Buffer((uint8_t*)indexData.Data + submesh.IndexOffset, submesh.IndexCount * sizeof(uint32_t));
 
-			std::cout << fmt::format("{} {} {} {} {} {}", submesh.NodeName, submesh.NodeID, submesh.VertexCount, submesh.IndexCount, submesh.VertexOffset, submesh.IndexCount) << std::endl;
 			CreateSubmeshResources(submesh, vertices, indices);
 
 			m_SubmeshData.emplace_back(submesh);
@@ -107,6 +104,7 @@ namespace Hazard
 			.Data = vertices.Data,
 		};
 
+		HZR_ASSERT(!m_VertexBuffers.contains(handle), "Something is wrong I can feel it");
 		m_VertexBuffers[handle] = GPUBuffer::Create(&vertexBufferInfo);
 
 		BufferCreateInfo indexBufferInfo = {
@@ -115,7 +113,7 @@ namespace Hazard
 			.Size = indices.Size,
 			.Data = indices.Data,
 		};
-		
+		HZR_ASSERT(!m_IndexBuffers.contains(handle), "Something is wrong I can feel it");
 		m_IndexBuffers[handle] = GPUBuffer::Create(&indexBufferInfo);
 	}
 }

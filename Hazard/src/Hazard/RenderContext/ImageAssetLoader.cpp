@@ -70,6 +70,12 @@ namespace Hazard
 
 	void ImageAssetLoader::ImageDataLoadFromSource(JobInfo& info, const std::filesystem::path& path, CreateSettings settings)
 	{
+		if (path.empty())
+		{
+			info.Job->SetResult(TextureHeader());
+			return;
+		}
+
 		if (!File::Exists(path))
 			throw JobException(fmt::format("Image source file does not exist: {}", path.string()));
 
@@ -85,9 +91,12 @@ namespace Hazard
 		TextureHeader header = info.ParentGraph->GetResult<TextureHeader>();
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
-		asset->SetExtent(header.Extent);
-		asset->SetMaxMipLevels(header.Mips);
-		asset->Invalidate(header.ImageData);
+		if (header.ImageData)
+		{
+			asset->SetExtent(header.Extent);
+			asset->SetMaxMipLevels(header.Mips);
+			asset->Invalidate(header.ImageData);
+		}
 
 		info.Job->SetResult(asset);
 		header.ImageData.Release();

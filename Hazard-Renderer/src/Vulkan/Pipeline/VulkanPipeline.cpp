@@ -48,7 +48,6 @@ namespace HazardRenderer::Vulkan
 			if (instance->m_Pipelines.contains(instance->m_CurrentRenderpass))
 				return;
 
-			std::cout << "SetRenderPass " << instance->m_Specs.DebugName << " " << renderPass.Raw() << std::endl;
 			instance->Invalidate_RT();
 		});
 	}

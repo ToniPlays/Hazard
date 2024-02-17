@@ -32,6 +32,7 @@ namespace Hazard
 
 		Ref<Pipeline> Pipeline;
 		Ref<Cubemap> RadianceMap;
+		Ref<Cubemap> IrradianceMap;
 		SkyboxConstants Constants;
 	};
 

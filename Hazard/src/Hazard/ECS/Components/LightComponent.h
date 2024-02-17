@@ -2,7 +2,6 @@
 
 #include "Color.h"
 #include "ComponentBase.h"
-#include "Hazard/Rendering/Environment/EnvironmentMap.h"
 
 namespace Hazard 
 {

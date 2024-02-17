@@ -453,8 +453,8 @@ namespace HazardRenderer::Vulkan
 	void VulkanRenderCommandBuffer::DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer, uint32_t bufferOffset)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<VulkanGPUBuffer> buffer = indexBuffer ? indexBuffer.As<VulkanGPUBuffer>() : nullptr;
 		Ref<VulkanRenderCommandBuffer> instance = this;
+		Ref<VulkanGPUBuffer> buffer = indexBuffer ? indexBuffer.As<VulkanGPUBuffer>() : nullptr;
 
 		if (indexBuffer)
 			HZR_ASSERT(buffer->GetUsageFlags() & BUFFER_USAGE_INDEX_BUFFER_BIT, "Invalid buffer flags");
@@ -758,8 +758,8 @@ namespace HazardRenderer::Vulkan
 
 			if (imageMemory.Image->GetType() == ImageType::Image2D)
 			{
-				image = imageMemory.Image.As<VulkanImage2D>()->GetVulkanImage();
 				imageMemory.Image.As<VulkanImage2D>()->SetImageLayout(VkUtils::GetVulkanImageLayout(imageMemory.DstLayout));
+				image = imageMemory.Image.As<VulkanImage2D>()->GetVulkanImage();
 			}
 			else
 			{

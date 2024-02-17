@@ -39,7 +39,7 @@ void main()
 	gl_Position = u_Camera.ViewProjection * worldPosition;
 
 	Output.Color = a_Color;
-    Output.Normal = a_Normal;
+    Output.Normal = mat3(transform) * a_Normal;
     Output.WorldNormal = mat3(transform) * mat3(a_Tangent, a_Binormal, a_Normal);
     Output.WorldPosition = worldPosition.xyz;
     Output.TextureCoords = a_TextureCoords;
@@ -97,7 +97,7 @@ const float gamma = 2.2;
 
 void main() 
 {
-    m_Params.Albedo =u_PushConstants.Albedo.rgb * Input.Color.rgb;
+    m_Params.Albedo = texture(u_Albedo, Input.TextureCoords.xy).rgb * u_PushConstants.Albedo.rgb * Input.Color.rgb;
     m_Params.Metalness = u_PushConstants.Metalness;
     m_Params.Roughness = max(u_PushConstants.Roughness, 0.05);
     m_Params.Normal = normalize(Input.Normal);

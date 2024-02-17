@@ -73,8 +73,6 @@ namespace Hazard
 		for(auto& submesh : mesh->GetSubmeshData())
 		{
 			Ref<Material> material = AssetManager::GetAsset<Material>(submesh.MaterialHandle);
-			if (!material) continue;
-
 			SubmitMesh(transform.GetTransformMat4() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
 		}
 	}
@@ -135,7 +133,8 @@ namespace Hazard
 
 		auto& env = s_Engine->GetDrawList();
 		env.Environment.Pipeline = material->GetPipeline();
-		env.Environment.RadianceMap = map->GetCubemap();
+		env.Environment.RadianceMap = map->GetRadianceMap();
+		env.Environment.IrradianceMap = map->GetIrradianceMap();
 		env.Environment.Constants.LodLevel = skyLight.LodLevel;
 		env.Environment.Constants.Intensity = skyLight.Intensity;
 	}

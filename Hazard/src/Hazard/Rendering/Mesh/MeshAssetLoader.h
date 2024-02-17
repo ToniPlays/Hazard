@@ -44,6 +44,7 @@ namespace Hazard
 		{
 			uint32_t Flags = 0;
 			std::filesystem::path MaterialPath;
+			std::filesystem::path TexturePath;
 		};
 
 	public:
@@ -58,7 +59,7 @@ namespace Hazard
 		static void PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings);
 		static void ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh);
 		static void ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot);
-		static void ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture);
+		static void ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot);
 		static void FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer);
 
 		static void ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh);

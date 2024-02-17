@@ -111,7 +111,7 @@ namespace Hazard
 		using namespace HazardRenderer;
 
 		CubemapCreateInfo cubemapSpec = {
-			.DebugName = fmt::format("Env map"),
+			.DebugName = fmt::format("Env map {}", settings.Resolution),
 			.Width = settings.Resolution,
 			.Height = settings.Resolution,
 			.MaxMips = 64,
@@ -170,7 +170,7 @@ namespace Hazard
 		Ref<Cubemap> cubemap = info.ParentGraph->GetResult<Ref<Cubemap>>();
 
 		Ref<EnvironmentMap> asset = Ref<EnvironmentMap>::Create();
-		asset->m_EnvironmentMap = cubemap;
+		asset->m_RadianceMap = cubemap;
 		asset->m_Spec.Resolution = cubemap->GetExtent().Width;
 		asset->m_Spec.Samples = samples;
 

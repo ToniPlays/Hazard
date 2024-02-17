@@ -36,6 +36,7 @@ namespace Hazard
 
         void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline);
         void Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap);
+        void Set(const std::string& name, Ref<HazardRenderer::Image2D> texture);
 
         template<typename T>
         void Set(const std::string& name, T value) 
@@ -44,13 +45,9 @@ namespace Hazard
 
             auto& param = m_MaterialParams[name];
             if constexpr (std::is_same<T, void*>::value)
-            {
                 m_PushConstants.Write(value, ShaderDataTypeSize(param.Type), param.Offset);
-            }
             else
-            {
                 m_PushConstants.Write(&value, ShaderDataTypeSize(param.Type), param.Offset);
-            }
         }
 
     private:

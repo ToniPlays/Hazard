@@ -120,18 +120,19 @@ namespace Hazard
 				Ref<DescriptorSet> cameraDescriptor = worldDrawList.WorldRenderer->GetCameraDescriptor(cameraIndex);
 				cameraDescriptor->Write(0, s_Resources->CameraUniformBuffer, sizeof(CameraData), camRegion.Offset);
 
-				if (worldDrawList.Environment.Pipeline)
+				if (worldDrawList.Environment.RadianceMap)
 				{
 					cameraDescriptor->Write(1, 0, worldDrawList.Environment.RadianceMap, s_Resources->DefaultImageSampler, false);
-					cameraDescriptor->Write(2, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
+					cameraDescriptor->Write(2, 0, worldDrawList.Environment.IrradianceMap, s_Resources->DefaultImageSampler, false);
+					cameraDescriptor->Write(3, 0, s_Resources->BRDFLut->GetSourceImage(), s_Resources->DefaultImageSampler, false);
 				}
 				else
 				{
 					cameraDescriptor->Write(1, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
 					cameraDescriptor->Write(2, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
+					cameraDescriptor->Write(3, 0, m_RenderContextManager->GetWindow().GetContext()->GetDefaultResources().WhiteTexture, s_Resources->DefaultImageSampler, false);
 				}
 
-				cameraDescriptor->Write(3, 0, s_Resources->BRDFLut->GetSourceImage(), s_Resources->DefaultImageSampler, false);
 
 				m_GeometryRenderer.Prepare(worldDrawList.GeometryPass, camera.RenderPass, cameraDescriptor);
 				m_EnvironmentRenderer.Prepare(worldDrawList.Environment, camera.RenderPass);

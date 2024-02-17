@@ -24,14 +24,17 @@ namespace Hazard
 		AssetType GetType() const override { return AssetType::EnvironmentMap; }
 		EnvironmentMapSpec GetSpec() const { return m_Spec; }
         
-		Ref<HazardRenderer::Cubemap> GetCubemap() const { return m_EnvironmentMap; }
+		Ref<HazardRenderer::Cubemap> GetRadianceMap() const { return m_RadianceMap; }
+		Ref<HazardRenderer::Cubemap> GetIrradianceMap() const { return m_IrradianceMap; }
 		Ref<Material> GetMaterial() const { return m_Material; }
 
 		void Invalidate();
+		void GenerateIrradiance();
 
     private:
 
-		Ref<HazardRenderer::Cubemap> m_EnvironmentMap;
+		Ref<HazardRenderer::Cubemap> m_RadianceMap;
+		Ref<HazardRenderer::Cubemap> m_IrradianceMap;
 		Ref<Material> m_Material;
 		EnvironmentMapSpec m_Spec;
 	};

@@ -17,8 +17,9 @@ namespace Hazard
 	struct MeshDependencyData
 	{
 		MeshImporter::MeshData MeshData;
-		AssetHandle MaterialHandle = INVALID_ASSET_HANDLE;
+		AssetHandle Handle = INVALID_ASSET_HANDLE;
 		uint64_t MaterialIndex = UINT64_MAX;
+		std::string TextureName;
 	};
 
 	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)
@@ -110,7 +111,7 @@ namespace Hazard
 			auto textures = importer->GetTextures();
 			for (auto& texture : textures)
 			{
-				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", texture.Name), ProcessTexture, importer, texture);
+				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", texture.Name), ProcessTexture, importer, texture, settings.TexturePath);
 				generateJobs.push_back(processMeshJob);
 			}
 		}
@@ -158,7 +159,7 @@ namespace Hazard
 			};
 
 			MeshDependencyData result = {
-				.MaterialHandle = material->GetHandle(),
+				.Handle = material->GetHandle(),
 				.MaterialIndex = metadata.MaterialIndex
 			};
 
@@ -172,9 +173,34 @@ namespace Hazard
 		info.ParentGraph->Halt();
 	}
 
-	void MeshAssetLoader::ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture)
+	void MeshAssetLoader::ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot)
 	{
-		auto textureData = importer->GetTextureData(texture.TextureIndex);
+		CreateAssetSettings create = {};
+
+		AssetManager::CreateAssetAsync(AssetType::Image, create).Then([info, importer, texture, textureRoot](JobGraph& graph) mutable {
+			Ref<Texture2DAsset> asset = graph.GetResult<Ref<Texture2DAsset>>();
+			if (!asset) return;
+
+			auto textureData = importer->GetTextureData(texture.TextureIndex);
+			asset->SetExtent({ textureData.Width, textureData.Height, 1 });
+			asset->SetMaxMipLevels(1);
+			asset->Invalidate(textureData.ImageData);
+
+			SaveAssetSettings saveSettings = {
+					.TargetPath = textureRoot / (textureData.Name + ".hasset"),
+					.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
+			};
+
+			MeshDependencyData result = {
+				.Handle = asset->GetHandle(),
+				.TextureName = textureData.Name,
+			};
+
+			info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(asset, saveSettings));
+
+			info.Job->SetResult(result);
+			textureData.ImageData.Release();
+		});
 	}
 
 
@@ -186,18 +212,24 @@ namespace Hazard
 
 		std::vector<MeshImporter::MeshData> meshData;
 		std::unordered_map<uint64_t, AssetHandle> materialData;
+		std::unordered_map<std::string, AssetHandle> textures;
 
 		for (auto& result : results)
 		{
 			if (result.MeshData.Vertices.size() > 0)
 				meshData.push_back(result.MeshData);
 
-			if (result.MaterialHandle != INVALID_ASSET_HANDLE)
-				materialData[result.MaterialIndex] = result.MaterialHandle;
+			if (result.MaterialIndex != UINT64_MAX)
+				materialData[result.MaterialIndex] = result.Handle;
+
+			if (result.Handle)
+				textures[result.TextureName] = result.Handle;
+
 		}
 
 		mesh->GenerateMesh(meshData);
 
+		//Set materials
 		for (auto& submesh : meshData)
 		{
 			if (!materialData.contains(submesh.MaterialIndex)) continue;
@@ -206,6 +238,9 @@ namespace Hazard
 			AssetHandle handle = materialData[submesh.MaterialIndex];
 			mesh->SetSubmeshMaterialHandle(nodeID, handle);
 		}
+
+
+
 
 		info.Job->SetResult(mesh);
 	}

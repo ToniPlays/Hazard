@@ -39,7 +39,7 @@ namespace Hazard
 		MeshImporter::MeshMetadata GetMeshDataFromNode(aiNode* node);
 
 		void PrintHierarchy(const aiNode* node, uint32_t level);
-		std::unordered_map<TextureType, uint32_t> GetMaterialTextures(aiMaterial* material);
+		std::unordered_map<MeshImporter::TextureType, uint32_t> GetMaterialTextures(aiMaterial* material);
 	private:
 
 		static HazardRenderer::ShaderDataType AiPropertyToShaderType(const aiMaterialProperty& material);

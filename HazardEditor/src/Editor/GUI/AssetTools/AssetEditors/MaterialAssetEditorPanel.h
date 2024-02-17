@@ -19,6 +19,7 @@ namespace UI
 		void SetMeshHandle(AssetHandle handle);
 		
 	private:
+		void RenderSidebar();
 		void RenderToolbar(ImVec2 corner);
 		void CreateWorldRenderer();
 
@@ -29,7 +30,7 @@ namespace UI
 
 		glm::mat4 m_Projection;
 		glm::mat4 m_View;
-		glm::vec3 m_Position = { 0, 1.2, 3.5 };
+		glm::vec3 m_Position = { 0, 1.5, 4.5 };
 
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;

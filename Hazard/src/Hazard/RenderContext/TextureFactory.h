@@ -23,6 +23,7 @@ namespace Hazard
 	{
 	public:
 		static TextureHeader LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip = false);
+		static TextureHeader LoadTextureFromMemory(Buffer buffer);
 		static uint32_t PixelSize(const HazardRenderer::ImageFormat& format);
 
 	private:

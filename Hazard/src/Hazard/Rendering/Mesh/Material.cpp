@@ -35,8 +35,18 @@ namespace Hazard
 			if (binding.Name != name) continue;
 			m_DescriptorSet->Write(binding.Binding, 0, cubemap.As<Image>(), RenderEngine::GetResources().DefaultImageSampler, true);
 		}
+	}
 
-		m_PushConstants.Release();
+	void Material::Set(const std::string& name, Ref<HazardRenderer::Image2D> image)
+	{
+		auto& spec = m_Pipeline->GetSpecifications();
+		if (spec.SetLayouts.size() <= 1) return;
+
+		for (auto& binding : spec.SetLayouts[1])
+		{
+			if (binding.Name != name) continue;
+			m_DescriptorSet->Write(binding.Binding, 0, image.As<Image>(), RenderEngine::GetResources().DefaultImageSampler, true);
+		}
 	}
 
 	void Material::Invalidate()

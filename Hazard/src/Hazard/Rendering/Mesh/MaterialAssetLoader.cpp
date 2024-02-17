@@ -7,6 +7,7 @@
 #include "Hazard/Assets/AssetPack.h"
 
 #include "Buffer/CachedBuffer.h"
+#include <Hazard/Rendering/RenderEngine.h>
 
 namespace Hazard
 {
@@ -63,6 +64,9 @@ namespace Hazard
 		Ref<Material> material = Ref<Material>::Create(ShaderLibrary::GetPipeline("PBR_Static"));
 		material->SetPushConstantData(data);
 
+		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
+		material->Set("u_Albedo", whiteTexture);
+
 		info.Job->SetResult(material);
 	}
 
@@ -70,6 +74,10 @@ namespace Hazard
 	{
 		Ref<Material> material = Ref<Material>::Create();
 		material->SetPipeline(ShaderLibrary::GetPipeline("PBR_Static"));
+
+		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
+		material->Set("u_Albedo", whiteTexture);
+
 		info.Job->SetResult(material);
 	}
 

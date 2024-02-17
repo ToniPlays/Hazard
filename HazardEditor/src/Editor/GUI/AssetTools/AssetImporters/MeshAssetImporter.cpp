@@ -94,6 +94,7 @@ bool MeshAssetImporter::ImportFromNew()
 	std::filesystem::path rootPath = Directory::FindAvailableName(assetPanel.GetOpenDirectory() / File::GetNameNoExt(m_SourcePath), File::GetNameNoExt(m_SourcePath));
 	std::filesystem::path path = rootPath / (File::GetNameNoExt(m_SourcePath) + ".hasset");
 	m_Settings.MaterialPath = rootPath / "Materials";
+	m_Settings.TexturePath = rootPath / "Textures";
 
 	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Mesh, settings);
 	promise.Then([path, assetPanel](JobGraph& graph) {

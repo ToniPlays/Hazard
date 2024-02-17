@@ -1,5 +1,7 @@
 #include "AssimpImporter.h"
 
+#include "Hazard/RenderContext/TextureFactory.h"
+
 #include <assimp/postprocess.h>
 #include "Callback.h"
 #include "spdlog/fmt/fmt.h"
@@ -59,7 +61,7 @@ namespace Hazard
 			material.Name = mat->GetName().C_Str();
 			material.MaterialIndex = materialIndex;
 			material.PropertyCount = mat->mNumProperties;
-			material.Textures = GetMaterialTextures(mat);
+			material.TextureCount = 0;
 		}
 
 		return materials;
@@ -393,29 +395,23 @@ namespace Hazard
 
 	std::unordered_map<MeshImporter::TextureType, uint32_t> AssimpImporter::GetMaterialTextures(aiMaterial* material)
 	{
+		const aiScene* scene = GetScene();
+
 		std::unordered_map<TextureType, uint32_t> result;
 
 		Hooks<aiTextureType, void(uint32_t)> hooks;
 
-		hooks.AddHook(aiTextureType_BASE_COLOR, [&result](uint32_t count) mutable { result[TextureType::Albedo] = count; });
-		hooks.AddHook(aiTextureType_DIFFUSE, [&result](uint32_t count) mutable { result[TextureType::Diffuse] = count; });
-		hooks.AddHook(aiTextureType_SPECULAR, [&result](uint32_t count) mutable { result[TextureType::Specular] = count; });
-		hooks.AddHook(aiTextureType_EMISSION_COLOR, [&result](uint32_t count) mutable { result[TextureType::Emission] = count; });
-		hooks.AddHook(aiTextureType_METALNESS, [&result](uint32_t count) mutable { result[TextureType::Metalness] = count; });
-		hooks.AddHook(aiTextureType_NORMALS, [&result](uint32_t count) mutable { result[TextureType::Normal] = count; });
-		hooks.AddHook(aiTextureType_HEIGHT, [&result](uint32_t count) mutable { result[TextureType::Height] = count; });
-		hooks.AddHook(aiTextureType_SHININESS, [&result](uint32_t count) mutable { result[TextureType::Shininess] = count; });
-		hooks.AddHook(aiTextureType_DISPLACEMENT, [&result](uint32_t count) mutable { result[TextureType::Displacement] = count; });
-		hooks.AddHook(aiTextureType_LIGHTMAP, [&result](uint32_t count) mutable { result[TextureType::Lightmap] = count; });
-		hooks.AddHook(aiTextureType_REFLECTION, [&result](uint32_t count) mutable { result[TextureType::Reflection] = count; });
-
-		for (uint32_t i = aiTextureType_DIFFUSE; i < aiTextureType_UNKNOWN - 1; i++)
-		{
-			uint32_t count = material->GetTextureCount((aiTextureType)i);
-			if (count == 0) continue;
-
-			hooks.Invoke((aiTextureType)i, count);
-		}
+		hooks.AddHook(aiTextureType_BASE_COLOR, [&result](uint32_t index) mutable { result[TextureType::Albedo] = index; });
+		hooks.AddHook(aiTextureType_DIFFUSE, [&result](uint32_t index) mutable { result[TextureType::Diffuse] = index; });
+		hooks.AddHook(aiTextureType_SPECULAR, [&result](uint32_t index) mutable { result[TextureType::Specular] = index; });
+		hooks.AddHook(aiTextureType_EMISSION_COLOR, [&result](uint32_t index) mutable { result[TextureType::Emission] = index; });
+		hooks.AddHook(aiTextureType_METALNESS, [&result](uint32_t index) mutable { result[TextureType::Metalness] = index; });
+		hooks.AddHook(aiTextureType_NORMALS, [&result](uint32_t index) mutable { result[TextureType::Normal] = index; });
+		hooks.AddHook(aiTextureType_HEIGHT, [&result](uint32_t index) mutable { result[TextureType::Height] = index; });
+		hooks.AddHook(aiTextureType_SHININESS, [&result](uint32_t index) mutable { result[TextureType::Shininess] = index; });
+		hooks.AddHook(aiTextureType_DISPLACEMENT, [&result](uint32_t index) mutable { result[TextureType::Displacement] = index; });
+		hooks.AddHook(aiTextureType_LIGHTMAP, [&result](uint32_t index) mutable { result[TextureType::Lightmap] = index; });
+		hooks.AddHook(aiTextureType_REFLECTION, [&result](uint32_t index) mutable { result[TextureType::Reflection] = index; });
 
 		return result;
 	}
@@ -471,15 +467,19 @@ namespace Hazard
 		const aiScene* scene = GetScene();
 		aiTexture* texture = scene->mTextures[textureIndex];
 
-		uint64_t dataSize = texture->mHeight == 0 ? texture->mWidth : texture->mWidth * texture->mWidth * sizeof(aiTexel);
+		if (texture->mHeight == 0)
+		{
+			TextureHeader header = TextureFactory::LoadTextureFromMemory({ texture->pcData, texture->mWidth });
 
-		MeshImporter::TextureData data = {
-			.Name = texture->mFilename.C_Str(),
-			.Width = texture->mWidth,
-			.Height = texture->mHeight,
-			.ImageData = Buffer((void*)texture->pcData, dataSize),
-		};
+			MeshImporter::TextureData data = {
+				.Name = texture->mFilename.C_Str(),
+				.Width = header.Extent.Width,
+				.Height = header.Extent.Height,
+				.ImageData = header.ImageData,
+			};
 
-		return data;
+			return data;
+		}
+		return MeshImporter::TextureData();
 	}
 }

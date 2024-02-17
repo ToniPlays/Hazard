@@ -30,7 +30,7 @@ namespace UI
 
 		m_ImageSampler = Hazard::RenderEngine::GetResources().DefaultImageSampler;
 		m_Projection = glm::perspective<float>(glm::radians(50.0), m_FrameBuffer->GetAspectRatio(), 0.03f, 400.0f);
-		m_View = Math::ToTransformMatrix(m_Position, glm::angleAxis(glm::radians(-17.0f), glm::vec3 { 1, 0, 0 }));
+		m_View = Math::ToTransformMatrix(m_Position, glm::angleAxis(glm::radians(-20.0f), glm::vec3 { 1, 0, 0 }));
 		m_View = glm::inverse(m_View);
 
 		CreateWorldRenderer();
@@ -59,6 +59,11 @@ namespace UI
 	{
 		using namespace Hazard;
 
+
+		ImGui::Columns(2, 0, true);
+		RenderSidebar();
+		ImGui::NextColumn();
+
 		ImUI::ScopedStyleVar padding(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImUI::ScopedStyleStack s(ImGuiStyleVar_FrameBorderSize, 0, ImGuiStyleVar_FrameRounding, FLT_MAX, ImGuiStyleVar_FramePadding, ImVec2(6, 5));
 
@@ -75,6 +80,7 @@ namespace UI
 		ImUI::Image(m_FrameBuffer->GetImage(), m_ImageSampler, size);
 
 		RenderToolbar(corner);
+		ImGui::Columns();
 	}
 
 	bool MaterialAssetEditorPanel::OnEvent(Event& e)
@@ -106,6 +112,16 @@ namespace UI
 			Entity entity = world->GetEntity(e);
 			entity.GetComponent<MeshComponent>().MeshHandle = handle;
 		}
+	}
+
+	void MaterialAssetEditorPanel::RenderSidebar()
+	{
+		ImVec2 size = ImGui::GetContentRegionAvail();
+		ImGui::BeginChild("#props", size);
+		
+
+
+		ImGui::EndChild();
 	}
 
 	void MaterialAssetEditorPanel::RenderToolbar(ImVec2 corner)
