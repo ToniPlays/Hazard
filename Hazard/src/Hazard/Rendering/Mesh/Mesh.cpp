@@ -20,6 +20,7 @@ namespace Hazard
 
 			SubmeshData data = {
 				.NodeName = submesh.Name,
+				.Transform = submesh.Transform,
 				.NodeID = UID(),
 				.VertexCount = submesh.Vertices.size(),
 				.IndexCount = submesh.Indices.size(),
@@ -47,6 +48,14 @@ namespace Hazard
 
 			CreateSubmeshResources(submesh, vertices, indices);
 		}
+	}
+
+	uint64_t Mesh::GetSubmeshNodeFromName(const std::string& name)
+	{
+		for (auto& [node, data] : m_SubmeshData)
+			if (data.NodeName == name) return node;
+
+		return 0;
 	}
 
 	uint64_t Mesh::CalculateTotalVertexCount()

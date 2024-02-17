@@ -131,15 +131,14 @@ namespace Hazard
 					cameraDescriptor->Write(2, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
 				}
 
-				cameraDescriptor->Write(3, 0, window.GetContext()->GetDefaultResources().WhiteTexture, s_Resources->DefaultImageSampler, false);
+				cameraDescriptor->Write(3, 0, s_Resources->BRDFLut->GetSourceImage(), s_Resources->DefaultImageSampler, false);
 
 				m_GeometryRenderer.Prepare(worldDrawList.GeometryPass, camera.RenderPass, cameraDescriptor);
 				m_EnvironmentRenderer.Prepare(worldDrawList.Environment, camera.RenderPass);
 
 				commandBuffer->BeginRenderPass(camera.RenderPass);
 				m_GeometryRenderer.Render();
-				m_EnvironmentRenderer.Render();
-
+				m_EnvironmentRenderer.Render(cameraDescriptor);
 				commandBuffer->EndRenderPass();
 
 				cameraIndex++;

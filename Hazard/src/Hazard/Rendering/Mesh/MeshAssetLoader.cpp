@@ -13,6 +13,13 @@
 
 namespace Hazard
 {
+	struct MeshDependencyData
+	{
+		MeshImporter::MeshData MeshData;
+		AssetHandle MaterialHandle = INVALID_ASSET_HANDLE;
+		uint64_t MaterialIndex = UINT64_MAX;
+	};
+
 	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -78,8 +85,6 @@ namespace Hazard
 		if (metadata.MeshCount == 0)
 			throw JobException("No meshes found in file");
 
-		auto textures = importer->GetTextures();
-		auto materials = importer->GetMaterials();
 		auto meshes = importer->GetMeshes();
 		auto animations = importer->GetAnimations();
 
@@ -88,15 +93,23 @@ namespace Hazard
 
 		for (auto& mesh : meshes)
 		{
-			Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Node: {}", mesh.Name), ProcessMeshNode, importer, mesh);
+			Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Mesh: {}", mesh.Name), ProcessMeshNode, importer, mesh);
 			generateJobs.push_back(processMeshJob);
 		}
 
 		if (settings.Flags & MESH_CREATE_INCLUDE_MATERIALS)
 		{
+			auto materials = importer->GetMaterials();
 			for (auto& material : materials)
 			{
 				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", material.Name), ProcessMaterial, importer, material, settings.MaterialPath);
+				generateJobs.push_back(processMeshJob);
+			}
+
+			auto textures = importer->GetTextures();
+			for (auto& texture : textures)
+			{
+				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", texture.Name), ProcessTexture, importer, texture);
 				generateJobs.push_back(processMeshJob);
 			}
 		}
@@ -111,7 +124,11 @@ namespace Hazard
 			jobRef.Progress((float)current / (float)total);
 		});
 
-		info.Job->SetResult(data);
+		MeshDependencyData result = {
+			.MeshData = data,
+		};
+
+		info.Job->SetResult(result);
 	}
 
 	void MeshAssetLoader::ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot)
@@ -128,10 +145,10 @@ namespace Hazard
 		Ref<JobGraph> loadGraph = AssetManager::GetCreateGraph(AssetType::Material, settings);
 		JobPromise promise = info.ParentGraph->SubGraph(loadGraph);
 
-		promise.Then([info, path = settings.SourcePath, props](JobGraph& graph) mutable {
+		promise.Then([info, metadata = material, path = settings.SourcePath, props](JobGraph& graph) mutable {
 			Ref<Material> material = graph.GetResult<Ref<Material>>();
 			if (!material) return;
-			
+
 			SetMaterialProperties(material, props);
 
 			SaveAssetSettings saveSettings = {
@@ -139,7 +156,14 @@ namespace Hazard
 				.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
 			};
 
-			info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(material, saveSettings)).Then([info](JobGraph&) mutable {
+			MeshDependencyData result = {
+				.MaterialHandle = material->GetHandle(),
+				.MaterialIndex = metadata.MaterialIndex
+			};
+
+			info.Job->SetResult(result);
+
+			info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(material, saveSettings)).Then([info, result](JobGraph&) mutable {
 				info.ParentGraph->Continue();
 			});
 		});
@@ -147,12 +171,40 @@ namespace Hazard
 		info.ParentGraph->Halt();
 	}
 
+	void MeshAssetLoader::ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture)
+	{
+		auto textureData = importer->GetTextureData(texture.TextureIndex);
+	}
+
+
 	void MeshAssetLoader::FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer)
 	{
-		auto results = info.ParentGraph->GetResults<MeshImporter::MeshData>();
+		auto results = info.ParentGraph->GetResults<MeshDependencyData>();
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create();
-		mesh->GenerateMesh(results);
+
+		std::vector<MeshImporter::MeshData> meshData;
+		std::unordered_map<uint64_t, AssetHandle> materialData;
+
+		for (auto& result : results)
+		{
+			if (result.MeshData.Vertices.size() > 0)
+				meshData.push_back(result.MeshData);
+
+			if (result.MaterialHandle != INVALID_ASSET_HANDLE)
+				materialData[result.MaterialIndex] = result.MaterialHandle;
+		}
+
+		mesh->GenerateMesh(meshData);
+
+		for (auto& submesh : meshData)
+		{
+			if (!materialData.contains(submesh.MaterialIndex)) continue;
+
+			uint64_t nodeID = mesh->GetSubmeshNodeFromName(submesh.Name);
+			AssetHandle handle = materialData[submesh.MaterialIndex];
+			mesh->SetSubmeshMaterialHandle(nodeID, handle);
+		}
 
 		info.Job->SetResult(mesh);
 	}
@@ -252,6 +304,8 @@ namespace Hazard
 		{
 			SubmeshHeader header = {
 				.NodeID = uid,
+				.Transform = submesh.Transform,
+				.MaterialHandle = submesh.MaterialHandle,
 				.VertexCount = submesh.VertexCount,
 				.IndexCount = submesh.IndexCount,
 				.VertexOffset = submesh.VertexOffset,
@@ -294,7 +348,9 @@ namespace Hazard
 
 			SubmeshData submeshData = {
 				.NodeName = pack.AssetData->Read<std::string>(),
+				.Transform = subHeader.Transform,
 				.NodeID = subHeader.NodeID,
+				.MaterialHandle = subHeader.MaterialHandle,
 				.VertexCount = subHeader.VertexCount,
 				.IndexCount = subHeader.IndexCount,
 				.VertexOffset = subHeader.VertexOffset,
@@ -319,12 +375,12 @@ namespace Hazard
 												material->Set(type, prop.Data.Data);	\
 												continue;								\
 											}																								
-
 		for (auto& prop : materialData.Properties)
 		{
 			std::cout << prop.Name << std::endl;
 			HZR_SET_MAT_PROP(material, "$mat.gltf.pbrMetallicRoughness.metallicFactor", "Metalness");
 			HZR_SET_MAT_PROP(material, "$mat.gltf.pbrMetallicRoughness.roughnessFactor", "Roughness");
+			HZR_SET_MAT_PROP(material, "$clr.diffuse", "Albedo");
 		}
 	}
 }

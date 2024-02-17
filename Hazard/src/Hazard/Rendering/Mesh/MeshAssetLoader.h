@@ -27,6 +27,8 @@ namespace Hazard
 	struct SubmeshHeader
 	{
 		UID NodeID;
+		glm::mat4 Transform;
+		uint64_t MaterialHandle;
 		uint64_t VertexCount;
 		uint64_t IndexCount;
 		uint64_t VertexOffset;
@@ -55,7 +57,8 @@ namespace Hazard
 	private:
 		static void PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings);
 		static void ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh);
-		static void ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& maetrialRoot);
+		static void ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot);
+		static void ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture);
 		static void FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer);
 
 		static void ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh);

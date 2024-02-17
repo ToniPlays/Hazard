@@ -273,16 +273,15 @@ namespace Hazard
 
 	Ref<JobGraph> AssetManager::GetCreateGraph(AssetType type, CreateAssetSettings settings)
 	{
-		HZR_CORE_ASSERT(!settings.SourcePath.empty() || type != AssetType::Material, "Fuck all of you");
 		Ref<JobGraph> graph = s_AssetLoader.Create(type, settings);
 		if (!graph) return nullptr;
 
-		graph->AddOnCompleted([source = settings.SourcePath](JobGraph& graph) {
+		graph->AddOnCompleted([settings](JobGraph& graph) {
 			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
 			if (!asset) return;
 
 			asset->m_Handle = UID();
-			asset->m_SourceAssetPath = source;
+			asset->m_SourceAssetPath = settings.SourcePath;
 
 			AssetMetadata metadata = {
 				.AssetPackHandle = 0,
@@ -290,7 +289,7 @@ namespace Hazard
 				.Type = asset->GetType(),
 				.LoadState = LoadState::Loaded,
 				.FilePath = "",
-				.SourceFile = source,
+				.SourceFile = settings.SourcePath,
 			};
 
 			std::scoped_lock(s_AssetMutex);

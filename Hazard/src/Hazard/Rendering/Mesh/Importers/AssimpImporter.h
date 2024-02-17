@@ -21,6 +21,7 @@ namespace Hazard
 		std::vector<MaterialMetadata> GetMaterials() override;
 		std::vector<MeshImporter::MeshMetadata> GetMeshes() override;
 		std::vector<MeshImporter::AnimationData> GetAnimations() override;
+		TextureData GetTextureData(uint32_t textureIndex) override;
 		MeshData GetMeshData(const MeshMetadata& mesh, const std::function<void(uint32_t, uint32_t)>& progress) override;
 		MaterialData GetMaterial(uint32_t materialIndex) override;
 		glm::mat4 GetMeshTransform(uint32_t meshIndex) override;
@@ -32,8 +33,8 @@ namespace Hazard
 
 	private:
 
-		aiMatrix4x4 GetMeshAiTransform(const aiNode* node);
-		const aiNode* FindMeshNode(aiNode* root, uint32_t meshIndex);
+		aiMatrix4x4 GetMeshAiTransform(aiMesh* mesh);
+		const aiNode* FindMeshNode(aiNode* root, aiMesh* mesh);
 		const aiScene* GetScene();
 		MeshImporter::MeshMetadata GetMeshDataFromNode(aiNode* node);
 
@@ -49,6 +50,7 @@ namespace Hazard
 
 		Callback<void(float)> m_LoadCallback;
 	};
+
 
 	class AssimpProgressHandler : public Assimp::ProgressHandler
 	{

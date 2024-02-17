@@ -578,7 +578,7 @@ namespace HazardRenderer::Vulkan
 				stagingInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
 
 				VkBuffer stagingBuffer;
-				VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
+				VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_ONLY, stagingBuffer);
 
 				//Copy data
 				uint8_t* dstData = allocator.MapMemory<uint8_t>(stagingBufferAlloc);
@@ -619,7 +619,7 @@ namespace HazardRenderer::Vulkan
 			stagingInfo.size = region.DataSize;
 
 			VkBuffer stagingBuffer;
-			VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_TO_GPU, stagingBuffer);
+			VmaAllocation stagingBufferAlloc = allocator.AllocateBuffer(stagingInfo, VMA_MEMORY_USAGE_CPU_ONLY, stagingBuffer);
 
 			//Copy image data
 			uint8_t* destData = allocator.MapMemory<uint8_t>(stagingBufferAlloc);

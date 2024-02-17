@@ -73,15 +73,19 @@ namespace Hazard
 
 			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/PBR_Static.glsl");
 
+
+			DescriptorSetLayout materialLayout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Albedo", 0, DESCRIPTOR_TYPE_SAMPLER_2D } };
+
 			PipelineSpecification specs = {
 				.DebugName = "Pipeline PBR_Static",
 				.Usage = PipelineUsage::GraphicsBit,
 				.pBufferLayout = &layout,
 				.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
 				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { setLayout },
-				.PushConstants = { { "Metalness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, 0 },
-								   { "Roughness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) } 
+				.SetLayouts = { setLayout, materialLayout },
+				.PushConstants = { { "Albedo", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float4, 0 },
+								   { "Metalness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 4 },
+								   { "Roughness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 5 } 
 								 },
 			};
 

@@ -51,8 +51,6 @@ namespace Hazard
             {
                 m_PushConstants.Write(&value, ShaderDataTypeSize(param.Type), param.Offset);
             }
-
-            std::cout << fmt::format("Parameter {} set to {}", param.Name, value) << std::endl;
         }
 
     private:

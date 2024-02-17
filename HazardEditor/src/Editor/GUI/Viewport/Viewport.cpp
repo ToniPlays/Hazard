@@ -310,7 +310,7 @@ namespace UI
 
 		ImGui::SetColumnWidth(0, 110);
 		float cameraSpeed = m_EditorCamera.GetSpeedMultiplier();
-		if (ImUI::SliderFloat("Camera speed", cameraSpeed, 1.0f, 0.01f, 5.0f))
+		if (ImUI::SliderFloat("Camera speed", cameraSpeed, 1.0f, 0.01f, 100.0f))
 			m_EditorCamera.SetSpeedMultiplier(cameraSpeed);
 
 		ImGui::Columns();

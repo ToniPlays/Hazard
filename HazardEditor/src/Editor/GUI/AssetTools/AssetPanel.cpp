@@ -453,7 +453,7 @@ namespace UI
 
 		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
 		{
-			ImUI::DropTarget<AssetHandle>((AssetType)i, [&, path = folder.Path](AssetHandle handle) {
+			ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
 				//EditorAssetManager::MoveAssetToFolder(handle, path);
 				Refresh();
 			});

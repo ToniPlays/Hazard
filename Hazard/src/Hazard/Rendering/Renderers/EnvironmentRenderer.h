@@ -12,7 +12,7 @@ namespace Hazard
 
 		void Init(Ref<HazardRenderer::RenderCommandBuffer> commandBuffer);
 		void Prepare(EnvironmentData& environment, Ref<RenderPass> renderPass);
-		void Render();
+		void Render(Ref<HazardRenderer::DescriptorSet> descriptor);
 
 	private:
 		Ref<HazardRenderer::RenderCommandBuffer> m_CommandBuffer;

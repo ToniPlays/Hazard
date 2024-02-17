@@ -69,16 +69,26 @@ namespace Hazard
 	{
 		const aiScene* scene = GetScene();
 		std::vector<MeshImporter::MeshMetadata> meshes;
-		meshes.reserve(scene->mRootNode->mNumChildren + 1);
+		meshes.reserve(scene->mNumMeshes);
 
 		uint64_t vertexOffset = 0;
 		uint64_t indexOffset = 0;
 
+		for (uint32_t m = 0; m < scene->mNumMeshes; m++)
 		{
-			auto data = GetMeshDataFromNode(scene->mRootNode);
-			data.NodeIndex = 0;
-			data.VertexOffset = vertexOffset;
-			data.IndexOffset = indexOffset;
+			const aiMesh* mesh = scene->mMeshes[m];
+
+			MeshMetadata data = {
+				.Name = mesh->mName.C_Str(),
+				.MeshIndex = m,
+				.MaterialIndex = mesh->mMaterialIndex,
+				.VertexCount = mesh->mNumVertices,
+				.IndexCount = mesh->mNumFaces * 3,
+				.VertexOffset = 0,
+				.IndexOffset = 0,
+				.BoneCount = mesh->mNumBones,
+				.AnimatedMeshCount = mesh->mNumAnimMeshes,
+			};
 
 			if (data.IndexCount > 0)
 			{
@@ -89,123 +99,103 @@ namespace Hazard
 			}
 		}
 
-		for (uint32_t i = 0; i < scene->mRootNode->mNumChildren; i++)
-		{
-			aiNode* node = scene->mRootNode->mChildren[i];
-			auto data = GetMeshDataFromNode(node);
-
-			data.NodeIndex = i + 1;
-			data.VertexOffset = vertexOffset;
-			data.IndexCount = indexOffset;
-
-			if (data.VertexCount == 0) continue;
-
-			meshes.push_back(data);
-			vertexOffset = data.VertexCount;
-			indexOffset = data.IndexCount;
-		}
-
 		return meshes;
 	}
 
 	MeshImporter::MeshData AssimpImporter::GetMeshData(const MeshMetadata& mesh, const std::function<void(uint32_t, uint32_t)>& progress)
 	{
 		const aiScene* scene = GetScene();
-		const aiNode* node = mesh.NodeIndex == 0 ? scene->mRootNode : scene->mRootNode->mChildren[mesh.NodeIndex - 1];
+		aiMesh* aiMesh = scene->mMeshes[mesh.MeshIndex];
+
 
 		MeshData data = {
 			.Name = mesh.Name,
+			.Transform = GetMeshTransform(mesh.MeshIndex)
 		};
-
-		auto transform = GetMeshAiTransform(node);
 
 		uint32_t vertexOffset = 0;
 
-		for (uint32_t m = 0; m < node->mNumMeshes; m++)
+		Callback<void(Vertex3D&, uint64_t)> loadCallback;
+		loadCallback.Add([aiMesh](Vertex3D& vertex, uint64_t index) mutable {
+			aiVector3D pos = aiMesh->mVertices[index];
+			vertex.Position.x = pos.x;
+			vertex.Position.y = pos.y;
+			vertex.Position.z = pos.z;
+		});
+
+		for (uint32_t channel = 0; channel < aiMesh->GetNumColorChannels(); channel++)
 		{
-			const aiMesh* aiMesh = scene->mMeshes[node->mMeshes[m]];
-
-			Callback<void(Vertex3D&, uint64_t)> loadCallback;
-			loadCallback.Add([aiMesh, transform](Vertex3D& vertex, uint64_t index) mutable {
-				aiVector3D pos = transform * aiMesh->mVertices[index];
-				vertex.Position.x = pos.x;
-				vertex.Position.y = pos.y;
-				vertex.Position.z = pos.z;
-			});
-
-			for (uint32_t channel = 0; channel < aiMesh->GetNumColorChannels(); channel++)
+			if (aiMesh->HasVertexColors(channel))
 			{
-				if (aiMesh->HasVertexColors(channel))
-				{
-					loadCallback.Add([aiMesh, channel](Vertex3D& vertex, uint64_t index) mutable {
-						aiColor4D color = aiMesh->mColors[channel][index];
-						if (isnan(color.r) || isnan(color.g) || isnan(color.b) || isnan(color.a)) return;
+				loadCallback.Add([aiMesh, channel](Vertex3D& vertex, uint64_t index) mutable {
+					aiColor4D color = aiMesh->mColors[channel][index];
+					if (isnan(color.r) || isnan(color.g) || isnan(color.b) || isnan(color.a)) return;
 
-						vertex.Color.r = color.r;
-						vertex.Color.g = color.g;
-						vertex.Color.b = color.b;
-						vertex.Color.a = color.a;
-					});
-					break;
-				}
-			}
-
-			if (aiMesh->HasNormals())
-			{
-				loadCallback.Add([aiMesh](Vertex3D& vertex, uint64_t index) mutable {
-					aiVector3D normal = aiMesh->mNormals[index];
-					vertex.Normals.x = normal.x;
-					vertex.Normals.y = normal.y;
-					vertex.Normals.z = normal.z;
+					vertex.Color.r = color.r;
+					vertex.Color.g = color.g;
+					vertex.Color.b = color.b;
+					vertex.Color.a = color.a;
 				});
+				break;
 			}
-
-			if (aiMesh->HasTangentsAndBitangents())
-			{
-				loadCallback.Add([aiMesh](Vertex3D& vertex, uint64_t index) mutable {
-					aiVector3D tangent = aiMesh->mTangents[index];
-					vertex.Tangent.x = tangent.x;
-					vertex.Tangent.y = tangent.y;
-					vertex.Tangent.z = tangent.z;
-
-					aiVector3D bitangent = aiMesh->mBitangents[index];
-					vertex.Binormal.x = bitangent.x;
-					vertex.Binormal.y = bitangent.y;
-					vertex.Binormal.z = bitangent.z;
-				});
-			}
-			for (uint32_t channel = 0; channel < AI_MAX_NUMBER_OF_COLOR_SETS; channel++)
-			{
-				if (aiMesh->HasTextureCoords(channel))
-				{
-					loadCallback.Add([aiMesh, channel](Vertex3D& vertex, uint64_t index) mutable {
-						aiVector3D coords = aiMesh->mTextureCoords[channel][index];
-						vertex.TexCoords.x = coords.x;
-						vertex.TexCoords.y = coords.y;
-						vertex.TexCoords.z = coords.z;
-					});
-				}
-			}
-
-			for (uint32_t v = 0; v < aiMesh->mNumVertices; v++)
-			{
-				Vertex3D& vertex = data.Vertices.emplace_back();
-				loadCallback.Invoke<Vertex3D&, uint64_t>(vertex, v);
-
-				if (progress)
-					progress(v, aiMesh->mNumVertices);
-			}
-
-			for (uint64_t f = 0; f < aiMesh->mNumFaces; f++)
-			{
-				aiFace face = aiMesh->mFaces[f];
-				for (uint32_t index = 0; index < face.mNumIndices; index++)
-					data.Indices.push_back(face.mIndices[index] + vertexOffset);
-			}
-
-			vertexOffset += aiMesh->mNumVertices;
-
 		}
+
+		if (aiMesh->HasNormals())
+		{
+			loadCallback.Add([aiMesh](Vertex3D& vertex, uint64_t index) mutable {
+				aiVector3D normal = aiMesh->mNormals[index];
+				vertex.Normals.x = normal.x;
+				vertex.Normals.y = normal.y;
+				vertex.Normals.z = normal.z;
+			});
+		}
+
+		if (aiMesh->HasTangentsAndBitangents())
+		{
+			loadCallback.Add([aiMesh](Vertex3D& vertex, uint64_t index) mutable {
+				aiVector3D tangent = aiMesh->mTangents[index];
+				vertex.Tangent.x = tangent.x;
+				vertex.Tangent.y = tangent.y;
+				vertex.Tangent.z = tangent.z;
+
+				aiVector3D bitangent = aiMesh->mBitangents[index];
+				vertex.Binormal.x = bitangent.x;
+				vertex.Binormal.y = bitangent.y;
+				vertex.Binormal.z = bitangent.z;
+			});
+		}
+		for (uint32_t channel = 0; channel < AI_MAX_NUMBER_OF_COLOR_SETS; channel++)
+		{
+			if (aiMesh->HasTextureCoords(channel))
+			{
+				loadCallback.Add([aiMesh, channel](Vertex3D& vertex, uint64_t index) mutable {
+					aiVector3D coords = aiMesh->mTextureCoords[channel][index];
+					vertex.TexCoords.x = coords.x;
+					vertex.TexCoords.y = coords.y;
+					vertex.TexCoords.z = coords.z;
+				});
+			}
+		}
+
+		for (uint32_t v = 0; v < aiMesh->mNumVertices; v++)
+		{
+			Vertex3D& vertex = data.Vertices.emplace_back();
+			loadCallback.Invoke<Vertex3D&, uint64_t>(vertex, v);
+
+			if (progress)
+				progress(v, aiMesh->mNumVertices);
+		}
+
+		for (uint64_t f = 0; f < aiMesh->mNumFaces; f++)
+		{
+			aiFace face = aiMesh->mFaces[f];
+			for (uint32_t index = 0; index < face.mNumIndices; index++)
+				data.Indices.push_back(face.mIndices[index] + vertexOffset);
+		}
+
+		vertexOffset += aiMesh->mNumVertices;
+		data.MaterialIndex = aiMesh->mMaterialIndex;
+
 		return data;
 	}
 
@@ -265,12 +255,11 @@ namespace Hazard
 			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
 		});
 
-		
+
 		for (uint32_t i = 0; i < mat->mNumProperties; i++)
 		{
 			aiMaterialProperty* property = mat->mProperties[i];
 			std::string key = property->mKey.C_Str();
-			//std::cout << key << std::endl;
 			hooks.Invoke(key, property);
 		}
 
@@ -278,47 +267,62 @@ namespace Hazard
 			.Name = mat->GetName().C_Str(),
 			.Properties = properties
 		};
-		
+
 		return data;
 	}
 
 	glm::mat4 AssimpImporter::GetMeshTransform(uint32_t nodeIndex)
 	{
-		return glm::mat4(1.0f);
+		const aiScene* scene = GetScene();
+		auto t = GetMeshAiTransform(scene->mMeshes[nodeIndex]);
+
+		return glm::mat4{ t[0][0], t[1][0], t[2][0], t[3][0],
+						  t[0][1], t[1][1], t[2][1], t[3][1],
+						  t[0][2], t[1][2], t[2][2], t[3][2],
+						  t[0][3], t[1][3], t[2][3], t[3][3]
+		};
 	}
 
-	aiMatrix4x4 AssimpImporter::GetMeshAiTransform(const aiNode* node)
+	aiMatrix4x4 AssimpImporter::GetMeshAiTransform(aiMesh* mesh)
 	{
 		const aiScene* scene = GetScene();
-		if (!node) return aiMatrix4x4();
+		const aiNode* root = FindMeshNode(scene->mRootNode, mesh);
+		aiMatrix4x4 transform = root->mTransformation;
 
-		aiMatrix4x4 transform = node->mTransformation;
-		while (node->mParent)
+		while (root->mParent)
 		{
-			transform = node->mParent->mTransformation * transform;
-			node = node->mParent;
+			transform = root->mParent->mTransformation * transform;
+			root = root->mParent;
 		}
 		return transform;
 	}
 
-	const aiNode* AssimpImporter::FindMeshNode(aiNode* root, uint32_t meshIndex)
+	const aiNode* AssimpImporter::FindMeshNode(aiNode* root, aiMesh* mesh)
 	{
 		const aiScene* scene = GetScene();
-		const aiMesh* mesh = scene->mMeshes[meshIndex];
 
 		for (uint32_t i = 0; i < root->mNumChildren; i++)
 		{
-			const aiNode* child = root->mChildren[i];
+			aiNode* child = root->mChildren[i];
+
 			for (uint32_t m = 0; m < child->mNumMeshes; m++)
 			{
-				const aiMesh* aiMesh = scene->mMeshes[child->mMeshes[m]];
+				aiMesh* aiMesh = scene->mMeshes[child->mMeshes[m]];
 				if (aiMesh == mesh)
 					return child;
 			}
 		}
+		
+		for (uint32_t m = 0; m < scene->mNumMeshes; m++)
+		{
+			aiMesh* aiMesh = scene->mMeshes[m];
 
-		HZR_ASSERT(false, fmt::format("Missing node: {}", mesh->mName.C_Str()));
-		return nullptr;
+			if (aiMesh == mesh)
+				return scene->mRootNode;
+		}
+
+		HZR_ASSERT(false, "Not found");
+		return scene->mRootNode;
 	}
 
 	const aiScene* AssimpImporter::GetScene()
@@ -330,6 +334,9 @@ namespace Hazard
 		flags |= aiProcess_JoinIdenticalVertices;
 		flags |= aiProcess_GenSmoothNormals;
 		flags |= aiProcess_SplitLargeMeshes;
+		flags |= aiProcess_ValidateDataStructure;
+		flags |= aiProcess_OptimizeMeshes;
+		flags |= aiProcess_RemoveRedundantMaterials;
 
 		m_Importer.SetProgressHandler(new AssimpProgressHandler([this](float progress) {
 			m_LoadCallback.Invoke(progress);
@@ -376,6 +383,14 @@ namespace Hazard
 	{
 		const aiScene* scene = GetScene();
 		std::cout << fmt::format("Node: {}", node->mName.C_Str()) << std::endl;
+		std::cout << fmt::format("Meshes: {}", node->mNumMeshes) << std::endl;
+
+		for (uint32_t m = 0; m < node->mNumMeshes; m++)
+		{
+			int meshIndex = node->mMeshes[m];
+			const aiMesh* mesh = scene->mMeshes[meshIndex];
+			std::cout << fmt::format("      \"{}\", material: {} ({})", mesh->mName.C_Str(), mesh->mMaterialIndex, (void*)mesh) << std::endl;
+		}
 
 		for (uint32_t i = 0; i < node->mNumChildren; i++)
 		{
@@ -387,7 +402,7 @@ namespace Hazard
 			{
 				int meshIndex = child->mMeshes[m];
 				const aiMesh* mesh = scene->mMeshes[meshIndex];
-				std::cout << fmt::format("      {}, material: {}", mesh->mName.C_Str(), mesh->mMaterialIndex) << std::endl;
+				std::cout << fmt::format("      \"{}\", material: {} ({})", mesh->mName.C_Str(), mesh->mMaterialIndex, (void*)mesh) << std::endl;
 			}
 		}
 	}
@@ -427,7 +442,7 @@ namespace Hazard
 
 		switch (material.mType)
 		{
-			case aiPTI_Float: 
+			case aiPTI_Float:
 			{
 				switch (material.mDataLength)
 				{
@@ -466,5 +481,21 @@ namespace Hazard
 		}
 
 		return animations;
+	}
+	MeshImporter::TextureData AssimpImporter::GetTextureData(uint32_t textureIndex)
+	{
+		const aiScene* scene = GetScene();
+		aiTexture* texture = scene->mTextures[textureIndex];
+
+		uint64_t dataSize = texture->mHeight == 0 ? texture->mWidth : texture->mWidth * texture->mWidth * sizeof(aiTexel);
+
+		MeshImporter::TextureData data = {
+			.Name = texture->mFilename.C_Str(),
+			.Width = texture->mWidth,
+			.Height = texture->mHeight,
+			.ImageData = Buffer((void*)texture->pcData, dataSize),
+		};
+		
+		return data;
 	}
 }

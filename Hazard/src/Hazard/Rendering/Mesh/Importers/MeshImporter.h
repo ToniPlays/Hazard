@@ -44,6 +44,14 @@ namespace Hazard
 			uint32_t TextureIndex;
 		};
 
+		struct TextureData
+		{
+			std::string Name;
+			uint32_t Width;
+			uint32_t Height;
+			Buffer ImageData;
+		};
+
 		struct MaterialMetadata
 		{
 			std::string Name;
@@ -69,7 +77,7 @@ namespace Hazard
 		struct MeshMetadata
 		{
 			std::string Name;
-			uint32_t NodeIndex;
+			uint32_t MeshIndex;
 			uint32_t MaterialIndex;
 			uint64_t VertexCount;
 			uint64_t IndexCount;
@@ -82,6 +90,8 @@ namespace Hazard
 		struct MeshData
 		{
 			std::string Name;
+			glm::mat4 Transform;
+			uint64_t MaterialIndex;
 			BoundingBox BoundingBox;
 			std::vector<Vertex3D> Vertices;
 			std::vector<uint32_t> Indices;
@@ -97,9 +107,10 @@ namespace Hazard
 		virtual std::vector<MeshImporter::TextureMetadata> GetTextures() = 0;
 		virtual std::vector<MaterialMetadata> GetMaterials() = 0;
 		virtual std::vector<MeshMetadata> GetMeshes() = 0;
+		virtual std::vector<AnimationData> GetAnimations() = 0;
+		virtual TextureData GetTextureData(uint32_t textureIndex) = 0;
 		virtual MeshData GetMeshData(const MeshMetadata& mesh, const std::function<void(uint32_t, uint32_t)>& progress = nullptr) = 0;
 		virtual MaterialData GetMaterial(uint32_t materialIndex) = 0;
-		virtual std::vector<AnimationData> GetAnimations() = 0;
 		virtual glm::mat4 GetMeshTransform(uint32_t meshIndex) = 0;
 
 		virtual void AddImportProgressCallback(const std::function<void(float)> callback) = 0;

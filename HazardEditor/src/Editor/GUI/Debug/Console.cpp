@@ -24,9 +24,7 @@ namespace UI
 
 		JobSystem& system = Application::Get().GetJobSystem();
 		system.Hook(JobSystem::Message, [this](Severity severity, const std::string& message) {
-			Application::Get().SubmitMainThread([this, severity, message]() {
-				AddMessage({ message, "", GetMessageFlagsFromSeverity(severity) });
-			});
+			//AddMessage({ message, "", GetMessageFlagsFromSeverity(severity) });
 		});
 	}
 

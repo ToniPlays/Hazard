@@ -60,6 +60,7 @@ namespace Hazard
 		Ref<Cubemap> BlackCubemap;
 		Ref<Cubemap> WhiteCubemap;
 		Ref<Sampler> DefaultImageSampler;
+		Ref<Texture2DAsset> BRDFLut;
 
 		void Initialize()
 		{
@@ -109,6 +110,8 @@ namespace Hazard
 			};
 
 			DefaultImageSampler = Sampler::Create(&samplerInfo);
+
+			BRDFLut = AssetManager::GetAsset<Texture2DAsset>(AssetManager::AssetHandleFromFile("res/Textures/BRDF_LUT.tga"));
 		}
 	};
 }

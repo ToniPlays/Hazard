@@ -12,7 +12,9 @@ namespace Hazard
 	struct SubmeshData
 	{
 		std::string NodeName;
+		glm::mat4 Transform;
 		uint64_t NodeID;
+		uint64_t MaterialHandle;
 		uint64_t VertexCount;
 		uint64_t IndexCount;
 		uint64_t VertexOffset;
@@ -26,10 +28,13 @@ namespace Hazard
 		~Mesh() = default;
 
 		AssetType GetType() const override { return AssetType::Mesh; }
+
 		void GenerateMesh(const std::vector<MeshImporter::MeshData>& meshData);
 		void GenerateMesh(const std::unordered_map<uint64_t, SubmeshData>& submeshes, Buffer vertexData, Buffer indexData);
 
 		const std::unordered_map<uint64_t, SubmeshData> GetSubmeshData() const { return m_SubmeshData; }
+		void SetSubmeshMaterialHandle(uint64_t node, AssetHandle handle) { m_SubmeshData[node].MaterialHandle = handle; }
+		uint64_t GetSubmeshNodeFromName(const std::string& name);
 
 		Ref<HazardRenderer::GPUBuffer> GetVertexBuffer(uint64_t submeshId) const { return m_VertexBuffers.at(submeshId); };
 		Ref<HazardRenderer::GPUBuffer> GetIndexBuffer(uint64_t submeshId) const { return m_IndexBuffers.at(submeshId); }

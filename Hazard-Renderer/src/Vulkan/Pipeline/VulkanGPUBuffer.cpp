@@ -31,7 +31,7 @@ namespace HazardRenderer::Vulkan
 			bufferCreateInfo.size = instance->m_Size;
 			bufferCreateInfo.usage = VkUtils::GetUsageFlags(flags) | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-			instance->m_BufferAllocation = allocator.AllocateBuffer(bufferCreateInfo, (flags & BUFFER_USAGE_DYNAMIC) ? VMA_MEMORY_USAGE_CPU_TO_GPU : VMA_MEMORY_USAGE_GPU_ONLY, instance->m_VulkanBuffer);
+			instance->m_BufferAllocation = allocator.AllocateBuffer(bufferCreateInfo, (flags & BUFFER_USAGE_DYNAMIC) ? VMA_MEMORY_USAGE_CPU_ONLY : VMA_MEMORY_USAGE_GPU_ONLY, instance->m_VulkanBuffer);
 			VkUtils::SetDebugUtilsObjectName(device->GetVulkanDevice(), VK_OBJECT_TYPE_BUFFER, fmt::format("VkBuffer {0}", instance->m_DebugName), instance->m_VulkanBuffer);
 		});
 

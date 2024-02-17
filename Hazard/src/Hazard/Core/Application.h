@@ -31,7 +31,6 @@ namespace Hazard
 		JobSystem& GetJobSystem() { return *m_JobSystem.get(); }
 		void SubmitMainThread(const std::function<void()>& function)
 		{
-			std::scoped_lock lock(m_MainJobMutex);
 			m_MainJobs.Add(function);
 		}
 
@@ -51,15 +50,11 @@ namespace Hazard
 		void InvokeMainThreadJobs()
 		{
 			m_MainJobs.Invoke();
-
-			m_MainJobMutex.lock();
 			m_MainJobs.Clear();
-			m_MainJobMutex.unlock();
 		}
 	private:
 
 		Scope<JobSystem> m_JobSystem;
-		std::mutex m_MainJobMutex;
 		Callback<void()> m_MainJobs;
 	};
 

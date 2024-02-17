@@ -76,6 +76,7 @@ struct PBRParameters
 
 layout(push_constant, std140) uniform PushConstants
 {
+    uniform vec4 Albedo;
     uniform float Metalness;
     uniform float Roughness;
 } u_PushConstants;
@@ -89,11 +90,14 @@ layout(location = 1) out uint EntityID;
 #include "Utils/Lighting.glslh"
 #include "Utils/PostProcessing.glslh"
 
+layout(binding = 0, set = 1) uniform sampler2D u_Albedo;
+
+
 const float gamma = 2.2;
 
 void main() 
 {
-    m_Params.Albedo = Input.Color.rgb;
+    m_Params.Albedo =u_PushConstants.Albedo.rgb * Input.Color.rgb;
     m_Params.Metalness = u_PushConstants.Metalness;
     m_Params.Roughness = max(u_PushConstants.Roughness, 0.05);
     m_Params.Normal = normalize(Input.Normal);
