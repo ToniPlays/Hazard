@@ -105,8 +105,6 @@ struct Buffer
 	uint8_t& operator[](int index) { return ((uint8_t*)Data)[index]; }
 	uint8_t operator[](int index) const { return ((uint8_t*)Data)[index]; }
 
-	inline uint64_t GetSize() { return Size; }
-
 	static Buffer Copy(const void* data, uint64_t size, uint64_t offset = 0) 
 	{
 		Buffer buffer;

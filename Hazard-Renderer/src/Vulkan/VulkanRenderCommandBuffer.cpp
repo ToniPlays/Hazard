@@ -202,6 +202,9 @@ namespace HazardRenderer::Vulkan
 
 		if (m_OwnedBySwapchain || !m_CommandPool) return;
 
+		for (auto& fence : m_WaitFences)
+			vkDestroyFence(device, fence, nullptr);
+
 		VkCommandPool commandPool = m_CommandPool;
 		vkDestroyCommandPool(device, commandPool, nullptr);
 	}
@@ -211,7 +214,7 @@ namespace HazardRenderer::Vulkan
 
 		if (m_OwnedBySwapchain)
 		{
-			
+
 			Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 			uint32_t frameIndex = swapchain->GetCurrentBufferIndex();
 			VkCommandBuffer buffer = swapchain->GetCurrentDrawCommandBuffer();
@@ -274,25 +277,25 @@ namespace HazardRenderer::Vulkan
 			HZR_TIMED_FUNCTION();
 			auto device = VulkanContext::GetInstance()->GetLogicalDevice();
 
-			if (!s_ComputeFence)
-			{
-				VkFenceCreateInfo fenceCreateInfo = {};
-				fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-				fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-				VK_CHECK_RESULT(vkCreateFence(device->GetVulkanDevice(), &fenceCreateInfo, nullptr, &s_ComputeFence), "");
-			}
-
 			VkSubmitInfo submitInfo = {};
 			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 			submitInfo.commandBufferCount = instance->m_CommandBuffers.size();
 			submitInfo.pCommandBuffers = instance->m_CommandBuffers.data();
 
-			vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX);
-			vkResetFences(device->GetVulkanDevice(), 1, &s_ComputeFence);
+			uint32_t index = instance->m_FrameIndex;
 
-			VK_CHECK_RESULT(vkQueueSubmit(instance->m_SubmitQueue, 1, &submitInfo, s_ComputeFence), "");
-			VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &s_ComputeFence, VK_TRUE, UINT64_MAX), "");
+			if (instance->m_WaitFences[index])
+			{
+				VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &instance->m_WaitFences[index], VK_TRUE, UINT64_MAX), "");
+				VK_CHECK_RESULT(vkResetFences(device->GetVulkanDevice(), 1, &instance->m_WaitFences[index]), "");
+			}
+
+			VK_CHECK_RESULT(vkQueueSubmit(instance->m_SubmitQueue, 1, &submitInfo, instance->m_WaitFences[index]), "");
+			if (instance->m_WaitFences[index])
+			{
+				Timer timer;
+				VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &instance->m_WaitFences[index], VK_TRUE, UINT64_MAX), "");
+			}
 
 			instance->m_OnCompletion.Invoke();
 			instance->m_OnCompletion.Clear();
@@ -525,7 +528,6 @@ namespace HazardRenderer::Vulkan
 
 		Renderer::Submit([instance, size = globalGroupSize]() mutable {
 			HZR_PROFILE_SCOPE("VulkanRenderCommandBuffer::DispatchCompute");
-
 			vkCmdDispatch(instance->m_ActiveCommandBuffer, size.x, size.y, size.z);
 		});
 	}

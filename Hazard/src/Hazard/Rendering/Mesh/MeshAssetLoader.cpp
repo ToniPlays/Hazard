@@ -10,6 +10,7 @@
 
 #include "Hazard/Core/Application.h"
 #include "Mesh.h"
+#include <Directory.h>
 
 namespace Hazard
 {
@@ -232,20 +233,30 @@ namespace Hazard
 
 		cmdBuffer->Begin();
 
-		for (auto& [uid, submesh] : mesh->GetSubmeshData())
+		for (auto& submesh : mesh->GetSubmeshData())
 		{
-			BufferCopyRegion vertexRegion = {
+			BufferCopyRegion vertexSrcRegion = {
+				.Size = submesh.VertexCount * sizeof(Vertex3D),
+				.Offset = 0,
+			};
+
+			BufferCopyRegion indexSrcRegion = {
+				.Size = submesh.IndexCount * sizeof(uint32_t),
+				.Offset = 0,
+			};
+
+			BufferCopyRegion vertexDstRegion = {
 				.Size = submesh.VertexCount * sizeof(Vertex3D),
 				.Offset = submesh.VertexOffset,
 			};
 
-			BufferCopyRegion indexRegion = {
+			BufferCopyRegion indexDstRegion = {
 				.Size = submesh.IndexCount * sizeof(uint32_t),
 				.Offset = submesh.IndexOffset,
 			};
 
-			cmdBuffer->CopyBufferToBuffer(mesh->GetVertexBuffer(uid), vertexRegion, vertexReadback, vertexRegion);
-			cmdBuffer->CopyBufferToBuffer(mesh->GetIndexBuffer(uid), indexRegion, indexReadback, indexRegion);
+			cmdBuffer->CopyBufferToBuffer(mesh->GetVertexBuffer(submesh.NodeID), vertexSrcRegion, vertexReadback, vertexDstRegion);
+			cmdBuffer->CopyBufferToBuffer(mesh->GetIndexBuffer(submesh.NodeID), indexSrcRegion, indexReadback, indexDstRegion);
 		}
 		cmdBuffer->End();
 		cmdBuffer->Submit();
@@ -264,8 +275,8 @@ namespace Hazard
 				.Size = indexReadback->GetSize(),
 			};
 
-			result.Vertex = vertexReadback->ReadData(vertexRegion);
-			result.Index = indexReadback->ReadData(indexRegion);
+			result.Vertex = Buffer::Copy(vertexReadback->ReadData(vertexRegion));
+			result.Index = Buffer::Copy(indexReadback->ReadData(indexRegion));
 
 			info.Job->SetResult(result);
 			info.ParentGraph->Continue();
@@ -285,7 +296,7 @@ namespace Hazard
 		auto meshData = mesh->GetSubmeshData();
 
 		uint64_t nodeNameLength = 0;
-		for (auto& [uid, submesh] : meshData)
+		for (auto& submesh : meshData)
 			nodeNameLength += submesh.NodeName.length() + sizeof(uint64_t);
 
 		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
@@ -293,17 +304,17 @@ namespace Hazard
 
 		MeshFileHeader meshHeader = {
 			.SubmeshCount = meshData.size(),
-			.VertexCount = result.Vertex.GetSize() / sizeof(Vertex3D),
-			.IndexCount = result.Index.GetSize() / sizeof(uint32_t),
+			.VertexCount = result.Vertex.Size / sizeof(Vertex3D),
+			.IndexCount = result.Index.Size / sizeof(uint32_t),
 		};
 
 		buf->Write(meshHeader);
 
 		uint32_t progress = 0;
-		for (auto& [uid, submesh] : meshData)
+		for (auto& submesh : meshData)
 		{
 			SubmeshHeader header = {
-				.NodeID = uid,
+				.NodeID = submesh.NodeID,
 				.Transform = submesh.Transform,
 				.MaterialHandle = submesh.MaterialHandle,
 				.VertexCount = submesh.VertexCount,
@@ -340,14 +351,15 @@ namespace Hazard
 
 		MeshFileHeader header = pack.AssetData->Read<MeshFileHeader>();
 
-		std::unordered_map<uint64_t, SubmeshData> submeshes;
+		std::vector<SubmeshData> submeshes;
 
 		for (uint32_t i = 0; i < header.SubmeshCount; i++)
 		{
 			SubmeshHeader subHeader = pack.AssetData->Read<SubmeshHeader>();
+			std::string name = pack.AssetData->Read<std::string>();
 
 			SubmeshData submeshData = {
-				.NodeName = pack.AssetData->Read<std::string>(),
+				.NodeName = name,
 				.Transform = subHeader.Transform,
 				.NodeID = subHeader.NodeID,
 				.MaterialHandle = subHeader.MaterialHandle,
@@ -357,13 +369,14 @@ namespace Hazard
 				.IndexOffset = subHeader.IndexOffset,
 			};
 
-			submeshes[submeshData.NodeID] = submeshData;
+			submeshes.push_back(submeshData);
 		}
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create();
 
 		Buffer vertices = pack.AssetData->Read<Buffer>(header.VertexCount * sizeof(Vertex3D));
 		Buffer indices = pack.AssetData->Read<Buffer>(header.IndexCount * sizeof(uint32_t));
+
 		mesh->GenerateMesh(submeshes, vertices, indices);
 
 		info.Job->SetResult(mesh);
@@ -377,7 +390,6 @@ namespace Hazard
 											}																								
 		for (auto& prop : materialData.Properties)
 		{
-			std::cout << prop.Name << std::endl;
 			HZR_SET_MAT_PROP(material, "$mat.gltf.pbrMetallicRoughness.metallicFactor", "Metalness");
 			HZR_SET_MAT_PROP(material, "$mat.gltf.pbrMetallicRoughness.roughnessFactor", "Roughness");
 			HZR_SET_MAT_PROP(material, "$clr.diffuse", "Albedo");

@@ -70,12 +70,12 @@ namespace Hazard
 		
 		if (!mesh) return;
 
-		for(auto& [uid, submesh] : mesh->GetSubmeshData())
+		for(auto& submesh : mesh->GetSubmeshData())
 		{
 			Ref<Material> material = AssetManager::GetAsset<Material>(submesh.MaterialHandle);
 			if (!material) continue;
 
-			SubmitMesh(transform.GetTransformMat4() * submesh.Transform, mesh->GetVertexBuffer(uid), mesh->GetIndexBuffer(uid), material, id);
+			SubmitMesh(transform.GetTransformMat4() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
 		}
 	}
 

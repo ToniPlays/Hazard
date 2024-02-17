@@ -7,6 +7,8 @@
 #include "Importers/MeshImporter.h"
 #include "../Vertices.h"
 
+#include "Buffer/Buffer.h"
+
 namespace Hazard
 {
 	struct SubmeshData
@@ -30,10 +32,10 @@ namespace Hazard
 		AssetType GetType() const override { return AssetType::Mesh; }
 
 		void GenerateMesh(const std::vector<MeshImporter::MeshData>& meshData);
-		void GenerateMesh(const std::unordered_map<uint64_t, SubmeshData>& submeshes, Buffer vertexData, Buffer indexData);
+		void GenerateMesh(const std::vector<SubmeshData>& submeshes, Buffer vertexData, Buffer indexData);
 
-		const std::unordered_map<uint64_t, SubmeshData> GetSubmeshData() const { return m_SubmeshData; }
-		void SetSubmeshMaterialHandle(uint64_t node, AssetHandle handle) { m_SubmeshData[node].MaterialHandle = handle; }
+		const std::vector<SubmeshData> GetSubmeshData() const { return m_SubmeshData; }
+		void SetSubmeshMaterialHandle(uint64_t node, AssetHandle handle);
 		uint64_t GetSubmeshNodeFromName(const std::string& name);
 
 		Ref<HazardRenderer::GPUBuffer> GetVertexBuffer(uint64_t submeshId) const { return m_VertexBuffers.at(submeshId); };
@@ -48,7 +50,7 @@ namespace Hazard
 	private:
 		std::unordered_map<uint64_t, Ref<HazardRenderer::GPUBuffer>> m_VertexBuffers;
 		std::unordered_map<uint64_t, Ref<HazardRenderer::GPUBuffer>> m_IndexBuffers;
-		std::unordered_map<uint64_t, SubmeshData> m_SubmeshData;
+		std::vector<SubmeshData> m_SubmeshData;
 
 	};
 }

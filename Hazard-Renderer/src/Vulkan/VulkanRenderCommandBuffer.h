@@ -103,8 +103,6 @@ namespace HazardRenderer::Vulkan
 
 		Callback<void()> m_OnCompletion;
 		VkQueue m_SubmitQueue = VK_NULL_HANDLE;
-
-		inline static VkFence s_ComputeFence = VK_NULL_HANDLE;
 	};
 }
 #endif

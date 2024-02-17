@@ -71,9 +71,6 @@ namespace Hazard
 		std::vector<MeshImporter::MeshMetadata> meshes;
 		meshes.reserve(scene->mNumMeshes);
 
-		uint64_t vertexOffset = 0;
-		uint64_t indexOffset = 0;
-
 		for (uint32_t m = 0; m < scene->mNumMeshes; m++)
 		{
 			const aiMesh* mesh = scene->mMeshes[m];
@@ -84,19 +81,11 @@ namespace Hazard
 				.MaterialIndex = mesh->mMaterialIndex,
 				.VertexCount = mesh->mNumVertices,
 				.IndexCount = mesh->mNumFaces * 3,
-				.VertexOffset = 0,
-				.IndexOffset = 0,
 				.BoneCount = mesh->mNumBones,
 				.AnimatedMeshCount = mesh->mNumAnimMeshes,
 			};
 
-			if (data.IndexCount > 0)
-			{
-				meshes.push_back(data);
-
-				vertexOffset = data.VertexCount;
-				indexOffset = data.IndexCount;
-			}
+			meshes.push_back(data);
 		}
 
 		return meshes;
@@ -107,13 +96,10 @@ namespace Hazard
 		const aiScene* scene = GetScene();
 		aiMesh* aiMesh = scene->mMeshes[mesh.MeshIndex];
 
-
 		MeshData data = {
 			.Name = mesh.Name,
 			.Transform = GetMeshTransform(mesh.MeshIndex)
 		};
-
-		uint32_t vertexOffset = 0;
 
 		Callback<void(Vertex3D&, uint64_t)> loadCallback;
 		loadCallback.Add([aiMesh](Vertex3D& vertex, uint64_t index) mutable {
@@ -190,12 +176,10 @@ namespace Hazard
 		{
 			aiFace face = aiMesh->mFaces[f];
 			for (uint32_t index = 0; index < face.mNumIndices; index++)
-				data.Indices.push_back(face.mIndices[index] + vertexOffset);
+				data.Indices.push_back(face.mIndices[index]);
 		}
 
-		vertexOffset += aiMesh->mNumVertices;
 		data.MaterialIndex = aiMesh->mMaterialIndex;
-
 		return data;
 	}
 
@@ -312,7 +296,7 @@ namespace Hazard
 					return child;
 			}
 		}
-		
+
 		for (uint32_t m = 0; m < scene->mNumMeshes; m++)
 		{
 			aiMesh* aiMesh = scene->mMeshes[m];
@@ -495,7 +479,7 @@ namespace Hazard
 			.Height = texture->mHeight,
 			.ImageData = Buffer((void*)texture->pcData, dataSize),
 		};
-		
+
 		return data;
 	}
 }

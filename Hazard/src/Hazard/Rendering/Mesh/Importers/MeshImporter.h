@@ -81,8 +81,6 @@ namespace Hazard
 			uint32_t MaterialIndex;
 			uint64_t VertexCount;
 			uint64_t IndexCount;
-			uint64_t VertexOffset;
-			uint64_t IndexOffset;
 			uint32_t BoneCount;
 			uint32_t AnimatedMeshCount;
 		};

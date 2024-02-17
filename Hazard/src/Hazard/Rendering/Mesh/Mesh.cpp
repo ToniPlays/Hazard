@@ -28,32 +28,49 @@ namespace Hazard
 				.IndexOffset = indexOffset,
 			};
 
-			Buffer vertices = Buffer((void*)submesh.Vertices.data(), submesh.Vertices.size() * sizeof(Vertex3D));
-			Buffer indices = Buffer((void*)submesh.Indices.data(), submesh.Indices.size() * sizeof(uint32_t));
+			Buffer vertices = Buffer((uint8_t*)submesh.Vertices.data(), submesh.Vertices.size() * sizeof(Vertex3D));
+			Buffer indices = Buffer((uint8_t*)submesh.Indices.data(), submesh.Indices.size() * sizeof(uint32_t));
 
 			CreateSubmeshResources(data, vertices, indices);
 
-			m_SubmeshData[data.NodeID] = data;
+			m_SubmeshData.emplace_back(data);
+
+			vertexOffset += vertices.Size;
+			indexOffset += indices.Size;
+
+			std::cout << fmt::format("{} {} {} {} {} {}", data.NodeName, data.NodeID, data.VertexCount, data.IndexCount, data.VertexOffset, data.IndexCount) << std::endl;
 		}
 	}
 
-	void Mesh::GenerateMesh(const std::unordered_map<uint64_t, SubmeshData>& submeshes, Buffer vertexData, Buffer indexData)
+	void Mesh::GenerateMesh(const std::vector<SubmeshData>& submeshes, Buffer vertexData, Buffer indexData)
 	{
-		m_SubmeshData = submeshes;
-
-		for (auto& [id, submesh] : m_SubmeshData)
+		for (auto& submesh : submeshes)
 		{
-			Buffer vertices = Buffer((uint8_t*)vertexData.Data + submesh.VertexOffset * sizeof(Vertex3D), submesh.VertexCount * sizeof(Vertex3D));
-			Buffer indices = Buffer((uint8_t*)indexData.Data + submesh.IndexOffset * sizeof(Vertex3D), submesh.IndexCount * sizeof(uint32_t));
+			Buffer vertices = Buffer((uint8_t*)vertexData.Data + submesh.VertexOffset, submesh.VertexCount * sizeof(Vertex3D));
+			Buffer indices = Buffer((uint8_t*)indexData.Data + submesh.IndexOffset, submesh.IndexCount * sizeof(uint32_t));
 
+			std::cout << fmt::format("{} {} {} {} {} {}", submesh.NodeName, submesh.NodeID, submesh.VertexCount, submesh.IndexCount, submesh.VertexOffset, submesh.IndexCount) << std::endl;
 			CreateSubmeshResources(submesh, vertices, indices);
+
+			m_SubmeshData.emplace_back(submesh);
+		}
+	}
+
+	void Mesh::SetSubmeshMaterialHandle(uint64_t node, AssetHandle handle)
+	{
+		for (auto& mesh : m_SubmeshData)
+		{
+			if (mesh.NodeID != node) continue;
+
+			mesh.MaterialHandle = handle;
+			break;
 		}
 	}
 
 	uint64_t Mesh::GetSubmeshNodeFromName(const std::string& name)
 	{
-		for (auto& [node, data] : m_SubmeshData)
-			if (data.NodeName == name) return node;
+		for (auto& data : m_SubmeshData)
+			if (data.NodeName == name) return data.NodeID;
 
 		return 0;
 	}
@@ -63,7 +80,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		uint64_t count = 0;
-		for (auto& [uid, mesh] : m_SubmeshData)
+		for (auto& mesh : m_SubmeshData)
 			count += mesh.VertexCount;
 
 		return count;
@@ -74,7 +91,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		uint64_t count = 0;
-		for (auto& [uid, mesh] : m_SubmeshData)
+		for (auto& mesh: m_SubmeshData)
 			count += mesh.IndexCount;
 
 		return count;
@@ -98,7 +115,7 @@ namespace Hazard
 			.Size = indices.Size,
 			.Data = indices.Data,
 		};
-
+		
 		m_IndexBuffers[handle] = GPUBuffer::Create(&indexBufferInfo);
 	}
 }
