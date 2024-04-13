@@ -67,13 +67,16 @@ namespace Hazard
 		}
 
 
-
-
-
 		template<>
 		static void Deserialize<TagComponent>(Entity entity, const YAML::Node& comp)
 		{
 			YamlUtils::Deserialize(comp, "Tag", entity.GetComponent<TagComponent>().Tag, std::string("New entity"));
+		}
+
+		template<>
+		static void Deserialize<RelationshipComponent>(Entity entity, const YAML::Node& comp)
+		{
+			YamlUtils::Deserialize(comp, "Parent", entity.GetComponent<RelationshipComponent>().ParentHandle, (UID)0);
 		}
 
 		template<>

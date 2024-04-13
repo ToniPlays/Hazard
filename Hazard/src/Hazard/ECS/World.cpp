@@ -42,9 +42,9 @@ namespace Hazard
 		tag.Uid = {};
 		tag.Tag = name;
 
+		e.AddComponent<RelationshipComponent>();
 		e.AddComponent<TransformComponent>();
 		m_EntityUIDMap[tag.Uid] = e;
-
 		return e;
 	}
 
@@ -55,6 +55,7 @@ namespace Hazard
 		tag.Uid = id;
 		tag.Tag = name;
 
+		e.AddComponent<RelationshipComponent>();
 		e.AddComponent<TransformComponent>();
 		m_EntityUIDMap[tag.Uid] = e;
 
@@ -79,6 +80,7 @@ namespace Hazard
 		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		entity.GetTag().Uid = UID();
 
+		CopyComponentIfExists<RelationshipComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<CameraComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 

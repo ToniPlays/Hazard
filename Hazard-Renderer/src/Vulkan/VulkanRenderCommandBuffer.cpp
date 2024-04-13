@@ -189,24 +189,22 @@ namespace HazardRenderer::Vulkan
 	VulkanRenderCommandBuffer::~VulkanRenderCommandBuffer()
 	{
 		HZR_PROFILE_FUNCTION();
-		auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
+		Renderer::SubmitResourceFree([queryPools = m_TimestampQueryPools, results = m_PipelineStatisticQueryResults, fences = m_WaitFences, commandPool = m_CommandPool, swapchain = m_OwnedBySwapchain]() mutable {
+			auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
 
-		for (auto queryPool : m_TimestampQueryPools)
-			vkDestroyQueryPool(device, queryPool, nullptr);
+			for (auto queryPool : queryPools)
+				vkDestroyQueryPool(device, queryPool, nullptr);
 
-		for (auto queryPool : m_PipelineQueryPools)
-			vkDestroyQueryPool(device, queryPool, nullptr);
+			for (auto& result : results)
+				result.clear();
 
-		for (auto& result : m_PipelineStatisticQueryResults)
-			result.clear();
+			if (swapchain || !commandPool) return;
 
-		if (m_OwnedBySwapchain || !m_CommandPool) return;
+			for (auto& fence : fences)
+				vkDestroyFence(device, fence, nullptr);
 
-		for (auto& fence : m_WaitFences)
-			vkDestroyFence(device, fence, nullptr);
-
-		VkCommandPool commandPool = m_CommandPool;
-		vkDestroyCommandPool(device, commandPool, nullptr);
+			vkDestroyCommandPool(device, commandPool, nullptr);
+		});
 	}
 	void VulkanRenderCommandBuffer::Begin()
 	{
@@ -214,7 +212,6 @@ namespace HazardRenderer::Vulkan
 
 		if (m_OwnedBySwapchain)
 		{
-
 			Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
 			uint32_t frameIndex = swapchain->GetCurrentBufferIndex();
 			VkCommandBuffer buffer = swapchain->GetCurrentDrawCommandBuffer();

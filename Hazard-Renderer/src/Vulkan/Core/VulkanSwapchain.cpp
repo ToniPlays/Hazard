@@ -245,11 +245,11 @@ namespace HazardRenderer::Vulkan
 			vkDestroyImageView(device, image.ImageView, nullptr);
 		m_Images.clear();
 
-		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(device, m_Swapchain, &m_ImageCount, nullptr), "");
+		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(device, m_Swapchain, &m_ImageCount, nullptr), "Unable to get swapchain images");
 		m_Images.resize(m_ImageCount);
 		m_VulkanImages.resize(m_ImageCount);
 
-		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(device, m_Swapchain, &m_ImageCount, m_VulkanImages.data()), "");
+		VK_CHECK_RESULT(fpGetSwapchainImagesKHR(device, m_Swapchain, &m_ImageCount, m_VulkanImages.data()), "Unable to get swapchain images");
 
 		for (uint32_t i = 0; i < m_ImageCount; i++)
 		{
@@ -585,7 +585,13 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		uint32_t index;
-		VK_CHECK_RESULT(fpAcquireNextImageKHR(m_Device->GetVulkanDevice(), m_Swapchain, UINT64_MAX, m_Semaphores.PresentComplete, (VkFence)nullptr, &index), "Failed to Acquire next image");
+		VkResult result = fpAcquireNextImageKHR(m_Device->GetVulkanDevice(), m_Swapchain, UINT64_MAX, m_Semaphores.PresentComplete, (VkFence)nullptr, &index);
+
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
+		{
+			Create(&m_Width, &m_Height, m_VSync);
+			return AcquireSwapchainImage();
+		}
 		return index;
 	}
 }

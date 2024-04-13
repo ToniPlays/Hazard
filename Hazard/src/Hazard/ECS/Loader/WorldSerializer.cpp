@@ -35,6 +35,8 @@ namespace Hazard
 
 		//General
 		TrySerialize<TagComponent>(entity, out);
+		TrySerialize<RelationshipComponent>(entity, out);
+
 		TrySerialize<TransformComponent>(entity, out);
 		TrySerialize<CameraComponent>(entity, out);
 

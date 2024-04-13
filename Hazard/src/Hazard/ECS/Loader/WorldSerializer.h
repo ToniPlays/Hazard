@@ -44,6 +44,14 @@ namespace Hazard
 		}
 
 		template<>
+		void SerializeComponent(Entity& entity, RelationshipComponent& component, YAML::Emitter& out)
+		{
+			YamlUtils::Map(out, "RelationshipComponent", [&]() {
+				YamlUtils::Serialize(out, "Parent", component.ParentHandle);
+			});
+		}
+
+		template<>
 		void SerializeComponent(Entity& entity, TransformComponent& component, YAML::Emitter& out)
 		{
 			YamlUtils::Map(out, "TransformComponent", [&]() {

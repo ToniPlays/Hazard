@@ -27,6 +27,7 @@ namespace Hazard
 
 				//Deserialize components
 				TryDeserializeComponent<TagComponent>("TagComponent", entity, node);
+				TryDeserializeComponent<RelationshipComponent>("RelationshipComponent", entity, node);
 				TryDeserializeComponent<TransformComponent>("TransformComponent", entity, node);
 				TryDeserializeComponent<CameraComponent>("CameraComponent", entity, node);
 

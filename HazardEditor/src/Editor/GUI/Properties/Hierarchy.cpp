@@ -11,9 +11,65 @@ namespace UI
 
 	Hierarchy::Hierarchy() : Panel("Hierarchy", false)
 	{
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+
 		m_SearchField = ImUI::TextField("");
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
 		m_SearchField.SetHint("Search...");
+
+		m_HierarchyTable = ImUI::Table<Entity>("Hierarchy", { 0, 0 }, false);
+		m_HierarchyTable.RowHeight(28.f);
+		m_HierarchyTable.SetColumns({ "Name", "Type", "Modifiers" });
+		m_HierarchyTable.RowContent([this, style](uint32_t index, Entity entity) {
+			TagComponent& tag = entity.GetComponent<TagComponent>();
+			if (!StringUtil::Contains(tag.Tag, m_SearchField.GetValue())) return;
+
+			bool drawChildren = false;
+			bool isSelected = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), entity) != m_SelectionContext.end();
+			ImUI::ScopedStyleColor color(ImGuiCol_Header, style.Window.HeaderHighlighted);
+
+			ImUI::ShiftX(4.0f);
+			bool clicked = ImUI::TableRowTreeItem(std::to_string(tag.Uid).c_str(), tag.Tag.c_str(), isSelected, [&drawChildren]() {
+				drawChildren = true;
+			});
+
+
+			ImUI::DropTarget<Entity>("Entity", [parent = entity](Entity e) {
+				e.SetParent(parent);
+			});
+
+			ImUI::DragSource("Entity", &entity, []() {
+				ImGui::Text("Entity");
+			});
+
+			//Type
+			ImGui::TableNextColumn();
+
+			ImUI::ShiftX(4.0f);
+			ImGui::Text("Entity");
+
+			//Modifiers
+			ImGui::TableNextColumn();
+
+			ImVec4 col = style.Window.Text;
+			ImUI::ScopedStyleVar frame(ImGuiStyleVar_FrameBorderSize, 0);
+			ImUI::ScopedStyleColor textColor(ImGuiCol_Text, col);
+
+			DrawModifiers(entity, tag);
+
+			if (drawChildren)
+			{
+				auto& rsc = entity.GetComponent<RelationshipComponent>();
+				for (auto& child : rsc.ChildHandles)
+				{
+					Entity c = entity.GetWorld().GetEntityFromUID(child);
+					DrawChildren(c);
+				}
+			}
+
+			if (clicked)
+				SelectEntity(entity);
+		});
 	}
 
 	void Hierarchy::Update()
@@ -27,55 +83,21 @@ namespace UI
 		//Draw hierarchy panel
 		Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
-        
-        auto& metadata = AssetManager::GetMetadata(world->GetHandle());
+
+		auto& metadata = AssetManager::GetMetadata(world->GetHandle());
 		m_SearchField.Render();
 
-		ImUI::Table_OLD("Hierarchy", { "Name", "Type", "Modifiers" }, ImGui::GetContentRegionAvail(), [&]() {
+		m_HierarchyTable.Size(ImGui::GetContentRegionAvail());
+		m_HierarchyTable.ClearRows();
 
-			for (auto& entity : world->GetEntitiesWith<TagComponent>())
-			{
-				Entity e(entity, world.Raw());
-				TagComponent& tag = e.GetComponent<TagComponent>();
+		for (auto& entity : world->GetEntitiesWith<TagComponent, RelationshipComponent>())
+		{
+			Entity e(entity, world.Raw());
+			if (e.GetComponent<RelationshipComponent>().ParentHandle == 0)
+				m_HierarchyTable.AddRow(e);
+		}
 
-				if (!StringUtil::Contains(tag.Tag, m_SearchField.GetValue())) continue;
-
-				bool isSelected = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), e) != m_SelectionContext.end();
-				ImUI::ScopedStyleColor color(ImGuiCol_Header, style.Window.HeaderHighlighted);
-
-				bool clicked = ImUI::TableRowTreeItem(std::to_string(tag.Uid).c_str(), tag.Tag.c_str(), isSelected, []() {
-
-				});
-
-				/*ImUI::DragSource<UID>("Hazard.Entity", &e.GetUID(), [&]() {
-					ImGui::Text(tag.Tag.c_str());
-					ImGui::Text("Entity");
-					});
-					*/
-
-					//Type
-				ImGui::TableNextColumn();
-
-				ImUI::ShiftX(4.0f);
-				ImGui::Text("Entity");
-
-				//Modifiers
-				ImGui::TableNextColumn();
-
-				ImUI::ScopedStyleVar frame(ImGuiStyleVar_FrameBorderSize, 0);
-				ImVec4 col = style.Window.Text;
-				ImUI::ScopedStyleColor textColor(ImGuiCol_Text, col);
-
-				DrawModifiers(e, tag);
-
-				if (clicked)
-					SelectEntity(e);
-			}
-			DrawContextMenu(world);
-		});
-
-		if (ImGui::IsItemClicked())
-			ClearSelected();
+		m_HierarchyTable.Render();
 	}
 	bool Hierarchy::OnEvent(Event& e)
 	{
@@ -252,6 +274,7 @@ namespace UI
 		Events::SelectionContextChange ev(m_SelectionContext);
 		Hazard::HazardLoop::GetCurrent().OnEvent(ev);
 	}
+
 	void Hierarchy::DeselectEntity(const Entity& entity)
 	{
 		auto it = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), entity);
@@ -261,10 +284,66 @@ namespace UI
 		Events::SelectionContextChange ev(m_SelectionContext);
 		Hazard::HazardLoop::GetCurrent().OnEvent(ev);
 	}
+
 	void Hierarchy::ClearSelected()
 	{
 		m_SelectionContext.clear();
 		Events::SelectionContextChange ev(m_SelectionContext);
 		Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+	}
+
+	void Hierarchy::DrawChildren(Hazard::Entity& entity, float offset)
+	{
+		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+
+
+		TagComponent& tag = entity.GetComponent<TagComponent>();
+		if (!StringUtil::Contains(tag.Tag, m_SearchField.GetValue())) return;
+
+		bool drawChildren = false;
+		bool isSelected = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), entity) != m_SelectionContext.end();
+		ImUI::ScopedStyleColor color(ImGuiCol_Header, style.Window.HeaderHighlighted);
+		ImGui::TableNextColumn();
+
+		ImUI::ShiftX(16.0f + offset);
+		bool clicked = ImUI::TableRowTreeItem(std::to_string(tag.Uid).c_str(), tag.Tag.c_str(), isSelected, [&drawChildren]() {
+			drawChildren = true;
+		});
+
+		ImUI::DropTarget<Entity>("Entity", [parent = entity](Entity e) {
+			e.SetParent(parent);
+		});
+
+		ImUI::DragSource("Entity", &entity, []() {
+			ImGui::Text("Entity");
+		});
+
+		//Type
+		ImGui::TableNextColumn();
+
+		ImUI::ShiftX(4.0f);
+		ImGui::Text("Entity");
+
+		//Modifiers
+		ImGui::TableNextColumn();
+
+		ImVec4 col = style.Window.Text;
+		ImUI::ScopedStyleVar frame(ImGuiStyleVar_FrameBorderSize, 0);
+		ImUI::ScopedStyleColor textColor(ImGuiCol_Text, col);
+
+		DrawModifiers(entity, tag);
+
+		if (drawChildren)
+		{
+			auto& rsc = entity.GetComponent<RelationshipComponent>();
+			for (auto& child : rsc.ChildHandles)
+			{
+				Entity c = entity.GetWorld().GetEntityFromUID(child);
+				DrawChildren(c, offset + 16.0f);
+			}
+		}
+
+		if (clicked)
+			SelectEntity(entity);
 	}
 }

@@ -50,7 +50,7 @@ namespace Hazard
 		JobGraphInfo pipeline = {
 			.Name = "World create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = {	{ "Create", 0.8f, { createJob } } }
+			.Stages = {	{ "Create", 1.0f, { createJob } } }
 		};
 
 		return Ref<JobGraph>::Create(pipeline);

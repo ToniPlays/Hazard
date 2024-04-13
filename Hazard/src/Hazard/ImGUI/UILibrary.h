@@ -357,74 +357,17 @@ namespace Hazard::ImUI
 #pragma region Table
 
 	template<typename T>
-	static void Table_OLD(const char* tableName, const std::vector<std::string>& headers, ImVec2 size, T callback)
-	{
-		if (size.x <= 0.0f || size.y <= 0.0f) return;
-
-		float edgeOffset = 4.0f;
-
-		ImVec4 bgColor = StyleManager::GetCurrent().BackgroundColor;
-		const ImU32 colRowAlt = ColorWithMultiplier(bgColor, 1.2f);
-
-		ScopedStyleVar cellPadding(ImGuiStyleVar_CellPadding, ImVec2(4.0f, 0.0f));
-		ScopedStyleColor rowColor(ImGuiCol_TableRowBg, bgColor);
-		ScopedStyleColor altRowColor(ImGuiCol_TableRowBgAlt, colRowAlt);
-		ScopedStyleColor tableBG(ImGuiCol_ChildBg, bgColor);
-
-		ImGuiTableFlags flags = ImGuiTableFlags_NoPadInnerX
-			| ImGuiTableFlags_Resizable
-			| ImGuiTableFlags_Reorderable
-			| ImGuiTableFlags_ScrollY
-			| ImGuiTableFlags_RowBg;
-
-		if (!ImGui::BeginTable(tableName, headers.size(), flags, size))
-			return;
-
-		//Setup
-		for (uint32_t i = 0; i < headers.size(); i++)
-			ImGui::TableSetupColumn(headers[i].c_str());
-
-		//Headers
-		{
-			const ImU32 activeColor = ColorWithMultiplier(bgColor, 1.3f);
-			ScopedColorStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
-
-			ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
-			ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);
-
-			for (uint32_t i = 0; i < headers.size(); i++)
-			{
-				ImGui::TableSetColumnIndex(i);
-				const char* columnName = ImGui::TableGetColumnName(i);
-				ImGui::PushID(columnName);
-				Shift(edgeOffset * 3.0f, edgeOffset * 2.0f);
-				ImGui::TableHeader(columnName);
-				Shift(-edgeOffset * 3.0f, -edgeOffset * 2.0f);
-				ImGui::PopID();
-			}
-			ImGui::SetCursorPosX(ImGui::GetCurrentTable()->OuterRect.Min.x);
-			Underline(true, 0.0f, 5.0f);
-		}
-
-		//Draw content from callback
-		callback();
-		ImGui::EndTable();
-	}
-
-	template<typename T>
 	static bool TableRowTreeItem(const char* id, const char* text, bool selected, T callback)
 	{
 		bool clicked = false;
 		//constexpr float edgeOffset = 4.0f;
-		constexpr float rowHeight = 21.0f;
+		constexpr float rowHeight = 28.0f;
 
 		auto* window = ImGui::GetCurrentWindow();
 		window->DC.CurrLineSize.y = rowHeight;
 
-		ImGui::TableNextRow(0, rowHeight);
-		ImGui::TableNextColumn();
 		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_DefaultOpen;
 
 		window->DC.CurrLineTextBaseOffset = 3.0f;
 		const ImVec2 rowAreaMin = ImGui::TableGetCellBgRect(ImGui::GetCurrentTable(), 0).Min;
@@ -433,7 +376,8 @@ namespace Hazard::ImUI
 
 		ImGui::PushClipRect(rowAreaMin, rowAreaMax, false);
 
-		bool isRowHovered, held;// = ImGui::ItemHoverable(ImRect(rowAreaMin, rowAreaMax), (uint64_t)(uint32_t)entity);
+		bool isRowHovered = false;
+		bool held = false;
 		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(id),
 												  &isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnClickRelease);
 

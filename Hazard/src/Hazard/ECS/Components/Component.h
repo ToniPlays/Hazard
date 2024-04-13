@@ -20,6 +20,16 @@ namespace Hazard {
 		bool ReceiveUpdate = true;
 	};
 
+	struct RelationshipComponent
+	{
+		UID ParentHandle = 0;
+		std::vector<UID> ChildHandles;
+
+		RelationshipComponent() = default;
+		RelationshipComponent(const RelationshipComponent& other) = default;
+		RelationshipComponent(UID parent) : ParentHandle(parent) {}
+	};
+
 	struct TransformComponent : public ComponentBase
 	{
 	private:

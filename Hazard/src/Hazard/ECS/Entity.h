@@ -63,11 +63,15 @@ namespace Hazard {
 
 		bool IsValid();
 
+		Entity GetParent() const;
+		void SetParent(Entity parent);
+		bool RemoveChild(const Entity& child);
+
 		const entt::entity& GetHandle() const { return m_Handle; }
 		const UID& GetUID() const { return GetComponent<TagComponent>().Uid; }
 
-		bool IsVisible() { return GetComponent<TagComponent>().Visible; }
-		bool ReceivesUpdate() { return GetComponent<TagComponent>().ReceiveUpdate; }
+		bool IsVisible() const { return GetComponent<TagComponent>().Visible; }
+		bool ReceivesUpdate() const { return GetComponent<TagComponent>().ReceiveUpdate; }
 
 		void SetVisible(bool visible) { GetComponent<TagComponent>().Visible = visible; }
 		void SetReceiveUpdate(bool receive) { GetComponent<TagComponent>().ReceiveUpdate = receive; }

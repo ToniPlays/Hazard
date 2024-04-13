@@ -6,6 +6,7 @@
 #include "Hazard/ECS/Entity.h"
 #include "Core/EditorEvent.h"
 #include "Hazard/ImGUI/UIElements/TextField.h"
+#include "Hazard/ImGUI/UIElements/Table.h"
 #include "Hazard/ImGUI/Panel.h"
 
 namespace UI 
@@ -27,8 +28,11 @@ namespace UI
 		void DeselectEntity(const Hazard::Entity& entity);
 		void ClearSelected();
 
+		void DrawChildren(Hazard::Entity& entity, float offset = 0.0f);
+
 	private:
 		std::vector<Hazard::Entity> m_SelectionContext;
 		Hazard::ImUI::TextField m_SearchField;
+		Hazard::ImUI::Table<Hazard::Entity> m_HierarchyTable;
 	};
 }
