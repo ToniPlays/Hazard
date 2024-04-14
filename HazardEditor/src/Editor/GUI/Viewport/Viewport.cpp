@@ -78,8 +78,8 @@ namespace UI
 						auto& cc = e.GetComponent<CameraComponent>();
 
 						if (cc.GetProjectionType() == Projection::Perspective)
-							HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
-						else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::Green);
+							HRenderer::SubmitPerspectiveCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetFov(), cc.GetClipping(), cc.GetAspectRatio(), Color::White);
+						else HRenderer::SubmitOrthoCameraFrustum(tc.GetTranslation(), tc.GetOrientation(), tc.GetTransformMat4(), cc.GetSize(), cc.GetClipping(), cc.GetAspectRatio(), Color::White);
 
 						if (m_ViewportSettings & ViewportSettingsFlags_LightIcons)
 							HRenderer::SubmitBillboard(tc.GetTransformMat4(), m_EditorCamera.GetView(), Color::White, icon);
@@ -174,7 +174,8 @@ namespace UI
 			for (auto& entity : m_SelectionContext)
 			{
 				auto& c = entity.GetComponent<TransformComponent>();
-				point.Encapsulate(c.GetTranslation());
+				auto& wst = c.GetWorldSpaceTransform();
+				point.Encapsulate(wst[3]);
 			}
 
 			glm::mat4 target = glm::translate(glm::mat4(1.0f), point.GetMedianPoint());

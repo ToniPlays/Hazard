@@ -37,7 +37,7 @@ project "Hazard"
     References("Box2D")
     References("GLAD")
     References("GLFW")
-	References("VMA")
+    References("VMA")
     References("Assimp")
     References("SpirvCross")
     References("Metal")

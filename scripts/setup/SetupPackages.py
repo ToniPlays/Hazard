@@ -4,6 +4,10 @@ import sys
 import subprocess
 import Utils
 
+from colorama import Fore
+from colorama import Back
+from colorama import Style
+
 def PackageInstalled(package):
     if package in sys.modules:
         return True
@@ -18,7 +22,7 @@ def InstallPackage(package):
 def PromptInstall(package):
     print(f"{Style.BRIGHT}{Back.YELLOW}Python package '{package}' not found{Style.RESET_ALL}")
     if Utils.YesNo("Install package? [Y/N]"):
-        SetupPackages.InstallPackage('requests')
+        InstallPackage('requests')
         print(f"{Style.BRIGHT}{Back.GREEN}Package '{package}' installed{Style.RESET_ALL}")
-        return true
-    return false
+        return True
+    return False

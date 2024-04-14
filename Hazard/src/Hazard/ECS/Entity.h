@@ -24,7 +24,6 @@ namespace Hazard {
 				return GetComponent<T>();
 			}
 			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
-			m_World->OnComponentAdded<T>(*this, component);
 			return component;
 		}
 		template<typename T, typename C, typename... Args>
@@ -37,13 +36,11 @@ namespace Hazard {
 
 			T& component = m_World->m_Registry.emplace<T>(*this, std::forward<Args>(args)...);
 			callback(component);
-			m_World->OnComponentAdded<T>(*this, component);
 			return component;
 		}
 		template<typename T>
 		void RemoveComponent() 
 		{
-			m_World->OnComponentRemoved<T>(*this, GetComponent<T>());
 			m_World->m_Registry.remove<T>(m_Handle);
 		}
 		template<>
@@ -78,6 +75,8 @@ namespace Hazard {
 
 		TransformComponent& GetTransform() const { return GetComponent<TransformComponent>(); }
 		TagComponent& GetTag() const { return GetComponent<TagComponent>(); }
+
+		void UpdateWorldTransforms() const;
 
 	public:
 		operator bool() const { return m_Handle != entt::null; }

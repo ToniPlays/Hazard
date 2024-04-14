@@ -73,9 +73,6 @@
     <Filter Include="src\Hazard\Rendering\Mesh\Importers">
       <UniqueIdentifier>{D31F66C5-3FD9-D06F-C838-EB4934F186DF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Hazard\Rendering\RenderGraphs">
-      <UniqueIdentifier>{975AB781-03C9-0C01-4CB2-C700B85F029D}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Hazard\Rendering\Renderers">
       <UniqueIdentifier>{7CF3F67D-6819-C1E4-515F-46B03D24E6B0}</UniqueIdentifier>
     </Filter>
@@ -384,16 +381,22 @@
     <ClInclude Include="src\Hazard\Rendering\Renderers\CircleRenderer.h">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Renderers\EnvironmentRenderer.h">
+      <Filter>src\Hazard\Rendering\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\Renderers\GeometryRenderer.h">
+      <Filter>src\Hazard\Rendering\Renderers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Renderers\LineRenderer.h">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Renderers\QuadRenderer.h">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
-      <Filter>src\Hazard\Rendering\Renderers</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\Rendering\Vertices.h">
+      <Filter>src\Hazard\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\Rendering\WorldRenderer.h">
       <Filter>src\Hazard\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\Scripting\AllBindings.h">
@@ -492,8 +495,6 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\Rendering\Renderers\GeometryRenderer.h" />
-    <ClInclude Include="src\Hazard\Rendering\Renderers\EnvironmentRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -548,6 +549,9 @@
       <Filter>src\Hazard\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\GUIManager.cpp">
+      <Filter>src\Hazard\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\Panel.cpp">
       <Filter>src\Hazard\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\Platform\OpenGL\GUIPlatformOpenGL.cpp">
@@ -658,6 +662,12 @@
     <ClCompile Include="src\Hazard\Rendering\Renderers\CircleRenderer.cpp">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Renderers\EnvironmentRenderer.cpp">
+      <Filter>src\Hazard\Rendering\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\Rendering\Renderers\GeometryRenderer.cpp">
+      <Filter>src\Hazard\Rendering\Renderers</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\Renderers\LineRenderer.cpp">
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClCompile>
@@ -665,7 +675,7 @@
       <Filter>src\Hazard\Rendering\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Rendering\WorldRenderer.cpp">
-      <Filter>src\Hazard\Rendering\Renderers</Filter>
+      <Filter>src\Hazard\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\Scripting\ScriptEngine.cpp">
       <Filter>src\Hazard\Scripting</Filter>
@@ -688,8 +698,5 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\ImGUI\Panel.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Renderers\GeometryRenderer.cpp" />
-    <ClCompile Include="src\Hazard\Rendering\Renderers\EnvironmentRenderer.cpp" />
   </ItemGroup>
 </Project>

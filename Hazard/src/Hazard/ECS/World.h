@@ -46,10 +46,14 @@ namespace Hazard
 		static Ref<World> Copy(Ref<World> sourceWorld);
 
 	private:
-		template<typename T>
-		void OnComponentAdded(Entity& entity, T& component);
-		template<typename T>
-		void OnComponentRemoved(Entity& entity, T& component);
+		void OnRelationshipComponentAdded(entt::registry& registry, entt::entity entity);
+		void OnRelationshipComponentRemoved(entt::registry& registry, entt::entity entity);
+
+		void OnCameraComponentAdded(entt::registry& registry, entt::entity entity);
+		void OnCameraComponentRemoved(entt::registry& registry, entt::entity entity);
+
+		void OnScriptComponentAdded(entt::registry& registry, entt::entity entity);
+		void OnScriptComponentRemoved(entt::registry& registry, entt::entity entity);
 
 	private:
 

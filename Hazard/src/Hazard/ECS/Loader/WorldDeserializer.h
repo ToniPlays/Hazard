@@ -76,7 +76,9 @@ namespace Hazard
 		template<>
 		static void Deserialize<RelationshipComponent>(Entity entity, const YAML::Node& comp)
 		{
-			YamlUtils::Deserialize(comp, "Parent", entity.GetComponent<RelationshipComponent>().ParentHandle, (UID)0);
+			UID handle = 0;
+			YamlUtils::Deserialize(comp, "Parent", handle, (UID)0);
+			entity.SetParent(entity.GetWorld().TryGetEntityFromUID(handle));
 		}
 
 		template<>

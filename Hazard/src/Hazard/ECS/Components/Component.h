@@ -32,11 +32,13 @@ namespace Hazard {
 
 	struct TransformComponent : public ComponentBase
 	{
+		friend class Entity;
 	private:
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
 		glm::quat Rotation;
 		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
-		glm::mat4 TransformMatrix = glm::mat4(1.0f);
+		glm::mat4 LocalTransform = glm::mat4(1.0f);
+		glm::mat4 WorldTransform = glm::mat4(1.0f);
 		bool Dirty = true;
 
 	public:
@@ -57,7 +59,7 @@ namespace Hazard {
 		void SetTransform(const glm::mat4& transform)
 		{
 			Math::DecomposeTransform(transform, Translation, Rotation, Scale);
-			TransformMatrix = transform;
+			LocalTransform = transform;
 		}
 
 		void AddTranslation(const glm::vec3& translation) { Translation += translation; Dirty = true; }
@@ -68,11 +70,16 @@ namespace Hazard {
 			HZR_TIMED_FUNCTION();
 			if (Dirty)
 			{
-				TransformMatrix = Math::ToTransformMatrix(Translation, Rotation, Scale);
+				LocalTransform = Math::ToTransformMatrix(Translation, Rotation, Scale);
 				Dirty = false;
 			}
-			return TransformMatrix;
+			return LocalTransform;
 		}
+		const glm::mat4 GetWorldSpaceTransform() const 
+		{
+			return WorldTransform;
+		}
+
 		inline glm::mat4 GetTransformNoScale() const
 		{
 			HZR_TIMED_FUNCTION();

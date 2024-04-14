@@ -5,12 +5,10 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Scripting/ScriptEngine.h"
 
-#define REGISTER_COMPONENT(x)	template<>															\
-								void World::OnComponentAdded<x>(Entity& entity, x& component) {}	\
-								template<>															\
-								void World::OnComponentRemoved<x>(Entity& entity, x& component) {}	\
+#define REGISTER_COMPONENT_FUNC(CompType)	m_Registry.on_construct<CompType>().connect<&World::On##CompType##Added>(this);	\
+									m_Registry.on_destroy<CompType>().connect<&World::On##CompType##Removed>(this);
 
-namespace Hazard 
+namespace Hazard
 {
 	template<typename T>
 	static void CopyComponent(entt::registry& src, entt::registry& dest, const std::unordered_map<UID, entt::entity>& entityMap)
@@ -28,16 +26,20 @@ namespace Hazard
 	{
 		m_DebugName = debugName;
 		m_Registry = entt::registry();
+
+		REGISTER_COMPONENT_FUNC(RelationshipComponent);
+		REGISTER_COMPONENT_FUNC(ScriptComponent);
+		REGISTER_COMPONENT_FUNC(CameraComponent);
 	}
 
-	World::~World() 
+	World::~World()
 	{
 		m_Registry.clear();
 	}
 
 	Entity World::CreateEntity(const std::string& name)
 	{
-		Entity e { m_Registry.create(), this };
+		Entity e = { m_Registry.create(), this };
 		TagComponent& tag = e.AddComponent<TagComponent>();
 		tag.Uid = {};
 		tag.Tag = name;
@@ -78,7 +80,9 @@ namespace Hazard
 		entt::registry& sourceRegistry = other.GetWorld().GetWorldRegistry();
 
 		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
-		entity.GetTag().Uid = UID();
+		UID id = UID();
+		entity.GetTag().Uid = id;
+		m_EntityUIDMap[id] = entity;
 
 		CopyComponentIfExists<RelationshipComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
@@ -112,7 +116,7 @@ namespace Hazard
 
 	Entity World::TryGetEntityFromUID(const UID& id)
 	{
-		if (m_EntityUIDMap.find(id) == m_EntityUIDMap.end()) 
+		if (m_EntityUIDMap.find(id) == m_EntityUIDMap.end())
 			return Entity();
 		return m_EntityUIDMap[id];
 	}
@@ -120,6 +124,10 @@ namespace Hazard
 	void World::DestroyEntity(Entity& entity)
 	{
 		//TODO: Call some functions before destroy
+
+		if (entity.HasComponent<RelationshipComponent>())
+			entity.RemoveComponent<RelationshipComponent>();
+
 		m_Registry.destroy(entity);
 	}
 
@@ -128,7 +136,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		Ref<World> copied = Ref<World>::Create(sourceWorld->m_DebugName + " (copy)");
 		const auto& sourceEntities = sourceWorld->GetEntitiesWith<TagComponent>();
-		
+
 		copied->m_EntityUIDMap.reserve(sourceEntities.size());
 
 		for (uint64_t i = sourceEntities.size(); i > 0; i--)
@@ -145,39 +153,35 @@ namespace Hazard
 	}
 
 	//Scene component added and removed
-	template<typename T>
-	void World::OnComponentAdded(Entity& entity, T& component) {}
-	template<typename T>
-	void World::OnComponentRemoved(Entity& entity, T& component) {}
+	void World::OnRelationshipComponentAdded(entt::registry& registry, entt::entity entity) 
+	{
+		Entity e = { entity, this };
+		auto& rsc = e.GetComponent<RelationshipComponent>();
+		Entity parent = TryGetEntityFromUID(rsc.ParentHandle);
+		if (!parent) return;
 
-	REGISTER_COMPONENT(MeshComponent);
-	REGISTER_COMPONENT(SpriteRendererComponent);
-	REGISTER_COMPONENT(SkyLightComponent);
-	REGISTER_COMPONENT(DirectionalLightComponent);
-	REGISTER_COMPONENT(PointLightComponent);
-	REGISTER_COMPONENT(Rigidbody2DComponent);
-	REGISTER_COMPONENT(BoxCollider2DComponent);
-	REGISTER_COMPONENT(CircleCollider2DComponent);
-	REGISTER_COMPONENT(RigidbodyComponent);
-	REGISTER_COMPONENT(BoxColliderComponent);
-	REGISTER_COMPONENT(SphereColliderComponent);
-	
-	template<>
-	void World::OnComponentAdded(Entity& entity, ScriptComponent& component) 
-	{
-		Application::Get().GetModule<ScriptEngine>().InitializeComponent(this, entity);
+		parent.GetComponent<RelationshipComponent>().ChildHandles.push_back(e.GetUID());
 	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, ScriptComponent& component) 
+	void World::OnRelationshipComponentRemoved(entt::registry& registry, entt::entity entity)
 	{
-		Application::Get().GetModule<ScriptEngine>().RemoveComponent(this, entity);
+		Entity e = { entity, this };
+		auto& component = e.GetComponent<RelationshipComponent>();
+
+		Entity parent = TryGetEntityFromUID(component.ParentHandle);
+		if (!parent) return;
+
+		HZR_CORE_INFO("Removing child {} of {}", e.GetTag().Tag, parent.GetTag().Tag);
+		parent.RemoveChild(e);
 	}
 
-	template<>
-	void World::OnComponentAdded(Entity& entity, CameraComponent& component) 
+	void World::OnCameraComponentAdded(entt::registry& registry, entt::entity entity)
 	{
+		Entity e = { entity, this };
+		auto& component = e.GetComponent<CameraComponent>();
 		component.RecalculateProjection(1920, 1080);
 	}
-	template<>
-	void World::OnComponentRemoved(Entity& entity, CameraComponent& component) {}
+	void World::OnCameraComponentRemoved(entt::registry& registry, entt::entity entity) {}
+
+	void World::OnScriptComponentAdded(entt::registry& registry, entt::entity entity) {}
+	void World::OnScriptComponentRemoved(entt::registry& registry, entt::entity entity) {}
 }

@@ -23,7 +23,7 @@ namespace Hazard
 	void HRenderer::SubmitSprite(TransformComponent& transform, const SpriteRendererComponent& spriteRenderer, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-		const glm::mat4& tMatrix = transform.GetTransformMat4();
+		const glm::mat4& tMatrix = transform.GetWorldSpaceTransform();
 		const Color& t = spriteRenderer.Color;
 		glm::vec4 color = { t.r, t.g, t.b, t.a };
 
@@ -73,7 +73,7 @@ namespace Hazard
 		for(auto& submesh : mesh->GetSubmeshData())
 		{
 			Ref<Material> material = AssetManager::GetAsset<Material>(submesh.MaterialHandle);
-			SubmitMesh(transform.GetTransformMat4() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
+			SubmitMesh(transform.GetWorldSpaceTransform() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
 		}
 	}
 

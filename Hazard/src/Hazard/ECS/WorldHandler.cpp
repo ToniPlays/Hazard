@@ -38,18 +38,27 @@ namespace Hazard
 	void WorldHandler::Update()
 	{
 		HZR_PROFILE_FUNCTION();
-		if (!(m_Flags & WorldFlags_UpdateScript)) return;
+		if (m_Flags & WorldFlags_UpdateScript)
+		{
 
-		auto view = m_World->GetEntitiesWith<ScriptComponent>();
-		float delta = (float)Time::s_DeltaTime;
+			auto view = m_World->GetEntitiesWith<ScriptComponent>();
+			float delta = (float)Time::s_DeltaTime;
 
-		for (auto& entity : view)
+			for (auto& entity : view)
+			{
+				Entity e = { entity, m_World.Raw() };
+				auto& sc = e.GetComponent<ScriptComponent>();
+				if (!e.ReceivesUpdate() || !sc.Active || !sc.m_Handle) continue;
+
+				sc.m_Handle->TryInvoke("OnUpdate", delta);
+			}
+		}
+
+		auto tcView = m_World->GetEntitiesWith<TransformComponent>();
+		for (auto& entity : tcView)
 		{
 			Entity e = { entity, m_World.Raw() };
-			auto& sc = e.GetComponent<ScriptComponent>();
-			if (!e.ReceivesUpdate() || !sc.Active || !sc.m_Handle) continue;
-
-			sc.m_Handle->TryInvoke("OnUpdate", delta);
+			e.UpdateWorldTransforms();
 		}
 	}
 

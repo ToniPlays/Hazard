@@ -27,7 +27,6 @@ namespace Hazard
 
 				//Deserialize components
 				TryDeserializeComponent<TagComponent>("TagComponent", entity, node);
-				TryDeserializeComponent<RelationshipComponent>("RelationshipComponent", entity, node);
 				TryDeserializeComponent<TransformComponent>("TransformComponent", entity, node);
 				TryDeserializeComponent<CameraComponent>("CameraComponent", entity, node);
 
@@ -46,7 +45,16 @@ namespace Hazard
 
 				m_Handler.Invoke(entities.size() - i, entities.size());
 			}
+
+			for (size_t i = entities.size(); i > 0; --i)
+			{
+				auto node = entities[i - 1];
+				UID uid = node["Entity"].as<uint64_t>();
+				Entity entity = world->GetEntityFromUID(uid);
+				TryDeserializeComponent<RelationshipComponent>("RelationshipComponent", entity, node);
+			}
 		}
+
 		return world;
 	}
 

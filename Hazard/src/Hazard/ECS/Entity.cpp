@@ -56,4 +56,20 @@ namespace Hazard
 
 		return false;
 	}
+	void Entity::UpdateWorldTransforms() const
+	{
+		HZR_PROFILE_FUNCTION();
+		HZR_TIMED_FUNCTION();
+		auto& tc = GetTransform();
+
+		Entity parent = GetParent();
+		glm::mat4 result = GetTransform().GetTransformMat4();
+
+		while (parent)
+		{
+			result = parent.GetTransform().GetTransformMat4() * result;
+			parent = parent.GetParent();
+		}
+		tc.WorldTransform = result;
+	}
 }

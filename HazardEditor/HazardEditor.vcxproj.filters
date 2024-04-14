@@ -114,6 +114,9 @@
     <ClInclude Include="src\Editor\GUI\AllPanels.h">
       <Filter>src\Editor\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\AssetTools\AssetEditors\MaterialAssetEditorPanel.h">
+      <Filter>src\Editor\GUI\AssetTools\AssetEditors</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\GUI\AssetTools\AssetEditors\MeshAssetEditorPanel.h">
       <Filter>src\Editor\GUI\AssetTools\AssetEditors</Filter>
     </ClInclude>
@@ -213,7 +216,6 @@
     <ClInclude Include="src\Project\ProjectSettingsSchema.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\AssetTools\AssetEditors\MaterialAssetEditorPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -248,6 +250,9 @@
     </ClCompile>
     <ClCompile Include="src\Editor\EditorWorldManager.cpp">
       <Filter>src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Editor\GUI\AssetTools\AssetEditors\MaterialAssetEditorPanel.cpp">
+      <Filter>src\Editor\GUI\AssetTools\AssetEditors</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\AssetTools\AssetEditors\MeshAssetEditorPanel.cpp">
       <Filter>src\Editor\GUI\AssetTools\AssetEditors</Filter>
@@ -324,6 +329,5 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\AssetTools\AssetEditors\MaterialAssetEditorPanel.cpp" />
   </ItemGroup>
 </Project>
