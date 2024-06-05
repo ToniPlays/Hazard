@@ -13,7 +13,7 @@
 #include "Overlays/ProgressOverlay.h"
 
 #include "ProjectPanel/ProjectTodoPanel.h"
-#include "ProjectPanel/ProjectSettingsPanel.h"
+#include "ProjectSettings/ProjectSettingsPanel.h"
 #include "ProjectPanel/ExportPanel.h"
 
 #include "Properties/Properties.h"

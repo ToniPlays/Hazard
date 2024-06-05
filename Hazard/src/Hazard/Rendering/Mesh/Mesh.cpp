@@ -33,7 +33,7 @@ namespace Hazard
 
 			CreateSubmeshResources(data, vertices, indices);
 
-			m_SubmeshData.emplace_back(data);
+			m_SubmeshData[data.NodeID] = data;
 
 			vertexOffset += vertices.Size;
 			indexOffset += indices.Size;
@@ -49,24 +49,18 @@ namespace Hazard
 
 			CreateSubmeshResources(submesh, vertices, indices);
 
-			m_SubmeshData.emplace_back(submesh);
+			m_SubmeshData[submesh.NodeID] = submesh;
 		}
 	}
 
 	void Mesh::SetSubmeshMaterialHandle(uint64_t node, AssetHandle handle)
 	{
-		for (auto& mesh : m_SubmeshData)
-		{
-			if (mesh.NodeID != node) continue;
-
-			mesh.MaterialHandle = handle;
-			break;
-		}
+		m_SubmeshData[node].DefaultMaterialHandle = handle;
 	}
 
 	uint64_t Mesh::GetSubmeshNodeFromName(const std::string& name)
 	{
-		for (auto& data : m_SubmeshData)
+		for (auto& [id, data] : m_SubmeshData)
 			if (data.NodeName == name) return data.NodeID;
 
 		return 0;
@@ -77,7 +71,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		uint64_t count = 0;
-		for (auto& mesh : m_SubmeshData)
+		for (auto& [node, mesh] : m_SubmeshData)
 			count += mesh.VertexCount;
 
 		return count;
@@ -88,7 +82,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 
 		uint64_t count = 0;
-		for (auto& mesh: m_SubmeshData)
+		for (auto& [node, mesh] : m_SubmeshData)
 			count += mesh.IndexCount;
 
 		return count;

@@ -6,11 +6,11 @@
 #include <Hazard/Input/InputSchema.h>
 #include <Hazard/Input/InputManager.h>
 
-#include "ProjectSettings/InputSettings.h"
-#include "ProjectSettings/ScriptPreprocessorSettings.h"
 #include <Project/ProjectManager.h>
-#include <Editor/EditorScriptManager.h>
 #include <Core/HazardEditor.h>
+
+#include "Pages/ApplicationGeneral.h"
+#include "Pages/BuildSettings.h"
 
 namespace UI
 {
@@ -21,7 +21,19 @@ namespace UI
 		m_SearchField = ImUI::TextField("");
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
 		m_SearchField.SetHint("Search...");
+
+		m_Pages[GENERAL_APP_PROPERTIES] = new ApplicationGeneral();
+		m_Pages[RUNTIME_BUILD_SETTINGS] = new BuildSettings();
+
+		OpenPage(GENERAL_APP_PROPERTIES);
 	}
+
+	ProjectSettingsPanel::~ProjectSettingsPanel()
+	{
+		for (auto& [index, page] : m_Pages)
+			delete page;
+	}
+
 	void ProjectSettingsPanel::OnPanelRender()
 	{
 		RenderNavbar();
@@ -29,58 +41,14 @@ namespace UI
 
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
-
 		ImGui::BeginChild("##projectsettings", { size.x, size.y }, ImGuiWindowFlags_AlwaysUseWindowPadding);
 		m_SearchField.Render();
 
-		switch (m_CurrentPage)
+		auto page = m_Pages[m_CurrentPage];
+		if (page)
 		{
-			case UI::ProjectSettingsPanel::GENERAL_APP_PROPERTIES:
-				RenderPageHeader("General - Application", "This is for application settings");
-				DrawApplicationSettings();
-				break;
-			case UI::ProjectSettingsPanel::GENERAL_INPUT_SETTINGS:
-				RenderPageHeader("General - Input", "This is for input settings");
-				DrawInputSettingsPanel();
-				break;
-			case UI::ProjectSettingsPanel::RUNTIME_BUILD_SETTINGS:
-				RenderPageHeader("Runtime - Build settings", "This is for build settings");
-				DrawRuntimeBuildSettings();
-				break;
-			case UI::ProjectSettingsPanel::SCRIPTING_PREPROCESSORS:
-				RenderPageHeader("Scripting - Preprocessors", "Ths is for preprocessors");
-				DrawScriptingPreprocessors();
-				break;
-			case UI::ProjectSettingsPanel::SCRIPTING_DEPENDENCIES:
-				RenderPageHeader("Scripting - Dependencies", "Ths is for dependencies");
-				DrawScriptingDependencies();
-				break;
-			case UI::ProjectSettingsPanel::SCRIPTING_EXECUTION_ORDER:
-				RenderPageHeader("Scripting - Execution order", "Ths is for execution order");
-				DrawScriptingExecutionOrder();
-				break;
-			case UI::ProjectSettingsPanel::RENDERING_QUALITY_SETTINGS:
-				RenderPageHeader("Graphics - Quality", "This is for quality settings");
-				DrawGraphicsQualitySettings();
-				break;
-			case UI::ProjectSettingsPanel::RENDERING_LIGHTING_SETTINGS:
-				RenderPageHeader("Graphics - Lighting", "This is for lighting settings");
-				DrawGraphicsLightingSettings();
-				break;
-			case UI::ProjectSettingsPanel::RENDERING_SHADOW_SETTINGS:
-				RenderPageHeader("Graphics - Shadows", "This is for shadow settings");
-				DrawGraphicsShadowSettings();
-				break;
-			case UI::ProjectSettingsPanel::PHYSICS_PROPERTIES:
-				RenderPageHeader("Physics - Properties", "This is for physics settings");
-				DrawPhysicsProperties();
-				break;
-			case UI::ProjectSettingsPanel::PHYSICS_COLLISION_LAYERS:
-				RenderPageHeader("Physics - Collision layers", "Ths is for collision settings");
-				DrawPhysicsCollisionLayers();
-				break;
-			default:
-				break;
+			RenderPageHeader(page->GetPageTitle(), page->GetPageDescription());
+			page->RenderPage();
 		}
 
 		ImGui::EndChild();
@@ -127,7 +95,7 @@ namespace UI
 
 		m_PreviousGamepadKey = e.GetGamepadButton();
 		m_PendingAxis->KeyCode = e.GetGamepadButton();
-		
+
 		m_PendingAxis = nullptr;
 		m_PendingType = InputDeviceType::None;
 
@@ -155,6 +123,7 @@ namespace UI
 		m_PendingAxis = nullptr;
 		return false;
 	}
+
 	void ProjectSettingsPanel::RenderNavbar()
 	{
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
@@ -174,27 +143,27 @@ namespace UI
 			ImGui::PopFont();
 
 			if (ImGui::Button("Application properties", { width, 32 }))
-				m_CurrentPage = GENERAL_APP_PROPERTIES;
+				OpenPage(GENERAL_APP_PROPERTIES);
 			if (ImGui::Button("Input settings", { width, 32 }))
-				m_CurrentPage = GENERAL_INPUT_SETTINGS;
+				OpenPage(GENERAL_INPUT_SETTINGS);
 
 			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 			ImUI::MenuHeader("Runtime");
 			ImGui::PopFont();
 
 			if (ImGui::Button("Build settings", { width, 32 }))
-				m_CurrentPage = RUNTIME_BUILD_SETTINGS;
+				OpenPage(RUNTIME_BUILD_SETTINGS);
 
 			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 			ImUI::MenuHeader("Scripting");
 			ImGui::PopFont();
 
 			if (ImGui::Button("Preprocessor defines", { width, 32 }))
-				m_CurrentPage = SCRIPTING_PREPROCESSORS;
+				OpenPage(SCRIPTING_PREPROCESSORS);
 			if (ImGui::Button("Dependencies", { width, 32 }))
-				m_CurrentPage = SCRIPTING_DEPENDENCIES;
+				OpenPage(SCRIPTING_DEPENDENCIES);
 			if (ImGui::Button("Execution order", { width, 32 }))
-				m_CurrentPage = SCRIPTING_EXECUTION_ORDER;
+				OpenPage(SCRIPTING_EXECUTION_ORDER);
 
 
 			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
@@ -202,24 +171,25 @@ namespace UI
 			ImGui::PopFont();
 
 			if (ImGui::Button("Quality settings", { width, 32 }))
-				m_CurrentPage = RENDERING_QUALITY_SETTINGS;
+				OpenPage(RENDERING_QUALITY_SETTINGS);
 			if (ImGui::Button("Lighting settings", { width, 32 }))
-				m_CurrentPage = RENDERING_LIGHTING_SETTINGS;
+				OpenPage(RENDERING_LIGHTING_SETTINGS);
 			if (ImGui::Button("Shadow settings", { width, 32 }))
-				m_CurrentPage = RENDERING_SHADOW_SETTINGS;
+				OpenPage(RENDERING_SHADOW_SETTINGS);
 
 			ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[2]);
 			ImUI::MenuHeader("Physics");
 			ImGui::PopFont();
 
 			if (ImGui::Button("Physics properties", { width, 32 }))
-				m_CurrentPage = PHYSICS_PROPERTIES;
+				OpenPage(PHYSICS_PROPERTIES);
 
 			if (ImGui::Button("Collision layers", { width, 32 }))
-				m_CurrentPage = PHYSICS_COLLISION_LAYERS;
+				OpenPage(PHYSICS_COLLISION_LAYERS);
 		}
 		ImGui::EndChild();
 	}
+
 	void ProjectSettingsPanel::RenderPageHeader(const char* title, const char* description)
 	{
 		ImUI::Shift(8.0, 8.0f);
@@ -232,25 +202,22 @@ namespace UI
 
 		ImUI::Shift(8.0, 8.0f);
 	}
-	void ProjectSettingsPanel::DrawApplicationSettings()
-	{
-		ImGui::Text("Here we have DrawApplicationSettings");
-	}
+
 	void ProjectSettingsPanel::DrawInputSettingsPanel()
 	{
-		DrawInputSourceTable();
+		//DrawInputSourceTable();
 
 		auto& schema = InputManager::GetSchema();
 
 		ImUI::Treenode bindings("Bindings", true);
 		bindings.Content([&]() mutable {
-			DrawInputBindingsTable(schema.Bindings, this);
+			//DrawInputBindingsTable(schema.Bindings, this);
 		});
 		bindings.Render();
 
 		ImUI::Treenode axis("Axis", true);
 		axis.Content([&]() mutable {
-			DrawInputAxisTable(schema.Bindings, this);
+			//DrawInputAxisTable(schema.Bindings, this);
 		});
 		axis.Render();
 
@@ -271,54 +238,29 @@ namespace UI
 		});
 		mouseProperties.Render();
 	}
-	void ProjectSettingsPanel::DrawRuntimeBuildSettings()
-	{
-		ImUI::Treenode includedWorlds("Worlds", true);
-		includedWorlds.Content([this]() {
 
-		});
-		includedWorlds.Render();
-	}
-	void ProjectSettingsPanel::DrawGraphicsQualitySettings()
-	{
-		ImGui::Text("Here we have DrawGraphicsQualitySettings");
-	}
-	void ProjectSettingsPanel::DrawGraphicsLightingSettings()
-	{
-		ImGui::Text("Here we have DrawGraphicsLightingSettings");
-	}
-	void ProjectSettingsPanel::DrawGraphicsShadowSettings()
-	{
-		ImGui::Text("Here we have DrawGraphicsShadowSettings");
-	}
-	void ProjectSettingsPanel::DrawPhysicsProperties()
-	{
-		ImGui::Text("Here we have DrawPhysicsProperties");
-	}
-	void ProjectSettingsPanel::DrawPhysicsCollisionLayers()
-	{
-		ImGui::Text("Here we have DrawPhysicsCollisionLayers");
-	}
 	void ProjectSettingsPanel::DrawScriptingPreprocessors()
 	{
+		/*
 		HazardEditorApplication& app = (HazardEditorApplication&)Application::Get();
 		auto& predefined = app.GetScriptManager().GetPreprocessorDefines();
 		auto& manager = Application::Get().GetModule<ProjectManager>();
 		auto& project = manager.GetProject();
 
 		DrawScriptDefineList(&project.GetScriptingSettings().Defines);
-		
+
 		ImUI::Shift(4.0f, 4.0f);
 		ImGui::Text("Other preprocessors");
 		ImUI::ShiftY(4.0f);
 		DrawScriptPredefinedList(predefined);
+		*/
 	}
-	void ProjectSettingsPanel::DrawScriptingDependencies()
+	void ProjectSettingsPanel::OpenPage(uint32_t page)
 	{
-		ImGui::Text("Here we have DrawScriptingDependencies");
-	}
-	void ProjectSettingsPanel::DrawScriptingExecutionOrder()
-	{
-		ImGui::Text("Here we have DrawScriptingExecutionOrder");
+		if (m_Pages[m_CurrentPage])
+			m_Pages[m_CurrentPage]->OnClose();
+		m_CurrentPage = (SettingsPageFlags)page;
+		if (m_Pages[m_CurrentPage])
+			m_Pages[m_CurrentPage]->OnOpen();
 	}
 }

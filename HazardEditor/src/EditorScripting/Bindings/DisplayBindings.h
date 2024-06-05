@@ -2,7 +2,6 @@
 
 #include "HazardScript.h"
 #include "Hazard/Core/Application.h"
-#include <Editor/EditorModeManager.h>
 #include <Core/HazardEditor.h>
 #include <Editor/GUI/Viewport/GameViewport.h>
 

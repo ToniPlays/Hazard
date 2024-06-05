@@ -61,7 +61,7 @@ namespace Hazard
 			.Name = "Image load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
 			.Stages = { { "Load data", 0.8f, { sourceLoad } },
-							{ "Create", 0.2f, { createImage } }
+						{ "Create", 0.2f, { createImage } }
 			}
 		};
 

@@ -6,23 +6,19 @@ void ProjectManager::Close()
 {
 	if (!m_Project.IsValid()) return;
 
-	m_Project.SerializeSetting<HazardProjectInfo>();
-	m_Project.SerializeSetting<ProjectInputSettings>();
-	m_Project.SerializeSetting<ScriptingSettings>();
+	//m_Project.SerializeSetting<HazardProjectInfo>();
 }
 
-HazardProject ProjectManager::LoadProjectFromFile(const std::filesystem::path& path)
+void ProjectManager::LoadProjectFromFile(const std::filesystem::path& path)
 {
 	HazardProject project(path);
 
-    if(!project.IsValid())
-        return project;
+	if (!project.IsValid())
+		return;
     
-	project.DeserializeSetting<HazardProjectInfo>();
-	project.DeserializeSetting<ProjectInputSettings>();
-	project.DeserializeSetting<ScriptingSettings>();
+	project.ReloadSettings();
 	project.ProcessAssets();
 
+
 	m_Project = project;
-	return m_Project;
 }

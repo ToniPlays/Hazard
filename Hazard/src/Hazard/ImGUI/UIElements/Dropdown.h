@@ -25,10 +25,10 @@ namespace Hazard::ImUI
 		const std::string& GetSelectedValue() { return m_Options[m_Selected]; }
 
 	private:
-		std::string m_Title;
+		std::string m_Title = "Undefined";
 		float m_Width = 0.0f;
 		uint64_t m_Selected = 0;
-		std::vector<std::string> m_Options;
+		std::vector<std::string> m_Options = {};
 		bool m_DidChange = false;
 		bool m_Mixed = false;
 	};

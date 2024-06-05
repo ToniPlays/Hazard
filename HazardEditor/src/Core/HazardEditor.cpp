@@ -29,8 +29,6 @@ void HazardEditorApplication::PreInit()
 		HZR_INFO("Working directory: {0} ", std::filesystem::current_path().string());
 	}
 
-	std::filesystem::path projectPath = CommandLineArgs::Get<std::filesystem::path>("hprj");
-
 	std::vector<const char*> icons = { "res/Icons/logo.png", "res/Icons/logo.png" };
 
 	ApplicationCreateInfo appInfo = {
@@ -54,10 +52,10 @@ void HazardEditorApplication::PreInit()
 	};
 
 	RendererCreateInfo rendererInfo = {};
-
 	EntityComponentCreateInfo entity = {};
 
-	std::string dllFile = File::GetName(projectPath) + ".dll";
+	std::filesystem::path projectPath = CommandLineArgs::Get<std::filesystem::path>("hprj");
+	std::filesystem::path dllFile = File::GetName(projectPath) + ".dll";
 	std::filesystem::path coreAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / "HazardScripting.dll";
 	std::filesystem::path appAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / dllFile;
 
@@ -82,14 +80,11 @@ void HazardEditorApplication::PreInit()
 
 
 	CreateApplicationStack(&createInfo);
-	InitDefaultHooks();
-
-	HazardProject project = PushModule<ProjectManager>().LoadProjectFromFile(projectPath);
-
-	auto& engine = GetModule<Hazard::ScriptEngine>();
-	Ref<ScriptAssembly> assembly = engine.GetLoadedAssembly("HazardScripting");
-	engine.RegisterScriptGlueFor<Editor::Bindings::EditorScriptGlue>(assembly);
+	InitJobsystemHooks();
 	EditorAssetManager::Init();
+
+	//TODO: Move
+	PushModule<ProjectManager>().LoadProjectFromFile(projectPath);
 }
 
 void HazardEditorApplication::Init()
@@ -100,7 +95,6 @@ void HazardEditorApplication::Init()
 
 	auto& scriptEngine = GetModule<ScriptEngine>();
 	scriptEngine.ReloadAssemblies();
-	m_ScriptManager.Init();
 
 	InitializeGUIPanels();
 }
@@ -113,10 +107,10 @@ void HazardEditorApplication::Update()
 
 bool HazardEditorApplication::OnEvent(Event& e)
 {
-	return m_ScriptManager.OnEvent(e);
+	return false;
 }
 
-void HazardEditorApplication::InitDefaultHooks()
+void HazardEditorApplication::InitJobsystemHooks()
 {
 	JobSystem& system = Application::Get().GetJobSystem();
 	system.Hook(JobSystem::Failure, [](Ref<JobGraph> graph) {

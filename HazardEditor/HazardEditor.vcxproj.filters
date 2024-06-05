@@ -99,12 +99,6 @@
     <ClInclude Include="src\Editor\EditorGrid.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\EditorModeManager.h">
-      <Filter>src\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Editor\EditorScriptManager.h">
-      <Filter>src\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="src\Editor\EditorUtils.h">
       <Filter>src\Editor</Filter>
     </ClInclude>
@@ -165,13 +159,13 @@
     <ClInclude Include="src\Editor\GUI\ProjectPanel\ExportPanel.h">
       <Filter>src\Editor\GUI\ProjectPanel</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\ProjectPanel\ProjectSettings\InputSettings.h">
+    <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\InputSettings.h">
       <Filter>src\Editor\GUI\ProjectPanel\ProjectSettings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\ProjectPanel\ProjectSettings\ScriptPreprocessorSettings.h">
+    <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\ScriptPreprocessorSettings.h">
       <Filter>src\Editor\GUI\ProjectPanel\ProjectSettings</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\ProjectPanel\ProjectSettingsPanel.h">
+    <ClInclude Include="src\Editor\GUI\ProjectSettings\ProjectSettingsPanel.h">
       <Filter>src\Editor\GUI\ProjectPanel</Filter>
     </ClInclude>
     <ClInclude Include="src\Editor\GUI\ProjectPanel\ProjectTodoPanel.h">
@@ -216,6 +210,9 @@
     <ClInclude Include="src\Project\ProjectSettingsSchema.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\SettingPage.h" />
+    <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\ApplicationGeneral.h" />
+    <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\BuildSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -240,12 +237,6 @@
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorGrid.cpp">
-      <Filter>src\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\EditorModeManager.cpp">
-      <Filter>src\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Editor\EditorScriptManager.cpp">
       <Filter>src\Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\EditorWorldManager.cpp">
@@ -299,7 +290,7 @@
     <ClCompile Include="src\Editor\GUI\ProjectPanel\ExportPanel.cpp">
       <Filter>src\Editor\GUI\ProjectPanel</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\ProjectPanel\ProjectSettingsPanel.cpp">
+    <ClCompile Include="src\Editor\GUI\ProjectSettings\ProjectSettingsPanel.cpp">
       <Filter>src\Editor\GUI\ProjectPanel</Filter>
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\ProjectPanel\ProjectTodoPanel.cpp">
@@ -329,5 +320,7 @@
     <ClCompile Include="src\Project\ProjectManager.cpp">
       <Filter>src\Project</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GUI\ProjectSettings\Pages\ApplicationGeneral.cpp" />
+    <ClCompile Include="src\Editor\GUI\ProjectSettings\Pages\BuildSettings.cpp" />
   </ItemGroup>
 </Project>

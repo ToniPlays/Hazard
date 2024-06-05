@@ -3,7 +3,6 @@
 #include "Hazard.h"
 
 #include "Event.h"
-#include "Editor/EditorScriptManager.h"
 
 inline static std::string GetBuildType()
 {
@@ -30,11 +29,9 @@ public:
 	void Update() override;
 	bool OnEvent(Event& e) override;
 
-	Editor::EditorScriptManager& GetScriptManager() { return m_ScriptManager; };
 private:
-	void InitDefaultHooks();
+	void InitJobsystemHooks();
 	void InitializeGUIPanels();
 
 private:
-	Editor::EditorScriptManager m_ScriptManager;
 };

@@ -318,7 +318,7 @@ namespace Hazard
 
 		uint32_t flags = aiProcess_Triangulate;
 		flags |= aiProcess_JoinIdenticalVertices;
-		flags |= aiProcess_GenSmoothNormals;
+		flags |= aiProcess_GenNormals;
 		flags |= aiProcess_SplitLargeMeshes;
 		flags |= aiProcess_ValidateDataStructure;
 		flags |= aiProcess_OptimizeMeshes;

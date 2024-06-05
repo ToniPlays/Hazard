@@ -130,7 +130,7 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (handle == INVALID_ASSET_HANDLE) return;
 
-		std::scoped_lock(s_AssetMutex);
+		std::scoped_lock lock(s_AssetMutex);
 		AssetMetadata& meta = GetMetadata(handle);
 		meta.LoadState = LoadState::None;
 		s_LoadedAssets.erase(handle);
@@ -138,7 +138,7 @@ namespace Hazard
 
 	JobPromise AssetManager::Reload(AssetHandle handle)
 	{
-		std::scoped_lock(s_AssetMutex);
+		std::scoped_lock lock(s_AssetMutex);
 
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 		if (metadata.LoadState == LoadState::None) return JobPromise();
@@ -172,7 +172,6 @@ namespace Hazard
 		if (s_LoadedAssets[handle])
 		{
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
-
 			Ref<JobGraph> graph = JobGraph::EmptyWithResult(s_LoadedAssets[handle]);
 			return JobPromise(graph);
 		}
@@ -197,6 +196,7 @@ namespace Hazard
 		graph->AddOnCompleted([handle = metadata.Handle](JobGraph& graph) mutable {
 			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
 			if (!asset) return;
+
 
 			AssetMetadata& metadata = GetMetadata(handle);
 			asset->m_Handle = metadata.Handle;
@@ -266,6 +266,8 @@ namespace Hazard
 			AssetMetadata& metadata = GetMetadata(asset->GetHandle());
 			if (!metadata.IsValid())
 				ImportAsset(settings.TargetPath, pack);
+
+			HZR_CORE_INFO("Saved asset: {} ({})", asset->GetSourceFilePath().string(), Utils::AssetTypeToString(asset->GetType()));
 		});
 
 		return graph;

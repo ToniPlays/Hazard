@@ -29,10 +29,11 @@ namespace UI
 			ImUI::ScopedStyleColor color(ImGuiCol_Header, style.Window.HeaderHighlighted);
 
 			ImUI::ShiftX(4.0f);
-			bool clicked = ImUI::TableRowTreeItem(std::to_string(tag.Uid).c_str(), tag.Tag.c_str(), isSelected, [&drawChildren]() {
+			ImGui::PushID(tag.Uid);
+			bool clicked = ImUI::TableRowTreeItem("##tree", tag.Tag.c_str(), isSelected, [&drawChildren]() {
 				drawChildren = true;
 			});
-
+			ImGui::PopID();
 
 			ImUI::DropTarget<Entity>("Entity", [parent = entity](Entity e) {
 				e.SetParent(parent);
@@ -98,7 +99,6 @@ namespace UI
 			if (e.GetComponent<RelationshipComponent>().ParentHandle == 0)
 				m_HierarchyTable.AddRow(e);
 		}
-
 		
 		m_HierarchyTable.Render();
 	}
@@ -271,7 +271,13 @@ namespace UI
 		else
 		{
 			auto it = std::find(m_SelectionContext.begin(), m_SelectionContext.end(), entity);
-			if (it != m_SelectionContext.end()) return;
+			if (it != m_SelectionContext.end())
+			{
+				m_SelectionContext.erase(it);
+				Events::SelectionContextChange ev(m_SelectionContext);
+				Hazard::HazardLoop::GetCurrent().OnEvent(ev);
+				return;
+			}
 		}
 
 		m_SelectionContext.push_back(entity);

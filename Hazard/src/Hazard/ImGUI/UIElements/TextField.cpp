@@ -38,9 +38,9 @@ namespace Hazard::ImUI
 				ScopedStyleStack padding(ImGuiStyleVar_FramePadding, ImVec2(0, (buttonHeight - GImGui->Font->FontSize) * 0.5f));
 				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - buttonHeight - 4.0f);
 				if (m_Hint.empty())
-					m_DidChange = ImGui::InputText("##text", buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue, NULL, nullptr);
+					m_DidChange = ImGui::InputText("##text", buffer, sizeof(buffer), 0, NULL, nullptr);
 				else
-					m_DidChange = ImGui::InputTextWithHint("##text", m_Hint.c_str(), buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue, NULL, nullptr);
+					m_DidChange = ImGui::InputTextWithHint("##text", m_Hint.c_str(), buffer, sizeof(buffer), 0, NULL, nullptr);
 			}
 
 			ImGui::SameLine();

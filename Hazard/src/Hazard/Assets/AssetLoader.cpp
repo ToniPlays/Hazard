@@ -19,6 +19,7 @@ namespace Hazard
 
 		return m_Loaders[metadata.Type]->Load(metadata);
 	}
+
 	Ref<JobGraph> AssetLoader::Save(Ref<Asset>& asset, const SaveAssetSettings& settings)
 	{
 		if (!asset)

@@ -244,11 +244,11 @@ namespace Hazard::ImUI
 	static ImTextureID GetImageID(Ref<HazardRenderer::Image2D> image, Ref<HazardRenderer::Sampler> sampler)
 	{
 		using namespace HazardRenderer;
-		
+
 
 		switch (GraphicsContext::GetRenderAPI())
 		{
-			#ifdef HZR_INCLUDE_OPENGL
+		#ifdef HZR_INCLUDE_OPENGL
 			case RenderAPI::OpenGL:
 				return (ImTextureID)image.As<OpenGL::OpenGLImage2D>()->GetID();
 			#endif
@@ -293,10 +293,10 @@ namespace Hazard::ImUI
 			default:
 				HZR_ASSERT(false, "Undefined ImageID");
 				break;
-			}
+		}
 
 		return 0;
-		}
+	}
 	static void Image(Ref<HazardRenderer::Image2D> image, Ref<HazardRenderer::Sampler> sampler, ImVec2 size, ImVec2 t0 = { 0, 1 }, ImVec2 t1 = { 1, 0 })
 	{
 		ImGui::Image(GetImageID(image, sampler), size, t0, t1);
@@ -367,7 +367,7 @@ namespace Hazard::ImUI
 		window->DC.CurrLineSize.y = rowHeight;
 
 		ImGuiTreeNodeFlags flags = (selected ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
-		flags |= ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_DefaultOpen;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 
 		window->DC.CurrLineTextBaseOffset = 3.0f;
 		const ImVec2 rowAreaMin = ImGui::TableGetCellBgRect(ImGui::GetCurrentTable(), 0).Min;
@@ -380,6 +380,8 @@ namespace Hazard::ImUI
 		bool held = false;
 		bool isRowClicked = ImGui::ButtonBehavior(ImRect(rowAreaMin, rowAreaMax), ImGui::GetID(id),
 												  &isRowHovered, &held, ImGuiButtonFlags_AllowItemOverlap | ImGuiButtonFlags_PressedOnClickRelease);
+
+		bool doubleClick = ImGui::IsMouseDoubleClicked(0) && ImGui::IsMouseHoveringRect(rowAreaMin, rowAreaMax, true);
 
 		ImGui::SetItemAllowOverlap();
 		ImGui::PopClipRect();
@@ -420,13 +422,16 @@ namespace Hazard::ImUI
 		//const float arrow_hit_x2 = (text_pos.x - text_offset_x) + (g.FontSize + padding.x * 2.0f) + style.TouchExtraPadding.x;
 		//const bool is_mouse_x_over_arrow = (g.IO.MousePos.x >= arrow_hit_x1 && g.IO.MousePos.x < arrow_hit_x2);
 
-		const bool opened = ImGui::TreeNodeWithIcon(ImGui::GetID(id), flags, text, nullptr);
-
-		if (isRowClicked)
+		if (isRowClicked || doubleClick)
 		{
 			FocusCurrentWindow();
+			if (doubleClick)
+				ImGui::SetNextItemOpen(!ImGui::TreeNodeBehaviorIsOpen(ImGui::GetID(id)));
+
 			clicked = true;
 		}
+
+		bool opened = ImGui::TreeNodeWithIcon(ImGui::GetID(id), flags, text, nullptr);
 
 		if (opened)
 		{
@@ -582,4 +587,4 @@ namespace Hazard::ImUI
 		return accepted;
 	}
 #pragma endregion
-	}
+}

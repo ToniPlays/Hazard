@@ -37,6 +37,7 @@ namespace Hazard
 
 			return buffer;
 		}
+
 		void FromBuffer(Ref<CachedBuffer> buffer)
 		{
 			Flags = buffer->Read<uint32_t>();

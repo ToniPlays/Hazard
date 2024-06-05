@@ -9,7 +9,6 @@
 #include "Hazard/Rendering/RenderEngine.h"
 
 #include "Hazard/ImGUI/UIElements/Dropdown.h"
-#include <Editor/EditorModeManager.h>
 
 using namespace HazardRenderer;
 
@@ -34,10 +33,10 @@ namespace UI
 		renderPassInfo.pTargetFrameBuffer = m_FrameBuffer;
 
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
-		m_EditorGrid.Invalidate(m_RenderPass);
 
 		m_ImageSampler = RenderEngine::GetResources().DefaultImageSampler;
 	}
+
 	void Viewport::Update()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -117,6 +116,7 @@ namespace UI
 		});
 
 	}
+
 	void Viewport::OnPanelRender()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -194,6 +194,7 @@ namespace UI
 
 		ImGui::IsWindowFocused() ? m_EditorCamera.OnUpdate() : m_EditorCamera.SetMousePosition(Input::GetMousePos());
 	}
+
 	bool Viewport::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
@@ -207,6 +208,7 @@ namespace UI
 
 		return false;
 	}
+
 	bool Viewport::OnSelectionContextChange(Events::SelectionContextChange& e)
 	{
 		m_SelectionContext = e.GetEntitites();
@@ -253,6 +255,7 @@ namespace UI
 		}
 		return false;
 	}
+
 	void Viewport::OnMouseClicked(const glm::vec2& mousePos)
 	{
 
@@ -282,6 +285,7 @@ namespace UI
 		ImGui::Columns();
 		ImGui::EndChild();
 	}
+
 	void Viewport::DrawSettingsWindow()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -317,6 +321,7 @@ namespace UI
 		ImGui::Columns();
 		ImGui::EndChild();
 	}
+
 	void Viewport::DrawLeftToolbar(ImVec2 corner)
 	{
 		float size = ImGui::GetFontSize();
@@ -340,6 +345,7 @@ namespace UI
 
 		ImGui::PopStyleVar();
 	}
+
 	void Viewport::DrawRightToolbar(ImVec2 size)
 	{
 		float fontSize = ImGui::GetFontSize();
@@ -367,6 +373,7 @@ namespace UI
 
 		ImGui::EndChild();
 	}
+
 	void Viewport::DrawPlaymodeButtons(ImVec2 size)
 	{
 		ImGui::SetCursorPosX((size.x - 84) * 0.5f);
@@ -380,7 +387,7 @@ namespace UI
 		ImGui::BeginChild("##mode", { 90, 36 });
 		ImGui::SameLine(0, 0);
 
-		const Editor::EditorMode& mode = Editor::EditorModeManager::GetCurrentMode();
+		/*const Editor::EditorMode& mode = Editor::EditorModeManager::GetCurrentMode();
 
 		if (mode == Editor::EditorMode::Edit)
 			ImGui::BeginDisabled();
@@ -408,6 +415,8 @@ namespace UI
 		}
 		if (mode != Editor::EditorMode::Edit)
 			ImGui::EndDisabled();
+
+		*/
 
 		ImGui::EndChild();
 		ImGui::PopStyleColor();

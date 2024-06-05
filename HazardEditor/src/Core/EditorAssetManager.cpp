@@ -7,6 +7,7 @@
 
 #include <FileCache.h>
 #include <Hazard/Rendering/Mesh/MeshAssetLoader.h>
+#include <Hazard/RenderContext/ImageAssetLoader.h>
 
 using namespace Hazard;
 
@@ -29,6 +30,7 @@ void EditorAssetManager::PostInit()
 	for (auto& promise : promises)
 		promise.Wait();
 }
+
 void EditorAssetManager::LoadEditorAssets()
 {
 	struct EditorAsset
@@ -73,6 +75,7 @@ AssetHandle EditorAssetManager::GetIconHandle(const std::string& name)
 		return s_Icons[name];
 	return s_Icons["Default"];
 }
+
 AssetHandle EditorAssetManager::GetDefaultMesh(const std::string& name)
 {
 	if (s_DefaultMesh.find(name) != s_DefaultMesh.end())
@@ -189,6 +192,8 @@ void EditorAssetManager::ImportEngineImages(std::vector<JobPromise>& promises)
 
 	for (auto& file : Directory::GetAllInDirectory("res/Textures", true))
 	{
+		if (File::GetFileExtension(file) == ".hdr") continue;
+
 		auto cacheFile = File::GetNameNoExt(file) + ".hasset";
 
 		if (cache.HasFile(cacheFile))
@@ -197,8 +202,12 @@ void EditorAssetManager::ImportEngineImages(std::vector<JobPromise>& promises)
 			continue;
 		}
 
+		Hazard::ImageAssetLoader::CreateSettings spec = {};
+		spec.FlipOnLoad = true;
+
 		CreateAssetSettings settings = {};
 		settings.SourcePath = file;
+		settings.Settings = &spec;
 
 		JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Image, settings);
 		promise.Then([cache](JobGraph& graph) {

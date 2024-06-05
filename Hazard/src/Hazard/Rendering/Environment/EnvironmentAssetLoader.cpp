@@ -14,7 +14,10 @@ namespace Hazard
 	Ref<JobGraph> EnvironmentAssetLoader::Load(AssetMetadata& metadata)
 	{
 		if (!File::Exists(metadata.FilePath))
+		{
+			HZR_CORE_ERROR("File does not exist");
 			return nullptr;
+		}
 
 		Ref<CachedBuffer> data = File::ReadBinaryFile(metadata.FilePath);
 
@@ -91,6 +94,9 @@ namespace Hazard
 	{
 		using namespace HazardRenderer;
 		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(sourcePath, true);
+
+		if (!header.ImageData)
+			throw JobException("Data not loaded");
 
 		Image2DCreateInfo sourceImage = {
 			.DebugName = fmt::format("Env map source: {}", sourcePath.string()),

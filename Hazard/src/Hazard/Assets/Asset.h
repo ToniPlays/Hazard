@@ -51,16 +51,16 @@ namespace Hazard
 		uint32_t GetFlags() const { return m_Flags; }
 		const std::filesystem::path& GetSourceFilePath() const { return m_SourceAssetPath; }
 		void SetSourceFilePath(const std::filesystem::path& newPath) { m_SourceAssetPath = newPath; }
-		bool IsValid() const { return m_Handle != INVALID_ASSET_HANDLE && GetType() != AssetType::Undefined; }
+		bool IsValid() const;
+
+	private:
+		void SetHandle(UID handle) { m_Handle = handle; };
+		void SetFlags(uint32_t flags) { m_Flags = flags; }
 
 	protected:
 		AssetHandle m_Handle = INVALID_ASSET_HANDLE;
 		uint16_t m_Flags = 0;
 		std::filesystem::path m_SourceAssetPath = "";
-
-	private:
-		void SetHandle(UID handle) { m_Handle = handle; };
-		void SetFlags(uint32_t flags) { m_Flags = flags; }
 	};
 
 	class AssetPointer : public Asset
@@ -72,12 +72,6 @@ namespace Hazard
 
 		AssetType GetType() const override { return AssetType::Undefined; }
 
-		static Ref<AssetPointer> Create(Ref<RefCount> value, AssetType type)
-		{
-			Ref<AssetPointer> pointer = Ref<AssetPointer>::Create();
-			pointer->Value = value;
-
-			return pointer;
-		}
+		static Ref<AssetPointer> Create(Ref<RefCount> value, AssetType type);
 	};
 }

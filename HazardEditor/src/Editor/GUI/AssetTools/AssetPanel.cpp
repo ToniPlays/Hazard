@@ -1,7 +1,6 @@
 
 #include "AssetPanel.h"
 #include "Core/EditorAssetManager.h"
-#include "Editor/EditorScriptManager.h"
 #include "Editor/GUI/AllPanels.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/ImGUI/UIElements/Treenode.h"
@@ -19,7 +18,7 @@ namespace UI
 {
 	AssetPanel::AssetPanel() : Panel("Asset panel", false)
 	{
-		SetRootFolder(ProjectManager::GetAssetFolder());
+		SetRootFolder(ProjectManager::GetCurrentProject().GetSettings().RuntimeConfig.ProjectPath / "Assets");
 
 		m_SearchField = ImUI::TextField("");
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
@@ -49,17 +48,20 @@ namespace UI
 		DrawContents();
 		ImGui::Columns();
 	}
+
 	bool AssetPanel::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<WindowFocusEvent>(BIND_EVENT(AssetPanel::OnWindowFocus));
 	}
+
 	bool AssetPanel::OnWindowFocus(WindowFocusEvent& e)
 	{
 		GenerateFolderStructure();
 		RefreshFolderItems();
 		return false;
 	}
+
 	void AssetPanel::SetSelectedFolder(const std::filesystem::path& path)
 	{
 		if (path == m_CurrentPath) return;
@@ -77,6 +79,7 @@ namespace UI
 			Refresh();
 		});
 	}
+
 	void AssetPanel::SetPreviouslySelectedFolder(uint32_t index)
 	{
 		if (m_PathSelection[index - 1] == m_CurrentPath) return;
@@ -87,6 +90,7 @@ namespace UI
 			Refresh();
 		});
 	}
+
 	void AssetPanel::OpenImport()
 	{
 		std::filesystem::path file = File::OpenFileDialog();
@@ -95,6 +99,7 @@ namespace UI
 		auto& panel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<AssetImporterPanel>();
 		panel.Open(file);
 	}
+
 	void AssetPanel::DrawToolbar()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -157,6 +162,7 @@ namespace UI
 		ImGui::EndChild();
 		ImUI::Separator({ size.x, 2.0f }, style.Frame.FrameColor);
 	}
+
 	void AssetPanel::DrawSettings()
 	{
 		ImGui::SetCursorPosX(12);
@@ -190,7 +196,7 @@ namespace UI
 					ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
 				});
 
-				ImUI::Treenode folders(ProjectManager::GetProjectName(), true);
+				ImUI::Treenode folders(ProjectManager::GetCurrentProject().GetSettings().RuntimeConfig.ProjectName, true);
 				folders.DefaultOpen();
 				folders.Content([&]() {
 					for (const auto& folder : m_FolderData)
@@ -208,6 +214,7 @@ namespace UI
 		}
 		ImGui::EndChild();
 	}
+
 	void AssetPanel::DrawContents()
 	{
 		HZR_PROFILE_FUNCTION();

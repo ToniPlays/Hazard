@@ -105,6 +105,10 @@ namespace ImGui
         bool hovered, held;
         bool pressed = ButtonBehavior(interact_bb, id, &hovered, &held, button_flags);
         bool toggled = false;
+
+        if (hovered)
+            float x = 0;
+
         if (!is_leaf)
         {
             if (pressed && g.DragDropHoldJustPressedId != id)
@@ -264,7 +268,6 @@ namespace ImGui
         if (is_open && !(flags & ImGuiTreeNodeFlags_NoTreePushOnOpen))
             TreePushOverrideID(id);
 
-        IMGUI_TEST_ENGINE_ITEM_INFO(id, label, window->DC.ItemFlags | (is_leaf ? 0 : ImGuiItemStatusFlags_Openable) | (is_open ? ImGuiItemStatusFlags_Opened : 0));
         return is_open;
     }
     /*
@@ -288,9 +291,6 @@ namespace ImGui
     static bool TreeNodeWithIcon(const char* label, ImGuiTreeNodeFlags flags, ImColor iconTint /*= IM_COL32_WHITE*/)
     {
         ImGuiWindow* window = GetCurrentWindow();
-        if (window->SkipItems)
-            return false;
-
         return TreeNodeWithIcon(window->GetID(label), flags, label, NULL, iconTint);
     }
 

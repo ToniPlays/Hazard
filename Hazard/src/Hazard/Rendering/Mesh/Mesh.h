@@ -16,7 +16,7 @@ namespace Hazard
 		std::string NodeName;
 		glm::mat4 Transform;
 		uint64_t NodeID;
-		uint64_t MaterialHandle;
+		uint64_t DefaultMaterialHandle;
 		uint64_t VertexCount;
 		uint64_t IndexCount;
 		uint64_t VertexOffset;
@@ -34,7 +34,9 @@ namespace Hazard
 		void GenerateMesh(const std::vector<MeshImporter::MeshData>& meshData);
 		void GenerateMesh(const std::vector<SubmeshData>& submeshes, Buffer vertexData, Buffer indexData);
 
-		const std::vector<SubmeshData> GetSubmeshData() const { return m_SubmeshData; }
+		const std::unordered_map<uint64_t, SubmeshData> GetSubmeshData() const { return m_SubmeshData; }
+		const SubmeshData& GetSubmesh(uint64_t node) const { return m_SubmeshData.at(node); };
+		bool IsValidSubmesh(uint64_t node) const { return m_SubmeshData.contains(node); }
 		void SetSubmeshMaterialHandle(uint64_t node, AssetHandle handle);
 		uint64_t GetSubmeshNodeFromName(const std::string& name);
 
@@ -50,7 +52,7 @@ namespace Hazard
 	private:
 		std::unordered_map<uint64_t, Ref<HazardRenderer::GPUBuffer>> m_VertexBuffers;
 		std::unordered_map<uint64_t, Ref<HazardRenderer::GPUBuffer>> m_IndexBuffers;
-		std::vector<SubmeshData> m_SubmeshData;
+		std::unordered_map<uint64_t, SubmeshData> m_SubmeshData;
 
 	};
 }

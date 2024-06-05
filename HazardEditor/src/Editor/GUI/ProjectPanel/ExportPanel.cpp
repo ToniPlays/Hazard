@@ -20,8 +20,8 @@ namespace UI
 
         if (ImGui::Button("Export", { 150, 60 }))
         {
-            auto& project = ProjectManager::GetProject();
-            auto& info = project.GetInfo();
+            auto& project = ProjectManager::GetCurrentProject();
+            auto& info = project.GetSettings();
 
             std::vector<AssetHandle> handles;
             handles.reserve(m_SelectedWorldTable.GetRows().size());

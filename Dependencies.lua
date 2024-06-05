@@ -1,4 +1,3 @@
-
 -- Hazard Dependencies
 
 VULKAN_SDK = os.getenv("VULKAN_SDK")
@@ -29,7 +28,8 @@ Dependencies = {
         LibraryDir = "%{wks.location}/Hazard/libmacos",
         WindowsLibs = {
             Debug = {"%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"},
-            Release = {"%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"}
+            Release = {"%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"},
+            Dist = {"%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"},
         }
     },
     VMA = {
@@ -45,7 +45,8 @@ Dependencies = {
         LibraryDir = "%{VULKAN_SDK}/Lib",
         WindowsLibs = {
             Debug = { "%{VULKAN_SDK}/Lib/vulkan-1.lib" },
-            Release = { "%{VULKAN_SDK}/Lib/vulkan-1.lib" }
+            Release = { "%{VULKAN_SDK}/Lib/vulkan-1.lib" },
+            Dist = { "%{VULKAN_SDK}/Lib/vulkan-1.lib" }
         }
     },
     Metal = {
@@ -64,7 +65,8 @@ Dependencies = {
         IncludeDir = "%{wks.location}/Hazard/vendor/shaderc/include",
         WindowsLibs = {
             Debug = { "%{VULKAN_SDK}/Lib/shaderc_sharedd.lib" },
-            --Release = { "%{VULKAN_SDK}/Lib/shaderc_shared.lib" }
+            Release = { "%{VULKAN_SDK}/Lib/shaderc_shared.lib" },
+            Dist = { "%{VULKAN_SDK}/Lib/shaderc_shared.lib" }
         }
     },
     SpirvCross = {
@@ -73,6 +75,7 @@ Dependencies = {
         WindowsLibs = {
             Debug = { "%{VULKAN_SDK}/Lib/spirv-cross-cored.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsld.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msld.lib" },
             Release = { "%{VULKAN_SDK}/Lib/spirv-cross-core.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsl.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msl.lib" },
+            Dist = { "%{VULKAN_SDK}/Lib/spirv-cross-core.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsl.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msl.lib" },
         }
     },
     StbImage = {
@@ -111,7 +114,7 @@ Dependencies = {
 local function LinkLibs(libs)
     for key, value in pairs(libs) do
         if key ~= "Common" then
-            --filter (string.format("configurations:%s", key))
+            filter (string.format("configurations:%s", key))
         end
         for k, lib in pairs(value) do
             links { lib }
@@ -120,6 +123,7 @@ local function LinkLibs(libs)
             --print("")
         end
     end
+    filter {}
 end
 
 function References(reference)
@@ -165,4 +169,3 @@ premake.override(_G, "workspace", function(base, ...)
 	filter {}
 	return rval
 	end)
-

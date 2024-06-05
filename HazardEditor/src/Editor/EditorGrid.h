@@ -12,7 +12,6 @@ namespace Editor {
 		~Grid();
 
 		void Render(const Editor::EditorCamera& camera);
-		void Invalidate(Ref<HazardRenderer::RenderPass> renderPass);
 		bool IsVisible() { return m_ShowGrid; }
 		void SetVisible(bool visible) { m_ShowGrid = visible; }
 

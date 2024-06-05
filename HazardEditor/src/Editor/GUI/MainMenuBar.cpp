@@ -2,7 +2,6 @@
 #include "MainMenuBar.h"
 #include "AllPanels.h"
 #include "Core/HazardEditor.h"
-#include "Editor/EditorModeManager.h"
 #include <Hazard/ImGUI/GUIManager.h>
 
 namespace UI
@@ -30,15 +29,16 @@ namespace UI
 		AddMenuItem("Edit/Cut", nullptr);
 		AddMenuItem("Edit/Copy", nullptr);
 		AddMenuItem("Edit/Paste", nullptr);
-		AddMenuItem("Edit/Reload assemblies", []() {
-			((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
-		});
+		//AddMenuItem("Edit/Reload assemblies", []() {
+		//	((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
+		//});
 
 		AddMenuItem("Assets/Import", nullptr);
 		AddMenuItem("Assets/Export", nullptr);
 
 		AddMenuItem("Tools/Project settings", [&]() {
-			//Application::Get().GetModule<Hazard::GUIManager>().SetPanelOpen<ProjectSettingsPanel>(true);
+			auto& panel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<ProjectSettingsPanel>();
+			panel.BringToFront();
 		});
 
 		AddMenuItem("Tools/Task list", [&]() {
@@ -49,9 +49,10 @@ namespace UI
 		AddMenuItem("Tools/Audio", nullptr);
 		AddMenuItem("Tools/Rendering", nullptr);
 
-        AddMenuItem("Build/Export package", [&]() {
-            //Application::Get().GetModule<GUIManager>().SetPanelOpen<ExportPanel>(true);
-        });
+		AddMenuItem("Build/Export package", [&]() {
+			auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<ExportPanel>();
+			panel.BringToFront();
+		});
 		AddMenuItem("Build/Show build folder", nullptr);
 
 		AddMenuItem("Window/General/Hierarchy", [&]() {
@@ -110,33 +111,26 @@ namespace UI
 			{
 				using namespace Editor;
 				using namespace Hazard;
-				if (EditorModeManager::GetCurrentMode() == EditorMode::Edit)
+
+				auto& handler = Application::Get().GetModule<WorldHandler>();
+				Ref<World> world = handler.GetCurrentWorld();
+				SaveAssetSettings settings = {};
+
+				if (world->GetSourceFilePath().empty())
 				{
-					auto& handler = Application::Get().GetModule<WorldHandler>();
-					Ref<World> world = handler.GetCurrentWorld();
-					SaveAssetSettings settings = {};
+					std::string path = File::SaveFile({ "Hazard world (.hazard)", "*.hazard" });
+					if (path.empty()) break;
 
-					if (world->GetSourceFilePath().empty())
-					{
-						std::string path = File::SaveFile({ "Hazard world (.hazard)", "*.hazard" });
-						if (path.empty()) break;
-
-						path = File::GetFileExtension(path) != ".hazard" ? path + ".hazard" : path;
-						world->SetSourceFilePath(path);
-						settings.TargetPath = File::GetPathNoExt(path).string() + ".hasset";
-					}
-
-					AssetManager::SaveAsset(world, settings);
+					path = File::GetFileExtension(path) != ".hazard" ? path + ".hazard" : path;
+					world->SetSourceFilePath(path);
+					settings.TargetPath = File::GetPathNoExt(path).string() + ".hasset";
 				}
+
+				AssetManager::SaveAsset(world, settings);
 				return true;
 			}
 			case Key::P:
-				using namespace Editor;
-				if (EditorModeManager::GetCurrentMode() == EditorMode::Edit)
-					EditorModeManager::BeginPlayMode();
-				else
-					EditorModeManager::EndPlayMode();
-				return true;
+				break;
 		}
 		return false;
 	}

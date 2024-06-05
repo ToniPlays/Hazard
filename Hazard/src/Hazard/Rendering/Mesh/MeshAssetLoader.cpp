@@ -239,9 +239,6 @@ namespace Hazard
 			mesh->SetSubmeshMaterialHandle(nodeID, handle);
 		}
 
-
-
-
 		info.Job->SetResult(mesh);
 	}
 
@@ -268,7 +265,7 @@ namespace Hazard
 
 		cmdBuffer->Begin();
 
-		for (auto& submesh : mesh->GetSubmeshData())
+		for (auto& [node, submesh] : mesh->GetSubmeshData())
 		{
 			BufferCopyRegion vertexSrcRegion = {
 				.Size = submesh.VertexCount * sizeof(Vertex3D),
@@ -331,7 +328,7 @@ namespace Hazard
 		auto meshData = mesh->GetSubmeshData();
 
 		uint64_t nodeNameLength = 0;
-		for (auto& submesh : meshData)
+		for (auto& [node, submesh] : meshData)
 			nodeNameLength += submesh.NodeName.length() + sizeof(uint64_t);
 
 		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
@@ -346,12 +343,12 @@ namespace Hazard
 		buf->Write(meshHeader);
 
 		uint32_t progress = 0;
-		for (auto& submesh : meshData)
+		for (auto& [node, submesh] : meshData)
 		{
 			SubmeshHeader header = {
 				.NodeID = submesh.NodeID,
 				.Transform = submesh.Transform,
-				.MaterialHandle = submesh.MaterialHandle,
+				.MaterialHandle = submesh.DefaultMaterialHandle,
 				.VertexCount = submesh.VertexCount,
 				.IndexCount = submesh.IndexCount,
 				.VertexOffset = submesh.VertexOffset,
@@ -397,7 +394,7 @@ namespace Hazard
 				.NodeName = name,
 				.Transform = subHeader.Transform,
 				.NodeID = subHeader.NodeID,
-				.MaterialHandle = subHeader.MaterialHandle,
+				.DefaultMaterialHandle = subHeader.MaterialHandle,
 				.VertexCount = subHeader.VertexCount,
 				.IndexCount = subHeader.IndexCount,
 				.VertexOffset = subHeader.VertexOffset,

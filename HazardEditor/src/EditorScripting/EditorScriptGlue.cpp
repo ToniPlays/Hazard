@@ -10,7 +10,6 @@ namespace Editor::Bindings
 	void EditorScriptGlue::Register(Ref<ScriptAssembly> assembly)
 	{
 		//Overwrite Display bindings
-		BIND_ICALL(Application_Quit_Native);
 		BIND_ICALL(Display_Width_Native);
 		BIND_ICALL(Display_Height_Native);
 

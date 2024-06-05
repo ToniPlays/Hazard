@@ -30,8 +30,10 @@ namespace UI
 
 		m_ImageSampler = Hazard::RenderEngine::GetResources().DefaultImageSampler;
 		m_Projection = glm::perspective<float>(glm::radians(50.0), m_FrameBuffer->GetAspectRatio(), 0.03f, 400.0f);
-		m_View = Math::ToTransformMatrix(m_Position, glm::angleAxis(glm::radians(-20.0f), glm::vec3 { 1, 0, 0 }));
+		m_View = Math::ToTransformMatrix(m_Position, glm::angleAxis(glm::radians(-20.0f), glm::vec3{ 1, 0, 0 }));
 		m_View = glm::inverse(m_View);
+
+		m_EnvironmentDropdown = Hazard::ImUI::Dropdown("Environment");
 
 		CreateWorldRenderer();
 	}
@@ -58,7 +60,6 @@ namespace UI
 	void MaterialAssetEditorPanel::OnPanelRender()
 	{
 		using namespace Hazard;
-
 
 		ImGui::Columns(2, 0, true);
 		RenderSidebar();
@@ -99,27 +100,52 @@ namespace UI
 			Entity entity = world->GetEntity(e);
 			entity.GetComponent<MeshComponent>().MaterialHandle = handle;
 		}
+		ListEnvironmentMaps();
 	}
 
 	void MaterialAssetEditorPanel::SetMeshHandle(AssetHandle handle)
 	{
 		using namespace Hazard;
 		Ref<World> world = m_Renderer->GetTargetWorld();
-		auto view = world->GetEntitiesWith<MeshComponent>();
+		JobPromise promise = AssetManager::GetAssetAsync(handle);
+		promise.Then([world, handle](JobGraph& graph) mutable {
+			Ref<Mesh> mesh = graph.GetResult<Ref<Mesh>>();
+			auto view = world->GetEntitiesWith<MeshComponent>();
+			for (auto& e : view)
+			{
+				Entity entity = world->GetEntity(e);
+				auto& mc = entity.GetComponent<MeshComponent>();
+				mc.MeshHandle = handle;
+				for (auto& [node, submesh] : mesh->GetSubmeshData())
+				{
+					if (submesh.VertexCount == 0) continue;
 
-		for (auto& e : view)
-		{
-			Entity entity = world->GetEntity(e);
-			entity.GetComponent<MeshComponent>().MeshHandle = handle;
-		}
+					mc.SubmeshHandle = node;
+					break;
+				}
+			}
+		});
+		ListEnvironmentMaps();
 	}
 
 	void MaterialAssetEditorPanel::RenderSidebar()
 	{
+		using namespace Hazard;
 		ImVec2 size = ImGui::GetContentRegionAvail();
 		ImGui::BeginChild("#props", size);
-		
+		m_EnvironmentDropdown.Render();
 
+		if (m_EnvironmentDropdown.DidChange())
+		{
+			AssetHandle handle = m_EnvironmentMaps[m_EnvironmentDropdown.GetSelected()].Handle;
+			Ref<World> world = m_Renderer->GetTargetWorld();
+			auto view = world->GetEntitiesWith<SkyLightComponent>();
+			for (auto& entity : view)
+			{
+				Entity e = { entity, world.Raw() };
+				e.GetComponent<SkyLightComponent>().EnvironmentMapHandle = handle;
+			}
+		}
 
 		ImGui::EndChild();
 	}
@@ -143,7 +169,7 @@ namespace UI
 		if (ImUI::ColoredButton((const char*)ICON_FK_STOP, backgroundColor, m_CurrentMode != 0 ? offColor : style.NavHighlight, { 0, fontSize + 16 }))
 		{
 			m_CurrentMode = 0;
-			//SetMeshHandle(AssetManager::AssetHandleFromFile("res/Meshes/Cube.glb"));
+			SetMeshHandle(AssetManager::AssetHandleFromFile("res/Meshes/Cube.glb"));
 		}
 
 		ImGui::SameLine(0, 4);
@@ -185,6 +211,11 @@ namespace UI
 		Entity mesh = world->CreateEntity("Material Preview");
 		auto& mc = mesh.AddComponent<MeshComponent>();
 		mc.MeshHandle = AssetManager::AssetHandleFromFile("res/Meshes/Cube.glb");
+		JobPromise promise = AssetManager::GetAssetAsync(mc.MeshHandle);
+		promise.Then([&mc](JobGraph& graph) {
+			Ref<Mesh> asset = graph.GetResult<Ref<Mesh>>();
+			mc.SubmeshHandle = asset->GetSubmesh(asset->GetSubmeshNodeFromName("Cube")).NodeID;
+		});
 
 		WorldRendererSpec spec = {
 			.DebugName = "Mesh editor",
@@ -192,5 +223,22 @@ namespace UI
 		};
 
 		m_Renderer = Ref<WorldRenderer>::Create(&spec);
+	}
+	void MaterialAssetEditorPanel::ListEnvironmentMaps()
+	{
+		m_EnvironmentMaps.clear();
+		std::vector<std::string> options;
+		auto& registry = Hazard::AssetManager::GetMetadataRegistry();
+
+		for (auto& [path, metadata] : registry)
+		{
+			if (metadata.Type != AssetType::EnvironmentMap) continue;
+			m_EnvironmentMaps.push_back(metadata);
+			options.push_back(File::GetName(metadata.SourceFile));
+		}
+
+		m_EnvironmentDropdown.SetOptions(options);
+
+		m_EnvironmentDropdown.SetSelected(0);
 	}
 }

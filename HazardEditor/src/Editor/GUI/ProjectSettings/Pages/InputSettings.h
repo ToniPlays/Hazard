@@ -5,6 +5,7 @@
 #include "Hazard/ImGUI/ScopedVar.h"
 #include <Hazard/Input/InputSchema.h>
 #include <Hazard/Input/InputManager.h>
+#include <Editor/GUI/ProjectSettings/ProjectSettingsPanel.h>
 
 namespace UI
 {

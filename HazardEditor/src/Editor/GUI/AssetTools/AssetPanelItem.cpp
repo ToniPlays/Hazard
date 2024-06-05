@@ -150,7 +150,9 @@ namespace UI
 		{
 			if (!Input::IsKeyDown(Key::LeftControl))
 			{
-				OnItemDoubleClicked();
+				Application::Get().SubmitMainThread([this]() {
+					OnItemDoubleClicked();
+				});
 			}
 			else
 			{

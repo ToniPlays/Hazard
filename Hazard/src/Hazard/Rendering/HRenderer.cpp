@@ -66,15 +66,18 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
 
-		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
-		
-		if (!mesh) return;
+		if (!meshComponent.SubmeshHandle) return;
 
-		for(auto& submesh : mesh->GetSubmeshData())
-		{
-			Ref<Material> material = AssetManager::GetAsset<Material>(submesh.MaterialHandle);
-			SubmitMesh(transform.GetWorldSpaceTransform() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
-		}
+		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
+
+		if (!mesh) return;
+		if (!mesh->IsValidSubmesh(meshComponent.SubmeshHandle)) return;
+
+		SubmeshData submesh = mesh->GetSubmesh(meshComponent.SubmeshHandle);
+		Ref<Material> material = AssetManager::GetAsset<Material>(meshComponent.MaterialHandle);
+		if (!material)
+			material = AssetManager::GetAsset<Material>(submesh.DefaultMaterialHandle);
+		SubmitMesh(transform.GetWorldSpaceTransform() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
 	}
 
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> material, uint64_t count, int id)
@@ -130,6 +133,7 @@ namespace Hazard
 
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
 		Ref<Material> material = map->GetMaterial();
+		if (!material) return;
 
 		auto& env = s_Engine->GetDrawList();
 		env.Environment.Pipeline = material->GetPipeline();

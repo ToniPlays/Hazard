@@ -94,6 +94,7 @@ layout(binding = 0, set = 1) uniform sampler2D u_Albedo;
 
 
 const float gamma = 2.2;
+const float dielectric = 0.04;
 
 void main() 
 {
@@ -106,7 +107,7 @@ void main()
     m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 
     vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
-    vec3 F0 = mix(vec3(0.04), m_Params.Albedo, m_Params.Metalness);
+    vec3 F0 = mix(vec3(dielectric), m_Params.Albedo, m_Params.Metalness);
 
     //Light calculations
     vec3 Lo = vec3(0.0);

@@ -1,7 +1,6 @@
 
 #include "ScriptCreatePanel.h"
 #include "Hazard/ImGUI/UILibrary.h"
-#include "Editor/EditorScriptManager.h"
 #include "Editor/GUI/AssetTools/AssetPanel.h"
 #include "Core/HazardEditor.h"
 

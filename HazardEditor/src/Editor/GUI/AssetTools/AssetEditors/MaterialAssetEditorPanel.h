@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Hazard/ImGUI/Panel.h"
+#include "Hazard/ImGUI/UIElements/Dropdown.h"
 #include "Hazard/Rendering/WorldRenderer.h"
+
 
 namespace UI
 {
@@ -12,6 +14,7 @@ namespace UI
 		~MaterialAssetEditorPanel() = default;
 
 		void Update() override;
+
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 
@@ -22,6 +25,7 @@ namespace UI
 		void RenderSidebar();
 		void RenderToolbar(ImVec2 corner);
 		void CreateWorldRenderer();
+		void ListEnvironmentMaps();
 
 	private:
 		uint32_t m_Width = 0, m_Height = 0;
@@ -35,6 +39,9 @@ namespace UI
 		Ref<HazardRenderer::RenderPass> m_RenderPass;
 		Ref<HazardRenderer::FrameBuffer> m_FrameBuffer;
 		Ref<HazardRenderer::Sampler> m_ImageSampler;
+
+		std::vector<Hazard::AssetMetadata> m_EnvironmentMaps;
+		Hazard::ImUI::Dropdown m_EnvironmentDropdown;
 
 		uint32_t m_CurrentMode = 1;
 	};

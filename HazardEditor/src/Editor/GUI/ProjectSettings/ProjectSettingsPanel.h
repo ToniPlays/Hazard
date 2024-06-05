@@ -4,6 +4,7 @@
 #include "Hazard/ImGUI/Panel.h"
 #include "Hazard/ImGUI/UIElements/TextField.h"
 #include "Hazard/Input/InputSchema.h"
+#include "Pages/SettingPage.h"
 
 namespace UI
 {
@@ -11,7 +12,7 @@ namespace UI
 	{
 	public:
 		ProjectSettingsPanel();
-		~ProjectSettingsPanel() = default;
+		~ProjectSettingsPanel();
 
 		void Update() override {};
 		void OnPanelRender() override;
@@ -26,23 +27,15 @@ namespace UI
 	private:
 		void RenderNavbar();
 		void RenderPageHeader(const char* title, const char* description);
-		void DrawApplicationSettings();
 		void DrawInputSettingsPanel();
-		void DrawRuntimeBuildSettings();
-		void DrawGraphicsQualitySettings();
-		void DrawGraphicsLightingSettings();
-		void DrawGraphicsShadowSettings();
-		void DrawPhysicsProperties();
-		void DrawPhysicsCollisionLayers();
 		void DrawScriptingPreprocessors();
-		void DrawScriptingDependencies();
-		void DrawScriptingExecutionOrder();
-
+		
+		void OpenPage(uint32_t page);
 
 	private:
 		Hazard::ImUI::TextField m_SearchField;
 
-		enum SettingsPage
+		enum SettingsPageFlags
 		{
 			GENERAL_APP_PROPERTIES,
 			GENERAL_INPUT_SETTINGS,
@@ -56,7 +49,9 @@ namespace UI
 			SCRIPTING_DEPENDENCIES,
 			SCRIPTING_EXECUTION_ORDER
 		};
-		SettingsPage m_CurrentPage = GENERAL_APP_PROPERTIES;
+
+		SettingsPageFlags m_CurrentPage = GENERAL_APP_PROPERTIES;
+		std::unordered_map<uint32_t, SettingPage*> m_Pages;
 
 		Key::KeyCode m_PreviousKey = Key::None;
 		Mouse::MouseCode m_PreviousMouseKey = Mouse::None;

@@ -14,11 +14,11 @@ namespace UI
 		if (ImGui::Button("New", { 150, 32 }))
 			defines->push_back("");
 
-		ImUI::Table<uint32_t> table("Define table", { size.x, 0 }, false);
+		ImUI::Table<std::string> table("Define table", { size.x, 0 }, false);
 		table.SetColumns({ "Name" });
 		table.RowHeight(28.0f);
-		table.RowContent([defines](uint32_t, uint32_t index) mutable {
-			ImUI::TextField defineName(defines->at(index));
+		table.RowContent([defines](uint32_t index, std::string value) mutable {
+			ImUI::TextField defineName(value);
 			defineName.SetHint("Define name");
 			defineName.Render();
 			defines->at(index) = defineName.GetValue();
@@ -32,7 +32,7 @@ namespace UI
 		});
 
 		for (uint32_t i = 0; i < defines->size(); i++)
-			table.AddRow(i);
+			table.AddRow(defines->at(i));
 
 		table.Render();
 	}

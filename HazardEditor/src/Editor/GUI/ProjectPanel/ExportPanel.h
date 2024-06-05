@@ -12,8 +12,9 @@ namespace UI
 
         void Update() override {};
         void OnPanelRender() override;
-        bool OnEvent(Event& e) override { return false; };
         
+        bool OnEvent(Event& e) override { return false; };
+
     private:
         Hazard::ImUI::Table<Hazard::AssetMetadata> m_SelectedWorldTable;
     };

@@ -17,6 +17,7 @@ namespace Editor {
 		m_Projection = glm::perspective(glm::radians(fov), aspectRatio, nearPlane, farPlane);
 		Init();
 	}
+
 	void EditorCamera::Init()
 	{
 		constexpr glm::vec3 position = { -5, 5, 5 };
@@ -31,6 +32,7 @@ namespace Editor {
 		m_ViewMatrix = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
 		m_ViewMatrix = glm::inverse(m_ViewMatrix);
 	}
+
 	void EditorCamera::OnUpdate()
 	{
 		const glm::vec2& mouse = Input::GetMousePos();
@@ -102,6 +104,7 @@ namespace Editor {
 		EventDispatcher dispatcher(e);
 		return dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT(EditorCamera::OnMouseScroll));
 	}
+
 	float EditorCamera::GetCameraSpeed() const
 	{
 		float speed = m_NormalSpeed;
@@ -239,6 +242,7 @@ namespace Editor {
 	{
 		return glm::quat(glm::vec3(-m_Pitch - m_PitchDelta, -m_Yaw - m_YawDelta, 0.0f));
 	}
+
 	void EditorCamera::SetIs2D(bool enabled2D)
 	{
 		if (enabled2D)

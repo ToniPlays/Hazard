@@ -681,7 +681,7 @@ namespace UI
 
 			uint32_t flags = 0;
 			AssetHandle mesh = firstMc.MeshHandle;
-			AssetHandle material = firstMc.MaterialHandle;
+			AssetHandle material = 0;// firstMc.MaterialHandle;
 
 			for (auto& entity : entities)
 			{
@@ -691,11 +691,11 @@ namespace UI
 					mesh = INVALID_ASSET_HANDLE;
 					flags |= BIT(0);
 				}
-				if (mc.MaterialHandle != material)
+				/*if (mc.MaterialHandle != material)
 				{
 					material = INVALID_ASSET_HANDLE;
 					flags |= BIT(1);
-				}
+				}*/
 			}
 
 			std::string meshName = "";
@@ -727,8 +727,8 @@ namespace UI
 
 			ImUI::DropTarget<AssetHandle>(AssetType::Material, [&](AssetHandle handle) {
 				Application::Get().SubmitMainThread([handle, entities]() {
-					for (auto entity : entities)
-						entity.GetComponent<MeshComponent>().MaterialHandle = handle;
+					//for (auto entity : entities)
+					//	entity.GetComponent<MeshComponent>().MaterialHandle = handle;
 				});
 			});
 		});
@@ -740,8 +740,8 @@ namespace UI
 			ImGui::Separator();
 			ImUI::MenuItem("Reset", [&]() {
 				Application::Get().SubmitMainThread([entities]() {
-					for (auto entity : entities)
-						entity.GetComponent<MeshComponent>().MaterialHandle = INVALID_ASSET_HANDLE;
+					//for (auto entity : entities)
+					//	entity.GetComponent<MeshComponent>().MaterialHandle = INVALID_ASSET_HANDLE;
 				});
 			});
 			ImUI::MenuItem("Remove", [&]() {
