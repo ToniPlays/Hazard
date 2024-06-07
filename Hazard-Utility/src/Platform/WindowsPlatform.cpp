@@ -115,7 +115,7 @@ void OS::Dialog(const char* title, const char* description)
 
 bool OS::ShowLocation(const std::filesystem::path& path) 
 {
-	auto abs = File::GetFileAbsolutePath(path);
+	auto abs = File::GetFileAbsolutePath(path).lexically_normal();
 	if (!File::Exists(abs)) return false;
 
 	std::string cmd = "explorer.exe /select,\"" + abs.string() + "\"";

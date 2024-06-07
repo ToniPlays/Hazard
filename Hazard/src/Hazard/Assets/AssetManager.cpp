@@ -294,7 +294,7 @@ namespace Hazard
 				.SourceFile = settings.SourcePath,
 			};
 
-			std::scoped_lock(s_AssetMutex);
+			std::scoped_lock mutex(s_AssetMutex);
 			s_LoadedAssets[asset->GetHandle()] = asset;
 		});
 		return graph;
@@ -322,6 +322,8 @@ namespace Hazard
 			.FilePath = absolutePath,
 			.SourceFile = pack.SourceFile
 		};
+
+		HZR_CORE_ASSERT(metadata.Type != AssetType::Undefined, "Asset cannot be undefined");
 
 		s_Registry[absolutePath] = metadata;
 

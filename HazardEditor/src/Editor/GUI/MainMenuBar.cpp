@@ -4,6 +4,9 @@
 #include "Core/HazardEditor.h"
 #include <Hazard/ImGUI/GUIManager.h>
 
+#include "Platform/OS.h"
+#include <Exporter/RuntimeExporter.h>
+
 namespace UI
 {
 	MainMenuBar::MainMenuBar()
@@ -50,10 +53,22 @@ namespace UI
 		AddMenuItem("Tools/Rendering", nullptr);
 
 		AddMenuItem("Build/Export package", [&]() {
-			auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<ExportPanel>();
-			panel.BringToFront();
+
+			HazardProject& project = ProjectManager::GetCurrentProject();
+
+			RuntimeExporter exporter(Platform::Windows);
+			exporter.SetTargetWorlds(project.GetSettings().BuildSettings.TargetWorlds);
+			exporter.Export(project.GetProjectDirectory() / project.GetSettings().BuildSettings.BuildDirectory / project.GetBuildTargetName());
 		});
-		AddMenuItem("Build/Show build folder", nullptr);
+		AddMenuItem("Build/Show build folder", [&]() {
+			HazardProjectInfo& info = ProjectManager::GetCurrentProject().GetSettings();
+			auto path = File::GetDirectoryOf(info.RuntimeConfig.ProjectPath) / info.BuildSettings.BuildDirectory;
+			if (!Directory::Exists(path))
+				Directory::Create(path);
+			OS::OpenDirectory(path);
+
+			HZR_INFO("Opening build directory {}", path.string());
+		});
 
 		AddMenuItem("Window/General/Hierarchy", [&]() {
 			auto& manager = Application::Get().GetModule<GUIManager>();

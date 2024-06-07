@@ -69,7 +69,7 @@ namespace Hazard
 		if (!metadata.SourceFile.empty())
 			source = File::ReadFile(metadata.SourceFile);
 
-		WorldDeserializer deserializer(source);
+		WorldDeserializer deserializer = WorldDeserializer(File::GetName(metadata.SourceFile), source);
 
 		deserializer.AddProgressHandler([job = info.Job](uint64_t index, uint64_t count) mutable {
 			job->Progress(((float)index / (float)count) * 0.1f);
@@ -80,8 +80,8 @@ namespace Hazard
 		std::vector<Ref<Job>> assetJobs;
 		assetJobs.reserve(assets.size());
 
-		for (auto& [handle, count] : assets)
-			assetJobs.push_back(Ref<Job>::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, handle));
+		for (auto& [meta, count] : assets)
+			assetJobs.push_back(Ref<Job>::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
 
 		info.ParentGraph->ContinueWith(assetJobs);
 	}
@@ -107,7 +107,7 @@ namespace Hazard
 		if (!metadata.SourceFile.empty())
 			source = File::ReadFile(metadata.SourceFile);
 
-		WorldDeserializer deserializer(source);
+		WorldDeserializer deserializer(File::GetName(metadata.SourceFile), source);
 
 		Ref<World> world = deserializer.Deserialize();
 		info.Job->SetResult(world);

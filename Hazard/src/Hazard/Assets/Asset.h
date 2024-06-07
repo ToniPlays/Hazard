@@ -36,7 +36,12 @@ namespace Hazard
 		std::filesystem::path SourceFile = "";	//Original asset location
 
 		bool IsValid() { return Handle && Type != AssetType::Undefined; }
+
+		bool operator==(const AssetMetadata& other) const {
+			return Handle == other.Handle && SourceFile == other.SourceFile;
+		}
 	};
+
 
 	class Asset : public RefCount
 	{
@@ -73,5 +78,17 @@ namespace Hazard
 		AssetType GetType() const override { return AssetType::Undefined; }
 
 		static Ref<AssetPointer> Create(Ref<RefCount> value, AssetType type);
+	};
+}
+
+namespace std
+{
+	template <>
+	struct hash<Hazard::AssetMetadata>
+	{
+		std::uint64_t operator()(const Hazard::AssetMetadata& metadata) const
+		{
+			return hash<uint64_t>()((uint64_t)metadata.Handle);
+		}
 	};
 }

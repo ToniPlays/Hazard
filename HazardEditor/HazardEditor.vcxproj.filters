@@ -156,9 +156,6 @@
     <ClInclude Include="src\Editor\GUI\Overlays\ProgressOverlay.h">
       <Filter>src\Editor\GUI\Overlays</Filter>
     </ClInclude>
-    <ClInclude Include="src\Editor\GUI\ProjectPanel\ExportPanel.h">
-      <Filter>src\Editor\GUI\ProjectPanel</Filter>
-    </ClInclude>
     <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\InputSettings.h">
       <Filter>src\Editor\GUI\ProjectPanel\ProjectSettings</Filter>
     </ClInclude>
@@ -213,6 +210,7 @@
     <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\SettingPage.h" />
     <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\ApplicationGeneral.h" />
     <ClInclude Include="src\Editor\GUI\ProjectSettings\Pages\BuildSettings.h" />
+    <ClInclude Include="src\Exporter\RuntimeExporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -287,9 +285,6 @@
     <ClCompile Include="src\Editor\GUI\Overlays\ProgressOverlay.cpp">
       <Filter>src\Editor\GUI\Overlays</Filter>
     </ClCompile>
-    <ClCompile Include="src\Editor\GUI\ProjectPanel\ExportPanel.cpp">
-      <Filter>src\Editor\GUI\ProjectPanel</Filter>
-    </ClCompile>
     <ClCompile Include="src\Editor\GUI\ProjectSettings\ProjectSettingsPanel.cpp">
       <Filter>src\Editor\GUI\ProjectPanel</Filter>
     </ClCompile>
@@ -322,5 +317,6 @@
     </ClCompile>
     <ClCompile Include="src\Editor\GUI\ProjectSettings\Pages\ApplicationGeneral.cpp" />
     <ClCompile Include="src\Editor\GUI\ProjectSettings\Pages\BuildSettings.cpp" />
+    <ClCompile Include="src\Exporter\RuntimeExporter.cpp" />
   </ItemGroup>
 </Project>

@@ -4,9 +4,7 @@
 
 void ProjectManager::Close()
 {
-	if (!m_Project.IsValid()) return;
 
-	//m_Project.SerializeSetting<HazardProjectInfo>();
 }
 
 void ProjectManager::LoadProjectFromFile(const std::filesystem::path& path)
@@ -16,9 +14,8 @@ void ProjectManager::LoadProjectFromFile(const std::filesystem::path& path)
 	if (!project.IsValid())
 		return;
     
-	project.ReloadSettings();
 	project.ProcessAssets();
-
+	project.ReloadSettings();
 
 	m_Project = project;
 }

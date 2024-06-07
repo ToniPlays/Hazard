@@ -19,6 +19,7 @@ public:
 	HazardProjectInfo& GetSettings() { return m_Info; }
 
 	std::string GetBuildTargetName() const;
+	std::filesystem::path GetProjectDirectory() const { return File::GetDirectoryOf(m_Info.RuntimeConfig.ProjectPath); }
 
 	void ReloadSettings();
 	void ProcessAssets();

@@ -6,6 +6,7 @@
 #include "Hazard/Physics/PhysicsCommand.h"
 #include "Hazard/Assets/AssetEnums.h"
 #include "Hazard/Scripting/ScriptSerializer.h"
+#include "Hazard/Assets/Asset.h"
 
 #include "UID.h"
 #include "Callback.h"
@@ -17,13 +18,14 @@ namespace Hazard
 	class WorldDeserializer
 	{
 	public:
-		WorldDeserializer() = default;
-		WorldDeserializer(const std::string& source) : m_Source(source) {}
+		WorldDeserializer(const std::string& debugName) : m_DebugName(debugName) {};
+		WorldDeserializer(const std::string& debugName, const std::string& source) : m_DebugName(debugName), m_Source(source) {}
 
+		const std::string& GetDebugName() const { return m_DebugName; }
 		void SetSource(const std::string& source) { m_Source = source; }
 
 		Ref<World> Deserialize();
-		std::unordered_map<AssetHandle, uint32_t> GetReferencedAssets();
+		std::unordered_map<AssetMetadata, uint32_t> GetReferencedAssets();
 
 		void AddProgressHandler(std::function<void(uint64_t, uint64_t)> callback)
 		{
@@ -216,6 +218,7 @@ namespace Hazard
 		}
 
 	private:
+		std::string m_DebugName;
 		std::string m_Source;
 		DeserializerCallback m_Handler;
 	};

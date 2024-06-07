@@ -58,13 +58,13 @@ namespace Hazard
 		return world;
 	}
 
-	std::unordered_map<AssetHandle, uint32_t> WorldDeserializer::GetReferencedAssets()
+	std::unordered_map<AssetMetadata, uint32_t> WorldDeserializer::GetReferencedAssets()
 	{
 		std::unordered_map<AssetHandle, uint32_t> handles;
 		YAML::Node root = YAML::Load(m_Source.c_str());
 
 		if (!root["World"])
-			return handles;
+			return std::unordered_map<AssetMetadata, uint32_t>();
 
 		auto entities = root["Entities"];
 		if (entities)
@@ -92,7 +92,18 @@ namespace Hazard
 			}
 		}
 
-		return handles;
+		std::unordered_map<AssetMetadata, uint32_t> result;
+		result.reserve(handles.size());
+
+		for (auto [handle, count] : handles)
+		{
+			AssetMetadata metadata = AssetManager::GetMetadata(handle);
+			if (metadata.Type == AssetType::Undefined)
+				HZR_ERROR("Missing asset {} in {}", handle, m_DebugName);
+			else result[metadata] = count;
+		}
+
+		return result;
 	}
 
 	template<typename T>

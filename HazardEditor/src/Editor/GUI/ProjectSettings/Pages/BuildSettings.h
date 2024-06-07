@@ -3,6 +3,9 @@
 #include "SettingPage.h"
 #include "Project/ProjectSettingsSchema.h"
 #include "Hazard/ImGUI/UIElements/TextField.h"
+#include "Hazard/ImGUI/UIElements/Table.h"
+
+#include "Hazard/Assets/Asset.h"
 
 class BuildSettings : public SettingPage
 {
@@ -24,6 +27,8 @@ private:
 private:
 	Hazard::ImUI::TextField m_BuildDirectory;
 	Hazard::ImUI::TextField m_BuildPathFormat;
+
+	Hazard::ImUI::Table<Hazard::AssetMetadata> m_BuildWorlds;
 
 	std::string m_PreviewValue;
 	bool m_ShouldSave = false;

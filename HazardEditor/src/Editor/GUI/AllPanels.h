@@ -14,7 +14,6 @@
 
 #include "ProjectPanel/ProjectTodoPanel.h"
 #include "ProjectSettings/ProjectSettingsPanel.h"
-#include "ProjectPanel/ExportPanel.h"
 
 #include "Properties/Properties.h"
 #include "Properties/Hierarchy.h"

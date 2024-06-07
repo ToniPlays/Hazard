@@ -5,6 +5,9 @@
 #include "File.h"
 #include "Directory.h"
 
+#include "Hazard/Assets/Asset.h"
+#include "Hazard/Assets/AssetManager.h"
+
 enum class Platform
 {
 	Windows,
@@ -69,10 +72,13 @@ struct AppRuntimeConfig : ProjectSettingInfo
 	std::string VersionIdentifier;
 	std::filesystem::path ProjectPath;
 
+	std::filesystem::path CurrentBuildConfig;
+
 	void Deserialize(YAML::Node& root) override {
 		YamlUtils::Deserialize<std::string>(root["Project"], "Company name", CompanyName, "MyCompany");
 		YamlUtils::Deserialize<std::string>(root["Project"], "Project name", ProjectName, "My Hazard Project");
 		YamlUtils::Deserialize<std::string>(root["Project"], "Version", VersionIdentifier, "");
+		YamlUtils::Deserialize<std::filesystem::path>(root["Build"], "Config", CurrentBuildConfig, "");
 	}
 
 	void Serialize(YAML::Emitter& out)
@@ -81,6 +87,9 @@ struct AppRuntimeConfig : ProjectSettingInfo
 			YamlUtils::Serialize(out, "Company name", CompanyName);
 			YamlUtils::Serialize(out, "Project name", ProjectName);
 			YamlUtils::Serialize(out, "Version", VersionIdentifier);
+		});
+		YamlUtils::Map(out, "Build", [this, &out]() {
+			YamlUtils::Serialize(out, "Config", CurrentBuildConfig);
 		});
 	}
 };
@@ -95,17 +104,35 @@ struct RuntimeBuildSettings : ProjectSettingInfo
 	std::filesystem::path BuildDirectory;
 	std::string BuildTargetFormat;
 	std::unordered_map<Platform, PlatformBuildSettings> Platform;
+	std::vector<Hazard::AssetMetadata> TargetWorlds;
 
 	void Deserialize(YAML::Node& root) override
 	{
 		YamlUtils::Deserialize<std::filesystem::path>(root["Target"], "Directory", BuildDirectory, "Builds/");
 		YamlUtils::Deserialize<std::string>(root["Target"], "Target format", BuildTargetFormat, "{project.name}");
+
+		for(auto p : root["Worlds"])
+		{
+			AssetHandle handle;
+			YamlUtils::Deserialize<AssetHandle>(root["Worlds"], p.first.as<std::string>(), handle, 0);
+			Hazard::AssetMetadata& metadata = Hazard::AssetManager::GetMetadata(handle);
+
+			if (metadata.Handle == INVALID_ASSET_HANDLE) continue;
+
+			TargetWorlds.push_back(metadata);
+		}
 	}
+
 	void Serialize(YAML::Emitter& out)
 	{
 		YamlUtils::Map(out, "Target", [this, &out]() {
 			YamlUtils::Serialize(out, "Directory", BuildDirectory);
 			YamlUtils::Serialize(out, "Target format", BuildTargetFormat);
+		});
+
+		YamlUtils::Map(out, "Worlds", [this, &out]() {
+			for (auto& metadata : TargetWorlds)
+				YamlUtils::Serialize(out, File::GetNameNoExt(metadata.SourceFile), metadata.Handle);
 		});
 	}
 };

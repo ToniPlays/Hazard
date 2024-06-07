@@ -16,7 +16,6 @@ namespace Hazard::ImUI
 	class Table
 	{
 	public:
-
 		Table() = default;
 		Table(const char* name, ImVec2 size, bool clickable = true) : m_Name(name), m_Size(size), m_IsClickable(clickable) {};
 		Table(const std::string& name, ImVec2 size) : m_Name(name), m_Size(size) {};
@@ -27,6 +26,11 @@ namespace Hazard::ImUI
 
 		void Reserve(uint64_t count) { m_Rows.reserve(count); }
 		void AddRow(const T& row) { m_Rows.push_back(row); }
+		void RemoveRow(const T& row) { 
+			auto it = std::find(m_Rows.begin(), m_Rows.end(), row);
+			if (it != m_Rows.end())
+				m_Rows.erase(it);
+		}
 		const std::vector<T> GetRows() { return m_Rows; }
 		void ClearRows() { m_Rows.clear(); }
 		void Size(const ImVec2& size) { m_Size = size; }
@@ -43,7 +47,7 @@ namespace Hazard::ImUI
 			float edgeOffset = 4.0f;
 
 			if (m_Size.y == 0.0f)
-				m_Size.y = m_RowHeight * m_Rows.size() + m_Rows.size() * edgeOffset + 27.0f + edgeOffset;
+				m_Size.y = m_RowHeight * m_Rows.size() + 27.0f + edgeOffset * 1.5f;
 
 			if (m_Size.x <= 0.0f || m_Size.y <= 0.0f) return;
 
@@ -72,16 +76,16 @@ namespace Hazard::ImUI
 				ScopedColorStack headerCol(ImGuiCol_HeaderHovered, activeColor, ImGuiCol_HeaderActive, activeColor);
 
 				ImGui::TableSetupScrollFreeze(ImGui::TableGetColumnCount(), 1);
-				ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 22.0f);
+				ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 27.0f);
 
 				for (uint32_t i = 0; i < m_Columns.size(); i++)
 				{
 					ImGui::TableSetColumnIndex(i);
 					const char* columnName = ImGui::TableGetColumnName(i);
 					ImGui::PushID(columnName);
-					Shift(edgeOffset * 3.0f, edgeOffset * 2.0f);
+					Shift(edgeOffset * 3.0f, edgeOffset * 1.5f);
 					ImGui::TableHeader(columnName);
-					Shift(-edgeOffset * 3.0f, -edgeOffset * 2.0f);
+					Shift(-edgeOffset * 3.0f, -edgeOffset * 1.5f);
 					ImGui::PopID();
 				}
 

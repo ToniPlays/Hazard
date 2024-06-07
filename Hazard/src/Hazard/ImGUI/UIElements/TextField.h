@@ -20,8 +20,8 @@ namespace Hazard::ImUI
 		void SetIcon(const std::string& icon) { m_Icon = icon; };
 		void SetIcon(const char* icon) { m_Icon = icon; };
 		void SetHint(const std::string& hint) { m_Hint = hint; };
-		bool DidChange() { return m_DidChange; }
-		bool DidClear() { return m_DidClear; }
+		bool DidChange() const { return m_DidChange; }
+		bool DidClear() const { return m_DidClear; }
 		const std::string& GetValue() { return m_Value; }
 
 	private:

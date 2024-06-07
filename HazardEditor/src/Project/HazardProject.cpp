@@ -30,13 +30,22 @@ void HazardProject::ReloadSettings()
 {
 	auto p = File::GetDirectoryOf(m_Info.RuntimeConfig.ProjectPath);
 	m_Info.RuntimeConfig.Load(m_Info.RuntimeConfig.ProjectPath);
-	m_Info.BuildSettings.Load(p / "Editor" / "BuildSettings.hzrcfg");
+	if (m_Info.RuntimeConfig.CurrentBuildConfig.empty())
+	{
+		auto config = p / "Editor" / "BuildSettings.hzrcfg";
+		m_Info.BuildSettings.Load(config);
+		m_Info.RuntimeConfig.CurrentBuildConfig = config;
+	}
+	else 
+	{
+		m_Info.BuildSettings.Load(m_Info.RuntimeConfig.CurrentBuildConfig);
+	}
 }
 
 void HazardProject::ProcessAssets()
 {
-	std::filesystem::path libraryPath = m_Info.RuntimeConfig.ProjectPath / "Library";
-	std::filesystem::path assetPath = m_Info.RuntimeConfig.ProjectPath / "Assets";
+	std::filesystem::path libraryPath = GetProjectDirectory() / "Library";
+	std::filesystem::path assetPath = GetProjectDirectory() / "Assets";
 
 	for (auto& item : Directory::GetAllInDirectory(assetPath, true))
 		ProcessAsset(item);

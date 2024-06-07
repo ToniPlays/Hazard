@@ -18,7 +18,7 @@ namespace UI
 {
 	AssetPanel::AssetPanel() : Panel("Asset panel", false)
 	{
-		SetRootFolder(ProjectManager::GetCurrentProject().GetSettings().RuntimeConfig.ProjectPath / "Assets");
+		SetRootFolder(File::GetDirectoryOf(ProjectManager::GetCurrentProject().GetSettings().RuntimeConfig.ProjectPath) / "Assets");
 
 		m_SearchField = ImUI::TextField("");
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
@@ -368,6 +368,8 @@ namespace UI
 			if (File::GetFileExtension(item) == ".hasset")
 			{
 				AssetHandle handle = AssetManager::AssetHandleFromFile(item);
+				if (handle == INVALID_ASSET_HANDLE) continue;
+
 				AssetPanelItem assetItem = AssetPanelItem(handle, File::GetPathNoExt(item));
 				files.push_back(assetItem);
 			}
