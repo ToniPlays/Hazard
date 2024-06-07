@@ -11,7 +11,7 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> EnvironmentAssetLoader::Load(AssetMetadata& metadata)
+	Ref<JobGraph> EnvironmentAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		if (!File::Exists(metadata.FilePath))
 		{

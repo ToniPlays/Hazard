@@ -124,7 +124,6 @@ namespace Hazard
 	void World::DestroyEntity(Entity& entity)
 	{
 		//TODO: Call some functions before destroy
-
 		if (entity.HasComponent<RelationshipComponent>())
 			entity.RemoveComponent<RelationshipComponent>();
 
@@ -166,8 +165,14 @@ namespace Hazard
 	{
 		Entity e = { entity, this };
 		auto& component = e.GetComponent<RelationshipComponent>();
-
 		Entity parent = TryGetEntityFromUID(component.ParentHandle);
+
+		for (auto& childEntity : component.ChildHandles)
+		{
+			Entity child = TryGetEntityFromUID(childEntity);
+			child.SetParent(parent);
+		}
+
 		if (!parent) return;
 
 		HZR_CORE_INFO("Removing child {} of {}", e.GetTag().Tag, parent.GetTag().Tag);

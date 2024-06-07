@@ -53,6 +53,11 @@ namespace Hazard
 				sc.m_Handle->TryInvoke("OnUpdate", delta);
 			}
 		}
+	}
+
+	void WorldHandler::OnBegin()
+	{
+		HZR_PROFILE_FUNCTION();
 
 		auto tcView = m_World->GetEntitiesWith<TransformComponent>();
 		for (auto& entity : tcView)
@@ -60,11 +65,7 @@ namespace Hazard
 			Entity e = { entity, m_World.Raw() };
 			e.UpdateWorldTransforms();
 		}
-	}
 
-	void WorldHandler::OnBegin()
-	{
-		HZR_PROFILE_FUNCTION();
 		auto view = m_World->GetEntitiesWith<ScriptComponent>();
 
 		for (auto& entity : view)

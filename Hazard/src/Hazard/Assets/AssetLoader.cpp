@@ -7,7 +7,7 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> AssetLoader::Load(AssetMetadata& metadata)
+	Ref<JobGraph> AssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		HZR_CORE_ASSERT(metadata.Type != AssetType::Undefined, "Asset type cannot be undefined");
 
@@ -17,7 +17,7 @@ namespace Hazard
 			return nullptr;
 		}
 
-		return m_Loaders[metadata.Type]->Load(metadata);
+		return m_Loaders[metadata.Type]->Load(metadata, settings);
 	}
 
 	Ref<JobGraph> AssetLoader::Save(Ref<Asset>& asset, const SaveAssetSettings& settings)

@@ -11,9 +11,26 @@
 #include "UID.h"
 #include "Callback.h"
 
+#define REFERENCE_SOURCE(references, x, msg) { AssetHandle handle;																							\
+										  if (YamlUtils::Deserialize<AssetHandle>(comp, x, handle, 0))														\
+										  {																													\
+											AssetMetadata& metadata = AssetManager::GetMetadata(handle);													\
+											if(metadata.Type != AssetType::Undefined)																		\
+												references.Assets[metadata] += 1;																			\
+											else references.MissingAssets[metadata].push_back(fmt::format("Missing {} in entity {}", ##x, entityName));		\
+										  }																													\
+										}																	
+
+
 namespace Hazard
 {
 	using DeserializerCallback = Callback<void(uint64_t, uint64_t)>;
+
+	struct AssetReferences
+	{
+		std::unordered_map<AssetMetadata, uint32_t> Assets;
+		std::unordered_map<AssetMetadata, std::vector<std::string>> MissingAssets;
+	};
 
 	class WorldDeserializer
 	{
@@ -25,7 +42,7 @@ namespace Hazard
 		void SetSource(const std::string& source) { m_Source = source; }
 
 		Ref<World> Deserialize();
-		std::unordered_map<AssetMetadata, uint32_t> GetReferencedAssets();
+		AssetReferences GetReferencedAssets();
 
 		void AddProgressHandler(std::function<void(uint64_t, uint64_t)> callback)
 		{
@@ -39,33 +56,26 @@ namespace Hazard
 		static void Deserialize(Entity entity, const YAML::Node& comp);
 
 		template<typename T>
-		static void TryGetReferencedAssets(const char* key, std::unordered_map<AssetHandle, uint32_t>& handles, const YAML::Node& node);
+		static void TryGetReferencedAssets(const char* key, AssetReferences& references, const YAML::Node& node, const std::string& entityName);
 
 		template<typename T>
-		static void GetReferencedAssets(std::unordered_map<AssetHandle, uint32_t>& handles, const YAML::Node& comp) {}
+		static void GetReferencedAssets(AssetReferences& references, const YAML::Node& comp, const std::string& entityName) {}
 
 		template<>
-		static void GetReferencedAssets<SkyLightComponent>(std::unordered_map<AssetHandle, uint32_t>& handles, const YAML::Node& comp)
+		static void GetReferencedAssets<SkyLightComponent>(AssetReferences& references, const YAML::Node& comp, const std::string& entityName)
 		{
-			AssetHandle handle = 0;
-			if (YamlUtils::Deserialize(comp, "EnvironmentMap", handle, (AssetHandle)INVALID_ASSET_HANDLE))
-				handles[handle] += 1;
+			REFERENCE_SOURCE(references, "EnvironmentMap", entityName);
 		}
 		template<>
-		static void GetReferencedAssets<MeshComponent>(std::unordered_map<AssetHandle, uint32_t>& handles, const YAML::Node& comp)
+		static void GetReferencedAssets<MeshComponent>(AssetReferences& references, const YAML::Node& comp, const std::string& entityName)
 		{
-			AssetHandle handle = 0;
-			if (YamlUtils::Deserialize(comp, "Mesh", handle, (AssetHandle)INVALID_ASSET_HANDLE))
-				handles[handle] += 1;
-			if (YamlUtils::Deserialize(comp, "Material", handle, (AssetHandle)INVALID_ASSET_HANDLE))
-				handles[handle] += 1;
+			REFERENCE_SOURCE(references, "Mesh", entityName);
+			REFERENCE_SOURCE(references, "Material", entityName);
 		}
 		template<>
-		static void GetReferencedAssets<SpriteRendererComponent>(std::unordered_map<AssetHandle, uint32_t>& handles, const YAML::Node& comp)
+		static void GetReferencedAssets<SpriteRendererComponent>(AssetReferences& references, const YAML::Node& comp, const std::string& entityName)
 		{
-			AssetHandle handle = 0;
-			if (YamlUtils::Deserialize(comp, "Sprite", handle, (AssetHandle)INVALID_ASSET_HANDLE))
-				handles[handle] += 1;
+			REFERENCE_SOURCE(references, "Sprite", entityName);
 		}
 
 

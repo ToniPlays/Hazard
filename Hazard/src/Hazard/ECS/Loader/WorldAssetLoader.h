@@ -9,20 +9,26 @@ namespace Hazard
 	class WorldDeserializer;
 	class World;
 
+
 	class WorldAssetLoader : public IAssetLoader 
 	{
 	public:
+		struct CreateSettings
+        {
+			
+        };
+
 		WorldAssetLoader() = default;
 		~WorldAssetLoader() = default;
 
-		Ref<JobGraph> Load(AssetMetadata& metadata) override;
+		Ref<JobGraph> Load(AssetMetadata& metadata, const LoadAssetSettings& settings) override;
 		Ref<JobGraph> Save(Ref<Asset> asset, const SaveAssetSettings& settings) override;
 		Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 
 	private:
 		static void GetWorldContent(JobInfo& info, WorldSerializer serializer, uint32_t assetSaveFlags);
 
-		static void PreprocessWorldFile(JobInfo& info, AssetHandle handle);
+		static void PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings);
 		static void LoadRequiredAsset(JobInfo& info, AssetHandle handle);
 		static void FinalizeWorld(JobInfo& info, AssetHandle handle);
 

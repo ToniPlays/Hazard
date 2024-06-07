@@ -113,6 +113,11 @@ bool HazardEditorApplication::OnEvent(Event& e)
 void HazardEditorApplication::InitJobsystemHooks()
 {
 	JobSystem& system = Application::Get().GetJobSystem();
+	
+	system.Hook(JobSystem::Finished, [](Ref<JobGraph> graph) {
+		HZR_TRACE("Job graph {} at {}", graph->GetName(), graph->GetCurrentStageInfo().Name);
+	});
+	
 	system.Hook(JobSystem::Failure, [](Ref<JobGraph> graph) {
 		HZR_ERROR("Job graph {} has failed at {}", graph->GetName(), graph->GetCurrentStageInfo().Name);
 	});
@@ -120,6 +125,9 @@ void HazardEditorApplication::InitJobsystemHooks()
 	system.Hook(JobSystem::Message, [](Severity severity, const std::string& message) {
 		switch (severity)
 		{
+			case Severity::Warning:
+				HZR_WARN("Warn: {}", message);
+				break;
 			case Severity::Error:
 				HZR_ERROR("Error: {}", message);
 				break;

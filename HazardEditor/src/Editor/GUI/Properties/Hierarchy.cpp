@@ -99,7 +99,7 @@ namespace UI
 			if (e.GetComponent<RelationshipComponent>().ParentHandle == 0)
 				m_HierarchyTable.AddRow(e);
 		}
-		
+
 		m_HierarchyTable.Render();
 	}
 	bool Hierarchy::OnEvent(Event& e)
@@ -121,8 +121,11 @@ namespace UI
 			{
 				std::vector<Entity> selections = m_SelectionContext;
 				Ref<World> world = Editor::EditorWorldManager::GetWorldRender()->GetTargetWorld();
-				for (auto& entity : selections)
-					world->DestroyEntity(entity);
+				Application::Get().SubmitMainThread([selections, world]() mutable {
+
+					for (auto& entity : selections)
+						world->DestroyEntity(entity);
+				});
 
 				ClearSelected();
 				return true;

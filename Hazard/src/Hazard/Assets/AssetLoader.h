@@ -5,6 +5,7 @@
 
 namespace Hazard 
 {
+	struct LoadAssetSettings;
 	struct SaveAssetSettings;
 
 	class AssetLoader
@@ -15,7 +16,7 @@ namespace Hazard
 		AssetLoader() = default;
 		~AssetLoader() = default;
 
-		Ref<JobGraph> Load(AssetMetadata& metadata);
+		Ref<JobGraph> Load(AssetMetadata& metadata, const LoadAssetSettings& settings);
 		Ref<JobGraph> Save(Ref<Asset>& asset, const SaveAssetSettings& settings);
 		Ref<JobGraph> Create(AssetType type, const CreateAssetSettings& settings);
 

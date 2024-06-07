@@ -22,7 +22,7 @@ namespace Hazard
 		std::string TextureName;
 	};
 
-	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata)
+	Ref<JobGraph> MeshAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		HZR_PROFILE_FUNCTION();
 

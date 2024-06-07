@@ -12,7 +12,7 @@ namespace Hazard
         EnvironmentAssetLoader() = default;
         ~EnvironmentAssetLoader() = default;
 
-        Ref<JobGraph> Load(AssetMetadata& metadata) override;
+        Ref<JobGraph> Load(AssetMetadata& metadata, const LoadAssetSettings& settings) override;
         Ref<JobGraph> Save(Ref<Asset> asset, const SaveAssetSettings& settings) override;
         Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 

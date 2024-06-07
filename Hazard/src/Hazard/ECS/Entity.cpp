@@ -30,7 +30,7 @@ namespace Hazard
 			currentParent.RemoveChild(*this);
 
 		auto& rsc = GetComponent<RelationshipComponent>();
-		rsc.ParentHandle = parent.GetUID();
+		rsc.ParentHandle = parent.IsValid() ? parent.GetUID() : UID(0);
 
 		if (!parent)
 			return;

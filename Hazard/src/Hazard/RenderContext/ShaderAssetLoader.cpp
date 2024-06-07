@@ -14,7 +14,7 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> ShaderAssetLoader::Load(AssetMetadata& metadata)
+	Ref<JobGraph> ShaderAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		using namespace HazardRenderer;
 

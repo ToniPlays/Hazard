@@ -142,6 +142,7 @@ void JobSystem::TerminateGraphJobs(Ref<JobGraph> graph)
 void JobSystem::OnGraphFinished(Ref<JobGraph> graph)
 {
 	m_GraphMutex.lock();
+
 	auto it = std::find(m_QueuedGraphs.begin(), m_QueuedGraphs.end(), graph);
 	if (it != m_QueuedGraphs.end())
 		m_QueuedGraphs.erase(it);

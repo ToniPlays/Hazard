@@ -727,8 +727,8 @@ namespace UI
 
 			ImUI::DropTarget<AssetHandle>(AssetType::Material, [&](AssetHandle handle) {
 				Application::Get().SubmitMainThread([handle, entities]() {
-					//for (auto entity : entities)
-					//	entity.GetComponent<MeshComponent>().MaterialHandle = handle;
+					for (auto entity : entities)
+						entity.GetComponent<MeshComponent>().MaterialHandle = handle;
 				});
 			});
 		});

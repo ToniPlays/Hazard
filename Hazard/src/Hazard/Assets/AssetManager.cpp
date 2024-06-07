@@ -143,7 +143,7 @@ namespace Hazard
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 		if (metadata.LoadState == LoadState::None) return JobPromise();
 
-		Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
+		Ref<JobGraph> graph = s_AssetLoader.Load(metadata, LoadAssetSettings());
 		if (!graph) return JobPromise();
 
 		Ref<Asset> oldAsset = s_LoadedAssets[handle];
@@ -162,7 +162,7 @@ namespace Hazard
 		return Application::Get().GetJobSystem().QueueGraph(graph);
 	}
 
-	JobPromise AssetManager::GetAssetAsync(AssetHandle handle)
+	JobPromise AssetManager::GetAssetAsync(AssetHandle handle, LoadAssetSettings settings)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -179,7 +179,7 @@ namespace Hazard
 		AssetMetadata& metadata = GetMetadata(handle);
 		if (!metadata.IsValid()) return JobPromise();
 
-		Ref<JobGraph> graph = GetLoadGraph(metadata);
+		Ref<JobGraph> graph = GetLoadGraph(metadata, settings);
 
 		if (!graph || metadata.LoadState != LoadState::None)
 			return JobPromise();
@@ -188,9 +188,9 @@ namespace Hazard
 		return Application::Get().GetJobSystem().QueueGraph(graph);
 	}
 
-	Ref<JobGraph> AssetManager::GetLoadGraph(AssetMetadata& metadata)
+	Ref<JobGraph> AssetManager::GetLoadGraph(AssetMetadata& metadata, LoadAssetSettings settings)
 	{
-		Ref<JobGraph> graph = s_AssetLoader.Load(metadata);
+		Ref<JobGraph> graph = s_AssetLoader.Load(metadata, settings);
 		if (!graph) return nullptr;
 
 		graph->AddOnCompleted([handle = metadata.Handle](JobGraph& graph) mutable {
@@ -218,7 +218,7 @@ namespace Hazard
 		if (settings.Flags & ASSET_MANAGER_SAVE_AND_UPDATE && !settings.TargetPath.empty() && metadata.Handle != INVALID_ASSET_HANDLE)
 			metadata.FilePath = settings.TargetPath;
 
-		if (!metadata.FilePath.empty())
+		if (!metadata.FilePath.empty() && settings.TargetPath.empty())
 			settings.TargetPath = metadata.FilePath;
 
 		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);

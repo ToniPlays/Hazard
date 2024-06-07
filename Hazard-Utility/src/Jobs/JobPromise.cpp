@@ -24,7 +24,8 @@ JobPromise JobPromise::Then(const std::function<void(JobGraph&)>& callback)
 
 	if (m_JobGraph->HasFinished())
 		callback(*m_JobGraph);
-	else m_JobGraph->AddOnCompleted(callback);
+	else 
+		m_JobGraph->AddOnCompleted(callback);
 
 	return *this;
 }

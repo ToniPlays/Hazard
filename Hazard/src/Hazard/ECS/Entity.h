@@ -70,8 +70,8 @@ namespace Hazard {
 		bool IsVisible() const { return GetComponent<TagComponent>().Visible; }
 		bool ReceivesUpdate() const { return GetComponent<TagComponent>().ReceiveUpdate; }
 
-		void SetVisible(bool visible) { GetComponent<TagComponent>().Visible = visible; }
-		void SetReceiveUpdate(bool receive) { GetComponent<TagComponent>().ReceiveUpdate = receive; }
+		void SetVisible(bool visible) const { GetComponent<TagComponent>().Visible = visible; }
+		void SetReceiveUpdate(bool receive) const { GetComponent<TagComponent>().ReceiveUpdate = receive; }
 
 		TransformComponent& GetTransform() const { return GetComponent<TransformComponent>(); }
 		TagComponent& GetTag() const { return GetComponent<TagComponent>(); }

@@ -12,7 +12,7 @@ namespace Hazard
 {
 	using namespace HazardRenderer;
 
-	Ref<JobGraph> PipelineAssetLoader::Load(AssetMetadata& metadata)
+	Ref<JobGraph> PipelineAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		HZR_PROFILE_FUNCTION();
 		return nullptr;

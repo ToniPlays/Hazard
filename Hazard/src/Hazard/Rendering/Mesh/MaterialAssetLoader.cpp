@@ -11,7 +11,7 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata)
+	Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		Ref<Job> loadMaterialJob = Ref<Job>::Create(fmt::format("Material {}", metadata.Handle), LoadMaterialAsset, metadata.FilePath);
 

@@ -9,7 +9,7 @@ namespace Hazard::Logging {
 
 	Logger::Logger() : Module("Logger")
 	{
-		spdlog::set_pattern("%^[%T] [%n]: %v%$");
+		spdlog::set_pattern("%^[%T.%e] [%n]: %v%$");
 		s_CoreLogger = spdlog::stdout_color_mt("Hazard");
 		s_CoreLogger->set_level(spdlog::level::trace);
 

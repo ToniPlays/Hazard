@@ -56,6 +56,9 @@ void JobGraph::Continue()
 
 	if (m_HaltCount > 0) return;
 
+	std::string msg = fmt::format("Graph {} continuing after halt", GetName());
+	m_JobSystem->SendMessage(Severity::Warning, msg);
+
 	std::vector<Ref<Job>> remainingJobs;
 	for (auto& job : GetCurrentStageInfo().Jobs)
 	{
@@ -67,9 +70,6 @@ void JobGraph::Continue()
 		OnJobFinished(nullptr);
 	else
 		m_JobSystem->QueueJobs(remainingJobs);
-
-	std::string msg = fmt::format("Graph {} continuing after halt", GetName());
-	m_JobSystem->SendMessage(Severity::Warning, msg);
 }
 
 void JobGraph::ContinueWith(const std::vector<Ref<Job>>& jobs)
@@ -117,6 +117,8 @@ float JobGraph::GetProgress()
 
 void JobGraph::OnJobFinished(Ref<Job> job)
 {
+	m_JobSystem->m_Hooks.Invoke(JobSystem::Status, Ref<JobGraph>(this));
+
 	if (m_HaltCount > 0) return;
 
 	if (m_CurrentStage + 1 < m_Info.Stages.size())
@@ -128,7 +130,6 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 	if (m_HasFinished) return;
 
 	m_CurrentStage++;
-	m_HasFinished = true;
 	m_Info.Flags |= JOB_GRAPH_SUCCEEDED;
 	m_JobSystem->m_Hooks.Invoke(JobSystem::Finished, Ref<JobGraph>(this));
 
@@ -144,7 +145,10 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 	}
 
 	m_JobSystem->OnGraphFinished(Ref<JobGraph>(this));
+
+	m_HasFinished = true;
 	m_HasFinished.notify_all();
+
 }
 void JobGraph::OnJobFailed(Ref<Job> job, const char* message)
 {

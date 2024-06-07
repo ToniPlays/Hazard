@@ -13,7 +13,7 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata)
+	Ref<JobGraph> ImageAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		HZR_PROFILE_FUNCTION();
 

@@ -47,14 +47,15 @@ void BuildSettings::OnOpen()
 
 void BuildSettings::OnClose()
 {
-	if (!m_ShouldSave) return;
-	m_ShouldSave = false;
+	if (m_ShouldSave)
+	{
+		m_ShouldSave = false;
 
-	HazardProject& project = ProjectManager::GetCurrentProject();
-	project.GetSettings().BuildSettings.TargetWorlds = m_BuildWorlds.GetRows();
+		HazardProject& project = ProjectManager::GetCurrentProject();
+		project.GetSettings().BuildSettings.TargetWorlds = m_BuildWorlds.GetRows();
 
-
-	project.GetSettings().BuildSettings.Save();
+		project.GetSettings().BuildSettings.Save();
+	}
 
 	m_BuildWorlds.ClearRows();
 }

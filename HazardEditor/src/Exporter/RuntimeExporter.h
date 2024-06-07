@@ -17,9 +17,11 @@ public:
 
 private:
 	std::vector<Ref<Job>> GetDependencyJobs();
+	std::vector<Ref<Job>> GetSaveWorldJobs();
 	
 	static void GetAssetDependenciesJob(JobInfo& job, const std::filesystem::path& sourcePath);
-	static void DispatchAssetJobs(JobInfo& job);
+	static void DispatchAssetJobs(JobInfo& job, std::filesystem::path& assetPath);
+	static void SaveWorldAssetJob(JobInfo& job, std::filesystem::path& assetPath, AssetHandle handle);
 
 private:
 	Platform m_Platform;

@@ -11,7 +11,7 @@
 
 #include <hzrpch.h>
 
-#define ASSET_UNLOAD_TIME 5
+#define ASSET_UNLOAD_TIME 10
 
 namespace Hazard
 {
@@ -21,6 +21,12 @@ namespace Hazard
 	{
 		ASSET_MANAGER_SAVE_AND_UPDATE = BIT(0),
 		ASSET_MANAGER_COMBINE_ASSET = BIT(1),
+		ASSET_MANAGER_NO_DEPENENCY_LOADING = BIT(2),
+	};
+
+	struct LoadAssetSettings
+	{
+		uint32_t Flags = 0;
 	};
 
 	struct SaveAssetSettings
@@ -66,13 +72,13 @@ namespace Hazard
 		static JobPromise Reload(AssetHandle handle);
 
 		template<typename T>
-		static Ref<T> GetAsset(const std::filesystem::path& path)
+		static Ref<T> GetAsset(const std::filesystem::path& path, LoadAssetSettings settings = LoadAssetSettings())
 		{
-			return GetAsset<T>(AssetHandleFromFile(path));
+			return GetAsset<T>(AssetHandleFromFile(path), settings);
 		}
 
 		template<typename T>
-		static Ref<T> GetAsset(AssetHandle handle)
+		static Ref<T> GetAsset(AssetHandle handle, LoadAssetSettings settings = LoadAssetSettings())
 		{
 			HZR_PROFILE_FUNCTION();
 			if (handle == INVALID_ASSET_HANDLE)
@@ -88,16 +94,16 @@ namespace Hazard
 			if (metadata.Type == AssetType::Undefined) 
 				return nullptr;
 
-			JobPromise promise = GetAssetAsync(handle);
+			JobPromise promise = GetAssetAsync(handle, settings);
 			promise.Wait();
 
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
 			return promise.GetResult<Ref<T>>();
 		}
 
-		static JobPromise GetAssetAsync(AssetHandle handle);
+		static JobPromise GetAssetAsync(AssetHandle handle, LoadAssetSettings settings = LoadAssetSettings());
 
-		static Ref<JobGraph> GetLoadGraph(AssetMetadata& metadata);
+		static Ref<JobGraph> GetLoadGraph(AssetMetadata& metadata, LoadAssetSettings settings = LoadAssetSettings());
 		static Ref<JobGraph> GetSaveGraph(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings());
 		static Ref<JobGraph> GetCreateGraph(AssetType type, CreateAssetSettings settings = CreateAssetSettings());
 

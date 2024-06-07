@@ -74,7 +74,7 @@ namespace Hazard
 		int w, h, channels;
 		constexpr int desired = 4;
 
-		Ref<CachedBuffer> buffer = File::ReadBinaryFile(path);
+		Ref<CachedBuffer> buffer = File::ReadBinaryFile(path.lexically_normal());
 
 		float* data = stbi_loadf_from_memory((stbi_uc*)buffer->GetData(), buffer->GetSize(), &w, &h, &channels, desired);
 		HZR_CORE_ASSERT(data, "Data not loaded correctly");

@@ -8,11 +8,11 @@
 
 namespace Hazard
 {
-	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata)
+	Ref<JobGraph> WorldAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		HZR_PROFILE_FUNCTION();
 
-		Ref<Job> preprocessJob = Ref<Job>::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle);
+		Ref<Job> preprocessJob = Ref<Job>::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle, settings);
 		Ref<Job> finalizeJob = Ref<Job>::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
 
 		JobGraphInfo pipeline = {
@@ -61,8 +61,11 @@ namespace Hazard
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(Buffer::Copy(result.c_str(), result.length()));
 		info.Job->SetResult(buffer);
 	}
-	void WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle)
+	void WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings)
 	{
+		if (settings.Flags & ASSET_MANAGER_NO_DEPENENCY_LOADING) 
+			return;
+
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 		std::string source;
 
@@ -78,9 +81,9 @@ namespace Hazard
 		auto assets = deserializer.GetReferencedAssets();
 
 		std::vector<Ref<Job>> assetJobs;
-		assetJobs.reserve(assets.size());
+		assetJobs.reserve(assets.Assets.size());
 
-		for (auto& [meta, count] : assets)
+		for (auto& [meta, count] : assets.Assets)
 			assetJobs.push_back(Ref<Job>::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
 
 		info.ParentGraph->ContinueWith(assetJobs);

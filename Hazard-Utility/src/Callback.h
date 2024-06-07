@@ -16,6 +16,7 @@ public:
 	inline void Add(const std::function<FuncT>& callback)
 	{
 		if (!callback) return;
+
 		std::scoped_lock lock(m_Mutex);
 		m_Callbacks.push_back(callback);
 	}
