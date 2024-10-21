@@ -10,12 +10,12 @@ namespace UI
 		using namespace Hazard;
 
 		JobSystem& system = Hazard::Application::Get().GetJobSystem();
-		system.Hook(JobSystem::Submit, [this](Ref<JobGraph> graph) {
+		system.Hook(JobSystemHook::Submit, [this](Ref<JobGraph> graph) {
 			std::scoped_lock lock(m_JobMutex);
 			m_JobGraphs.push_back({ Time::s_Time, 0.0, 0.0, 0.0, graph });
 		});
 
-		system.Hook(JobSystem::Failure, [this](Ref<JobGraph> graph) {
+		system.Hook(JobSystemHook::Failure, [this](Ref<JobGraph> graph) {
 			std::scoped_lock lock(m_JobMutex);
 			for (auto& graphs : m_JobGraphs)
 			{
@@ -24,7 +24,7 @@ namespace UI
 			}
 		});
 
-		system.Hook(JobSystem::Finished, [this](Ref<JobGraph> graph) {
+		system.Hook(JobSystemHook::Finished, [this](Ref<JobGraph> graph) {
 
 			std::scoped_lock lock(m_JobMutex);
 			for (auto& graphs : m_JobGraphs)
@@ -69,7 +69,7 @@ namespace UI
 	void ProgressOverlay::DrawProgressCard(Ref<JobGraph> graph)
 	{
 		const Hazard::ImUI::Style& style = Hazard::ImUI::StyleManager::GetCurrent();
-		const std::string& currentJob = graph->GetCurrentStageInfo().Name;
+        const std::string& currentJob = graph->GetStageName();
 		float progress = graph->GetProgress();
 
 		std::string progressText = fmt::format("{0}/100", (uint32_t)(progress * 100.0f));

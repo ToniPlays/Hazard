@@ -19,7 +19,7 @@ public:
 	template<typename... Args>
 	void Invoke(HookT hook, const Args... args)
 	{
-		m_Hooks[hook].Invoke<Args...>(args...);
+        m_Hooks[hook].template Invoke<Args...>(args...);
 	}
 
 private:

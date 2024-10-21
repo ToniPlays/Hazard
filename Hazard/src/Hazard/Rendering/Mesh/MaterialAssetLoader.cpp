@@ -13,7 +13,7 @@ namespace Hazard
 {
 	Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
-		Ref<Job> loadMaterialJob = Ref<Job>::Create(fmt::format("Material {}", metadata.Handle), LoadMaterialAsset, metadata.FilePath);
+		Ref<Job> loadMaterialJob = Job::Create(fmt::format("Material {}", metadata.Handle), LoadMaterialAsset, metadata.FilePath);
 
 		JobGraphInfo info = {
 			.Name = "Material load",
@@ -27,7 +27,7 @@ namespace Hazard
 
 	Ref<JobGraph> MaterialAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		Ref<Job> saveAssetJob = Ref<Job>::Create("Material save", SaveMaterialAsset, asset);
+		Ref<Job> saveAssetJob = Job::Create("Material save", SaveMaterialAsset, asset);
 
 		JobGraphInfo info = {
 			.Name = "Material save",
@@ -42,7 +42,7 @@ namespace Hazard
 	{
 		HZR_CORE_ASSERT(settings.Settings, "Material settings required, no defaults available");
 		CreateSettings matSettings = *(CreateSettings*)settings.Settings;
-		Ref<Job> createAssetJob = Ref<Job>::Create("Material create", CreateMaterialAsset, matSettings);
+		Ref<Job> createAssetJob = Job::Create("Material create", CreateMaterialAsset, matSettings);
 
 		JobGraphInfo info = {
 			.Name = "Material create",
@@ -67,7 +67,7 @@ namespace Hazard
 		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 		material->Set("u_Albedo", whiteTexture);
 
-		info.Job->SetResult(material);
+		//info.Job->SetResult(material);
 	}
 
 	void MaterialAssetLoader::CreateMaterialAsset(JobInfo& info, const CreateSettings& settings)
@@ -78,7 +78,7 @@ namespace Hazard
 		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 		material->Set("u_Albedo", whiteTexture);
 
-		info.Job->SetResult(material);
+		//info.Job->SetResult(material);
 	}
 
 	void MaterialAssetLoader::SaveMaterialAsset(JobInfo& info, Ref<Material> material)
@@ -89,7 +89,7 @@ namespace Hazard
 		buffer->Allocate(constants.Size);
 		buffer->Write(constants.Data, constants.Size);
 
-		info.Job->SetResult(buffer);
+		//info.Job->SetResult(buffer);
 	}
 }
 

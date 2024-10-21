@@ -45,7 +45,7 @@ namespace Hazard::ImUI
 			{
 				/*
 				if (metadata.LoadState == LoadState::None)
-					JobPromise promise = AssetManager::GetAssetAsync(m_Handle);
+                 Promise promise = AssetManager::GetAssetAsync(m_Handle);
 				else if (metadata.LoadState == LoadState::Loading)
 					m_Handle = INVALID_ASSET_HANDLE;
 				*/

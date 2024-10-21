@@ -44,19 +44,19 @@ using namespace std::chrono_literals;
 
 #if (defined(HZR_DEBUG))
 	//Core logging macros
-	#define HZR_CORE_INFO(...)				::Hazard::Logging::Logger::GetCoreLogger()->info(__VA_ARGS__)
-	#define HZR_CORE_WARN(...)				::Hazard::Logging::Logger::GetCoreLogger()->warn(__VA_ARGS__)
-	#define HZR_CORE_ERROR(...)	 			::Hazard::Logging::Logger::GetCoreLogger()->error(__VA_ARGS__)
-	#define HZR_CORE_FATAL(...)				::Hazard::Logging::Logger::GetCoreLogger()->critical(__VA_ARGS__)
-	#define HZR_CORE_TRACE(...)				::Hazard::Logging::Logger::GetCoreLogger()->trace(__VA_ARGS__)
+	#define HZR_CORE_INFO(...)				::Hazard::Logger::GetCoreLogger()->info(__VA_ARGS__)
+	#define HZR_CORE_WARN(...)				::Hazard::Logger::GetCoreLogger()->warn(__VA_ARGS__)
+	#define HZR_CORE_ERROR(...)	 			::Hazard::Logger::GetCoreLogger()->error(__VA_ARGS__)
+	#define HZR_CORE_FATAL(...)				::Hazard::Logger::GetCoreLogger()->critical(__VA_ARGS__)
+	#define HZR_CORE_TRACE(...)				::Hazard::Logger::GetCoreLogger()->trace(__VA_ARGS__)
 	#define HZR_CORE_ASSERT(success, ...)	 if(!(success)) { HZR_CORE_ERROR(__VA_ARGS__); assert(false); }
 
 	//Client logging macros
-	#define HZR_INFO(...)					::Hazard::Logging::Logger::GetClientLogger()->info(__VA_ARGS__)
-	#define HZR_WARN(...)					::Hazard::Logging::Logger::GetClientLogger()->warn(__VA_ARGS__)
-	#define HZR_ERROR(...)					::Hazard::Logging::Logger::GetClientLogger()->error(__VA_ARGS__)
-	#define HZR_FATAL(...)					::Hazard::Logging::Logger::GetClientLogger()->critical(__VA_ARGS__)
-	#define HZR_TRACE(...)					::Hazard::Logging::Logger::GetClientLogger()->trace(__VA_ARGS__)
+	#define HZR_INFO(...)					::Hazard::Logger::GetClientLogger()->info(__VA_ARGS__)
+	#define HZR_WARN(...)					::Hazard::Logger::GetClientLogger()->warn(__VA_ARGS__)
+	#define HZR_ERROR(...)					::Hazard::Logger::GetClientLogger()->error(__VA_ARGS__)
+	#define HZR_FATAL(...)					::Hazard::Logger::GetClientLogger()->critical(__VA_ARGS__)
+	#define HZR_TRACE(...)					::Hazard::Logger::GetClientLogger()->trace(__VA_ARGS__)
 	#define HZR_ASSERT(success, ...)		if(!(success)) { HZR_CORE_ERROR(__VA_ARGS__); assert(false); }
 	
 #else

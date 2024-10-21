@@ -11,8 +11,7 @@ namespace HazardRenderer
 	struct CubemapCreateInfo
 	{
 		std::string DebugName;
-		uint32_t Width;
-		uint32_t Height;
+		uint32_t Size;
 		uint32_t MaxMips = 1;
 		ImageUsage Usage = ImageUsage::None;
 		ImageFormat Format = ImageFormat::None;

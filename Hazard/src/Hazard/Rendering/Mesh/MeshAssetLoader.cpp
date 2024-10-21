@@ -26,7 +26,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		Ref<Job> loadJob = Ref<Job>::Create("Load", CreateMeshFromSource, metadata.Handle);
+		Ref<Job> loadJob = Job::Create("Load", CreateMeshFromSource, metadata.Handle);
 
 		JobGraphInfo info = {
 			.Name = "Mesh load",
@@ -39,8 +39,8 @@ namespace Hazard
 
 	Ref<JobGraph> MeshAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		Ref<Job> saveJob = Ref<Job>::Create("Save", ReadMeshDataFromGPU, asset.As<Mesh>());
-		Ref<Job> compileMesh = Ref<Job>::Create("Mesh compile", CompileMesh, asset.As<Mesh>());
+		Ref<Job> saveJob = Job::Create("Save", ReadMeshDataFromGPU, asset.As<Mesh>());
+		Ref<Job> compileMesh = Job::Create("Mesh compile", CompileMesh, asset.As<Mesh>());
 
 		JobGraphInfo info = {
 			.Name = "Mesh save",
@@ -61,8 +61,8 @@ namespace Hazard
 
 		Ref<AssimpImporter> importer = Ref<AssimpImporter>::Create(settings.SourcePath);
 
-		Ref<Job> preprocessJob = Ref<Job>::Create(fmt::format("Mesh: {}", settings.SourcePath.string()), PreprocessDependencies, importer, importSettings);
-		Ref<Job> finalize = Ref<Job>::Create(fmt::format("Finalize Mesh: {}", settings.SourcePath.string()), FinalizeMesh, importer);
+		Ref<Job> preprocessJob = Job::Create(fmt::format("Mesh: {}", settings.SourcePath.string()), PreprocessDependencies, importer, importSettings);
+		Ref<Job> finalize = Job::Create(fmt::format("Finalize Mesh: {}", settings.SourcePath.string()), FinalizeMesh, importer);
 
 		JobGraphInfo info = {
 			.Name = "Mesh create",
@@ -78,7 +78,7 @@ namespace Hazard
 
 	void MeshAssetLoader::PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings)
 	{
-		Job& job = *info.Job.Raw();
+		Job& job = *info.Current.Raw();
 		importer->AddImportProgressCallback([&job](float progress) {
 			job.Progress(progress);
 		});
@@ -95,7 +95,7 @@ namespace Hazard
 
 		for (auto& mesh : meshes)
 		{
-			Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Mesh: {}", mesh.Name), ProcessMeshNode, importer, mesh);
+			Ref<Job> processMeshJob = Job::Create(fmt::format("Mesh: {}", mesh.Name), ProcessMeshNode, importer, mesh);
 			generateJobs.push_back(processMeshJob);
 		}
 
@@ -104,24 +104,24 @@ namespace Hazard
 			auto materials = importer->GetMaterials();
 			for (auto& material : materials)
 			{
-				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", material.Name), ProcessMaterial, importer, material, settings.MaterialPath);
+				Ref<Job> processMeshJob = Job::Create(fmt::format("Material: {}", material.Name), ProcessMaterial, importer, material, settings.MaterialPath);
 				generateJobs.push_back(processMeshJob);
 			}
 
 			auto textures = importer->GetTextures();
 			for (auto& texture : textures)
 			{
-				Ref<Job> processMeshJob = Ref<Job>::Create(fmt::format("Material: {}", texture.Name), ProcessTexture, importer, texture, settings.TexturePath);
+				Ref<Job> processMeshJob = Job::Create(fmt::format("Material: {}", texture.Name), ProcessTexture, importer, texture, settings.TexturePath);
 				generateJobs.push_back(processMeshJob);
 			}
 		}
 
-		info.ParentGraph->ContinueWith(generateJobs);
+		//info.ParentGraph->ContinueWith(generateJobs);
 	}
 
 	void MeshAssetLoader::ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh)
 	{
-		Job& jobRef = *info.Job;
+		Job& jobRef = *info.Current;
 		MeshImporter::MeshData data = importer->GetMeshData(mesh, [&jobRef](uint32_t current, uint32_t total) mutable {
 			jobRef.Progress((float)current / (float)total);
 		});
@@ -130,7 +130,7 @@ namespace Hazard
 			.MeshData = data,
 		};
 
-		info.Job->SetResult(result);
+		//info.Job->SetResult(result);
 	}
 
 	void MeshAssetLoader::ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot)
@@ -145,7 +145,7 @@ namespace Hazard
 		auto props = importer->GetMaterial(material.MaterialIndex);
 
 		Ref<JobGraph> loadGraph = AssetManager::GetCreateGraph(AssetType::Material, settings);
-		JobPromise promise = info.ParentGraph->SubGraph(loadGraph);
+        /*Promise promise = info.ParentGraph->SubGraph(loadGraph);
 
 		promise.Then([info, metadata = material, path = settings.SourcePath, props](JobGraph& graph) mutable {
 			Ref<Material> material = graph.GetResult<Ref<Material>>();
@@ -168,16 +168,16 @@ namespace Hazard
 			info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(material, saveSettings)).Then([info, result](JobGraph&) mutable {
 				info.ParentGraph->Continue();
 			});
-		});
+		});*/
 
-		info.ParentGraph->Halt();
+		//info.ParentGraph->Halt();
 	}
 
 	void MeshAssetLoader::ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot)
 	{
 		CreateAssetSettings create = {};
 
-		AssetManager::CreateAssetAsync(AssetType::Image, create).Then([info, importer, texture, textureRoot](JobGraph& graph) mutable {
+		/*AssetManager::CreateAssetAsync<Texture2DAsset>(AssetType::Image, create).Then([info, importer, texture, textureRoot](JobGraph& graph) mutable {
 			Ref<Texture2DAsset> asset = graph.GetResult<Ref<Texture2DAsset>>();
 			if (!asset) return;
 
@@ -196,17 +196,17 @@ namespace Hazard
 				.TextureName = textureData.Name,
 			};
 
-			info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(asset, saveSettings));
+			//info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(asset, saveSettings));
 
 			info.Job->SetResult(result);
 			textureData.ImageData.Release();
-		});
+		});*/
 	}
 
 
 	void MeshAssetLoader::FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer)
 	{
-		auto results = info.ParentGraph->GetResults<MeshDependencyData>();
+        std::vector<MeshDependencyData> results;// = info.ParentGraph->GetResults<MeshDependencyData>();
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create();
 
@@ -239,7 +239,7 @@ namespace Hazard
 			mesh->SetSubmeshMaterialHandle(nodeID, handle);
 		}
 
-		info.Job->SetResult(mesh);
+		//info.Job->SetResult(mesh);
 	}
 
 	void MeshAssetLoader::ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh)
@@ -310,11 +310,11 @@ namespace Hazard
 			result.Vertex = Buffer::Copy(vertexReadback->ReadData(vertexRegion));
 			result.Index = Buffer::Copy(indexReadback->ReadData(indexRegion));
 
-			info.Job->SetResult(result);
-			info.ParentGraph->Continue();
+			//info.Job->SetResult(result);
+			//info.ParentGraph->Continue();
 		});
 
-		info.ParentGraph->Halt();
+		//info.ParentGraph->Halt();
 	}
 
 	void MeshAssetLoader::CompileMesh(JobInfo& info, Ref<Mesh> mesh)
@@ -323,7 +323,7 @@ namespace Hazard
 		{
 			Buffer Vertex;
 			Buffer Index;
-		} result = info.ParentGraph->GetResult<Result>();
+		} result = info.Graph->GetResult<Result>();
 
 		auto meshData = mesh->GetSubmeshData();
 
@@ -359,12 +359,12 @@ namespace Hazard
 			buf->Write(submesh.NodeName);
 
 			progress++;
-			info.Job->Progress((float)progress / (float)meshData.size());
+			info.Current->Progress((float)progress / (float)meshData.size());
 		}
 
 		buf->Write<Buffer>(result.Vertex);
 		buf->Write<Buffer>(result.Index);
-		info.Job->SetResult(buf);
+		//info.Job->SetResult(buf);
 
 		result.Vertex.Release();
 		result.Index.Release();
@@ -411,7 +411,7 @@ namespace Hazard
 
 		mesh->GenerateMesh(submeshes, vertices, indices);
 
-		info.Job->SetResult(mesh);
+		//info.Job->SetResult(mesh);
 	}
 
 	void MeshAssetLoader::SetMaterialProperties(Ref<Material> material, const MeshImporter::MaterialData& materialData)

@@ -291,7 +291,7 @@ namespace UI
 				panel.Open();
 			});
 			ImUI::MenuItem("World", [&]() {
-				Ref<World> world = AssetManager::CreateAsset(AssetType::World, CreateAssetSettings()).As<World>();
+                Ref<World> world = AssetManager::CreateAsset<World>(CreateAssetSettings());
 				Editor::EditorWorldManager::SetWorld(world);
 				changed = true;
 			});
@@ -303,14 +303,14 @@ namespace UI
 					.Settings = &matSettings
 				};
 
-				Ref<Material> material = AssetManager::CreateAsset(AssetType::Material, settings).As<Material>();
+				Ref<Material> material = AssetManager::CreateAsset<Material>(settings);
 
 				SaveAssetSettings saveSettings = {
 					.TargetPath = File::FindAvailableName(m_CurrentPath, "New material", ".hasset"),
 					.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
 				};
 
-				AssetManager::SaveAsset(material, saveSettings);
+				AssetManager::SaveAsset<Material>(material, saveSettings);
 				changed = true;
 			});
 
@@ -485,8 +485,8 @@ namespace UI
 					break;
 				if (metadata.LoadState == LoadState::None)
 				{
-					JobPromise promise = AssetManager::GetAssetAsync(metadata.Handle);
-					promise.Then([&](JobGraph&) {
+                    Promise promise = AssetManager::GetAssetAsync<Texture2DAsset>(metadata.Handle);
+					promise.ContinueWith([&](const auto& results) {
 						Application::Get().SubmitMainThread([&]() {
 							Refresh();
 						});

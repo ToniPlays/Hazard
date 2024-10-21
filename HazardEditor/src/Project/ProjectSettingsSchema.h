@@ -81,7 +81,7 @@ struct AppRuntimeConfig : ProjectSettingInfo
 		YamlUtils::Deserialize<std::filesystem::path>(root["Build"], "Config", CurrentBuildConfig, "");
 	}
 
-	void Serialize(YAML::Emitter& out)
+	void Serialize(YAML::Emitter& out) override
 	{
 		YamlUtils::Map(out, "Project", [this, &out]() {
 			YamlUtils::Serialize(out, "Company name", CompanyName);
@@ -123,7 +123,7 @@ struct RuntimeBuildSettings : ProjectSettingInfo
 		}
 	}
 
-	void Serialize(YAML::Emitter& out)
+	void Serialize(YAML::Emitter& out) override
 	{
 		YamlUtils::Map(out, "Target", [this, &out]() {
 			YamlUtils::Serialize(out, "Directory", BuildDirectory);

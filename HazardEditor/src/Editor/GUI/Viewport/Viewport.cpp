@@ -57,7 +57,7 @@ namespace UI
 
 		Ref<World> world = renderer->GetTargetWorld();
 
-		renderer->SubmitExtra([=]() mutable {
+		renderer->SubmitExtra([this, world]() mutable {
 			HZR_PROFILE_FUNCTION("WorldRenderer::SubmitExtra()");
 			m_EditorGrid.Render(m_EditorCamera);
 

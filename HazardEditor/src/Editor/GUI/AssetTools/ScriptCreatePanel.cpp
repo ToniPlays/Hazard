@@ -77,7 +77,7 @@ namespace UI
 		if (ImGui::Button("Create", { 100, 24 }))
 		{
 			m_CreateInfo.Path = path;
-			Application::Get().SubmitMainThread([=]() {
+			Application::Get().SubmitMainThread([this]() {
 				CreateFiles();
 			});
 		}

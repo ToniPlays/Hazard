@@ -19,7 +19,7 @@ namespace HazardRenderer
 		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanCubemap>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_METAL
-        case RenderAPI::Metal:  return Ref<Metal::MetalCubemapTexture>::Create(createInfo);
+        case RenderAPI::Metal:  return Ref<Metal::MetalCubemap>::Create(createInfo);
 #endif
 		default:
 			return nullptr;

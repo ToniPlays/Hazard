@@ -69,7 +69,7 @@ void ComputeShaderTest::Init()
 	computeSpec.DebugName = "Compute";
 	computeSpec.Usage = PipelineUsage::ComputeBit;
 	computeSpec.SetLayouts = { computeDescriptorLayout };
-	computeSpec.PushConstants = { { SHADER_STAGE_COMPUTE_BIT, 16, 0 } };
+	computeSpec.PushConstants = { { "Idk", SHADER_STAGE_COMPUTE_BIT, ShaderDataType::Float4, 0 } };
 	computeSpec.Shaders = {
 		{ SHADER_STAGE_COMPUTE_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/compute.Compute.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) } };
 
@@ -116,7 +116,7 @@ void ComputeShaderTest::Init()
 	computeBuffer->SetPipeline(m_ComputePipeline);
 	computeBuffer->PushConstants(Buffer(&color, sizeof(glm::vec4)), 0, SHADER_STAGE_COMPUTE_BIT);
 	computeBuffer->SetDescriptorSet(m_ComputeDescriptorSet, 0);
-	computeBuffer->DispatchCompute({ m_OutputImage->GetWidth(), m_OutputImage->GetHeight(), 1 });
+    computeBuffer->DispatchCompute({ m_OutputImage->GetExtent().Width, m_OutputImage->GetExtent().Height, 1 });
 	computeBuffer->End();
 	computeBuffer->Submit();
 

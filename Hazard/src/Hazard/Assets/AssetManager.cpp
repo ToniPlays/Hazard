@@ -99,32 +99,6 @@ namespace Hazard
 		return s_NullMetadata;
 	}
 
-	Ref<Asset> AssetManager::CreateAsset(AssetType type, const CreateAssetSettings& settings)
-	{
-		HZR_PROFILE_FUNCTION();
-		JobPromise promise = CreateAssetAsync(type, settings);
-		promise.Wait();
-		return promise.GetResult<Ref<Asset>>();
-	}
-
-	JobPromise AssetManager::CreateAssetAsync(AssetType type, const CreateAssetSettings& settings)
-	{
-		Ref<JobGraph> graph = GetCreateGraph(type, settings);
-		if (!graph) return JobPromise();
-
-		return Application::Get().GetJobSystem().QueueGraph(graph);
-	}
-
-	JobPromise AssetManager::SaveAsset(Ref<Asset> asset, SaveAssetSettings settings)
-	{
-		HZR_PROFILE_FUNCTION();
-
-		Ref<JobGraph> graph = GetSaveGraph(asset, settings);
-		if (!graph) return JobPromise();
-
-		return Application::Get().GetJobSystem().QueueGraph(graph);
-	}
-
 	void AssetManager::Unload(AssetHandle handle)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -136,64 +110,12 @@ namespace Hazard
 		s_LoadedAssets.erase(handle);
 	}
 
-	JobPromise AssetManager::Reload(AssetHandle handle)
-	{
-		std::scoped_lock lock(s_AssetMutex);
-
-		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-		if (metadata.LoadState == LoadState::None) return JobPromise();
-
-		Ref<JobGraph> graph = s_AssetLoader.Load(metadata, LoadAssetSettings());
-		if (!graph) return JobPromise();
-
-		Ref<Asset> oldAsset = s_LoadedAssets[handle];
-
-		graph->AddOnCompleted([handle, oldAsset](JobGraph& graph) {
-			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
-			if (!asset) return;
-
-			asset->m_Handle = oldAsset->GetHandle();
-			asset->m_Flags = oldAsset->GetFlags();
-			asset->m_SourceAssetPath = oldAsset->GetSourceFilePath();
-
-			s_LoadedAssets[handle] = asset;
-		});
-
-		return Application::Get().GetJobSystem().QueueGraph(graph);
-	}
-
-	JobPromise AssetManager::GetAssetAsync(AssetHandle handle, LoadAssetSettings settings)
-	{
-		HZR_PROFILE_FUNCTION();
-
-		if (handle == INVALID_ASSET_HANDLE)
-			return JobPromise();
-
-		if (s_LoadedAssets[handle])
-		{
-			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
-			Ref<JobGraph> graph = JobGraph::EmptyWithResult(s_LoadedAssets[handle]);
-			return JobPromise(graph);
-		}
-
-		AssetMetadata& metadata = GetMetadata(handle);
-		if (!metadata.IsValid()) return JobPromise();
-
-		Ref<JobGraph> graph = GetLoadGraph(metadata, settings);
-
-		if (!graph || metadata.LoadState != LoadState::None)
-			return JobPromise();
-
-		metadata.LoadState = LoadState::Loading;
-		return Application::Get().GetJobSystem().QueueGraph(graph);
-	}
-
 	Ref<JobGraph> AssetManager::GetLoadGraph(AssetMetadata& metadata, LoadAssetSettings settings)
 	{
 		Ref<JobGraph> graph = s_AssetLoader.Load(metadata, settings);
 		if (!graph) return nullptr;
 
-		graph->AddOnCompleted([handle = metadata.Handle](JobGraph& graph) mutable {
+		/*graph->AddOnCompleted([handle = metadata.Handle](JobGraph& graph) mutable {
 			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
 			if (!asset) return;
 
@@ -207,6 +129,7 @@ namespace Hazard
 			s_LoadedAssets[asset->GetHandle()] = asset;
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
 		});
+         */
 		return graph;
 	}
 
@@ -224,7 +147,7 @@ namespace Hazard
 		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);
 		if (!graph) return nullptr;
 
-		graph->AddOnCompleted([asset, settings](JobGraph& graph) {
+		/*graph->AddOnCompleted([asset, settings](JobGraph& graph) {
 
 			Ref<CachedBuffer> result = graph.GetResult<Ref<CachedBuffer>>();
 			if (!result)
@@ -269,6 +192,7 @@ namespace Hazard
 
 			HZR_CORE_INFO("Saved asset: {} ({})", asset->GetSourceFilePath().string(), Utils::AssetTypeToString(asset->GetType()));
 		});
+         */
 
 		return graph;
 	}
@@ -278,7 +202,7 @@ namespace Hazard
 		Ref<JobGraph> graph = s_AssetLoader.Create(type, settings);
 		if (!graph) return nullptr;
 
-		graph->AddOnCompleted([settings](JobGraph& graph) {
+		/*graph->AddOnCompleted([settings](JobGraph& graph) {
 			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
 			if (!asset) return;
 
@@ -297,6 +221,7 @@ namespace Hazard
 			std::scoped_lock mutex(s_AssetMutex);
 			s_LoadedAssets[asset->GetHandle()] = asset;
 		});
+         */
 		return graph;
 	}
 

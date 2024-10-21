@@ -21,7 +21,7 @@ namespace UI
 	template<typename T>
 	bool ComponentMenu(const std::vector<Entity>& entities)
 	{
-		STATIC_ASSERT(false, T);
+        throw std::exception();
 	}
 
 	template<typename T>

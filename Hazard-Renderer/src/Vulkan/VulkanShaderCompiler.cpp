@@ -1,6 +1,6 @@
 #include "VulkanShaderCompiler.h"
 
-#ifdef HZR_SHADER_COMPILER
+#if defined(HZR_SHADER_COMPILER) && defined(HZR_INCLUDE_VULKAN)
 
 #include "MathCore.h"
 #include "Profiling/Timer.h"
@@ -46,7 +46,8 @@ namespace HazardRenderer::Vulkan
 
         switch (compileInfo->Renderer)
         {
-        case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
+            case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
+            default: break;
         }
         
         options.SetTargetSpirv(shaderc_spirv_version_1_2);

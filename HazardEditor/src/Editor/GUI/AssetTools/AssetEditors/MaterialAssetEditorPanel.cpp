@@ -107,9 +107,9 @@ namespace UI
 	{
 		using namespace Hazard;
 		Ref<World> world = m_Renderer->GetTargetWorld();
-		JobPromise promise = AssetManager::GetAssetAsync(handle);
-		promise.Then([world, handle](JobGraph& graph) mutable {
-			Ref<Mesh> mesh = graph.GetResult<Ref<Mesh>>();
+        Promise<Ref<Mesh>> promise = AssetManager::GetAssetAsync<Mesh>(handle);
+		promise.ContinueWith([world, handle](auto results) mutable {
+            Ref<Mesh> mesh = results[0];
 			auto view = world->GetEntitiesWith<MeshComponent>();
 			for (auto& e : view)
 			{
@@ -211,9 +211,9 @@ namespace UI
 		Entity mesh = world->CreateEntity("Material Preview");
 		auto& mc = mesh.AddComponent<MeshComponent>();
 		mc.MeshHandle = AssetManager::AssetHandleFromFile("res/Meshes/Cube.glb");
-		JobPromise promise = AssetManager::GetAssetAsync(mc.MeshHandle);
-		promise.Then([&mc](JobGraph& graph) {
-			Ref<Mesh> asset = graph.GetResult<Ref<Mesh>>();
+        Promise<Ref<Mesh>> promise = AssetManager::GetAssetAsync<Mesh>(mc.MeshHandle);
+		promise.ContinueWith([&mc](const auto& results) mutable {
+            Ref<Mesh> asset = results[0];
 			mc.SubmeshHandle = asset->GetSubmesh(asset->GetSubmeshNodeFromName("Cube")).NodeID;
 		});
 

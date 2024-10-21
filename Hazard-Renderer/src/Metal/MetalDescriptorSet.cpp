@@ -66,7 +66,7 @@ namespace HazardRenderer::Metal
             instance->m_DescriptorValues[binding + index] = { mtlImage, mtlSampler };
         });
     }
-    void MetalDescriptorSet::Write(uint32_t binding, Ref<GPUBuffer> buffer, bool updateAll)
+    void MetalDescriptorSet::Write(uint32_t binding, Ref<GPUBuffer> buffer, uint32_t size, uint32_t offset, bool updateAll)
     {
         Ref<MetalDescriptorSet> instance = this;
         Ref<MetalGPUBuffer> mtlBuffer = buffer.As<MetalGPUBuffer>();
@@ -91,7 +91,7 @@ namespace HazardRenderer::Metal
                     encoder->setFragmentSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_SAMPLER_CUBE:
-                    encoder->setFragmentTexture(b.Value.As<MetalCubemapTexture>()->GetMetalTexture(), element.Binding - offset);
+                    encoder->setFragmentTexture(b.Value.As<MetalCubemap>()->GetMetalTexture(), element.Binding - offset);
                     encoder->setFragmentSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_STORAGE_IMAGE:
@@ -130,15 +130,15 @@ namespace HazardRenderer::Metal
                     encoder->setSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_SAMPLER_CUBE:
-                    encoder->setTexture(b.Value.As<MetalCubemapTexture>()->GetMetalTexture(), element.Binding);
+                    encoder->setTexture(b.Value.As<MetalCubemap>()->GetMetalTexture(), element.Binding);
                     encoder->setSamplerState(b.Secondary.As<MetalSampler>()->GetMetalSampler(), element.Binding - offset);
                     break;
                 case DESCRIPTOR_TYPE_STORAGE_IMAGE:
                 {
-                    const TextureType type = b.Value.As<Image2D>()->GetType();
-                    if(type == TextureType::Image2D)
+                    const ImageType type = b.Value.As<Image2D>()->GetType();
+                    if(type == ImageType::Image2D)
                         encoder->setTexture(b.Value.As<MetalImage2D>()->GetMetalTexture(), element.Binding);
-                    else encoder->setTexture(b.Value.As<MetalCubemapTexture>()->GetMetalTexture(), element.Binding);
+                    else encoder->setTexture(b.Value.As<MetalCubemap>()->GetMetalTexture(), element.Binding);
                     break;
                 }
                 case DESCRIPTOR_TYPE_UNIFORM_BUFFER:

@@ -2,20 +2,6 @@
 
 #include "Asset.h"
 
-#ifndef HZR_PLATFORM_WINDOWS
-namespace std
-{
-	template <>
-	struct hash<std::filesystem::path>
-	{
-		std::uint64_t operator()(const std::filesystem::path& path) const
-		{
-			return hash_value(path);
-		}
-	};
-}
-#endif
-
 namespace Hazard
 {
 	class AssetRegistry

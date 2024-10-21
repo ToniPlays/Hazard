@@ -66,7 +66,7 @@ namespace UI
 				ImGui::PushID(i);
 
 				ImUI::ShiftX(4.0f);
-				ImGui::Text(data.VertexBuffer->GetDebugName().c_str());
+				ImGui::Text("%s", data.VertexBuffer->GetDebugName().c_str());
 
 				ImGui::TableNextColumn();
 				ImUI::ShiftX(4.0f);

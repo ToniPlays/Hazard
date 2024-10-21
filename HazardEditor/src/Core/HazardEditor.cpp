@@ -114,15 +114,16 @@ void HazardEditorApplication::InitJobsystemHooks()
 {
 	JobSystem& system = Application::Get().GetJobSystem();
 	
-	system.Hook(JobSystem::Finished, [](Ref<JobGraph> graph) {
-		HZR_TRACE("Job graph {} at {}", graph->GetName(), graph->GetCurrentStageInfo().Name);
+	system.Hook(JobSystemHook::Finished, [](Ref<JobGraph> graph) {
+		HZR_TRACE("Job graph {} at {}", graph->GetName(), graph->GetStageName());
 	});
 	
-	system.Hook(JobSystem::Failure, [](Ref<JobGraph> graph) {
-		HZR_ERROR("Job graph {} has failed at {}", graph->GetName(), graph->GetCurrentStageInfo().Name);
+	system.Hook(JobSystemHook::Failure, [](Ref<JobGraph> graph) {
+		HZR_ERROR("Job graph {} has failed at {}", graph->GetName(), graph->GetStageName());
 	});
 
-	system.Hook(JobSystem::Message, [](Severity severity, const std::string& message) {
+	system.Hook(JobSystemHook::Message, [](Severity severity, const std::string& message) {
+        return;
 		switch (severity)
 		{
 			case Severity::Warning:
@@ -131,15 +132,17 @@ void HazardEditorApplication::InitJobsystemHooks()
 			case Severity::Error:
 				HZR_ERROR("Error: {}", message);
 				break;
+            default: break;
 		}
 	});
 
-	system.Hook(JobSystem::Status, [](Ref<Thread> thread, ThreadStatus status) {
+	system.Hook(JobSystemHook::Status, [](Ref<Thread> thread, ThreadStatus status) {
 		switch (status)
 		{
 			case ThreadStatus::Failed:
 				HZR_ERROR("Thread {} failed: {}", thread->GetThreadID(), thread->GetCurrentJob()->GetName());
 				break;
+            default: break;
 		}
 	});
 }

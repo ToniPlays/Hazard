@@ -7,8 +7,8 @@
 #include "Metal/MetalRenderCommandBuffer.h"
 #include "Metal/MetalSwapchain.h"
 
-#include "ImGui_Backend/imgui_impl_glfw.h"
-#include "ImGui_Backend/imgui_impl_metal.h"
+#include <../ImGui_Backend/imgui_impl_glfw.h>
+#include <../ImGui_Backend/imgui_impl_metal.h>
 
 #include <Metal/Metal.hpp>
 #include <Foundation/Foundation.hpp>

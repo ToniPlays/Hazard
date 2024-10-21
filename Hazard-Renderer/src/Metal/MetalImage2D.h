@@ -23,16 +23,13 @@ namespace HazardRenderer::Metal
         
         void Resize_RT(uint32_t width, uint32_t height);
         
-        Buffer ReadPixels(const ImageCopyRegion& region) override;
-        
-        TextureType GetType() const override { return TextureType::Image2D; }
-        uint32_t GetWidth() override { return m_Extent.Width; };
-        uint32_t GetHeight() override { return m_Extent.Height; };
+        ImageType GetType() const override { return ImageType::Image2D; }
+        const Extent& GetExtent() const override { return m_Extent; };
         ImageFormat GetFormat() const override { return m_Format; }
         const std::string& GetDebugName() const override { return m_DebugName; };
         virtual uint32_t GetMipLevels() const override { return m_MipLevels; };
         
-        virtual float GetAspectRatio() override { return (float)m_Extent.Width / (float)m_Extent.Height; };
+        float GetAspectRatio() const override { return (float)m_Extent.Width / (float)m_Extent.Height; };
         
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }

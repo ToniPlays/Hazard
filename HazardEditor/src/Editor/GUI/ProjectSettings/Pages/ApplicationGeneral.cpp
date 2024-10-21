@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ApplicationGeneral.h"
 #include <Hazard/ImGUI/UILibrary.h>
 #include <Hazard/ImGUI/ScopedVar.h>

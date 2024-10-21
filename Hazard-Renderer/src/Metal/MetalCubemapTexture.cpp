@@ -8,19 +8,18 @@
 
 namespace HazardRenderer::Metal
 {
-    MetalCubemapTexture::MetalCubemapTexture(CubemapTextureCreateInfo* createInfo)
+    MetalCubemap::MetalCubemap(CubemapCreateInfo* createInfo)
         : m_Format(createInfo->Format)
     {
         HZR_PROFILE_FUNCTION();
         m_DebugName = createInfo->DebugName;
         m_Usage = createInfo->Usage;
             
-        m_Width = createInfo->Width;
-        m_Height = createInfo->Height;
+        m_Extent = { createInfo->Size, createInfo->Size, 6 };
         
-        m_MipLevels = createInfo->MaxMips <= 1 ? 1 : glm::min(Math::GetBaseLog(m_Width), createInfo->MaxMips);
+        m_MipLevels = createInfo->MaxMips <= 1 ? 1 : glm::min(Math::GetBaseLog(m_Extent.Width), createInfo->MaxMips);
         
-        Ref<MetalCubemapTexture> instance = this;
+        Ref<MetalCubemap> instance = this;
         Renderer::SubmitResourceCreate([instance]() mutable {
             auto device = MetalContext::GetMetalDevice();
             
@@ -32,8 +31,8 @@ namespace HazardRenderer::Metal
             
             MTL::TextureDescriptor* descriptor = MTL::TextureDescriptor::alloc()->init();
             descriptor->setTextureType(MTL::TextureTypeCube);
-            descriptor->setWidth(instance->m_Width);
-            descriptor->setHeight(instance->m_Height);
+            descriptor->setWidth(instance->m_Extent.Width);
+            descriptor->setHeight(instance->m_Extent.Height);
             descriptor->setDepth(1);
             descriptor->setArrayLength(1);
             descriptor->setMipmapLevelCount(instance->m_MipLevels);
@@ -59,7 +58,12 @@ namespace HazardRenderer::Metal
             RegenerateMips();
     }
 
-    void MetalCubemapTexture::RegenerateMips()
+    MetalCubemap::~MetalCubemap()
+    {
+        Release();
+    }
+
+    void MetalCubemap::RegenerateMips()
     {
         Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Image gen mip", DeviceQueue::TransferBit, 1);
 
@@ -95,12 +99,12 @@ namespace HazardRenderer::Metal
             {
                 BlitImageInfo blit = {};
                 blit.Image = (Image*)this;
-                blit.SrcExtent = { m_Width >> (mip - 1), m_Height >> (mip - 1), 1 };
+                blit.SrcExtent = { m_Extent.Width >> (mip - 1), m_Extent.Height >> (mip - 1), 1 };
                 blit.SrcLayer = face;
                 blit.SrcMip = mip - 1;
                 blit.SrcLayout = IMAGE_LAYOUT_TRANSFER_SRC;
 
-                blit.DstExtent = { m_Width >> mip, m_Height >> mip, 1 };
+                blit.DstExtent = { m_Extent.Width >> mip, m_Extent.Height >> mip, 1 };
                 blit.DstLayer = face;
                 blit.DstMip = mip;
                 blit.DstLayout = IMAGE_LAYOUT_TRANSFER_DST;
@@ -133,6 +137,14 @@ namespace HazardRenderer::Metal
 
         cmdBuffer->End();
         cmdBuffer->Submit();
+    }
+    void MetalCubemap::Invalidate()
+    {
+        
+    }
+
+    void MetalCubemap::Release() {
+        
     }
 }
 #endif

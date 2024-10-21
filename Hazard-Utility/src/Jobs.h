@@ -2,4 +2,4 @@
 
 #include <Jobs/Job.h>
 #include <Jobs/JobGraph.h>
-#include <Jobs/JobPromise.h>
+#include <Jobs/Promise.h>

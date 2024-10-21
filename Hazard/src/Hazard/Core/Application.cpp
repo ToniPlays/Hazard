@@ -6,7 +6,7 @@
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/Rendering/RenderEngine.h"
 #include "Hazard/Scripting/ScriptEngine.h"
-#include "Hazard/ImGui/GUIManager.h"
+#include "Hazard/ImGUI/GUIManager.h"
 #include "Hazard/ECS/WorldHandler.h"
 
 #ifdef HZR_PLATFORM_WINDOWS

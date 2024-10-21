@@ -141,7 +141,7 @@ namespace UI
 					settings.TargetPath = File::GetPathNoExt(path).string() + ".hasset";
 				}
 
-				AssetManager::SaveAsset(world, settings);
+				//AssetManager::SaveAsset(world, settings);
 				return true;
 			}
 			case Key::P:

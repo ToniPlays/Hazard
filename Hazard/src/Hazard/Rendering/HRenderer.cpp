@@ -98,7 +98,7 @@ namespace Hazard
 		if (!material) return;
 
 		auto& drawList = s_Engine->GetDrawList();
-		MeshKey key = { vertexBuffer, indexBuffer, material, count };
+        MeshKey key = { vertexBuffer, indexBuffer, material, static_cast<uint32_t>(count) };
 
 		if (!drawList.GeometryPass.contains(key))
 		{
@@ -128,8 +128,8 @@ namespace Hazard
 		AssetHandle handle = skyLight.EnvironmentMapHandle;
 		if (handle == INVALID_ASSET_HANDLE) return;
 
-		JobPromise promise = AssetManager::GetAssetAsync(handle);
-		if (!promise.HasFinished() || !promise.Valid()) return;
+        //Promise promise = AssetManager::GetAssetAsync(handle);
+		//if (!promise.HasFinished() || !promise.Valid()) return;
 
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
 		Ref<Material> material = map->GetMaterial();

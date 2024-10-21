@@ -10,6 +10,7 @@
 #include "Metal/MetalShaderCompiler.h"
 
 #include "spdlog/fmt/fmt.h"
+#include "Jobs/JobException.h"
 
 namespace Hazard
 {
@@ -38,7 +39,7 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfoVulkan))
-					throw std::exception(compiler.GetErrorMessage().c_str());
+                    throw std::exception();
 
 				std::vector<ShaderDefine> glDefines = { { "OPENGL_API" } };
 
@@ -54,14 +55,14 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfoVkToGL))
-					throw std::exception(compiler.GetErrorMessage().c_str());
+                    throw std::exception();
 
 				compilationTime += compiler.GetCompileTime();
 
 				//Get OpenGL shader source from Vulkan binaries
 				std::string glSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), glSource))
-					throw std::exception(compiler.GetErrorMessage().c_str());
+                    throw std::exception();
 
 				return glSource;
 			}
@@ -82,7 +83,7 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfo))
-					throw std::exception(compiler.GetErrorMessage().c_str());
+                    throw std::exception();
 
 				return std::string((char*)compiler.GetCompiledBinary().Data, compiler.GetCompiledBinary().Size);
 			}
@@ -103,11 +104,11 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfo))
-					throw std::exception(compiler.GetErrorMessage().c_str());
+                    throw std::exception();
 
 				std::string mslSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), mslSource))
-					throw std::exception(compiler.GetErrorMessage().c_str());
+                    throw std::exception();
 
 				return mslSource;
 			}

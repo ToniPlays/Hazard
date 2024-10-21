@@ -5,9 +5,9 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-namespace Hazard::Logging {
+namespace Hazard {
 
-	Logger::Logger() : Module("Logger")
+	void Logger::Init()
 	{
 		spdlog::set_pattern("%^[%T.%e] [%n]: %v%$");
 		s_CoreLogger = spdlog::stdout_color_mt("Hazard");
@@ -15,10 +15,5 @@ namespace Hazard::Logging {
 
 		s_ClienLogger = spdlog::stdout_color_mt("Client");
 		s_ClienLogger->set_level(spdlog::level::trace);
-	}
-	Logger::~Logger()
-	{
-		s_CoreLogger.reset();
-		s_ClienLogger.reset();
 	}
 }

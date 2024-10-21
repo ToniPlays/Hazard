@@ -1,5 +1,7 @@
 #pragma once
 
+#include "UtilityCore.h"
+
 enum class ThreadStatus
 {
 	None,

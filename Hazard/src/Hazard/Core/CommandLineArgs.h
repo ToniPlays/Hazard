@@ -35,7 +35,7 @@ namespace Hazard
 		template<typename C>
 		static C Get(const std::string& key)
 		{
-			STATIC_ASSERT(false, C);
+            return C();
 		}
 		template<>
 		static bool Get(const std::string& key)

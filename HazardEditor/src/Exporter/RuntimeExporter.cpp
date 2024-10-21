@@ -16,7 +16,7 @@ void RuntimeExporter::Export(const std::filesystem::path& target)
 		.Name = "Export",
 		.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
 		.Stages = { { "Preprocess", 0.1f, GetDependencyJobs() },
-					{ "Dispatch jobs", 0.0f, { Ref<Job>::Create("Dispatch", DispatchAssetJobs, target / "Data" )}},
+					{ "Dispatch jobs", 0.0f, { Job::Create("Dispatch", DispatchAssetJobs, target / "Data" )}},
 					{ "Asset generation", 0.75f, { } },
 					{ "Finalize", 0.15f, { GetSaveWorldJobs() }},
 				},
@@ -24,11 +24,11 @@ void RuntimeExporter::Export(const std::filesystem::path& target)
 
 	Ref<JobGraph> graph = Ref<JobGraph>::Create(exportInfo);
 
-	JobPromise promise = Hazard::Application::Get().GetJobSystem().QueueGraph(graph);
+    //Promise<bool> promise = Hazard::Application::Get().GetJobSystem().QueueGraph(graph);
 
-	promise.Then([target = m_BuildTarget](JobGraph& graph) {
+	//promise.Then([target = m_BuildTarget](JobGraph& graph) {
 		//OS::OpenDirectory(target);
-	});
+	//});
 
 	HZR_WARN("Starting export to: {0}", m_BuildTarget.string());
 }
@@ -40,7 +40,7 @@ std::vector<Ref<Job>> RuntimeExporter::GetDependencyJobs()
 	jobs.reserve(m_TargetWorlds.size());
 
 	for (auto& target : m_TargetWorlds)
-		jobs.push_back(Ref<Job>::Create(File::GetNameNoExt(target.SourceFile), GetAssetDependenciesJob, target.SourceFile));
+		jobs.push_back(Job::Create(File::GetNameNoExt(target.SourceFile), GetAssetDependenciesJob, target.SourceFile));
 
 	return jobs;
 }
@@ -52,7 +52,7 @@ std::vector<Ref<Job>> RuntimeExporter::GetSaveWorldJobs()
 
 	for (auto& target : m_TargetWorlds)
 	{
-		Ref<Job> job = Ref<Job>::Create("World save", SaveWorldAssetJob, m_BuildTarget, target.Handle);
+		Ref<Job> job = Job::Create("World save", SaveWorldAssetJob, m_BuildTarget, target.Handle);
 		jobs.push_back(job);
 	}
 
@@ -67,12 +67,12 @@ void RuntimeExporter::GetAssetDependenciesJob(JobInfo& job, const std::filesyste
 	std::string source = File::ReadFile(sourcePath);
 	Hazard::WorldDeserializer deserializer(File::GetName(sourcePath), source);
 	deserializer.AddProgressHandler([&job](uint64_t i, uint64_t count) {
-		job.Job->Progress((float)i / (float)count);
+		job.Current->Progress((float)i / (float)count);
 	});
 
 
 	auto referencedAssets = deserializer.GetReferencedAssets();
-	job.Job->SetResult(referencedAssets.Assets);
+	//job.Job->SetResult(referencedAssets.Assets);
 
 	for (auto& [metadata, messages] : referencedAssets.MissingAssets)
 		for (auto& message : messages)
@@ -83,14 +83,14 @@ void RuntimeExporter::DispatchAssetJobs(JobInfo& job, std::filesystem::path& ass
 {
 	using namespace Hazard;
 	std::unordered_map<AssetHandle, uint32_t> handles;
-	auto results = job.ParentGraph->GetResults<std::unordered_map<AssetMetadata, uint32_t>>();
+	/*auto results = job.ParentGraph->GetResults<std::unordered_map<AssetMetadata, uint32_t>>();
 	for (auto& result : results)
 	{
 		for (auto& [metadata, count] : result)
 			handles[metadata.Handle] += count;
 	}
 	
-	std::vector<JobPromise> promises;
+	std::vector<Promise> promises;
 
 	for (auto& [handle, count] : handles)
 	{
@@ -102,14 +102,15 @@ void RuntimeExporter::DispatchAssetJobs(JobInfo& job, std::filesystem::path& ass
 			.Flags = ASSET_MANAGER_COMBINE_ASSET,
 		};
 
-		JobPromise promise = AssetManager::GetAssetAsync(handle);
+        Promise promise = AssetManager::GetAssetAsync(handle);
 		promise.Then([settings, info = job](JobGraph& graph) {
-			JobPromise savePromise = AssetManager::SaveAsset(graph.GetResult<Ref<Asset>>(), settings);
+            Promise savePromise = AssetManager::SaveAsset(graph.GetResult<Ref<Asset>>(), settings);
 			savePromise.Then([info](JobGraph& graph) mutable {
 				info.ParentGraph->Continue();
 			});
 		});
 	}
+    */
 }
 
 void RuntimeExporter::SaveWorldAssetJob(JobInfo& job, std::filesystem::path& assetPath, AssetHandle handle)
@@ -127,12 +128,14 @@ void RuntimeExporter::SaveWorldAssetJob(JobInfo& job, std::filesystem::path& ass
 		.Flags = ASSET_MANAGER_COMBINE_ASSET,
 	};
 
+    /*
 	job.ParentGraph->Halt();
-	JobPromise promise = AssetManager::GetAssetAsync(handle, loadSettings);
+    Promise<Ref<Asset>> promise = AssetManager::GetAssetAsync(handle, loadSettings);
 	promise.Then([settings, info = job](JobGraph& graph) {
-		JobPromise savePromise = AssetManager::SaveAsset(graph.GetResult<Ref<Asset>>(), settings);
+        Promise savePromise = AssetManager::SaveAsset(graph.GetResult<Ref<Asset>>(), settings);
 		savePromise.Then([info](JobGraph& graph) mutable {
 			info.ParentGraph->Continue();
 		});
 	});
+     */
 }

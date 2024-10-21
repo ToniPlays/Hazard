@@ -17,11 +17,13 @@ public:
 	void Init() override;
 	void Run() override;
 	void Terminate() override;
-
+    
+    void InitializeHooks();
+    
 	const char* GetName() override { return "Job graph test"; }
 
 private:
 	Ref<JobGraph> m_Graph;
-	JobSystem* m_JobSystem;
+	Scope<JobSystem> m_JobSystem;
 };
 

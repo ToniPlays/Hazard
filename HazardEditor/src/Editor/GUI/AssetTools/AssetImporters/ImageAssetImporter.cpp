@@ -56,32 +56,32 @@ void ImageAssetImporter::InitializeSettings()
 
 bool ImageAssetImporter::ImportFromNew()
 {
-	using namespace Hazard;
-	ImageAssetLoader::CreateSettings imageSettings = {};
-	imageSettings.Resolution = BIT(m_ResolutionDropdown.GetSelected() + 6);
-
-	CreateAssetSettings settings = {};
-	settings.SourcePath = m_SourcePath;
-	settings.Settings = &imageSettings;
-
-	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Image, settings);
-
-	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
-	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
-
-	promise.Then([path, assetPanel](JobGraph& graph) {
-		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
-
-		SaveAssetSettings settings = {};
-		settings.TargetPath = path;
-		settings.Flags |= ASSET_MANAGER_COMBINE_ASSET;
-
-		AssetManager::SaveAsset(asset, settings).Then([assetPanel](JobGraph&) mutable { 
-			assetPanel.Refresh();
-		});
-	});
-
-	return promise.Valid();
+    using namespace Hazard;
+    ImageAssetLoader::CreateSettings imageSettings = {};
+    imageSettings.Resolution = BIT(m_ResolutionDropdown.GetSelected() + 6);
+    
+    CreateAssetSettings settings = {};
+    settings.SourcePath = m_SourcePath;
+    settings.Settings = &imageSettings;
+    
+    Promise<Ref<Texture2DAsset>> promise = AssetManager::CreateAssetAsync<Texture2DAsset>(AssetType::Image, settings);
+    
+    auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
+    auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
+    
+    promise.ContinueWith([path, assetPanel](const auto& results) {
+        Ref<Asset> asset = results[0];
+        
+        SaveAssetSettings settings = {};
+        settings.TargetPath = path;
+        settings.Flags |= ASSET_MANAGER_COMBINE_ASSET;
+        
+        //AssetManager::SaveAsset(asset, settings).Then([assetPanel](JobGraph&) mutable {
+        //	assetPanel.Refresh();
+        //});
+    });
+    
+    return true; //TODO: Maybe fix
 }
 
 bool ImageAssetImporter::ReimportExisting()
@@ -95,10 +95,10 @@ bool ImageAssetImporter::ReimportExisting()
 	SaveAssetSettings settings = {};
 	settings.Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
 
-	JobPromise promise = AssetManager::SaveAsset(asset, settings);
-	promise.Then([handle = asset->GetHandle()](JobGraph&) {
+    /*Promise<bool> promise = AssetManager::SaveAsset(asset, settings);
+	promise.ContinueWith([handle = asset->GetHandle()](const auto& results) {
 		AssetManager::Reload(handle).Wait();
 	});
-
-	return promise.Valid();
+     */
+    return false;
 }

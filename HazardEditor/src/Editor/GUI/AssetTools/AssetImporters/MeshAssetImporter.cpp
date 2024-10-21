@@ -5,22 +5,21 @@
 #include "Editor/GUI/AssetTools/AssetPanel.h"
 #include <Hazard/RenderContext/ImageAssetLoader.h>
 #include <Hazard/ImGUI/GUIManager.h>
+#include "Hazard/ImGUI/StyleManager.h"
 
 MeshAssetImporter::MeshAssetImporter()
 {
-	using namespace Hazard::ImUI;
+	const Hazard::ImUI::Style& style = Hazard::ImUI::StyleManager::GetCurrent();
 
-	const Style& style = StyleManager::GetCurrent();
-
-	m_TransformTreenode = Treenode("Transform", 125.0f);
-	m_MaterialTreenode = Treenode("Materials", 125.0f);
-	m_AnimationTreenode = Treenode("Animations", 125.0f);
+	m_TransformTreenode = Hazard::ImUI::Treenode("Transform", 125.0f);
+	m_MaterialTreenode = Hazard::ImUI::Treenode("Materials", 125.0f);
+	m_AnimationTreenode = Hazard::ImUI::Treenode("Animations", 125.0f);
 
 	m_TransformTreenode.Content([this]() {
 		m_Translation.Render();
-		ShiftY(4.0f);
+        Hazard::ImUI::ShiftY(4.0f);
 		m_Rotation.Render();
-		ShiftY(4.0f);
+        Hazard::ImUI::ShiftY(4.0f);
 	});
 
 	m_MaterialTreenode.Content([this]() {
@@ -31,7 +30,7 @@ MeshAssetImporter::MeshAssetImporter()
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, 125.0f);
 
-		if (Checkbox("Import materials", import, false))
+		if (Hazard::ImUI::Checkbox("Import materials", import, false))
 			m_Settings.Flags ^= MESH_CREATE_INCLUDE_MATERIALS;
 
 		ImGui::Columns();
@@ -96,23 +95,23 @@ bool MeshAssetImporter::ImportFromNew()
 	m_Settings.MaterialPath = rootPath / "Materials";
 	m_Settings.TexturePath = rootPath / "Textures";
 
-	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::Mesh, settings);
-	promise.Then([path, assetPanel](JobGraph& graph) {
-		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
+    Promise<Ref<Mesh>> promise = AssetManager::CreateAssetAsync<Mesh>(AssetType::Mesh, settings);
+	promise.ContinueWith([path, assetPanel](const auto& results) {
+        Ref<Asset> asset = results[0];
 		if (!asset) return;
 
 		SaveAssetSettings settings = {};
 		settings.TargetPath = path;
 		settings.Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
 
-		AssetManager::SaveAsset(asset, settings).Then([assetPanel](JobGraph&) mutable {
+		/*AssetManager::SaveAsset(asset, settings).ContinueWith([assetPanel](const auto& results) mutable {
 			Application::Get().SubmitMainThread([assetPanel]() mutable {
 				assetPanel.Refresh();
 			});
-		});
+		});*/
 	});
 
-	return promise.Valid();
+    return true; //TODO: maybe fix this
 }
 
 bool MeshAssetImporter::ReimportExisting()

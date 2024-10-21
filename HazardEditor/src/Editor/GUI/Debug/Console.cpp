@@ -18,12 +18,11 @@ namespace UI
 		});
 
 		scriptEngine.AddDebugCallback([this](const HazardScript::ScriptMessage& message) {
-			uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 			AddMessage({ message.Message, message.StackTrace, GetMessageFlagsFromSeverity(Severity::Error) });
 		});
 
 		JobSystem& system = Application::Get().GetJobSystem();
-		system.Hook(JobSystem::Message, [this](Severity severity, const std::string& message) {
+		system.Hook(JobSystemHook::Message, [this](Severity severity, const std::string& message) {
 			//AddMessage({ message, "", GetMessageFlagsFromSeverity(severity) });
 		});
 	}

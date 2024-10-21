@@ -8,7 +8,6 @@
 #include <MathCore.h>
 
 class JobSystem;
-struct JobPromise;
 
 struct GraphStageInfo 
 {
@@ -28,94 +27,63 @@ class JobGraph : public RefCount
 {
 	friend class GraphStage;
 	friend class Job;
-
+    friend class JobPromise;
 public:
 	JobGraph(const JobGraphInfo& info);
 	~JobGraph() = default;
 
 	const std::string& GetName() const { return m_Info.Name; }
-	uint32_t GetCurrentStageIndex() const { return m_CurrentStage; }
 	uint32_t GetFlags() const { return m_Info.Flags; }
 
 	const JobGraphInfo& GetInfo() const { return m_Info; }
-	const GraphStageInfo& GetCurrentStageInfo() const 
-	{ 
-		return m_Info.Stages[Math::Min<uint64_t>(m_CurrentStage, m_Info.Stages.size() - 1)]; 
-	}
-
-	bool Execute(JobSystem* system);
-	void Halt();
-	void Continue();
+    const std::string& GetStageName() const { return m_Info.Stages[m_StageIndex].Name; }
+    
+	bool SubmitJobs(JobSystem* system);
 	void ContinueWith(const std::vector<Ref<Job>>& jobs);
-	JobPromise SubGraph(Ref<JobGraph> graph);
-
+    bool Wait() const {
+        if(!m_JobSystem) return false;
+        m_HasFinished.wait(false);
+        return true;
+    }
+    
+    void AddOnFailed(const std::function<void(JobException)>&& callback)
+    {
+        m_OnFailedCallback.Add(callback);
+    }
+    
 	float GetProgress();
-
-	void WaitUntilFinished() const
-	{
-		m_HasFinished.wait(false);
-	}
-
-	bool HasFinished() const
-	{
-		return m_HasFinished;
-	}
 
 	template<typename T>
 	T GetResult() const
 	{
-		auto results = GetResults<T>();
-		return results.size() > 0 ? results[0] : T();
-	}
-
-	template<typename T>
-	std::vector<T> GetResults() const
-	{
-		if (m_CurrentStage < 1) return std::vector<T>();
-
-		auto& stageJobs = m_Info.Stages[m_CurrentStage - 1].Jobs;
-		std::vector<T> results;
-		results.reserve(stageJobs.size());
-
-		for (auto& job : stageJobs)
-			results.push_back(job->GetResult<T>());
-
-		return results;
-	}
-
-	void AddOnCompleted(const std::function<void(JobGraph&)>& callback)
-	{
-		m_OnCompleted.Add(callback);
+        return T();
 	}
 
 	template<typename T>
 	static Ref<JobGraph> EmptyWithResult(T value)
 	{
-		Ref<Job> job = Ref<Job>::Create();
-		job->SetResult(value);
-
+		Ref<Job> job = Job::Create();
+		
 		JobGraphInfo info = {};
 		info.Stages = { { "", 1.0f, { job }} };
 		auto graph = Ref<JobGraph>::Create(info);
-		graph->m_HasFinished = true;
-		graph->m_CurrentStage = 1;
 		return graph;
 	}
 
 private:
 	void OnJobFinished(Ref<Job> job);
-	void OnJobFailed(Ref<Job> job, const char* message);
+	void OnJobFailed(Ref<Job> job);
 	void SubmitNextStage();
 	
 private:
-
+    std::atomic_bool m_HasFinished = false;
+    std::atomic_bool m_Failed = false;
+    std::atomic_uint32_t m_RunningJobs = 0;
+    
 	JobGraphInfo m_Info;
-	std::atomic_uint32_t m_CurrentStage = 0;
-	std::atomic_bool m_HasFinished = false;
-	std::atomic_uint32_t m_HaltCount = 0;
-	std::mutex m_StageMutex;
-
 	JobSystem* m_JobSystem = nullptr;
-
-	Callback<void(JobGraph&)> m_OnCompleted;
+    
+    uint32_t m_StageIndex = 0;
+    
+    Callback<void(const JobException&)> m_OnFailedCallback;
 };

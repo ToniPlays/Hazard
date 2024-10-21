@@ -29,6 +29,7 @@ namespace HazardRenderer::Metal
 
         uint32_t GetWidth() const override { return m_Specs.Width; };
         uint32_t GetHeight() const override { return m_Specs.Height; };
+        float GetAspectRatio() const override { return (float)m_Specs.Width / (float)m_Specs.Height; };
         uint64_t GetColorAttachmentCount() override { return m_ColorAttachments.size(); }
 
         Ref<Image2D> GetImage(uint32_t index = 0) const override { return m_ColorAttachments[index]; };

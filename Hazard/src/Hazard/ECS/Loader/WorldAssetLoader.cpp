@@ -12,8 +12,8 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		Ref<Job> preprocessJob = Ref<Job>::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle, settings);
-		Ref<Job> finalizeJob = Ref<Job>::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
+		Ref<Job> preprocessJob = Job::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle, settings);
+		Ref<Job> finalizeJob = Job::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
 
 		JobGraphInfo pipeline = {
 			.Name = "World load",
@@ -31,7 +31,7 @@ namespace Hazard
 		Ref<World> world = asset.As<World>();
 		WorldSerializer serializer(world);
 
-		Ref<Job> contentJob = Ref<Job>::Create("GetWorldContent", GetWorldContent, serializer, settings.Flags);
+		Ref<Job> contentJob = Job::Create("GetWorldContent", GetWorldContent, serializer, settings.Flags);
 
 		JobGraphInfo pipeline = {
 			.Name = "World save",
@@ -45,7 +45,7 @@ namespace Hazard
 	{
 		auto& file = settings.SourcePath;
 
-		Ref<Job> createJob = Ref<Job>::Create("GetWorldContent", CreateWorld, file);
+		Ref<Job> createJob = Job::Create("GetWorldContent", CreateWorld, file);
 
 		JobGraphInfo pipeline = {
 			.Name = "World create",
@@ -59,7 +59,7 @@ namespace Hazard
 	{
 		std::string result = serializer.Serialize();
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(Buffer::Copy(result.c_str(), result.length()));
-		info.Job->SetResult(buffer);
+		//info.Job->SetResult(buffer);
 	}
 	void WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings)
 	{
@@ -74,7 +74,7 @@ namespace Hazard
 
 		WorldDeserializer deserializer = WorldDeserializer(File::GetName(metadata.SourceFile), source);
 
-		deserializer.AddProgressHandler([job = info.Job](uint64_t index, uint64_t count) mutable {
+		deserializer.AddProgressHandler([job = info.Current](uint64_t index, uint64_t count) mutable {
 			job->Progress(((float)index / (float)count) * 0.1f);
 		});
 
@@ -84,9 +84,9 @@ namespace Hazard
 		assetJobs.reserve(assets.Assets.size());
 
 		for (auto& [meta, count] : assets.Assets)
-			assetJobs.push_back(Ref<Job>::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
+			assetJobs.push_back(Job::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
 
-		info.ParentGraph->ContinueWith(assetJobs);
+		//info.ParentGraph->ContinueWith(assetJobs);
 	}
 	void WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)
 	{
@@ -94,13 +94,13 @@ namespace Hazard
 		if (!metadata.IsValid()) return;
 		
 		Ref<JobGraph> loadGraph = AssetManager::GetLoadGraph(metadata);
-		JobPromise promise = info.ParentGraph->SubGraph(loadGraph);
+        /*//Promise promise = info.ParentGraph->SubGraph(loadGraph);
 
 		promise.Then([info](JobGraph&) mutable {
 			info.ParentGraph->Continue();
 		});
 
-		info.ParentGraph->Halt();
+		info.ParentGraph->Halt();*/
 	}
 	void WorldAssetLoader::FinalizeWorld(JobInfo& info, AssetHandle handle)
 	{
@@ -113,11 +113,11 @@ namespace Hazard
 		WorldDeserializer deserializer(File::GetName(metadata.SourceFile), source);
 
 		Ref<World> world = deserializer.Deserialize();
-		info.Job->SetResult(world);
+		//info.Job->SetResult(world);
 	}
 	void WorldAssetLoader::CreateWorld(JobInfo& info, const std::filesystem::path& file)
 	{
 		Ref<World> world = Ref<World>::Create(file.string());
-		info.Job->SetResult(world);
+		//info.Job->SetResult(world);
 	}
 }

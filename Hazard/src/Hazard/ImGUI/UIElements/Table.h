@@ -93,7 +93,7 @@ namespace Hazard::ImUI
 				Underline(true, 0.0f, 5.0f);
 			}
 
-			for (uint64_t i = 0; i < m_Rows.size(); i++)
+			for (uint32_t i = 0; i < m_Rows.size(); i++)
 			{
 				ImGui::PushID(i);
 

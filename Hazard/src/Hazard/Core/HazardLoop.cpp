@@ -14,23 +14,17 @@ namespace Hazard
 {
 	HazardLoop::HazardLoop()
 	{
+        Logger::Init();
 		//OPTICK_THREAD("MainThread");
 		HazardLoop::s_Instance = this;
 		m_ModuleHandler = CreateScope<ModuleHandler>();
-
-	#ifndef HZR_RELEASE
-		m_ModuleHandler->AddModule<Logging::Logger>();
-	#endif // HZR_RELEASE
 	}
 	HazardLoop::HazardLoop(Application* app) : m_Application(app)
 	{
+        Logger::Init();
 		//OPTICK_THREAD("MainThread");
 		HazardLoop::s_Instance = this;
 		m_ModuleHandler = CreateScope<ModuleHandler>();
-
-	#ifndef HZR_RELEASE
-		m_ModuleHandler->AddModule<Logging::Logger>();
-	#endif // HZR_RELEASE
 	}
 
 	HazardLoop::~HazardLoop()

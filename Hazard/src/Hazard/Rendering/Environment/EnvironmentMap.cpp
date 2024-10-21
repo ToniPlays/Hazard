@@ -29,8 +29,7 @@ namespace Hazard
 		{
 			CubemapCreateInfo cubemapInfo = {
 				.DebugName = "Irradiance",
-				.Width = 32,
-				.Height = 32,
+				.Size = 32,
 				.MaxMips = 1,
 				.Usage = ImageUsage::Texture,
 				.Format = ImageFormat::RGBA,

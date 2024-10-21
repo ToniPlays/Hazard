@@ -22,15 +22,15 @@ project "Hazard-Renderer"
 	}
 
 	References("HazardUtility")
-    References("GLM")
-    References("SpirvCross")
-    References("GLFW")
-    References("GLAD")
-    References("Spdlog")
+    	References("GLM")
+    	References("SpirvCross")
+    	References("GLFW")
+    	References("GLAD")
+    	References("Spdlog")
 	References("VMA")
-    References("OpenGL")
-    References("Vulkan")
-    References("Metal")
+    	References("OpenGL")
+    	References("Vulkan")
+    	References("Metal")
 
 	filter "system:windows or system:macosx"
 		References("ShaderC")

@@ -1,6 +1,7 @@
 #ifdef HZR_PLATFORM_IOS
 
 #include "UtilityCore.h"
+#include "Buffer/CachedBuffer.h"
 #include "File.h"
 #include "Utility/StringUtil.h"
 
@@ -89,7 +90,7 @@ std::string File::ReadFile(const std::filesystem::path& file)
         return content.UTF8String;
     }
 }
-CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
+Ref<CachedBuffer> File::ReadBinaryFile(const std::filesystem::path& path)
 {
     @autoreleasepool {
         
@@ -103,11 +104,11 @@ CachedBuffer File::ReadBinaryFile(const std::filesystem::path& path)
         NSString* bundlePath = [bundle pathForResource: fileName ofType: [NSString stringWithUTF8String: extension.c_str()]];
         
         if(!bundlePath)
-            return CachedBuffer();
+            return nullptr;
         
         NSData* content = [NSData dataWithContentsOfFile: bundlePath];
-        CachedBuffer result(content.length);
-        result.Write(content.bytes, content.length);
+        Ref<CachedBuffer> result = Ref<CachedBuffer>::Create(content.length);
+        result->Write(content.bytes, content.length);
         return result;
     }
 }

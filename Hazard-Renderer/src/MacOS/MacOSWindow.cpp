@@ -21,18 +21,18 @@ namespace HazardRenderer
 
     void Window::SendDebugMessage(const RenderMessage& message)
     {
-        if (!MacOSWindow::s_DebugCallback)
+        if (MacOSWindow::s_DebugCallback.Count() == 0)
         {
             MacOSWindow::s_QueueMessages.push_back(message);
             return;
         }
 
         for (auto& m : MacOSWindow::s_QueueMessages)
-        {
-            MacOSWindow::s_DebugCallback(m);
-        }
+            MacOSWindow::s_DebugCallback.Invoke<const RenderMessage&>(m);
+
         MacOSWindow::s_QueueMessages.clear();
-        MacOSWindow::s_DebugCallback(message);
+        MacOSWindow::s_DebugCallback.Invoke<const RenderMessage&>(message);
+
     }
 
     MacOSWindow::MacOSWindow(HazardRendererCreateInfo* info)
@@ -42,7 +42,7 @@ namespace HazardRenderer
 
         s_CurrentWindow = this;
 
-        s_DebugCallback = info->pAppInfo->MessageCallback;
+        s_DebugCallback.Add(info->pAppInfo->MessageCallback);
         m_WindowData.EventCallback = info->pAppInfo->EventCallback;
 
         if (!m_WindowData.EventCallback)
@@ -189,9 +189,9 @@ namespace HazardRenderer
         {
             const GLFWvidmode mode = modePtr[i];
             Resolution resolution = {
-                .Width = mode.width;
-                .Height = mode.height;
-                .RefreshRate = mode.refreshRate;
+                .Width = static_cast<uint32_t>(mode.width),
+                .Height = static_cast<uint32_t>(mode.height),
+                .RefreshRate = static_cast<float>(mode.refreshRate)
             };
             result.push_back(resolution);
         }

@@ -60,7 +60,6 @@ namespace UI
 	void MeshAssetEditorPanel::OnPanelRender()
 	{
 		using namespace Hazard;
-		ImVec2 corner = ImGui::GetCursorPos();
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
 		if (size.x != m_Width || size.y != m_Height)

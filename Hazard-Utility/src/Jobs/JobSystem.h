@@ -5,9 +5,11 @@
 #include "JobFlags.h"
 #include "Hooks.h"
 #include "Severity.h"
+#include "Promise.h"
+
+#include "spdlog/fmt/fmt.h"
 
 class JobGraph;
-struct JobPromise;
 
 class Thread : public RefCount
 {
@@ -37,20 +39,19 @@ private:
 	std::atomic<ThreadStatus> m_Status = ThreadStatus::Waiting;
 };
 
+enum class JobSystemHook
+{
+    Submit = 0,
+    Status,
+    Finished,
+    Failure,
+    Message
+};
+
 class JobSystem
 {
 	friend class Thread;
 	friend class JobGraph;
-
-public:
-	enum JobSystemHook
-	{
-		Submit = 0,
-		Status,
-		Finished,
-		Failure,
-		Message
-	};
 
 public:
 	JobSystem(uint32_t threads = std::thread::hardware_concurrency());
@@ -61,9 +62,43 @@ public:
 
 	void WaitForJobsToFinish();
 	void Terminate();
+    
+    template<typename T>
+	Promise<T> Submit(Ref<JobGraph> graph)
+    {
+        if (!graph)
+        {
+            std::string msg = "Tried submitting nullptr, aborting";
+            SendMessage(Severity::Warning, msg);
+            return Promise<T>();
+        }
+            
+        if (!graph->SubmitJobs(this))
+        {
+            m_HookCallbacks.Add([this, graph]() mutable {
+                std::string message = fmt::format("Failed to submit graph {0}: No starting jobs specified", graph->GetName());
+                m_MessageHook.Invoke(Severity::Error, message);
+            });
+            return Promise<T>();
+        }
 
-	JobPromise QueueGraph(Ref<JobGraph> graph, bool notify = true);
+        m_GraphMutex.lock();
+        m_QueuedGraphs.push_back(graph);
+        m_HookCallbacks.Add([this, graph]() mutable {
+            m_Hooks.Invoke(JobSystemHook::Submit, graph);
+        });
+        
+        m_GraphMutex.unlock();
+        
+        return Promise<T>(graph);
+    }
+    
 	uint64_t WaitForUpdate();
+    void Update() 
+    {
+        m_HookCallbacks.Invoke();
+        m_HookCallbacks.Clear();
+    }
 
 	void Hook(JobSystemHook hook, const std::function<void(Ref<JobGraph>)>& callback)
 	{
@@ -86,7 +121,9 @@ private:
 	void SendMessage(Severity severity, const std::string& message)
 	{
 		std::scoped_lock lock(m_MessageMutex);
-		m_MessageHook.Invoke(severity, message);
+        m_HookCallbacks.Add([this, msg = message, severity]() mutable {
+            m_MessageHook.Invoke(severity, msg);
+        });
 	}
 
 
@@ -111,4 +148,5 @@ private:
 	Hooks<JobSystemHook, void(Ref<JobGraph>)> m_Hooks;
 	Callback<void(Severity, const std::string&)> m_MessageHook;
 	Callback<void(Ref<Thread>, ThreadStatus)> m_StatusHook;
+    Callback<void()> m_HookCallbacks;
 };

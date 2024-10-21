@@ -78,6 +78,7 @@ namespace HazardRenderer::Metal
         
         return succeeded;
     }
+
     bool MetalShaderCompiler::Decompile(Buffer binary, std::string& result, bool tesellation)
     {
         HZR_ASSERT(binary.Size > 0, "Cannot use empty binary data");
@@ -90,11 +91,11 @@ namespace HazardRenderer::Metal
         options.vertex_for_tessellation = tesellation;
         options.texture_buffer_native = true;
         
-        spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
+        spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size);
         
         compiler.set_msl_options(options);
-        result = compiler.compile(); 
-    
+        result = compiler.compile();
+        
         return !result.empty();
     }
     std::unordered_map<std::string, MSLBinding> MetalShaderCompiler::GetMSLBindings(Buffer binary, bool tesellation)
@@ -135,7 +136,6 @@ namespace HazardRenderer::Metal
         for(auto& image : resources.storage_images)
         {
             int id = compiler.get_automatic_msl_resource_binding(image.id);
-            auto& type = compiler.get_type(image.type_id);
             uint32_t sId = compiler.get_automatic_msl_resource_binding_secondary(image.id);
             
             if(id == -1) continue;

@@ -12,11 +12,13 @@ class Job;
 
 struct JobInfo 
 {
-	Ref<Job> Job;
+	Ref<Job> Current;
 	Ref<Thread> Thread;
-	Ref<JobGraph> ParentGraph;
+	Ref<JobGraph> Graph;
 	uint32_t StageIndex;
 	uint32_t ExecutionID;
+    
+    void ContinueWith(Ref<Job> job);
 };
 
 class Job : public RefCount
@@ -26,16 +28,6 @@ class Job : public RefCount
 	using JobCallback = std::function<void(JobInfo&)>;
 
 public:
-
-	Job() = default;
-	~Job();
-
-	template<typename Fn, typename... Args>
-	Job(const std::string& name, Fn&& callback, Args&&... args) : m_JobName(name)
-	{
-		m_JobCallback = std::bind(&callback, std::placeholders::_1, std::forward<Args>(args)...);
-	}
-
 	const std::string& GetName() const { return m_JobName; }
 	JobStatus GetStatus() const { return m_Status; }
 
@@ -44,22 +36,36 @@ public:
 
 	float GetExecutionTime() const { return m_ExecutionTime; }
 	float GetProgress() const { return m_Progress; }
-
-	template<typename T>
-	T GetResult() const
-	{
-		return m_Result ? *(T*)m_Result : T();
-	}
-	template<typename T>
-	void SetResult(T value)
-	{
-		T* val = hnew T(value);
-		m_Result = (void*)val;
-		
-		m_DestroyQueue.Add([result = val]() mutable {
-			hdelete (T*)result;
-		});
-	}
+    
+    std::optional<JobException> GetException() const { return m_Exception; }
+    
+    template<typename Fn, typename... Args>
+    static Ref<Job> Create(const std::string& name, Fn&& callback, Args&&... args)
+    {
+        return hnew Job(name, callback, args...);
+    }
+    
+    static Ref<Job> Lambda(const std::string& name, JobCallback&& callback)
+    {
+        Ref<Job> job = Create();
+        job->m_JobName = name;
+        job->m_JobCallback = callback;
+        return job;
+    }
+    static Ref<Job> Create()
+    {
+        return hnew Job();
+    }
+    
+private:
+    
+    Job() = default;
+    
+    template<typename Fn, typename... Args>
+    Job(const std::string& name, Fn&& callback, Args&&... args) : m_JobName(name)
+    {
+        m_JobCallback = std::bind(&callback, std::placeholders::_1, std::forward<Args>(args)...);
+    }
 
 private:
 
@@ -73,7 +79,5 @@ private:
 	JobGraph* m_JobGraph = nullptr;
 
 	JobStatus m_Status = JobStatus::None;
-
-	void* m_Result = nullptr;
-	Callback<void()> m_DestroyQueue;
+    std::optional<JobException> m_Exception;
 };

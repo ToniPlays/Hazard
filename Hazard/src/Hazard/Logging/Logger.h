@@ -4,17 +4,15 @@
 
 #include "spdlog/spdlog.h"
 
-namespace Hazard::Logging
+namespace Hazard
 {
-
-	class Logger : public Module
+	class Logger
 	{
 		using SPLogger = std::shared_ptr<spdlog::logger>;
 
 	public:
-		Logger();
-		~Logger();
-
+		static void Init();
+        
 		static SPLogger GetCoreLogger() { return s_CoreLogger; }
 		static SPLogger GetClientLogger() { return s_ClienLogger; }
 

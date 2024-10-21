@@ -11,13 +11,13 @@
 #include "UID.h"
 #include "Callback.h"
 
-#define REFERENCE_SOURCE(references, x, msg) { AssetHandle handle;																							\
-										  if (YamlUtils::Deserialize<AssetHandle>(comp, x, handle, 0))														\
+#define REFERENCE_SOURCE(references, key, msg) { AssetHandle handle;																							\
+if (YamlUtils::Deserialize<AssetHandle>(comp, key, handle, 0))														\
 										  {																													\
 											AssetMetadata& metadata = AssetManager::GetMetadata(handle);													\
 											if(metadata.Type != AssetType::Undefined)																		\
 												references.Assets[metadata] += 1;																			\
-											else references.MissingAssets[metadata].push_back(fmt::format("Missing {} in entity {}", ##x, entityName));		\
+											else references.MissingAssets[metadata].push_back(fmt::format("Missing {} in entity {}", key, entityName));		\
 										  }																													\
 										}																	
 

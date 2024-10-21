@@ -2,6 +2,12 @@
 
 VULKAN_SDK = os.getenv("VULKAN_SDK")
 
+if VULKAN_SDK == nil then
+	print("Vulkan SDK not found")
+else
+	print("Vulkan SDK at " .. VULKAN_SDK) 
+end
+
 Dependencies = {
     YAML = {
         IncludeDir = "%{wks.location}/Hazard/vendor/yaml-cpp/include",
@@ -76,7 +82,7 @@ Dependencies = {
             Debug = { "%{VULKAN_SDK}/Lib/spirv-cross-cored.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsld.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msld.lib" },
             Release = { "%{VULKAN_SDK}/Lib/spirv-cross-core.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsl.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msl.lib" },
             Dist = { "%{VULKAN_SDK}/Lib/spirv-cross-core.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsl.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msl.lib" },
-        }
+        },
     },
     StbImage = {
         IncludeDir = "%{wks.location}/Hazard/vendor/stb_image"

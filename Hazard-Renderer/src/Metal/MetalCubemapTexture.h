@@ -10,27 +10,29 @@
 
 namespace HazardRenderer::Metal
 {
-    class MetalCubemapTexture : public CubemapTexture
+    class MetalCubemap : public Cubemap
     {
     public:
-        MetalCubemapTexture() = default;
-        MetalCubemapTexture(CubemapCreateInfo* createInfo);
+        MetalCubemap() = default;
+        MetalCubemap(CubemapCreateInfo* createInfo);
+        ~MetalCubemap();
         
+        const std::string& GetDebugName() const override { return m_DebugName; }
         ImageFormat GetFormat() const override { return m_Format; };
-        uint32_t GetWidth() const override { return m_Width; };
-        uint32_t GetHeight() const override { return m_Height; }
-        glm::uvec2 GetSize() const override { return { m_Width, m_Height }; };
+        const Extent& GetExtent() const override { return m_Extent; };
         uint32_t GetMipLevels() const override { return m_MipLevels; }
+        float GetAspectRatio() const override { return 1.0f; };
         void RegenerateMips() override;
+        
+        void Invalidate() override;
+        void Release() override;
         
         //Metal specific
         MTL::Texture* GetMetalTexture() const { return m_MetalTexture; }
-        const std::string& GetDebugName() const { return m_DebugName; }
         
     private:
         ImageFormat m_Format = ImageFormat::None;
-        uint32_t m_Width = 0;
-        uint32_t m_Height = 0;
+        Extent m_Extent;
         uint32_t m_MipLevels = 1;
         ImageUsage m_Usage;
         

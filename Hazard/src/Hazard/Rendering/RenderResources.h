@@ -72,12 +72,9 @@ namespace Hazard
 
 			CameraUniformBuffer = GPUBuffer::Create(&cameraUBO);
 
-			auto& resources = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources();
-
 			CubemapCreateInfo blackCubemap = {
 				.DebugName = "BlackCubemap",
-				.Width = 1,
-				.Height = 1,
+				.Size = 1,
 				.MaxMips = 1,
 				.Usage = ImageUsage::Texture,
 				.Format = ImageFormat::RGBA,
@@ -91,8 +88,7 @@ namespace Hazard
 
 			CubemapCreateInfo whiteCubemap = {
 				.DebugName = "WhiteCubemap",
-				.Width = 1,
-				.Height = 1,
+				.Size = 1,
 				.MaxMips = 1,
 				.Usage = ImageUsage::Texture,
 				.Format = ImageFormat::RGBA,

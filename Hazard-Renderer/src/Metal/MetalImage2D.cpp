@@ -93,35 +93,6 @@ namespace HazardRenderer::Metal
     {
         
     }
-    Buffer MetalImage2D::ReadPixels(const ImageCopyRegion& region)
-    {
-        Buffer buffer;
-        buffer.Allocate(4 * region.Extent.Width * region.Extent.Height * region.Extent.Depth);
-        
-        Ref<MetalImage2D> instance = this;
-        Renderer::Submit([instance, dataBuffer = buffer, region]() mutable {
-            
-            auto device = MetalContext::GetMetalDevice();
-            auto commandBuffer = device->GetGraphicsQueue()->commandBuffer();
-            
-            MTL::BlitCommandEncoder* encoder = commandBuffer->blitCommandEncoder();
-            
-            MTL::Buffer* buffer = device->GetMetalDevice()->newBuffer(dataBuffer.Size, MTL::ResourceOptionCPUCacheModeDefault);
-        
-            encoder->copyFromTexture(instance->m_MetalTexture, 0, 0, { region.X, region.Y, region.Z }, { region.Extent.Width, region.Extent.Height, region.Extent.Depth }, buffer, 0, 4 * region.Extent.Width, 0);
-            
-            encoder->endEncoding();
-            commandBuffer->commit();
-            commandBuffer->waitUntilCompleted();
-            
-            encoder->release();
-            commandBuffer->release();
-            buffer->release();
-            
-            dataBuffer.Write(buffer->contents(), dataBuffer.Size);
-        });
-        return buffer;
-    }
     
     void MetalImage2D::Invalidate_RT()
     {

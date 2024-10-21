@@ -176,7 +176,9 @@ namespace UI
 			case ThreadStatus::Terminated:	return "Terminated";
 			case ThreadStatus::Waiting:		return "Waiting";
 			case ThreadStatus::Executing:	return "Executing";
+            case ThreadStatus::Finished:    return "Finished";
+            case ThreadStatus::Failed:      return "Failed";
 		}
 		return "";
 	}
-	}
+}

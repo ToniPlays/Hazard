@@ -142,7 +142,6 @@ namespace Hazard
 		{
 			const auto& entityID = sourceEntities[i - 1];
 			Entity sourceEntity = { entityID, sourceWorld.Raw() };
-			const TagComponent& tc = sourceEntity.GetComponent<TagComponent>();
 
 			Entity destEntity = copied->CreateEntity(sourceEntity);
 			copied->m_EntityUIDMap[destEntity.GetUID()] = destEntity;

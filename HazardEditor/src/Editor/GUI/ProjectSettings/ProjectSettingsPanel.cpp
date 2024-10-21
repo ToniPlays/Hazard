@@ -207,7 +207,7 @@ namespace UI
 	{
 		//DrawInputSourceTable();
 
-		auto& schema = InputManager::GetSchema();
+		//auto& schema = InputManager::GetSchema();
 
 		ImUI::Treenode bindings("Bindings", true);
 		bindings.Content([&]() mutable {

@@ -58,7 +58,7 @@ namespace Hazard
 			aiMaterial* mat = scene->mMaterials[materialIndex];
 
 			auto& material = materials.emplace_back();
-			material.Name = mat->GetName().C_Str();
+			//material.Name = mat->GetName().C_Str();
 			material.MaterialIndex = materialIndex;
 			material.PropertyCount = mat->mNumProperties;
 			material.TextureCount = 0;
@@ -250,7 +250,7 @@ namespace Hazard
 		}
 
 		MeshImporter::MaterialData data = {
-			.Name = mat->GetName().C_Str(),
+			//.Name = mat->GetName().C_Str(),
 			.Properties = properties
 		};
 
@@ -395,8 +395,6 @@ namespace Hazard
 
 	std::unordered_map<MeshImporter::TextureType, uint32_t> AssimpImporter::GetMaterialTextures(aiMaterial* material)
 	{
-		const aiScene* scene = GetScene();
-
 		std::unordered_map<TextureType, uint32_t> result;
 
 		Hooks<aiTextureType, void(uint32_t)> hooks;

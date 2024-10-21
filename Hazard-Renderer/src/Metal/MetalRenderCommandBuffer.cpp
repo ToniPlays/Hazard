@@ -179,12 +179,12 @@ namespace HazardRenderer::Metal
             encoder->release();
         });
     }
-    void MetalRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding)
+    void MetalRenderCommandBuffer::SetVertexBuffer(Ref<GPUBuffer> vertexBuffer, uint32_t binding, uint64_t bufferOffset)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
         Ref<MetalGPUBuffer> buffer = vertexBuffer.As<MetalGPUBuffer>();
-        Renderer::Submit([instance, buffer, binding]() mutable {
-            instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), 0, 28 + binding);
+        Renderer::Submit([instance, buffer, binding, bufferOffset]() mutable {
+            instance->m_RenderEncoder->setVertexBuffer(buffer->GetMetalBuffer(), bufferOffset, 28 + binding);
         });
     }
     void MetalRenderCommandBuffer::SetDescriptorSet(Ref<DescriptorSet> descriptorSet, uint32_t set)
@@ -241,11 +241,11 @@ namespace HazardRenderer::Metal
         
     }
 
-    void MetalRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer)
+    void MetalRenderCommandBuffer::Draw(uint64_t count, Ref<GPUBuffer> indexBuffer, uint32_t bufferOffset)
     {
-        DrawInstanced(count, 1, indexBuffer);
+        DrawInstanced(count, 1, indexBuffer, bufferOffset);
     }
-    void MetalRenderCommandBuffer::DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer)
+    void MetalRenderCommandBuffer::DrawInstanced(uint64_t count, uint32_t instanceCount, Ref<GPUBuffer> indexBuffer, uint32_t bufferOffset)
     {
         Ref<MetalRenderCommandBuffer> instance = this;
         Ref<MetalGPUBuffer> mtlIndexBuffer = indexBuffer.As<MetalGPUBuffer>();
@@ -315,7 +315,7 @@ namespace HazardRenderer::Metal
         Renderer::Submit([instance, destinationImage, region, buffer]() mutable {
             HZR_PROFILE_FUNCTION();
             
-            MTL::Texture* texture = destinationImage->GetType() == TextureType::Image2D ? destinationImage.As<MetalImage2D>()->GetMetalTexture() : destinationImage.As<MetalCubemapTexture>()->GetMetalTexture();
+            MTL::Texture* texture = destinationImage->GetType() == ImageType::Image2D ? destinationImage.As<MetalImage2D>()->GetMetalTexture() : destinationImage.As<MetalCubemap>()->GetMetalTexture();
             
             MTL::Region mtlRegion;
             mtlRegion.size.width = region.Extent.Width;
@@ -333,7 +333,7 @@ namespace HazardRenderer::Metal
     {
         if(!m_BlitComputePipeline)
         {
-            std::string shaderSource = blitInfo.Image->GetType() == TextureType::Image2D ? R"(
+            std::string shaderSource = blitInfo.Image->GetType() == ImageType::Image2D ? R"(
                         kernel void main0(constant BlitInfo& info [[buffer(0)]], texture2d<float> src [[texture(0)]], texture2d<float, access::write> dst [[texture(1)]], uint3 gl_GlobalInvocationID [[thread_position_in_grid]], uint3 gl_NumWorkGroups [[threadgroups_per_grid]])
                         {
                             
@@ -434,7 +434,7 @@ namespace HazardRenderer::Metal
             info.SrcMip = blitInfo.SrcMip;
             info.DstMip = blitInfo.DstMip;
             
-            MTL::Texture* texture = blitInfo.Image->GetType() == TextureType::Image2D ? blitInfo.Image.As<MetalImage2D>()->GetMetalTexture() : blitInfo.Image.As<MetalCubemapTexture>()->GetMetalTexture();
+            MTL::Texture* texture = blitInfo.Image->GetType() == ImageType::Image2D ? blitInfo.Image.As<MetalImage2D>()->GetMetalTexture() : blitInfo.Image.As<MetalCubemap>()->GetMetalTexture();
             
             instance->m_ComputeEncoder->setBytes(&info, sizeof(blitInfo), 0);
             instance->m_ComputeEncoder->setTexture(texture, 0);

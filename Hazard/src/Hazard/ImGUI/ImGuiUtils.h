@@ -106,9 +106,6 @@ namespace ImGui
         bool pressed = ButtonBehavior(interact_bb, id, &hovered, &held, button_flags);
         bool toggled = false;
 
-        if (hovered)
-            float x = 0;
-
         if (!is_leaf)
         {
             if (pressed && g.DragDropHoldJustPressedId != id)

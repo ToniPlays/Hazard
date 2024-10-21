@@ -23,9 +23,9 @@ namespace Editor
 	void EditorWorldManager::LoadWorld(AssetHandle handle)
 	{
 		Timer timer;
-		JobPromise promise = AssetManager::GetAssetAsync(handle);
-		promise.Then([timer](JobGraph& graph) {
-			Ref<World> result = graph.GetResult<Ref<World>>();
+        Promise<Ref<World>> promise = AssetManager::GetAssetAsync<World>(handle);
+		promise.ContinueWith([timer](const auto& results) {
+            Ref<World> result = results[0];
 			if (!result) return;
 
 			SetWorld(result);

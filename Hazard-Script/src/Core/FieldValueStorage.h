@@ -70,7 +70,7 @@ namespace HazardScript
 		template<typename T>
 		void SetStoredValue(T value)
 		{
-			STATIC_ASSERT(false, T);
+			
 		}
 		//Target is MonoClassField*, for array types it returns MonoArray*
 		/*

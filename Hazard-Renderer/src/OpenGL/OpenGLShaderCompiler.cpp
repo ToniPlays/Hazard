@@ -1,6 +1,6 @@
 #include "OpenGLShaderCompiler.h"
 
-#ifdef HZR_SHADER_COMPILER
+#if defined(HZR_SHADER_COMPILER) && defined(HZR_INCLUDE_OPENGL)
 
 #include "MathCore.h"
 #include "Profiling/Timer.h"
@@ -73,7 +73,7 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		m_ErrorMessage.clear();
-		spirv_cross::CompilerGLSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
+		spirv_cross::CompilerGLSL compiler((uint32_t*)binary.Data, binary.Size);
 		result = compiler.compile();
 		return !result.empty();
 	}

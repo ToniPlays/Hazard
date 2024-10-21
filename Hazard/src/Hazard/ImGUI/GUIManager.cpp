@@ -3,6 +3,7 @@
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "../ImGui_Backend/FontAwesome.h"
 #include "Platform/Vulkan/GUIPlatformVulkan.h"
+#include "Platform/Metal/GUIPlatformMetal.h"
 
 #include "imgui.h"
 #include "../../../vendor/ImGui_Backend/ImGuizmo.h"
@@ -114,7 +115,7 @@ namespace Hazard
 	#endif
 	#ifdef HZR_INCLUDE_METAL
 		case RenderAPI::Metal: {
-			m_Platform = hnew EditorPlatformMetal(window);
+			m_Platform = hnew GUIPlatformMetal(window);
 			break;
 		}
 	#endif

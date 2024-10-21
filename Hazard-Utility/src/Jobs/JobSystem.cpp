@@ -10,12 +10,12 @@ void Thread::Execute(Ref<Job> job)
 
 	m_CurrentJob = job;
 
-	JobInfo info = {};
-	info.Thread = this;
-
-	m_Status = ThreadStatus::Executing;
 	try
 	{
+        JobInfo info = {};
+        info.Thread = this;
+        
+        m_Status = ThreadStatus::Executing;
 		job->Execute(info);
 		m_Status = ThreadStatus::Finished;
 	}
@@ -118,7 +118,7 @@ bool JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 
 	m_JobCount.notify_all();
 
-	std::string msg = fmt::format("Queuing {} jobs", jobs.size());
+	std::string msg = fmt::format("Queued {} jobs", jobs.size());
 	SendMessage(Severity::Info, msg);
 	return true;
 }
@@ -148,6 +148,8 @@ void JobSystem::OnGraphFinished(Ref<JobGraph> graph)
 		m_QueuedGraphs.erase(it);
 
 	m_GraphMutex.unlock();
+    
+    m_Hooks.Invoke(JobSystemHook::Finished, graph);
 }
 
 void JobSystem::WaitForJobsToFinish()
@@ -165,27 +167,6 @@ void JobSystem::Terminate()
 	m_JobCount.notify_all();
 }
 
-JobPromise JobSystem::QueueGraph(Ref<JobGraph> graph, bool notify)
-{
-	if (!graph)
-	{
-		std::string msg = "Tried submitting null graph, aborting";
-		SendMessage(Severity::Warning, msg);
-		return JobPromise();
-	}
-
-	if (!graph->Execute(this))
-		return JobPromise();
-
-	m_GraphMutex.lock();
-	m_QueuedGraphs.push_back(graph);
-	m_GraphMutex.unlock();
-	
-	if(notify)
-		m_Hooks.Invoke(JobSystemHook::Submit, graph);
-
-	return JobPromise(graph);
-}
 
 uint64_t JobSystem::WaitForUpdate()
 {

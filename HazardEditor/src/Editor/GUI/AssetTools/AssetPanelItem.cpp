@@ -259,6 +259,7 @@ namespace UI
 				panel.SetMaterialHandle(m_Handle);
 				break;
 			}
+            default: break;
 		}
 	}
 }

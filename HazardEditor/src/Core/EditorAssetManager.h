@@ -29,10 +29,10 @@ public:
     static AssetHandle GetDefaultMesh(const std::string& name);
 
 private:
-	static void ImportEngineShaders(std::vector<JobPromise>& promises);
-	static void ImportEngineEnvironments(std::vector<JobPromise>& promises);
-	static void ImportEngineMeshes(std::vector<JobPromise>& promises);
-	static void ImportEngineImages(std::vector<JobPromise>& promises);
+	static void ImportEngineShaders();
+	static void ImportEngineEnvironments();
+	static void ImportEngineMeshes();
+	static void ImportEngineImages();
 
 
 private:

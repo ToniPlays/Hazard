@@ -17,7 +17,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		Ref<Job> createJob = Ref<Job>::Create(fmt::format("ImageLoad: {}", metadata.FilePath.string()), CreateImageFromBinary, metadata.Handle);
+		Ref<Job> createJob = Job::Create(fmt::format("ImageLoad: {}", metadata.FilePath.string()), CreateImageFromBinary, metadata.Handle);
 
 		JobGraphInfo info = {
 			.Name = "Image load",
@@ -33,8 +33,8 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(settings.Flags & ASSET_MANAGER_COMBINE_ASSET, "Cannot override image source file");
 
-		Ref<Job> readbackJob = Ref<Job>::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
-		Ref<Job> processJob = Ref<Job>::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
+		Ref<Job> readbackJob = Job::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
+		Ref<Job> processJob = Job::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
 
 		JobGraphInfo info = {
 			.Name = "Image save",
@@ -54,8 +54,8 @@ namespace Hazard
 		if (settings.Settings)
 			imageSpec = *(CreateSettings*)settings.Settings;
 
-		Ref<Job> sourceLoad = Ref<Job>::Create(fmt::format("Image data load from: {0}", file.string()), ImageDataLoadFromSource, file, imageSpec);
-		Ref<Job> createImage = Ref<Job>::Create(fmt::format("Image {}", File::GetName(file)), CreateImageFromData, imageSpec);
+		Ref<Job> sourceLoad = Job::Create(fmt::format("Image data load from: {0}", file.string()), ImageDataLoadFromSource, file, imageSpec);
+		Ref<Job> createImage = Job::Create(fmt::format("Image {}", File::GetName(file)), CreateImageFromData, imageSpec);
 
 		JobGraphInfo info = {
 			.Name = "Image load",
@@ -72,7 +72,7 @@ namespace Hazard
 	{
 		if (path.empty())
 		{
-			info.Job->SetResult(TextureHeader());
+			//info.Job->SetResult(TextureHeader());
 			return;
 		}
 
@@ -83,12 +83,12 @@ namespace Hazard
 		if (!header.ImageData.Data)
 			throw JobException("Image load from source failed");
 
-		info.Job->SetResult(header);
+		//info.Job->SetResult(header);
 	}
 
 	void ImageAssetLoader::CreateImageFromData(JobInfo& info, CreateSettings settings)
 	{
-		TextureHeader header = info.ParentGraph->GetResult<TextureHeader>();
+		TextureHeader header = info.Graph->GetResult<TextureHeader>();
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
 		if (header.ImageData)
@@ -98,7 +98,7 @@ namespace Hazard
 			asset->Invalidate(header.ImageData);
 		}
 
-		info.Job->SetResult(asset);
+		//info.Job->SetResult(asset);
 		header.ImageData.Release();
 	}
 
@@ -149,17 +149,17 @@ namespace Hazard
 				.Offset = 0
 			};
 
-			Buffer data = readbackBuffer->ReadData(region);
-			info.Job->SetResult(Ref<CachedBuffer>::Create(data));
-			info.ParentGraph->Continue();
+			//Buffer data = readbackBuffer->ReadData(region);
+			//info.Job->SetResult(Ref<CachedBuffer>::Create(data));
+			//info.ParentGraph->Continue();
 		});
 
-		info.ParentGraph->Halt();
+		//info.ParentGraph->Halt();
 	}
 
 	void ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
-		Ref<CachedBuffer> imageData = info.ParentGraph->GetResult<Ref<CachedBuffer>>();
+		Ref<CachedBuffer> imageData = info.Graph->GetResult<Ref<CachedBuffer>>();
 
 		ImageAssetFileHeader file = {
 			.Extent = image->GetExtent(),
@@ -171,7 +171,7 @@ namespace Hazard
 		buf->Write(file);
 		buf->Write(imageData->GetData(), imageData->GetSize());
 
-		info.Job->SetResult(buf);
+		//info.Job->SetResult(buf);
 	}
 
 	void ImageAssetLoader::CreateImageFromBinary(JobInfo& info, AssetHandle handle)
@@ -192,6 +192,6 @@ namespace Hazard
 		asset->SetMaxMipLevels(1);
 		asset->Invalidate(pack.AssetData->Read<Buffer>(pack.AssetData->GetSize() - pack.AssetData->GetCursor()));
 
-		info.Job->SetResult(asset);
+		//info.Job->SetResult(asset);
 	}
 }

@@ -286,8 +286,11 @@ namespace Hazard::ImUI
 		#ifdef HZR_INCLUDE_METAL
 			case RenderAPI::Metal:
 			{
+                /*
+                static std::unordered_map<Metal::MetalImage2D*, MTL::Texture*> cache;
 				cache[image.Raw()] = image.As<Metal::MetalImage2D>()->GetMetalTexture();
 				return cache[image.Raw()];
+                 */
 			}
 		#endif
 			default:

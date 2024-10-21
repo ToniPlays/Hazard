@@ -52,7 +52,7 @@ bool EnvironmentAssetImporter::ImportFromNew()
 	using namespace Hazard;
 
 	EnvironmentAssetLoader::CreateSettings envSettings = {
-		.Resolution = BIT(m_Resolution.GetSelected() + 9),
+		.Resolution = (uint32_t)BIT(m_Resolution.GetSelected() + 9),
 		.Samples = m_SampleCount.GetValue(),
 	};
 
@@ -60,25 +60,25 @@ bool EnvironmentAssetImporter::ImportFromNew()
 	settings.SourcePath = m_SourcePath;
 	settings.Settings = &envSettings;
 
-	JobPromise promise = AssetManager::CreateAssetAsync(AssetType::EnvironmentMap, settings);
+    Promise<Ref<EnvironmentMap>> promise = AssetManager::CreateAssetAsync<EnvironmentMap>(AssetType::EnvironmentMap, settings);
 
 	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
 	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
 
-	promise.Then([path, assetPanel](JobGraph& graph) {
-		Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
+	promise.ContinueWith([path, assetPanel](const auto& results) {
+        Ref<Asset> asset = results[0];
 		if (!asset) return;
 
 		SaveAssetSettings settings = {};
 		settings.TargetPath = path;
 		settings.Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
 
-		AssetManager::SaveAsset(asset, settings).Then([assetPanel](JobGraph&) mutable {
+		/*AssetManager::SaveAsset(asset, settings).ContinueWith([assetPanel](const auto& results) mutable {
 			assetPanel.Refresh();
-		});
+		});*/
 	});
 
-	return promise.Valid();
+    return true; //TODO: Maybe fix
 }
 
 bool EnvironmentAssetImporter::ReimportExisting()

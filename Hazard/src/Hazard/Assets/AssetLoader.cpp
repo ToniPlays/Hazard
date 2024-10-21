@@ -27,7 +27,7 @@ namespace Hazard
 
 		if (m_Loaders.find(asset->GetType()) == m_Loaders.end())
 		{
-			HZR_CORE_ERROR("No loaders for {0} : {1}", Utils::AssetTypeToString(asset->GetType()));
+			HZR_CORE_ERROR("No loaders for {0} : {1}", asset->GetHandle(), Utils::AssetTypeToString(asset->GetType()));
 			return nullptr;
 		}
 		return m_Loaders[asset->GetType()]->Save(asset, settings);
@@ -37,7 +37,7 @@ namespace Hazard
 	{
 		if (m_Loaders.find(type) == m_Loaders.end())
 		{
-			HZR_CORE_ERROR("No loaders for {0} ({1})", Utils::AssetTypeToString(type));
+			HZR_CORE_ERROR("No loaders for {0}", Utils::AssetTypeToString(type));
 			return nullptr;
 		}
 

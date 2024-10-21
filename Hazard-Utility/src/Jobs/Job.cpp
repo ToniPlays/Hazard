@@ -4,16 +4,16 @@
 
 #include "spdlog/fmt/fmt.h"
 
-Job::~Job()
+void JobInfo::ContinueWith(Ref<Job> job)
 {
-	m_DestroyQueue.Invoke();
-	m_DestroyQueue.Clear();
+    Graph->ContinueWith({ job });
 }
+
 
 void Job::Execute(JobInfo& info)
 {
-	info.Job = this;
-	info.ParentGraph = m_JobGraph;
+	info.Current = this;
+	info.Graph = m_JobGraph;
 	info.ExecutionID = m_InvocationId;
 
 	m_Status = JobStatus::Executing;
@@ -40,7 +40,8 @@ void Job::Execute(JobInfo& info)
 	{
 		m_Status = JobStatus::Failure;
 		m_ExecutionTime = timer.ElapsedMillis();
-		m_JobGraph->OnJobFailed(this, e.what());
+        m_Exception = e;
+		m_JobGraph->OnJobFailed(this);
 		throw e;
 	}
 
