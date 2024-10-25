@@ -105,10 +105,8 @@ namespace HazardRenderer::Vulkan
 			VkSemaphore PresentComplete = VK_NULL_HANDLE;
 		};
 
-		SwapchainSemaphores m_Semaphores;
+		std::vector<SwapchainSemaphores> m_Semaphores;
 		std::vector<VkFence> m_WaitFences;
-
-		VkSubmitInfo m_SubmitInfo;
 
 		uint32_t m_CurrentImageIndex = 0;
 		uint32_t m_CurrentBufferIndex = 0;

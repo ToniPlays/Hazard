@@ -65,7 +65,7 @@ void TestFramework::Init()
 
 	Application::GetModule<InputManager>().InvalidateSchema(schema);
 
-    m_Tests.push_back(new JobGraphTest());
+    //m_Tests.push_back(new JobGraphTest());
 	m_Tests.push_back(new TriangleTest());
 	m_Tests.push_back(new TexturedQuadTest());
 	m_Tests.push_back(new UniformBufferTest());

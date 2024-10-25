@@ -1,3 +1,5 @@
+#include <hzrpch.h>
+
 #include "InputFloat.h"
 #include <Hazard/ImGUI/ScopedVar.h>
 #include "../StyleManager.h"

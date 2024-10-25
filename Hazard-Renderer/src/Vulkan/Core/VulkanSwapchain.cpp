@@ -292,7 +292,7 @@ namespace HazardRenderer::Vulkan
 		allocInfo.commandBufferCount = 1;
 
 		m_CommandBuffers.resize(m_ImageCount);
-		for (uint32_t i = 0; auto& buffer : m_CommandBuffers)
+		for (uint32_t i = 0; auto & buffer : m_CommandBuffers)
 		{
 			VK_CHECK_RESULT(vkCreateCommandPool(device, &poolInfo, nullptr, &buffer.CommandPool), "Failed to create command pool");
 			allocInfo.commandPool = buffer.CommandPool;
@@ -302,16 +302,20 @@ namespace HazardRenderer::Vulkan
 			i++;
 		}
 
-		if (!m_Semaphores.RenderComplete || !m_Semaphores.PresentComplete)
+		if (m_Semaphores.size() == 0)
 		{
-			VkSemaphoreCreateInfo semaphoreInfo = {};
-			semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-			VK_CHECK_RESULT(vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_Semaphores.RenderComplete), "Failed to create semaphore");
+			m_Semaphores.resize(m_ImageCount);
+			for (uint32_t i = 0; i < m_ImageCount; i++)
+			{
+				VkSemaphoreCreateInfo semaphoreInfo = {};
+				semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+				VK_CHECK_RESULT(vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_Semaphores[i].RenderComplete), "Failed to create semaphore");
 
-			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SEMAPHORE, "Swapchain RenderComplete Semaphore", m_Semaphores.RenderComplete);
+				VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SEMAPHORE, fmt::format("Swapchain RenderComplete Semaphore {}", i), m_Semaphores[i].RenderComplete);
 
-			VK_CHECK_RESULT(vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_Semaphores.PresentComplete), "Failed to create semaphore");
-			VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SEMAPHORE, "Swapchain PresentComplete Semaphore", m_Semaphores.PresentComplete);
+				VK_CHECK_RESULT(vkCreateSemaphore(device, &semaphoreInfo, nullptr, &m_Semaphores[i].PresentComplete), "Failed to create semaphore");
+				VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_SEMAPHORE, fmt::format("Swapchain PresentComplete Semaphore {}", i), m_Semaphores[i].PresentComplete);
+			}
 		}
 
 		if (m_WaitFences.size() != m_ImageCount)
@@ -327,13 +331,6 @@ namespace HazardRenderer::Vulkan
 				VkUtils::SetDebugUtilsObjectName(device, VK_OBJECT_TYPE_FENCE, "Swapchain Fence", fence);
 			}
 		}
-
-		m_SubmitInfo = {};
-		m_SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		m_SubmitInfo.waitSemaphoreCount = 1;
-		m_SubmitInfo.pWaitSemaphores = &m_Semaphores.PresentComplete;
-		m_SubmitInfo.signalSemaphoreCount = 1;
-		m_SubmitInfo.pSignalSemaphores = &m_Semaphores.RenderComplete;
 
 		VkFormat depthFormat = m_Device->GetPhysicalDevice().As<VulkanPhysicalDevice>()->GetDepthFormat();
 
@@ -403,7 +400,7 @@ namespace HazardRenderer::Vulkan
 			VK_CHECK_RESULT(vkCreateFramebuffer(m_Device->GetVulkanDevice(), &frameBufferInfo, nullptr, &m_FrameBuffers[i]), "Failed to create Framebuffer");
 			VkUtils::SetDebugUtilsObjectName(m_Device->GetVulkanDevice(), VK_OBJECT_TYPE_FRAMEBUFFER, "Swapchain Framebuffer", m_FrameBuffers[i]);
 		}
-		
+
 		m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("SwapchainCommandBuffer");
 
 		if (m_DefaultFramebuffer)
@@ -461,11 +458,15 @@ namespace HazardRenderer::Vulkan
 		for (auto framebuffer : m_FrameBuffers)
 			vkDestroyFramebuffer(device, framebuffer, nullptr);
 
-		if (m_Semaphores.RenderComplete)
-			vkDestroySemaphore(device, m_Semaphores.RenderComplete, nullptr);
+		for (auto& semaphores : m_Semaphores)
+		{
 
-		if (m_Semaphores.PresentComplete)
-			vkDestroySemaphore(device, m_Semaphores.PresentComplete, nullptr);
+			if (semaphores.RenderComplete)
+				vkDestroySemaphore(device, semaphores.RenderComplete, nullptr);
+
+			if (semaphores.PresentComplete)
+				vkDestroySemaphore(device, semaphores.PresentComplete, nullptr);
+		}
 
 		for (auto& fence : m_WaitFences)
 			vkDestroyFence(device, fence, nullptr);
@@ -486,11 +487,20 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
 
+		m_CurrentBufferIndex = (m_CurrentBufferIndex + 1) % VulkanContext::GetImagesInFlight();
+
+		auto vkDevice = m_Device->GetVulkanDevice();
 		m_CurrentImageIndex = AcquireSwapchainImage();
 		VK_CHECK_RESULT(vkResetCommandPool(m_Device->GetVulkanDevice(), m_CommandBuffers[m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
 
+		{
+			HZR_PROFILE_SCOPE("VulkanSwapchain::Present() WaitForFences");
+			VK_CHECK_RESULT(vkWaitForFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex], VK_TRUE, UINT64_MAX), "");
+		}
+
 		m_RenderCommandBuffer->Begin();
 	}
+
 	void VulkanSwapchain::Present()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -507,9 +517,9 @@ namespace HazardRenderer::Vulkan
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submitInfo.pWaitDstStageMask = &pipelineFlags;
 		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores = &m_Semaphores.PresentComplete;
+		submitInfo.pWaitSemaphores = &m_Semaphores[m_CurrentImageIndex].PresentComplete;
 		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pSignalSemaphores = &m_Semaphores.RenderComplete;
+		submitInfo.pSignalSemaphores = &m_Semaphores[m_CurrentImageIndex].RenderComplete;
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentBufferIndex].CommandBuffer;
 
@@ -524,7 +534,7 @@ namespace HazardRenderer::Vulkan
 			presentInfo.pSwapchains = &m_Swapchain;
 			presentInfo.pImageIndices = &m_CurrentImageIndex;
 			presentInfo.waitSemaphoreCount = 1;
-			presentInfo.pWaitSemaphores = &m_Semaphores.RenderComplete;
+			presentInfo.pWaitSemaphores = &m_Semaphores[m_CurrentImageIndex].RenderComplete;
 
 			result = fpQueuePresentKHR(m_Device->GetGraphicsQueue(), &presentInfo);
 		}
@@ -534,15 +544,8 @@ namespace HazardRenderer::Vulkan
 			if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
 				Resize(m_Width, m_Height);
 		}
-		//Wait for fence
-		{
-			HZR_PROFILE_SCOPE("VulkanSwapchain::Present() WaitForFences");
-			const auto& imageCount = VulkanContext::GetImagesInFlight();
-			m_CurrentBufferIndex = (m_CurrentBufferIndex + 1) % imageCount;
-			VK_CHECK_RESULT(vkWaitForFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex], VK_TRUE, UINT64_MAX), "");
-		}
 
-		m_RenderCommandBuffer.As<VulkanRenderCommandBuffer>()->GetQueryPoolResults_RT();
+		//m_RenderCommandBuffer.As<VulkanRenderCommandBuffer>()->GetQueryPoolResults_RT();
 	}
 	void VulkanSwapchain::FindImageFormatAndColorSpace()
 	{
@@ -585,7 +588,7 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		uint32_t index;
-		VkResult result = fpAcquireNextImageKHR(m_Device->GetVulkanDevice(), m_Swapchain, UINT64_MAX, m_Semaphores.PresentComplete, (VkFence)nullptr, &index);
+		VkResult result = fpAcquireNextImageKHR(m_Device->GetVulkanDevice(), m_Swapchain, UINT64_MAX, m_Semaphores[m_CurrentImageIndex].PresentComplete, (VkFence)nullptr, &index);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
 		{

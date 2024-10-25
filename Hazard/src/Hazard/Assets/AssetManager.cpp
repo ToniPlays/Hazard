@@ -200,28 +200,6 @@ namespace Hazard
 	Ref<JobGraph> AssetManager::GetCreateGraph(AssetType type, CreateAssetSettings settings)
 	{
 		Ref<JobGraph> graph = s_AssetLoader.Create(type, settings);
-		if (!graph) return nullptr;
-
-		/*graph->AddOnCompleted([settings](JobGraph& graph) {
-			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
-			if (!asset) return;
-
-			asset->m_Handle = UID();
-			asset->m_SourceAssetPath = settings.SourcePath;
-
-			AssetMetadata metadata = {
-				.AssetPackHandle = 0,
-				.Handle = asset->GetHandle(),
-				.Type = asset->GetType(),
-				.LoadState = LoadState::Loaded,
-				.FilePath = "",
-				.SourceFile = settings.SourcePath,
-			};
-
-			std::scoped_lock mutex(s_AssetMutex);
-			s_LoadedAssets[asset->GetHandle()] = asset;
-		});
-         */
 		return graph;
 	}
 

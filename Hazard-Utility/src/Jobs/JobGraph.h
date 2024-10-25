@@ -40,7 +40,8 @@ public:
     
 	bool SubmitJobs(JobSystem* system);
 	void ContinueWith(const std::vector<Ref<Job>>& jobs);
-    bool Wait() const {
+    bool Wait() const 
+	{
         if(!m_JobSystem) return false;
         m_HasFinished.wait(false);
         return true;
@@ -79,6 +80,7 @@ private:
     std::atomic_bool m_HasFinished = false;
     std::atomic_bool m_Failed = false;
     std::atomic_uint32_t m_RunningJobs = 0;
+	std::mutex m_JobMutex;
     
 	JobGraphInfo m_Info;
 	JobSystem* m_JobSystem = nullptr;

@@ -1,6 +1,6 @@
 #include "OpenGLShaderCompiler.h"
 
-#if defined(HZR_SHADER_COMPILER) && defined(HZR_INCLUDE_OPENGL)
+#ifdef HZR_SHADER_COMPILER
 
 #include "MathCore.h"
 #include "Profiling/Timer.h"

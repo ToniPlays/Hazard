@@ -1,3 +1,4 @@
+#include <hzrpch.h>
 #include "AssimpImporter.h"
 
 #include "Hazard/RenderContext/TextureFactory.h"
@@ -480,4 +481,5 @@ namespace Hazard
 		}
 		return MeshImporter::TextureData();
 	}
+
 }

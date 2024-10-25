@@ -1,3 +1,4 @@
+#include <hzrpch.h>
 #include "Texture2D.h"
 #include "Hazard/Rendering/RenderEngine.h"
 

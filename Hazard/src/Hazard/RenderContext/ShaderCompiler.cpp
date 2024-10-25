@@ -1,3 +1,4 @@
+#include <hzrpch.h>
 #include "ShaderCompiler.h"
 
 #ifdef HZR_SHADER_COMPILER

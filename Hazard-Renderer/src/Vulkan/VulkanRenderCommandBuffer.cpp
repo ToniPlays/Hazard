@@ -102,6 +102,8 @@ namespace HazardRenderer::Vulkan
 		for (auto& time : m_GPUExecutionTimes)
 			time.resize(m_TimestampQueryCount / 2);
 
+		if(queue == DeviceQueue::TransferBit) return;
+
 		m_PipelineQueryCount = 7;
 
 		queryPoolCreateInfo.queryType = VK_QUERY_TYPE_PIPELINE_STATISTICS;
@@ -122,6 +124,7 @@ namespace HazardRenderer::Vulkan
 			queryPoolCreateInfo.pipelineStatistics =
 				VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT;
 		}
+		
 
 		m_PipelineQueryPools.resize(framesInFlight);
 		for (auto& queryPool : m_PipelineQueryPools)

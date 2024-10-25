@@ -39,7 +39,7 @@ def main(argv):
 
     #Check premake settings
     print("\nValidating premake")
-    premakeInstalled = PremakeRequirements.Validate('5.0.0-beta1')
+    premakeInstalled = PremakeRequirements.Validate('5.0.0-beta2')
 
     if not premakeInstalled:
         print(f"{Style.BRIGHT}{Back.YELLOW}Premake is not installed{Style.RESET_ALL}")
@@ -51,7 +51,7 @@ def main(argv):
     #Check vulkan version
     if Utils.IsWindows():
         print("\nValidating Vulkan version")
-        vulkanInstalled = VulkanRequirements.Validate("1.3.216.0")
+        vulkanInstalled = VulkanRequirements.Validate("1.3.296.0")
         
         if not vulkanInstalled:
             if Utils.YesNo("Vulkan SDK not found, would you like to install it [Y/N]"):

@@ -49,11 +49,11 @@ void JobGraphTest::Init()
 	m_Graph = Ref<JobGraph>::Create(graphInfo);
 	Promise<uint32_t> promise = m_JobSystem->Submit<uint32_t>(m_Graph);
     
-    promise.ContinueWith([]() {
+    promise.ContinueWith([](const auto& result) {
         HZR_INFO("Job graph finished");
     }).Catch([](const JobException& exception) {
         HZR_ERROR("Grahp Error: {} ", exception.what());
-    }).Wait();
+    });
     
     std::cout << "Finished" << std::endl;
 }

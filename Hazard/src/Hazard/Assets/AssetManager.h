@@ -64,62 +64,84 @@ namespace Hazard
 		static bool IsAssetLoaded(AssetHandle handle);
 
 		static AssetMetadata& GetMetadata(AssetHandle handle);
-        template<typename T>
+		template<typename T>
 		static Ref<T> CreateAsset(const CreateAssetSettings& settings)
-        {
-            HZR_PROFILE_FUNCTION();
-            Promise<Ref<T>> promise = CreateAssetAsync<T>(AssetType::Image, settings);
-            promise.Wait();
-            return nullptr;
-            
-        }
-        template<typename T>
-        static Promise<Ref<T>> CreateAssetAsync(AssetType type, const CreateAssetSettings& settings)
-        {
-            Ref<JobGraph> graph = GetCreateGraph(type, settings);
-            if (!graph) return Promise<Ref<T>>();
+		{
+			HZR_PROFILE_FUNCTION();
+			Promise<Ref<T>> promise = CreateAssetAsync<T>(AssetType::Image, settings);
+			promise.Wait();
+			return nullptr;
 
-            return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
-        }
-        template<typename T>
-        static Promise<Ref<T>> SaveAsset(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings())
-        {
-            HZR_PROFILE_FUNCTION();
+		}
+		template<typename T>
+		static Promise<Ref<T>> CreateAssetAsync(AssetType type, const CreateAssetSettings& settings)
+		{
+			Ref<JobGraph> graph = GetCreateGraph(type, settings);
+			if (!graph) return Promise<Ref<T>>();
 
-            Ref<JobGraph> graph = GetSaveGraph(asset, settings);
-            if (!graph) return Promise<Ref<T>>();
+			Promise<Ref<T>> promise = Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
 
-            return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
-        }
+			promise.ContinueWith([settings](const auto& results) {
+				Ref<Asset> asset = results[0];
+				if (!asset) return;
+
+				asset->m_Handle = UID();
+				asset->m_SourceAssetPath = settings.SourcePath;
+
+				AssetMetadata metadata = {
+					.AssetPackHandle = 0,
+					.Handle = asset->GetHandle(),
+					.Type = asset->GetType(),
+					.LoadState = LoadState::Loaded,
+					.FilePath = "",
+					.SourceFile = settings.SourcePath,
+				};
+
+				std::scoped_lock mutex(s_AssetMutex);
+				s_LoadedAssets[asset->GetHandle()] = asset;
+				});
+
+			return promise;
+		}
+		template<typename T>
+		static Promise<Ref<T>> SaveAsset(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings())
+		{
+			HZR_PROFILE_FUNCTION();
+
+			Ref<JobGraph> graph = GetSaveGraph(asset, settings);
+			if (!graph) return Promise<Ref<T>>();
+
+			return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
+		}
 
 		static void Unload(AssetHandle handle);
-        template<typename T>
+		template<typename T>
 		static Promise<T> Reload(AssetHandle handle)
-        {
-            std::scoped_lock lock(s_AssetMutex);
+		{
+			std::scoped_lock lock(s_AssetMutex);
 
-            AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-            if (metadata.LoadState == LoadState::None) return Promise<T>();
+			AssetMetadata& metadata = AssetManager::GetMetadata(handle);
+			if (metadata.LoadState == LoadState::None) return Promise<T>();
 
-            Ref<JobGraph> graph = s_AssetLoader.Load(metadata, LoadAssetSettings());
-            if (!graph) return Promise<T>();
+			Ref<JobGraph> graph = s_AssetLoader.Load(metadata, LoadAssetSettings());
+			if (!graph) return Promise<T>();
 
-            Ref<Asset> oldAsset = s_LoadedAssets[handle];
+			Ref<Asset> oldAsset = s_LoadedAssets[handle];
 
-            /*graph->AddOnCompleted([handle, oldAsset](JobGraph& graph) {
-                Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
-                if (!asset) return;
+			/*graph->AddOnCompleted([handle, oldAsset](JobGraph& graph) {
+				Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
+				if (!asset) return;
 
-                asset->m_Handle = oldAsset->GetHandle();
-                asset->m_Flags = oldAsset->GetFlags();
-                asset->m_SourceAssetPath = oldAsset->GetSourceFilePath();
+				asset->m_Handle = oldAsset->GetHandle();
+				asset->m_Flags = oldAsset->GetFlags();
+				asset->m_SourceAssetPath = oldAsset->GetSourceFilePath();
 
-                s_LoadedAssets[handle] = asset;
-            });
-             */
+				s_LoadedAssets[handle] = asset;
+			});
+			 */
 
-            return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
-        }
+			return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
+		}
 
 		template<typename T>
 		static Ref<T> GetAsset(const std::filesystem::path& path, LoadAssetSettings settings = LoadAssetSettings())
@@ -141,41 +163,42 @@ namespace Hazard
 			}
 
 			AssetMetadata& metadata = GetMetadata(handle);
-			if (metadata.Type == AssetType::Undefined) 
+			if (metadata.Type == AssetType::Undefined)
 				return nullptr;
 
 			Promise<Ref<T>> promise = GetAssetAsync<T>(handle, settings);
 			promise.Wait();
 
+
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
-            return nullptr; //promise.Result();
+			return nullptr; //promise.Result();
 		}
-        template<typename T>
+		template<typename T>
 		static Promise<Ref<T>> GetAssetAsync(AssetHandle handle, LoadAssetSettings settings = LoadAssetSettings())
-        {
-            HZR_PROFILE_FUNCTION();
+		{
+			HZR_PROFILE_FUNCTION();
 
-            if (handle == INVALID_ASSET_HANDLE)
-                return Promise<Ref<T>>();
+			if (handle == INVALID_ASSET_HANDLE)
+				return Promise<Ref<T>>();
 
-            if (s_LoadedAssets[handle])
-            {
-                s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
-                Ref<JobGraph> graph = JobGraph::EmptyWithResult(s_LoadedAssets[handle]);
-                return Promise<Ref<T>>();
-            }
+			if (s_LoadedAssets[handle])
+			{
+				s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
+				Ref<JobGraph> graph = JobGraph::EmptyWithResult(s_LoadedAssets[handle]);
+				return Promise<Ref<T>>();
+			}
 
-            AssetMetadata& metadata = GetMetadata(handle);
-            if (!metadata.IsValid()) return Promise<Ref<T>>();
+			AssetMetadata& metadata = GetMetadata(handle);
+			if (!metadata.IsValid()) return Promise<Ref<T>>();
 
-            Ref<JobGraph> graph = GetLoadGraph(metadata, settings);
+			Ref<JobGraph> graph = GetLoadGraph(metadata, settings);
 
-            if (!graph || metadata.LoadState != LoadState::None)
-                return Promise<Ref<T>>();
+			if (!graph || metadata.LoadState != LoadState::None)
+				return Promise<Ref<T>>();
 
-            metadata.LoadState = LoadState::Loading;
-            return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
-        }
+			metadata.LoadState = LoadState::Loading;
+			return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
+		}
 
 		static Ref<JobGraph> GetLoadGraph(AssetMetadata& metadata, LoadAssetSettings settings = LoadAssetSettings());
 		static Ref<JobGraph> GetSaveGraph(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings());

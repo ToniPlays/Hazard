@@ -28,3 +28,4 @@
 [submodule "Hazard/vendor/Coral"]
 	path = Hazard/vendor/Coral
 	url = https://github.com/StudioCherno/Coral.git
+	branch = dev
