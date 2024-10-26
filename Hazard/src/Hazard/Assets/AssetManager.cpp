@@ -146,7 +146,7 @@ namespace Hazard
 
 		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);
 		if (!graph) return nullptr;
-
+        
 		/*graph->AddOnCompleted([asset, settings](JobGraph& graph) {
 
 			Ref<CachedBuffer> result = graph.GetResult<Ref<CachedBuffer>>();

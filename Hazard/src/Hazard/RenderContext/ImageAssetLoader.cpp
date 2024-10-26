@@ -88,7 +88,7 @@ namespace Hazard
 
 	void ImageAssetLoader::CreateImageFromData(JobInfo& info, CreateSettings settings)
 	{
-		TextureHeader header = info.Graph->GetResult<TextureHeader>();
+		TextureHeader header = info.Graph->GetResults<TextureHeader>()[0];
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
 		if (header.ImageData)
@@ -159,7 +159,7 @@ namespace Hazard
 
 	void ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
-		Ref<CachedBuffer> imageData = info.Graph->GetResult<Ref<CachedBuffer>>();
+		Ref<CachedBuffer> imageData = info.Graph->GetResults<Ref<CachedBuffer>>()[0];
 
 		ImageAssetFileHeader file = {
 			.Extent = image->GetExtent(),

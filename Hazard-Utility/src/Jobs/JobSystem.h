@@ -13,16 +13,17 @@ class JobGraph;
 
 class Thread : public RefCount
 {
-	friend class JobSystem;
+    friend class JobSystem;
 public:
-
-	Thread(uint32_t id) : m_ThreadID(id) {};
-	~Thread() = default;
-
-	uint32_t GetThreadID() const { return m_ThreadID; }
-	bool IsWaiting() const { return m_Status.load() == ThreadStatus::Waiting; }
-	ThreadStatus GetStatus() const { return m_Status; }
-	Ref<Job> GetCurrentJob() const { return m_CurrentJob; }
+    
+    Thread(uint32_t id) : m_ThreadID(id) {};
+    ~Thread() = default;
+    
+    uint32_t GetThreadID() const { return m_ThreadID; }
+    bool IsWaiting() const { return m_Status.load() == ThreadStatus::Waiting; }
+    ThreadStatus GetStatus() const { return m_Status; }
+    Ref<Job> GetCurrentJob() const { return m_CurrentJob; }
+    const std::string& GetLastError() const { return m_LastError; }
 
 	void Join() { m_Thread.join(); };
 	void Detach() { m_Thread.detach(); };
@@ -36,6 +37,7 @@ private:
 	std::thread m_Thread;
 	uint32_t m_ThreadID = 0;
 	Ref<Job> m_CurrentJob = nullptr;
+    std::string m_LastError;
 	std::atomic<ThreadStatus> m_Status = ThreadStatus::Waiting;
 };
 

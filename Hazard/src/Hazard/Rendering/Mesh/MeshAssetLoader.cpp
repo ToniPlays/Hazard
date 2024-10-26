@@ -323,7 +323,7 @@ namespace Hazard
 		{
 			Buffer Vertex;
 			Buffer Index;
-		} result = info.Graph->GetResult<Result>();
+		} result = info.Graph->GetResults<Result>()[0];
 
 		auto meshData = mesh->GetSubmeshData();
 

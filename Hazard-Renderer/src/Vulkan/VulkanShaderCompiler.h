@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
-#ifdef HZR_SHADER_COMPILER && defined(HZR_INCLUDE_VULKAN)
+#ifdef HZR_SHADER_COMPILER
 
 #include "File.h"
 #include "Core/CompileInfo.h"

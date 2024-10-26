@@ -104,7 +104,7 @@ namespace Hazard
 			return promise;
 		}
 		template<typename T>
-		static Promise<Ref<T>> SaveAsset(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings())
+		static Promise<Ref<T>> SaveAsset(Ref<T> asset, SaveAssetSettings settings = SaveAssetSettings())
 		{
 			HZR_PROFILE_FUNCTION();
 

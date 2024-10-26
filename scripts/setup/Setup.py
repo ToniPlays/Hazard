@@ -49,7 +49,7 @@ def main(argv):
             requestsInstalled = True
 
     #Check vulkan version
-    if Utils.IsWindows():
+    if Utils.IsWindows() or True:
         print("\nValidating Vulkan version")
         vulkanInstalled = VulkanRequirements.Validate("1.3.296.0")
         

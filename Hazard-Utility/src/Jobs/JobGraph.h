@@ -35,6 +35,7 @@ public:
 	const std::string& GetName() const { return m_Info.Name; }
 	uint32_t GetFlags() const { return m_Info.Flags; }
 
+    bool DidFail() const { return m_Failed; }
 	const JobGraphInfo& GetInfo() const { return m_Info; }
     const std::string& GetStageName() const { return m_Info.Stages[m_StageIndex].Name; }
     
@@ -47,6 +48,26 @@ public:
         return true;
     }
     
+    template<typename T>
+    std::vector<T> GetResults() const
+    {
+        if (m_StageIndex < 1) return std::vector<T>();
+
+        auto& stageJobs = m_Info.Stages[m_StageIndex - 1].Jobs;
+        std::vector<T> results;
+        results.reserve(stageJobs.size());
+
+        for (auto& job : stageJobs)
+            results.push_back(job->GetResult<T>());
+
+        return results;
+    }
+    
+    void AddOnFinished(const std::function<void()>& callback)
+    {
+        m_OnFinishedCallback.Add(callback);
+    }
+    
     void AddOnFailed(const std::function<void(JobException)>&& callback)
     {
         m_OnFailedCallback.Add(callback);
@@ -54,11 +75,6 @@ public:
     
 	float GetProgress();
 
-	template<typename T>
-	T GetResult() const
-	{
-        return T();
-	}
 
 	template<typename T>
 	static Ref<JobGraph> EmptyWithResult(T value)
@@ -87,5 +103,6 @@ private:
     
     uint32_t m_StageIndex = 0;
     
+    Callback<void()> m_OnFinishedCallback;
     Callback<void(const JobException&)> m_OnFailedCallback;
 };

@@ -140,7 +140,7 @@ void HazardEditorApplication::InitJobsystemHooks()
 		switch (status)
 		{
 			case ThreadStatus::Failed:
-				HZR_ERROR("Thread {} failed: {}", thread->GetThreadID(), thread->GetCurrentJob()->GetName());
+				HZR_ERROR("Thread {} failed: {} ({})", thread->GetThreadID(), thread->GetCurrentJob()->GetName(), thread->GetLastError());
 				break;
             default: break;
 		}

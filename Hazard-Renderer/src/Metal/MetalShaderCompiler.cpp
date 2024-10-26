@@ -43,7 +43,7 @@ namespace HazardRenderer::Metal
 
         switch (compileInfo->Renderer)
         {
-        case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3); break;
+        case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
         default: break;
         }
         
@@ -91,7 +91,7 @@ namespace HazardRenderer::Metal
         options.vertex_for_tessellation = tesellation;
         options.texture_buffer_native = true;
         
-        spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size);
+        spirv_cross::CompilerMSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
         
         compiler.set_msl_options(options);
         result = compiler.compile();

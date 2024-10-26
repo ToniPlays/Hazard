@@ -8,18 +8,8 @@
 
 class JobGraph;
 class Thread;
-class Job;
+struct JobInfo;
 
-struct JobInfo 
-{
-	Ref<Job> Current;
-	Ref<Thread> Thread;
-	Ref<JobGraph> Graph;
-	uint32_t StageIndex;
-	uint32_t ExecutionID;
-    
-    void ContinueWith(Ref<Job> job);
-};
 
 class Job : public RefCount
 {
@@ -28,6 +18,12 @@ class Job : public RefCount
 	using JobCallback = std::function<void(JobInfo&)>;
 
 public:
+    
+    ~Job() {
+        if(m_ResultBuffer)
+            delete m_ResultBuffer;
+    }
+    
 	const std::string& GetName() const { return m_JobName; }
 	JobStatus GetStatus() const { return m_Status; }
 
@@ -39,6 +35,20 @@ public:
     
     std::optional<JobException> GetException() const { return m_Exception; }
     
+    template<typename T>
+    void SetResult(T value)
+    {
+        m_ResultBuffer = (void*)new T(value);
+    }
+    template<typename T>
+    T GetResult() const
+    {
+        if(!m_ResultBuffer)
+            return T();
+        return *(T*)m_ResultBuffer;
+    }
+    
+public:
     template<typename Fn, typename... Args>
     static Ref<Job> Create(const std::string& name, Fn&& callback, Args&&... args)
     {
@@ -77,7 +87,24 @@ private:
 	
 	uint32_t m_InvocationId = 0;
 	JobGraph* m_JobGraph = nullptr;
+    void* m_ResultBuffer = nullptr;
 
 	JobStatus m_Status = JobStatus::None;
     std::optional<JobException> m_Exception;
+};
+
+struct JobInfo
+{
+    Ref<Job> Current;
+    Ref<Thread> Thread;
+    Ref<JobGraph> Graph;
+    uint32_t StageIndex;
+    uint32_t ExecutionID;
+    
+    template<typename T>
+    void Result(T value)
+    {
+        Current->SetResult<T>(value);
+    };
+    void ContinueWith(const std::vector<Ref<Job>>& jobs);
 };

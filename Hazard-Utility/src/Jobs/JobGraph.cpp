@@ -62,9 +62,9 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 
 		if (m_StageIndex + 1 >= m_Info.Stages.size())
 		{
+            m_JobSystem->OnGraphFinished(this);
 			m_HasFinished = true;
 			m_HasFinished.notify_all();
-			m_JobSystem->OnGraphFinished(this);
 			return;
 		}
 	}
@@ -82,11 +82,11 @@ void JobGraph::OnJobFailed(Ref<Job> job)
 
 	if (m_Info.Flags & JOB_GRAPH_TERMINATE_ON_ERROR)
 	{
+        m_JobSystem->OnGraphFinished(this);
 		m_HasFinished = true;
 		m_HasFinished.notify_all();
 
 		m_JobSystem->TerminateGraphJobs(this);
-		m_JobSystem->OnGraphFinished(this);
 	}
 }
 
@@ -97,8 +97,9 @@ void JobGraph::SubmitNextStage()
 	m_StageIndex++;
 	if (!SubmitJobs(m_JobSystem))
 	{
+        m_JobSystem->OnGraphFinished(this);
 		m_HasFinished = true;
 		m_HasFinished.notify_all();
-		m_JobSystem->OnGraphFinished(this);
+		
 	}
 }

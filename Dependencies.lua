@@ -31,7 +31,7 @@ Dependencies = {
     },
     Assimp = {
         IncludeDir = "%{wks.location}/Hazard/vendor/assimp/include",
-        LibraryDir = "%{wks.location}/Hazard/libmacos",
+        LibraryDir = "%{wks.location}vendor/libmacos",
         WindowsLibs = {
             Debug = {"%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"},
             Release = {"%{wks.location}/Hazard/vendor/assimp/lib/assimp-vc142-mt.lib"},
@@ -77,7 +77,7 @@ Dependencies = {
     },
     SpirvCross = {
         IncludeDir = "%{VULKAN_SDK}/Include",
-        LibraryDir = "%{wks.location}/Hazard/libmacos",
+        LibraryDir = "%{wks.location}/vendor/libmacos",
         WindowsLibs = {
             Debug = { "%{VULKAN_SDK}/Lib/spirv-cross-cored.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsld.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msld.lib" },
             Release = { "%{VULKAN_SDK}/Lib/spirv-cross-core.lib", "%{VULKAN_SDK}/Lib/spirv-cross-glsl.lib", "%{VULKAN_SDK}/Lib/spirv-cross-msl.lib" },

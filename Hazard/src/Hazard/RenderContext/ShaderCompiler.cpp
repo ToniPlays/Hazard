@@ -4,6 +4,7 @@
 #ifdef HZR_SHADER_COMPILER
 
 #include "MathCore.h"
+#include "CompileException.h"
 #include "Utility/StringUtil.h"
 
 #include "OpenGL/OpenGLShaderCompiler.h"
@@ -40,7 +41,7 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfoVulkan))
-                    throw std::exception();
+                    throw CompileException(compiler.GetErrorMessage());
 
 				std::vector<ShaderDefine> glDefines = { { "OPENGL_API" } };
 
@@ -54,16 +55,16 @@ namespace Hazard
 					.DefineCount = glDefines.size(),
 					.pDefines = glDefines.data()
 				};
-
+                
 				if (!compiler.Compile(&compileInfoVkToGL))
-                    throw std::exception();
+                    throw CompileException(compiler.GetErrorMessage());
 
 				compilationTime += compiler.GetCompileTime();
 
 				//Get OpenGL shader source from Vulkan binaries
 				std::string glSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), glSource))
-                    throw std::exception();
+                    throw CompileException(compiler.GetErrorMessage());
 
 				return glSource;
 			}
@@ -84,7 +85,7 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfo))
-                    throw std::exception();
+                    throw CompileException(compiler.GetErrorMessage());
 
 				return std::string((char*)compiler.GetCompiledBinary().Data, compiler.GetCompiledBinary().Size);
 			}
@@ -105,11 +106,12 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfo))
-                    throw std::exception();
+                    throw CompileException(compiler.GetErrorMessage());
 
+                
 				std::string mslSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), mslSource))
-                    throw std::exception();
+                    throw CompileException(compiler.GetErrorMessage());
 
 				return mslSource;
 			}

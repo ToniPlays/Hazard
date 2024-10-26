@@ -63,7 +63,7 @@ void BuildSettings::OnClose()
 void BuildSettings::RenderPage()
 {
 	using namespace Hazard;
-	const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
+	//const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
 	RenderSharedSettings();
 	ImUI::Shift(4, 16);

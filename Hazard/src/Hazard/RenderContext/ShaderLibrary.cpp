@@ -16,7 +16,7 @@ namespace Hazard
 	{
 		HZR_PROFILE_SCOPE();
 		HZR_TIMED_FUNCTION();
-
+        
 		DescriptorSetLayout setLayout = { { SHADER_STAGE_ALL_GRAPHICS, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
 										  { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 										  { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },

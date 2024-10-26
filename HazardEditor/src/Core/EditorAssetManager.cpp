@@ -15,6 +15,8 @@ void EditorAssetManager::Init()
 {
 	ImportEngineShaders();
 	ImportEngineImages();
+    
+    Application::Get().GetJobSystem().WaitForJobsToFinish();
 }
 
 void EditorAssetManager::PostInit()
@@ -96,16 +98,17 @@ void EditorAssetManager::ImportEngineShaders()
 		settings.SourcePath = file;
 
         Promise<Ref<ShaderAsset>> promise = AssetManager::CreateAssetAsync<ShaderAsset>(AssetType::Shader, settings);
-		promise.ContinueWith([cache](std::vector<Ref<ShaderAsset>> results) {
-            Ref<Asset> asset = results[0];
+		promise.ContinueWith([cache](std::vector<Ref<ShaderAsset>> results) mutable {
+            Ref<ShaderAsset> asset = results[0];
 			if (!asset) return;
 
 			SaveAssetSettings settings = {};
 			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
 			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
 
-			//AssetManager::SaveAsset(asset, settings).Wait();
-		});
+            AssetManager::SaveAsset(asset, settings).Wait();
+        });
+        promise.Wait();
 	}
 }
 

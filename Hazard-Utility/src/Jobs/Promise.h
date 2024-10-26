@@ -32,7 +32,14 @@ public:
         return *this;
     }
     
-    Promise<T> ContinueWith(const std::function<void(std::vector<T>)>&) { return *this; }
+    Promise<T> ContinueWith(const std::function<void(std::vector<T>)>& callback) {
+        if(m_JobGraph)
+            m_JobGraph->AddOnFinished([callback]() {
+                callback(std::vector<T>());
+            });
+        
+        return *this;
+    }
     Promise<T> Catch(std::function<void(const JobException&)> callback) {
         if(m_JobGraph)
             m_JobGraph->AddOnFailed(callback);

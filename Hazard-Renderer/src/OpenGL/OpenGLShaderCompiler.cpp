@@ -41,7 +41,7 @@ namespace HazardRenderer::OpenGL
 
 		switch (compileInfo->Renderer)
 		{
-		case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2); break;
+		case RenderAPI::Vulkan: options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3); break;
 		case RenderAPI::OpenGL: options.SetTargetEnvironment(shaderc_target_env_opengl, 450); break;
 		}
 
@@ -73,7 +73,7 @@ namespace HazardRenderer::OpenGL
 	{
 		HZR_PROFILE_FUNCTION();
 		m_ErrorMessage.clear();
-		spirv_cross::CompilerGLSL compiler((uint32_t*)binary.Data, binary.Size);
+		spirv_cross::CompilerGLSL compiler((uint32_t*)binary.Data, binary.Size / sizeof(uint32_t));
 		result = compiler.compile();
 		return !result.empty();
 	}

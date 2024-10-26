@@ -133,7 +133,7 @@ namespace Hazard
 			.pLayout = &layout,
 		};
 
-		Ref<Image2D> image = info.Graph->GetResult<Ref<Image2D>>();
+		Ref<Image2D> image = info.Graph->GetResults<Ref<Image2D>>()[0];
 		Ref<Cubemap> cubemap = Cubemap::Create(&cubemapSpec);
 		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("EquirectangularToCubemap");
 		Ref<DescriptorSet> computeSet = DescriptorSet::Create(&setInfo);
@@ -172,7 +172,7 @@ namespace Hazard
 	void EnvironmentAssetLoader::CreateEnvironmentAsset(JobInfo& info, uint32_t samples)
 	{
 		using namespace HazardRenderer;
-		Ref<Cubemap> cubemap = info.Graph->GetResult<Ref<Cubemap>>();
+		Ref<Cubemap> cubemap = info.Graph->GetResults<Ref<Cubemap>>()[0];
 
 		Ref<EnvironmentMap> asset = Ref<EnvironmentMap>::Create();
 		asset->m_RadianceMap = cubemap;

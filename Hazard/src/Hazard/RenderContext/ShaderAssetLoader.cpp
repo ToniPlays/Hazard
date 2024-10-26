@@ -3,6 +3,7 @@
 #include "ShaderAssetLoader.h"
 #include "Core/GraphicsContext.h"
 #include "ShaderCompiler.h"
+#include "CompileException.h"
 
 #include <Hazard/RenderContext/ShaderAsset.h>
 #include "Hazard/Assets/AssetManager.h"
@@ -66,8 +67,8 @@ namespace Hazard
 		std::unordered_map<uint32_t, std::string> sources = ShaderCompiler::GetShaderSources(path);
 
 		std::vector<Ref<Job>> loadingJobs;
-
-		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
+        //TODO: Fix
+		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Vulkan; api++)
 		{
 			for (auto& [stage, source] : sources)
 			{
@@ -76,16 +77,16 @@ namespace Hazard
 			}
 		}
 
-		//info.Job->SetResult(sources);
-		//info.ParentGraph->ContinueWith(loadingJobs);
+        info.Result(sources);
+		info.ContinueWith(loadingJobs);
 	}
 	void ShaderAssetLoader::CompileShaderSourceCode(JobInfo& info, uint32_t api, uint32_t stageFlags)
 	{
 		using namespace HazardRenderer;
 
-		auto sources = info.Graph->GetResult<std::unordered_map<uint32_t, std::string>>();
+		auto sources = info.Graph->GetResults<std::unordered_map<uint32_t, std::string>>()[0];
 		if (!sources.contains(stageFlags))
-			throw JobException("Shader stage load failed");
+			throw JobException("No source code provided");
 
 		try
 		{
@@ -98,10 +99,10 @@ namespace Hazard
 				.Flags = stageFlags
 			};
             
-            HZR_CORE_INFO("Shader compiled {}", Utils::ShaderStageToString(stageFlags));
-			//info.Job->SetResult(result);
+            HZR_CORE_INFO("Shader compiled {} for {}", Utils::ShaderStageToString(stageFlags), HazardRenderer::RenderAPIToString((RenderAPI)api));
+            info.Result(result);
 		}
-		catch (std::exception e)
+        catch (CompileException e)
 		{
 			throw JobException(fmt::format("Compile error: {}", e.what()));
 		}
@@ -109,14 +110,14 @@ namespace Hazard
 	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info)
 	{
 		using namespace HazardRenderer;
-        std::vector<ShaderCompileResult> results;// = info.ParentGraph->GetResults<ShaderCompileResult>();
+        std::vector<ShaderCompileResult> results = info.Graph->GetResults<ShaderCompileResult>();
 
 		Ref<ShaderAsset> asset = Ref<ShaderAsset>::Create();
 
 		for (auto& result : results)
 			asset->ShaderCode[(RenderAPI)result.API][result.Flags] = result.Data;
 
-		//info.Job->SetResult(asset);
+		info.Result(asset);
 	}
 	void ShaderAssetLoader::GenerateShaderAssetBinary(JobInfo& info, Ref<ShaderAsset> asset)
 	{

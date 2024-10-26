@@ -4,12 +4,6 @@
 
 #include "spdlog/fmt/fmt.h"
 
-void JobInfo::ContinueWith(Ref<Job> job)
-{
-    Graph->ContinueWith({ job });
-}
-
-
 void Job::Execute(JobInfo& info)
 {
 	info.Current = this;
@@ -52,4 +46,9 @@ void Job::Progress(float progress)
 {
 	m_Progress = progress;
 	m_Progress.notify_all();
+}
+
+void JobInfo::ContinueWith(const std::vector<Ref<Job>>& jobs)
+{
+    Graph->ContinueWith(jobs);
 }
