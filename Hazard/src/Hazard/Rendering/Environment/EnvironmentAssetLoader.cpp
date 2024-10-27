@@ -88,7 +88,7 @@ namespace Hazard
 
 		Buffer buf = Buffer::Copy(&create, sizeof(CreateSettings));
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(buf);
-		//info.Job->SetResult(buffer);
+		info.Result(buffer);
 	}
 	void EnvironmentAssetLoader::CreateImageFromSource(JobInfo& info, const std::filesystem::path& sourcePath)
 	{
@@ -108,7 +108,7 @@ namespace Hazard
 		};
 
 		Ref<Image2D> image = Image2D::Create(&sourceImage);
-		//info.Job->SetResult(image);
+		info.Result(image);
 
 		header.ImageData.Release();
 	}
@@ -167,7 +167,7 @@ namespace Hazard
 		cmdBuffer->Submit();
 
 		cubemap->RegenerateMips();
-		//info.Job->SetResult(cubemap);
+		info.Result(cubemap);
 	}
 	void EnvironmentAssetLoader::CreateEnvironmentAsset(JobInfo& info, uint32_t samples)
 	{
@@ -181,6 +181,6 @@ namespace Hazard
 
 		asset->Invalidate();
 
-		//info.Job->SetResult(asset);
+		info.Result(asset);
 	}
 }

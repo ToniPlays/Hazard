@@ -118,6 +118,6 @@ namespace Hazard
 	void WorldAssetLoader::CreateWorld(JobInfo& info, const std::filesystem::path& file)
 	{
 		Ref<World> world = Ref<World>::Create(file.string());
-		//info.Job->SetResult(world);
+		info.Result(world);
 	}
 }

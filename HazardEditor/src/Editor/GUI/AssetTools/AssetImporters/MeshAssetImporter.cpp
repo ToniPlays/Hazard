@@ -85,9 +85,11 @@ bool MeshAssetImporter::ImportFromNew()
 {
 	using namespace Hazard;
 
-	CreateAssetSettings settings = {};
-	settings.SourcePath = m_SourcePath;
-	settings.Settings = &m_Settings;
+	CreateAssetSettings settings = {
+		.Type = AssetType::Mesh,
+		.SourcePath = m_SourcePath,
+		.Settings = &m_Settings,
+	};
 
 	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
 	std::filesystem::path rootPath = Directory::FindAvailableName(assetPanel.GetOpenDirectory() / File::GetNameNoExt(m_SourcePath), File::GetNameNoExt(m_SourcePath));
@@ -95,7 +97,7 @@ bool MeshAssetImporter::ImportFromNew()
 	m_Settings.MaterialPath = rootPath / "Materials";
 	m_Settings.TexturePath = rootPath / "Textures";
 
-    Promise<Ref<Mesh>> promise = AssetManager::CreateAssetAsync<Mesh>(AssetType::Mesh, settings);
+    Promise<Ref<Mesh>> promise = AssetManager::CreateAssetAsync<Mesh>(settings);
 	promise.ContinueWith([path, assetPanel](const auto& results) {
         Ref<Asset> asset = results[0];
 		if (!asset) return;

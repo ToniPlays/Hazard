@@ -37,6 +37,7 @@ namespace Hazard
 
 	struct CreateAssetSettings
 	{
+		AssetType Type;
 		std::filesystem::path SourcePath;
 		void* Settings = nullptr;
 	};
@@ -68,15 +69,15 @@ namespace Hazard
 		static Ref<T> CreateAsset(const CreateAssetSettings& settings)
 		{
 			HZR_PROFILE_FUNCTION();
-			Promise<Ref<T>> promise = CreateAssetAsync<T>(AssetType::Image, settings);
+			Promise<Ref<T>> promise = CreateAssetAsync<T>(settings);
 			promise.Wait();
-			return nullptr;
+			return promise.GetResults()[0];
 
 		}
 		template<typename T>
-		static Promise<Ref<T>> CreateAssetAsync(AssetType type, const CreateAssetSettings& settings)
+		static Promise<Ref<T>> CreateAssetAsync(const CreateAssetSettings& settings)
 		{
-			Ref<JobGraph> graph = GetCreateGraph(type, settings);
+			Ref<JobGraph> graph = GetCreateGraph(settings);
 			if (!graph) return Promise<Ref<T>>();
 
 			Promise<Ref<T>> promise = Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
@@ -99,6 +100,10 @@ namespace Hazard
 
 				std::scoped_lock mutex(s_AssetMutex);
 				s_LoadedAssets[asset->GetHandle()] = asset;
+
+				HZR_CORE_INFO("Loaded asset {}", settings.SourcePath.string());
+				}).Catch([](const JobException& e) {
+					HZR_CORE_ERROR("Something went wrong: {0}", e.what());
 				});
 
 			return promise;
@@ -202,7 +207,7 @@ namespace Hazard
 
 		static Ref<JobGraph> GetLoadGraph(AssetMetadata& metadata, LoadAssetSettings settings = LoadAssetSettings());
 		static Ref<JobGraph> GetSaveGraph(Ref<Asset> asset, SaveAssetSettings settings = SaveAssetSettings());
-		static Ref<JobGraph> GetCreateGraph(AssetType type, CreateAssetSettings settings = CreateAssetSettings());
+		static Ref<JobGraph> GetCreateGraph(CreateAssetSettings settings = CreateAssetSettings());
 
 	private:
 		static AssetHandle ImportAssetPack(const std::filesystem::path& path, const AssetPack& pack);

@@ -62,6 +62,7 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 
 		if (m_StageIndex + 1 >= m_Info.Stages.size())
 		{
+			m_StageIndex++;
             m_JobSystem->OnGraphFinished(this);
 			m_HasFinished = true;
 			m_HasFinished.notify_all();

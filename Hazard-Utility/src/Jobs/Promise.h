@@ -34,19 +34,29 @@ public:
     
     Promise<T> ContinueWith(const std::function<void(std::vector<T>)>& callback) {
         if(m_JobGraph)
-            m_JobGraph->AddOnFinished([callback]() {
-                callback(std::vector<T>());
+            m_JobGraph->AddOnFinished([callback, graph = m_JobGraph]() {
+                callback(graph->GetResults<T>());
             });
         
         return *this;
     }
+    
     Promise<T> Catch(std::function<void(const JobException&)> callback) {
         if(m_JobGraph)
             m_JobGraph->AddOnFailed(callback);
         return *this;
     }
+
+    std::vector<T> GetResults() 
+    {
+        if (m_JobGraph)
+            return m_JobGraph->GetResults<T>();
+        else return std::vector<T>();
+    }
+
 private:
     Promise(Ref<JobGraph> graph) : m_JobGraph(graph) {}
+
 private:
 	Ref<JobGraph> m_JobGraph = nullptr;
 };

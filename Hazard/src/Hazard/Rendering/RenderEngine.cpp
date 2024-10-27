@@ -65,6 +65,7 @@ namespace Hazard
 	}
 	void RenderEngine::Init()
 	{
+		return;
 		ShaderLibrary::Init(m_RenderContextManager->GetWindow().GetWindowInfo().SelectedAPI);
 
 		s_Resources->Initialize();
@@ -94,6 +95,7 @@ namespace Hazard
 
 		for (auto& worldDrawList : m_DrawList)
 		{
+			continue;
 			CollectGeometry();
 
 			//Update common rendergraph resources

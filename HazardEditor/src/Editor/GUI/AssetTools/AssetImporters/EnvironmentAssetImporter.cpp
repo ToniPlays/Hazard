@@ -56,11 +56,13 @@ bool EnvironmentAssetImporter::ImportFromNew()
 		.Samples = m_SampleCount.GetValue(),
 	};
 
-	CreateAssetSettings settings = {};
-	settings.SourcePath = m_SourcePath;
-	settings.Settings = &envSettings;
+	CreateAssetSettings settings = {
+		.Type = AssetType::EnvironmentMap,
+		.SourcePath = m_SourcePath,
+		.Settings = &envSettings,
+	};
 
-    Promise<Ref<EnvironmentMap>> promise = AssetManager::CreateAssetAsync<EnvironmentMap>(AssetType::EnvironmentMap, settings);
+    Promise<Ref<EnvironmentMap>> promise = AssetManager::CreateAssetAsync<EnvironmentMap>(settings);
 
 	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
 	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");

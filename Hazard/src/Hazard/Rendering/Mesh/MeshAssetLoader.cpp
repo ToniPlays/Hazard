@@ -138,13 +138,14 @@ namespace Hazard
 		MaterialAssetLoader::CreateSettings mat = {};
 
 		CreateAssetSettings settings = {
+			.Type = AssetType::Material,
 			.SourcePath = materialRoot / (material.Name + ".hasset"),
 			.Settings = &mat,
 		};
 
 		auto props = importer->GetMaterial(material.MaterialIndex);
 
-		Ref<JobGraph> loadGraph = AssetManager::GetCreateGraph(AssetType::Material, settings);
+		Ref<JobGraph> loadGraph = AssetManager::GetCreateGraph(settings);
         /*Promise promise = info.ParentGraph->SubGraph(loadGraph);
 
 		promise.Then([info, metadata = material, path = settings.SourcePath, props](JobGraph& graph) mutable {

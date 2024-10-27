@@ -15,8 +15,8 @@ void EditorAssetManager::Init()
 {
 	ImportEngineShaders();
 	ImportEngineImages();
-    
-    Application::Get().GetJobSystem().WaitForJobsToFinish();
+
+	Application::Get().GetJobSystem().WaitForJobsToFinish();
 }
 
 void EditorAssetManager::PostInit()
@@ -47,19 +47,22 @@ void EditorAssetManager::LoadEditorAssets()
 	Timer timer;
 	for (auto& texture : texturesToLoad)
 	{
-		CreateAssetSettings settings = {};
-		settings.SourcePath = texture.Path;
+		CreateAssetSettings settings = {
+			.Type = AssetType::Image,
+			.SourcePath = texture.Path,
+		};
 
-        auto promise = AssetManager::CreateAssetAsync<Texture2DAsset>(AssetType::Image, settings);
-        promise.ContinueWith([key = texture.Key](std::vector<Ref<Texture2DAsset>> result) {
-            Ref<Texture2DAsset> asset = result[0];
+		auto promise = AssetManager::CreateAssetAsync<Texture2DAsset>(settings);
+		promise.ContinueWith([key = texture.Key](std::vector<Ref<Texture2DAsset>> result) {
+			Ref<Texture2DAsset> asset = result[0];
 			s_Icons[key] = asset->GetHandle();
 			asset->IncRefCount();
-        }).Catch([texture](const JobException& e) {
-            HZR_ERROR("Failed to load {} with {}", texture.Path, e.what());
-        });
-		promises.push_back(promise);
+			}).Catch([texture](const JobException& e) {
+				HZR_ERROR("Failed to load {} with {}", texture.Path, e.what());
+				});
+			promises.push_back(promise);
 	}
+
 	for (auto& promise : promises)
 		promise.Wait();
 
@@ -83,6 +86,8 @@ void EditorAssetManager::ImportEngineShaders()
 {
 	FileCache cache("Library/Shaders");
 
+	std::vector<Promise<Ref<ShaderAsset>>> promises;
+
 	for (auto& file : Directory::GetAllInDirectory("res/Shaders", true))
 	{
 		if (File::GetFileExtension(file) != ".glsl") continue;
@@ -94,22 +99,27 @@ void EditorAssetManager::ImportEngineShaders()
 			continue;
 		}
 
-		CreateAssetSettings settings = {};
-		settings.SourcePath = file;
+		CreateAssetSettings settings = {
+			.Type = AssetType::Shader,
+			.SourcePath = file
+		};
 
-        Promise<Ref<ShaderAsset>> promise = AssetManager::CreateAssetAsync<ShaderAsset>(AssetType::Shader, settings);
+		Promise<Ref<ShaderAsset>> promise = AssetManager::CreateAssetAsync<ShaderAsset>(settings);
 		promise.ContinueWith([cache](std::vector<Ref<ShaderAsset>> results) mutable {
-            Ref<ShaderAsset> asset = results[0];
+			Ref<ShaderAsset> asset = results[0];
 			if (!asset) return;
 
 			SaveAssetSettings settings = {};
 			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
 			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
 
-            AssetManager::SaveAsset(asset, settings).Wait();
-        });
-        promise.Wait();
+			AssetManager::SaveAsset(asset, settings);
+			});
+		promises.emplace_back(promise);
 	}
+
+	for (auto& promise : promises)
+		promise.Wait();
 }
 
 void EditorAssetManager::ImportEngineEnvironments()
@@ -125,16 +135,18 @@ void EditorAssetManager::ImportEngineEnvironments()
 		if (cache.HasFile(cacheFile))
 		{
 			AssetManager::Import(cache.Get(cacheFile));
-			continue;
 		}
+			continue;
 
-		CreateAssetSettings settings = {};
-		settings.SourcePath = file;
+		CreateAssetSettings settings = {
+			.Type = AssetType::EnvironmentMap,
+			.SourcePath = file
+		};
 
-        Promise<Ref<EnvironmentMap>> promise = AssetManager::CreateAssetAsync<EnvironmentMap>(AssetType::EnvironmentMap, settings);
+		Promise<Ref<EnvironmentMap>> promise = AssetManager::CreateAssetAsync<EnvironmentMap>(settings);
 
-        promise.ContinueWith([cache](std::vector<Ref<EnvironmentMap>> results) {
-            Ref<Asset> asset = results[0];
+		promise.ContinueWith([cache](std::vector<Ref<EnvironmentMap>> results) {
+			Ref<Asset> asset = results[0];
 			if (!asset) return;
 
 			SaveAssetSettings settings = {};
@@ -142,7 +154,7 @@ void EditorAssetManager::ImportEngineEnvironments()
 			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
 
 			//AssetManager::SaveAsset(asset, settings).Wait();
-		});
+			});
 	}
 }
 
@@ -160,12 +172,14 @@ void EditorAssetManager::ImportEngineMeshes()
 			continue;
 		}
 
-		CreateAssetSettings settings = {};
-		settings.SourcePath = file;
+		CreateAssetSettings settings = {
+			.Type = AssetType::Mesh,
+			.SourcePath = file
+		};
 
-        Promise<Ref<Mesh>> promise = AssetManager::CreateAssetAsync<Mesh>(AssetType::Mesh, settings);
+		Promise<Ref<Mesh>> promise = AssetManager::CreateAssetAsync<Mesh>(settings);
 		promise.ContinueWith([cache](std::vector<Ref<Mesh>> results) {
-            Ref<Asset> asset = results[0];
+			Ref<Asset> asset = results[0];
 			if (!asset) return;
 
 			SaveAssetSettings settings = {};
@@ -173,7 +187,7 @@ void EditorAssetManager::ImportEngineMeshes()
 			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
 
 			//AssetManager::SaveAsset(asset, settings).Wait();
-		});
+			});
 
 		//promises.push_back(promise);
 	}
@@ -198,13 +212,15 @@ void EditorAssetManager::ImportEngineImages()
 		Hazard::ImageAssetLoader::CreateSettings spec = {};
 		spec.FlipOnLoad = true;
 
-		CreateAssetSettings settings = {};
-		settings.SourcePath = file;
-		settings.Settings = &spec;
+		CreateAssetSettings settings = {
+			.Type = AssetType::Image,
+			.SourcePath = file,
+			.Settings = &spec,
+		};
 
-        Promise<Ref<Texture2DAsset>> promise = AssetManager::CreateAssetAsync<Texture2DAsset>(AssetType::Image, settings);
+		Promise<Ref<Texture2DAsset>> promise = AssetManager::CreateAssetAsync<Texture2DAsset>(settings);
 		promise.ContinueWith([cache](std::vector<Ref<Texture2DAsset>> results) {
-            Ref<Asset> asset = results[0];
+			Ref<Asset> asset = results[0];
 			if (!asset) return;
 
 			SaveAssetSettings settings = {};
@@ -212,7 +228,7 @@ void EditorAssetManager::ImportEngineImages()
 			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
 
 			//AssetManager::SaveAsset(asset, settings).Wait();
-		});
+			});
 
 		//promises.push_back(promise);
 	}

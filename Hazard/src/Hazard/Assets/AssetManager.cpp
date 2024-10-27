@@ -197,9 +197,9 @@ namespace Hazard
 		return graph;
 	}
 
-	Ref<JobGraph> AssetManager::GetCreateGraph(AssetType type, CreateAssetSettings settings)
+	Ref<JobGraph> AssetManager::GetCreateGraph(CreateAssetSettings settings)
 	{
-		Ref<JobGraph> graph = s_AssetLoader.Create(type, settings);
+		Ref<JobGraph> graph = s_AssetLoader.Create(settings);
 		return graph;
 	}
 

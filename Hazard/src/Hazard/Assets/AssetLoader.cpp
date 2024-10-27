@@ -33,14 +33,14 @@ namespace Hazard
 		return m_Loaders[asset->GetType()]->Save(asset, settings);
 	}
 
-	Ref<JobGraph> AssetLoader::Create(AssetType type, const CreateAssetSettings& settings)
+	Ref<JobGraph> AssetLoader::Create(const CreateAssetSettings& settings)
 	{
-		if (m_Loaders.find(type) == m_Loaders.end())
+		if (m_Loaders.find(settings.Type) == m_Loaders.end())
 		{
-			HZR_CORE_ERROR("No loaders for {0}", Utils::AssetTypeToString(type));
+			HZR_CORE_ERROR("No loaders for {0}", Utils::AssetTypeToString(settings.Type));
 			return nullptr;
 		}
 
-		return m_Loaders[type]->Create(settings);
+		return m_Loaders[settings.Type]->Create(settings);
 	}
 }

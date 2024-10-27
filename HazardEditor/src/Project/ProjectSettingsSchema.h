@@ -67,8 +67,8 @@ public:
 
 struct AppRuntimeConfig : ProjectSettingInfo
 {
-	std::string CompanyName;
-	std::string ProjectName;
+	std::string CompanyName = "My Company";
+	std::string ProjectName = "New project";
 	std::string VersionIdentifier;
 	std::filesystem::path ProjectPath;
 

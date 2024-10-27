@@ -8,7 +8,6 @@
 #include "Hazard/Rendering/RenderEngine.h"
 
 
-
 #include "Hazard/Core/Application.h"
 
 namespace Hazard

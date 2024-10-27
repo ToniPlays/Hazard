@@ -115,7 +115,7 @@ void HazardEditorApplication::InitJobsystemHooks()
 	JobSystem& system = Application::Get().GetJobSystem();
 	
 	system.Hook(JobSystemHook::Finished, [](Ref<JobGraph> graph) {
-		HZR_TRACE("Job graph {} at {}", graph->GetName(), graph->GetStageName());
+		HZR_TRACE("Job graph {} finished", graph->GetName());
 	});
 	
 	system.Hook(JobSystemHook::Failure, [](Ref<JobGraph> graph) {
