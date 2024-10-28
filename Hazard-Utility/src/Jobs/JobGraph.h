@@ -37,7 +37,7 @@ public:
 
     bool DidFail() const { return m_Failed; }
 	const JobGraphInfo& GetInfo() const { return m_Info; }
-    const std::string& GetStageName() const { return m_Info.Stages[m_StageIndex].Name; }
+    const std::string& GetStageName() const { return m_Info.Stages[Math::Min<uint32_t>(m_StageIndex, m_Info.Stages.size() - 1)].Name; }
     
 	bool SubmitJobs(JobSystem* system);
 	void ContinueWith(const std::vector<Ref<Job>>& jobs);

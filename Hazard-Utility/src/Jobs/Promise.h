@@ -35,7 +35,7 @@ public:
 	Promise<T> ContinueWith(const std::function<void(std::vector<T>)>& callback) {
 		if (m_JobGraph)
 			m_JobGraph->AddOnFinished([callback, graph = m_JobGraph]() {
-			callback(graph->template GetResults<T>());
+				callback(graph->template GetResults<T>());
 				});
 
 		return *this;

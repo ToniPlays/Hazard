@@ -59,7 +59,7 @@ namespace Hazard
 	{
 		std::string result = serializer.Serialize();
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(Buffer::Copy(result.c_str(), result.length()));
-		//info.Job->SetResult(buffer);
+		info.Result(buffer);
 	}
 	void WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings)
 	{
@@ -86,7 +86,9 @@ namespace Hazard
 		for (auto& [meta, count] : assets.Assets)
 			assetJobs.push_back(Job::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
 
-		//info.ParentGraph->ContinueWith(assetJobs);
+		if (assetJobs.size() == 0)
+			info.ContinueWith({ Job::Lambda("Dummy", [](JobInfo&) {}) });
+		info.ContinueWith(assetJobs);
 	}
 	void WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)
 	{
@@ -113,7 +115,7 @@ namespace Hazard
 		WorldDeserializer deserializer(File::GetName(metadata.SourceFile), source);
 
 		Ref<World> world = deserializer.Deserialize();
-		//info.Job->SetResult(world);
+		info.Result(world);
 	}
 	void WorldAssetLoader::CreateWorld(JobInfo& info, const std::filesystem::path& file)
 	{

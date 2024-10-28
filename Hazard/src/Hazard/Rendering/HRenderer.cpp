@@ -128,9 +128,6 @@ namespace Hazard
 		AssetHandle handle = skyLight.EnvironmentMapHandle;
 		if (handle == INVALID_ASSET_HANDLE) return;
 
-        //Promise promise = AssetManager::GetAssetAsync(handle);
-		//if (!promise.HasFinished() || !promise.Valid()) return;
-
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
 		Ref<Material> material = map->GetMaterial();
 		if (!material) return;

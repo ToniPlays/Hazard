@@ -67,7 +67,7 @@ namespace Hazard
 		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 		material->Set("u_Albedo", whiteTexture);
 
-		//info.Job->SetResult(material);
+		info.Result(material);
 	}
 
 	void MaterialAssetLoader::CreateMaterialAsset(JobInfo& info, const CreateSettings& settings)
@@ -78,7 +78,7 @@ namespace Hazard
 		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 		material->Set("u_Albedo", whiteTexture);
 
-		//info.Job->SetResult(material);
+		info.Result(material);
 	}
 
 	void MaterialAssetLoader::SaveMaterialAsset(JobInfo& info, Ref<Material> material)
@@ -89,7 +89,7 @@ namespace Hazard
 		buffer->Allocate(constants.Size);
 		buffer->Write(constants.Data, constants.Size);
 
-		//info.Job->SetResult(buffer);
+		info.Result(buffer);
 	}
 }
 

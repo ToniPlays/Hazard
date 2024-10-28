@@ -81,7 +81,7 @@ namespace Hazard
 		Job& job = *info.Current.Raw();
 		importer->AddImportProgressCallback([&job](float progress) {
 			job.Progress(progress);
-		});
+			});
 
 		auto metadata = importer->GetSceneMetadata();
 		if (metadata.MeshCount == 0)
@@ -116,7 +116,7 @@ namespace Hazard
 			}
 		}
 
-		//info.ParentGraph->ContinueWith(generateJobs);
+		info.ContinueWith(generateJobs);
 	}
 
 	void MeshAssetLoader::ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh)
@@ -124,13 +124,13 @@ namespace Hazard
 		Job& jobRef = *info.Current;
 		MeshImporter::MeshData data = importer->GetMeshData(mesh, [&jobRef](uint32_t current, uint32_t total) mutable {
 			jobRef.Progress((float)current / (float)total);
-		});
+			});
 
 		MeshDependencyData result = {
 			.MeshData = data,
 		};
 
-		//info.Job->SetResult(result);
+		info.Result(result);
 	}
 
 	void MeshAssetLoader::ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot)
@@ -143,71 +143,61 @@ namespace Hazard
 			.Settings = &mat,
 		};
 
+		std::atomic_bool fence = true;
+
 		auto props = importer->GetMaterial(material.MaterialIndex);
 
 		Ref<JobGraph> loadGraph = AssetManager::GetCreateGraph(settings);
-        /*Promise promise = info.ParentGraph->SubGraph(loadGraph);
+		Ref<Material> asset = AssetManager::CreateAsset<Material>(settings);
+		SetMaterialProperties(asset, props);
 
-		promise.Then([info, metadata = material, path = settings.SourcePath, props](JobGraph& graph) mutable {
-			Ref<Material> material = graph.GetResult<Ref<Material>>();
-			if (!material) return;
 
-			SetMaterialProperties(material, props);
+		SaveAssetSettings saveSettings = {
+			.TargetPath = settings.SourcePath,
+			.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
+		};
+		AssetManager::SaveAsset(asset, saveSettings);
 
-			SaveAssetSettings saveSettings = {
-				.TargetPath = path,
-				.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
-			};
+		MeshDependencyData result = {
+			.Handle = asset->GetHandle(),
+			.MaterialIndex = material.MaterialIndex
+		};
 
-			MeshDependencyData result = {
-				.Handle = material->GetHandle(),
-				.MaterialIndex = metadata.MaterialIndex
-			};
-
-			info.Job->SetResult(result);
-
-			info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(material, saveSettings)).Then([info, result](JobGraph&) mutable {
-				info.ParentGraph->Continue();
-			});
-		});*/
-
-		//info.ParentGraph->Halt();
+		info.Result(result);
 	}
 
 	void MeshAssetLoader::ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot)
 	{
-		CreateAssetSettings create = {};
+		CreateAssetSettings create = {
+			.Type = AssetType::Image,
+		};
 
-		/*AssetManager::CreateAssetAsync<Texture2DAsset>(AssetType::Image, create).Then([info, importer, texture, textureRoot](JobGraph& graph) mutable {
-			Ref<Texture2DAsset> asset = graph.GetResult<Ref<Texture2DAsset>>();
-			if (!asset) return;
+		Ref<Texture2DAsset> asset = AssetManager::CreateAsset<Texture2DAsset>(create);
 
-			auto textureData = importer->GetTextureData(texture.TextureIndex);
-			asset->SetExtent({ textureData.Width, textureData.Height, 1 });
-			asset->SetMaxMipLevels(1);
-			asset->Invalidate(textureData.ImageData);
+		auto textureData = importer->GetTextureData(texture.TextureIndex);
+		asset->SetExtent({ textureData.Width, textureData.Height, 1 });
+		asset->SetMaxMipLevels(1);
+		asset->Invalidate(textureData.ImageData);
 
-			SaveAssetSettings saveSettings = {
-					.TargetPath = textureRoot / (textureData.Name + ".hasset"),
-					.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
-			};
+		SaveAssetSettings saveSettings = {
+				.TargetPath = textureRoot / (textureData.Name + ".hasset"),
+				.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
+		};
 
-			MeshDependencyData result = {
-				.Handle = asset->GetHandle(),
-				.TextureName = textureData.Name,
-			};
+		MeshDependencyData result = {
+			.Handle = asset->GetHandle(),
+			.TextureName = textureData.Name,
+		};
 
-			//info.ParentGraph->SubGraph(AssetManager::GetSaveGraph(asset, saveSettings));
+		AssetManager::SaveAsset(asset, saveSettings);
 
-			info.Job->SetResult(result);
-			textureData.ImageData.Release();
-		});*/
+		info.Result(result);
+		textureData.ImageData.Release();
 	}
-
 
 	void MeshAssetLoader::FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer)
 	{
-        std::vector<MeshDependencyData> results;// = info.ParentGraph->GetResults<MeshDependencyData>();
+		std::vector<MeshDependencyData> results = info.Graph->GetResults<MeshDependencyData>();
 
 		Ref<Mesh> mesh = Ref<Mesh>::Create();
 
@@ -240,7 +230,7 @@ namespace Hazard
 			mesh->SetSubmeshMaterialHandle(nodeID, handle);
 		}
 
-		//info.Job->SetResult(mesh);
+		info.Result(mesh);
 	}
 
 	void MeshAssetLoader::ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh)
@@ -311,11 +301,10 @@ namespace Hazard
 			result.Vertex = Buffer::Copy(vertexReadback->ReadData(vertexRegion));
 			result.Index = Buffer::Copy(indexReadback->ReadData(indexRegion));
 
-			//info.Job->SetResult(result);
-			//info.ParentGraph->Continue();
-		});
+			info.Result(result);
 
-		//info.ParentGraph->Halt();
+			});
+		cmdBuffer->Wait();
 	}
 
 	void MeshAssetLoader::CompileMesh(JobInfo& info, Ref<Mesh> mesh)
@@ -365,7 +354,7 @@ namespace Hazard
 
 		buf->Write<Buffer>(result.Vertex);
 		buf->Write<Buffer>(result.Index);
-		//info.Job->SetResult(buf);
+		info.Result(buf);
 
 		result.Vertex.Release();
 		result.Index.Release();
@@ -412,12 +401,12 @@ namespace Hazard
 
 		mesh->GenerateMesh(submeshes, vertices, indices);
 
-		//info.Job->SetResult(mesh);
+		info.Result(mesh);
 	}
 
 	void MeshAssetLoader::SetMaterialProperties(Ref<Material> material, const MeshImporter::MaterialData& materialData)
 	{
-	#define HZR_SET_MAT_PROP(mat, key, type) if(prop.Name == key) {						\
+#define HZR_SET_MAT_PROP(mat, key, type) if(prop.Name == key) {						\
 												material->Set(type, prop.Data.Data);	\
 												continue;								\
 											}																								

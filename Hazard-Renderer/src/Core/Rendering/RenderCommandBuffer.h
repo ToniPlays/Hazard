@@ -85,6 +85,8 @@ namespace HazardRenderer
 		virtual void End() = 0;
 		virtual void Submit() = 0;
 
+		virtual void Wait() = 0;
+
 		virtual void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) = 0;
 		virtual void EndRenderPass() = 0;
 

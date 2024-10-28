@@ -103,6 +103,5 @@ void JobGraph::SubmitNextStage()
         m_JobSystem->OnGraphFinished(this);
 		m_HasFinished = true;
 		m_HasFinished.notify_all();
-		
 	}
 }

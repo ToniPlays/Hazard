@@ -213,6 +213,9 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 
+		m_Started = true;
+		m_Started.notify_all();
+
 		if (m_OwnedBySwapchain)
 		{
 			Ref<VulkanSwapchain> swapchain = VulkanContext::GetInstance()->GetSwapchain().As<VulkanSwapchain>();
@@ -299,9 +302,15 @@ namespace HazardRenderer::Vulkan
 
 			instance->m_OnCompletion.Invoke();
 			instance->m_OnCompletion.Clear();
+			instance->m_Started = false;
+			instance->m_Started.notify_all();
 
 			//instance->GetQueryPoolResults_RT();
 		});
+	}
+	void VulkanRenderCommandBuffer::Wait()
+	{
+		m_Started.wait(true);
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
 	{

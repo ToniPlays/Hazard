@@ -12,18 +12,18 @@ void Thread::Execute(Ref<Job> job)
 
 	try
 	{
-        m_LastError = "";
-        JobInfo info = {};
-        info.Thread = this;
-        
-        m_Status = ThreadStatus::Executing;
+		m_LastError = "";
+		JobInfo info = {};
+		info.Thread = this;
+
+		m_Status = ThreadStatus::Executing;
 		job->Execute(info);
 		m_Status = ThreadStatus::Finished;
 	}
 	catch (JobException e)
 	{
 		m_Status = ThreadStatus::Failed;
-        m_LastError = e.what();
+		m_LastError = e.what();
 		throw e;
 	}
 }
@@ -86,8 +86,8 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 			thread->m_CurrentJob = job;
 
 			m_StatusHook.Invoke(thread, ThreadStatus::Executing);
-            m_StatusHook.Invoke(thread, thread->GetStatus());
-            thread->Execute(job);
+			m_StatusHook.Invoke(thread, thread->GetStatus());
+			thread->Execute(job);
 		}
 		catch (JobException e)
 		{
@@ -150,9 +150,11 @@ void JobSystem::OnGraphFinished(Ref<JobGraph> graph)
 		m_QueuedGraphs.erase(it);
 
 	m_GraphMutex.unlock();
-    if(graph->DidFail()) return;
-    
-    m_Hooks.Invoke(JobSystemHook::Finished, graph);
+	m_HookCallbacks.Add([this, graph]() mutable {
+		if (graph->DidFail())
+			m_Hooks.Invoke(JobSystemHook::Failure, graph);
+		else m_Hooks.Invoke(JobSystemHook::Finished, graph);
+		});
 }
 
 void JobSystem::WaitForJobsToFinish()

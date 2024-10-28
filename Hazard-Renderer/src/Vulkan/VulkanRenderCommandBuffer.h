@@ -34,6 +34,7 @@ namespace HazardRenderer::Vulkan
 		void Begin() override;
 		void End() override;
 		void Submit() override;
+		void Wait() override;
 
 		void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) override;
 		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
@@ -103,6 +104,8 @@ namespace HazardRenderer::Vulkan
 
 		Callback<void()> m_OnCompletion;
 		VkQueue m_SubmitQueue = VK_NULL_HANDLE;
+
+		std::atomic_bool m_Started = false;
 	};
 }
 #endif

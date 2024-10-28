@@ -100,6 +100,7 @@ namespace Hazard
 		Time::Update(micros / 1000000.0f);
 
 		m_Application->InvokeMainThreadJobs();
+		m_Application->GetJobSystem().Update();
 
 		//Update
 		m_ModuleHandler->PreUpdate();
