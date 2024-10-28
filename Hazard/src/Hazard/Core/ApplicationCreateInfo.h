@@ -59,6 +59,7 @@ namespace Hazard {
 	struct GuiCreateInfo
 	{
 		std::string Title;
+		bool DockSpace = true;
 	};
 
 	struct HazardCreateInfo 

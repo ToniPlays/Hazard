@@ -36,7 +36,8 @@ namespace Hazard
 			.Renderer = createInfo->Renderer,
 			.WindowCount = 1,
 			.pWindows = &windowInfo,
-			.VSync = createInfo->VSync
+			.ImagesInFlight = 1,
+			.VSync = createInfo->VSync,
 		};
 
 		m_Window = Window::Create(&rendererInfo);

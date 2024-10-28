@@ -2,6 +2,7 @@
 #include "HazardLauncher.h"
 #include "HazardRendererCore.h"
 #include "Hazard/ImGUI/GUIManager.h"
+#include "GUI/LauncherGUI.h"
 
 using namespace Hazard;
 using namespace HazardRenderer;
@@ -23,14 +24,16 @@ void HazardLauncher::PreInit()
 		.Height = 720,
 		.VSync = CommandLineArgs::Get<bool>("VSync"),
 	};
-    
-    GuiCreateInfo guiInfo = {};
-    guiInfo.Title = appInfo.AppName;
+
+	GuiCreateInfo guiInfo = {
+		.Title = appInfo.AppName,
+		.DockSpace = false
+	};
 
 	HazardCreateInfo createInfo = {
 		.AppInfo = &appInfo,
 		.RenderContextInfo = &renderContextInfo,
-        .GuiInfo = &guiInfo
+		.GuiInfo = &guiInfo
 	};
 
 	CreateApplicationStack(&createInfo);
@@ -38,5 +41,7 @@ void HazardLauncher::PreInit()
 
 void HazardLauncher::Init()
 {
-    
+	using namespace Hazard::ImUI;
+	auto& manager = GetModule<GUIManager>();
+	manager.New<LauncherGUI>();
 }

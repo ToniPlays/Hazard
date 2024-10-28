@@ -10,6 +10,7 @@ namespace Hazard
 
 		static void Init(std::string cmdLine) 
 		{
+			std::cout << cmdLine << std::endl;
 			ProcessArgs(cmdLine);
 
 			//Check if config exists
@@ -76,6 +77,6 @@ namespace Hazard
 			}
 		}
 	private:
-		static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
+		inline static std::unordered_map<std::string, std::vector<std::string>> m_Arguments;
 	};
 }

@@ -65,7 +65,7 @@ namespace Hazard
 			if (m_Menubar)
 				m_Menubar->Render();
 
-			{
+			if(m_HasDockspace) {
 				using namespace ImUI;
 				ScopedStyleVar style(ImGuiStyleVar_FramePadding, ImVec2(16.0f, 8.0f));
 				Dockspace::BeginDockspace("MainWorkspace", ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_PassthruCentralNode);

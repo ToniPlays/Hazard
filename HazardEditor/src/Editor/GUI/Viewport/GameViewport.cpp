@@ -51,7 +51,7 @@ namespace UI
 		cameraData.Height = m_Height;
 
 		auto renderer = Editor::EditorWorldManager::GetWorldRender();
-		//renderer->SubmitCamera(cameraData);
+		renderer->SubmitCamera(cameraData);
 		*/
 	}
 	void GameViewport::OnPanelRender()

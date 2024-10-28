@@ -181,8 +181,6 @@ void EditorAssetManager::ImportEngineMeshes()
 
 			//AssetManager::SaveAsset(asset, settings).Wait();
 			});
-
-		//promises.push_back(promise);
 	}
 }
 
@@ -219,11 +217,7 @@ void EditorAssetManager::ImportEngineImages()
 			SaveAssetSettings settings = {};
 			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
 			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
-
-			//AssetManager::SaveAsset(asset, settings).Wait();
 			});
-
-		//promises.push_back(promise);
 	}
 }
 

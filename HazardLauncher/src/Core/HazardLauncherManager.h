@@ -5,7 +5,8 @@
 
 #include "Hazard/Assets/AssetEnums.h"
 
-class HazardLauncherManager {
+class HazardLauncherManager 
+{
 public:
 	HazardLauncherManager();
 	~HazardLauncherManager() = default;

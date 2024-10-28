@@ -14,7 +14,9 @@ namespace Hazard
 	{
 	public:
 		GUIManager() = delete;
-		GUIManager(GuiCreateInfo* info) : Hazard::Module("GUIManager") {};
+		GUIManager(GuiCreateInfo* info) : Hazard::Module("GUIManager") {
+			m_HasDockspace = info->DockSpace;
+		};
 		~GUIManager() = default;
 
 		void Init() override;
@@ -102,5 +104,7 @@ namespace Hazard
 		GUIPlatform* m_Platform = nullptr;
 		ImUI::MenuBar* m_Menubar = nullptr;
 		std::unordered_map<uint64_t, std::vector<ImUI::GUIRenderable*>> m_Renderables;
+
+		bool m_HasDockspace = false;
 	};
 }

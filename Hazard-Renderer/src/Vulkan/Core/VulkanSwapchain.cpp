@@ -129,6 +129,7 @@ namespace HazardRenderer::Vulkan
 
 		FindImageFormatAndColorSpace();
 	}
+
 	void VulkanSwapchain::Create(uint32_t* width, uint32_t* height, bool enableVSync)
 	{
 		HZR_PROFILE_FUNCTION();
@@ -487,16 +488,18 @@ namespace HazardRenderer::Vulkan
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
 
+		auto vkDevice = m_Device->GetVulkanDevice();
 		m_CurrentBufferIndex = (m_CurrentBufferIndex + 1) % VulkanContext::GetImagesInFlight();
 
-		auto vkDevice = m_Device->GetVulkanDevice();
-		m_CurrentImageIndex = AcquireSwapchainImage();
-		VK_CHECK_RESULT(vkResetCommandPool(m_Device->GetVulkanDevice(), m_CommandBuffers[m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
-
 		{
-			HZR_PROFILE_SCOPE("VulkanSwapchain::Present() WaitForFences");
+			HZR_PROFILE_SCOPE("VulkanSwapchain::BeginFrame() WaitForFences");
 			VK_CHECK_RESULT(vkWaitForFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex], VK_TRUE, UINT64_MAX), "");
+			VK_CHECK_RESULT(vkResetFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex]), "Failed to reset fence");
 		}
+
+		m_CurrentImageIndex = AcquireSwapchainImage();
+
+		VK_CHECK_RESULT(vkResetCommandPool(m_Device->GetVulkanDevice(), m_CommandBuffers[m_CurrentBufferIndex].CommandPool, 0), "Failed to reset command pool");
 
 		m_RenderCommandBuffer->Begin();
 	}
@@ -517,13 +520,13 @@ namespace HazardRenderer::Vulkan
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submitInfo.pWaitDstStageMask = &pipelineFlags;
 		submitInfo.waitSemaphoreCount = 1;
-		submitInfo.pWaitSemaphores = &m_Semaphores[m_CurrentImageIndex].PresentComplete;
+		submitInfo.pWaitSemaphores = &m_Semaphores[m_CurrentBufferIndex].PresentComplete;
 		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pSignalSemaphores = &m_Semaphores[m_CurrentImageIndex].RenderComplete;
+		submitInfo.pSignalSemaphores = &m_Semaphores[m_CurrentBufferIndex].RenderComplete;
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &m_CommandBuffers[m_CurrentBufferIndex].CommandBuffer;
 
-		VK_CHECK_RESULT(vkResetFences(vkDevice, 1, &m_WaitFences[m_CurrentBufferIndex]), "Failed to reset fence");
+		
 		VkResult result = vkQueueSubmit(m_Device->GetGraphicsQueue(), 1, &submitInfo, m_WaitFences[m_CurrentBufferIndex]);
 		VK_CHECK_RESULT(result, "vkQueueSubmit Failed");
 
@@ -534,7 +537,7 @@ namespace HazardRenderer::Vulkan
 			presentInfo.pSwapchains = &m_Swapchain;
 			presentInfo.pImageIndices = &m_CurrentImageIndex;
 			presentInfo.waitSemaphoreCount = 1;
-			presentInfo.pWaitSemaphores = &m_Semaphores[m_CurrentImageIndex].RenderComplete;
+			presentInfo.pWaitSemaphores = &m_Semaphores[m_CurrentBufferIndex].RenderComplete;
 
 			result = fpQueuePresentKHR(m_Device->GetGraphicsQueue(), &presentInfo);
 		}
@@ -588,7 +591,7 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		uint32_t index;
-		VkResult result = fpAcquireNextImageKHR(m_Device->GetVulkanDevice(), m_Swapchain, UINT64_MAX, m_Semaphores[m_CurrentImageIndex].PresentComplete, (VkFence)nullptr, &index);
+		VkResult result = fpAcquireNextImageKHR(m_Device->GetVulkanDevice(), m_Swapchain, UINT64_MAX, m_Semaphores[m_CurrentBufferIndex].PresentComplete, (VkFence)nullptr, &index);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
 		{

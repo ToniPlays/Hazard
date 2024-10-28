@@ -33,6 +33,7 @@ namespace HazardRenderer::Vulkan
 				labels.append(fmt::format("\t\t- Command Buffer Label[{0}]: name {1}, color {2}\n", i, label.pLabelName ? label.pLabelName : "NULL", colorStr));
 			}
 		}
+
 		if (pCallbackData->objectCount)
 		{
 			objects = fmt::format("\tObjects({}): \n", pCallbackData->objectCount);
