@@ -15,8 +15,6 @@ void EditorAssetManager::Init()
 {
 	ImportEngineShaders();
 	ImportEngineImages();
-
-	Application::Get().GetJobSystem().WaitForJobsToFinish();
 }
 
 void EditorAssetManager::PostInit()
@@ -41,9 +39,7 @@ void EditorAssetManager::LoadEditorAssets()
 		{ "Camera",				"res/Icons/camera.png"},
 		{ "DirectionalLight",	"res/Icons/directionalLight.png" }
 	};
-
-	std::vector<Promise<Ref<Texture2DAsset>>> promises;
-
+    
 	Timer timer;
 	for (auto& texture : texturesToLoad)
 	{
@@ -55,17 +51,17 @@ void EditorAssetManager::LoadEditorAssets()
 		auto promise = AssetManager::CreateAssetAsync<Texture2DAsset>(settings);
 		promise.ContinueWith([key = texture.Key](std::vector<Ref<Texture2DAsset>> result) {
 			Ref<Texture2DAsset> asset = result[0];
+            if(!asset) return;
+            
 			s_Icons[key] = asset->GetHandle();
 			asset->IncRefCount();
+            
 			}).Catch([texture](const JobException& e) {
 				HZR_ERROR("Failed to load {} with {}", texture.Path, e.what());
 				});
-			promises.push_back(promise);
+        
+        promise.Wait();
 	}
-
-	for (auto& promise : promises)
-		promise.Wait();
-
 }
 
 AssetHandle EditorAssetManager::GetIconHandle(const std::string& name)
@@ -114,12 +110,9 @@ void EditorAssetManager::ImportEngineShaders()
 			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
 
 			AssetManager::SaveAsset(asset, settings);
-			});
-		promises.emplace_back(promise);
+        });
+        promise.Wait();
 	}
-
-	for (auto& promise : promises)
-		promise.Wait();
 }
 
 void EditorAssetManager::ImportEngineEnvironments()

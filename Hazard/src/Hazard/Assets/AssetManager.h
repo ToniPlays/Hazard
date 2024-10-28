@@ -70,8 +70,7 @@ namespace Hazard
 		{
 			HZR_PROFILE_FUNCTION();
 			Promise<Ref<T>> promise = CreateAssetAsync<T>(settings);
-			promise.Wait();
-			return promise.GetResults()[0];
+			return promise.Wait().GetResults()[0];
 
 		}
 		template<typename T>
@@ -100,8 +99,9 @@ namespace Hazard
 
 				std::scoped_lock mutex(s_AssetMutex);
 				s_LoadedAssets[asset->GetHandle()] = asset;
+                s_Registry[metadata.SourceFile] = metadata;
 
-				HZR_CORE_INFO("Loaded asset {}", settings.SourcePath.string());
+				HZR_CORE_INFO("Created asset {}", settings.SourcePath.string());
 				}).Catch([](const JobException& e) {
 					HZR_CORE_ERROR("Something went wrong: {0}", e.what());
 				});
@@ -131,19 +131,7 @@ namespace Hazard
 			Ref<JobGraph> graph = s_AssetLoader.Load(metadata, LoadAssetSettings());
 			if (!graph) return Promise<T>();
 
-			Ref<Asset> oldAsset = s_LoadedAssets[handle];
-
-			/*graph->AddOnCompleted([handle, oldAsset](JobGraph& graph) {
-				Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
-				if (!asset) return;
-
-				asset->m_Handle = oldAsset->GetHandle();
-				asset->m_Flags = oldAsset->GetFlags();
-				asset->m_SourceAssetPath = oldAsset->GetSourceFilePath();
-
-				s_LoadedAssets[handle] = asset;
-			});
-			 */
+            Ref<Asset> oldAsset = s_LoadedAssets[handle];
 
 			return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
 		}
@@ -176,7 +164,7 @@ namespace Hazard
 
 
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
-			return nullptr; //promise.Result();
+            return promise.GetResults()[0];
 		}
 		template<typename T>
 		static Promise<Ref<T>> GetAssetAsync(AssetHandle handle, LoadAssetSettings settings = LoadAssetSettings())

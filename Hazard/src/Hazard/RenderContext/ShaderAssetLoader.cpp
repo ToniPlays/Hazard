@@ -68,7 +68,7 @@ namespace Hazard
 
 		std::vector<Ref<Job>> loadingJobs;
         //TODO: Fix
-		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Vulkan; api++)
+		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
 		{
 			for (auto& [stage, source] : sources)
 			{

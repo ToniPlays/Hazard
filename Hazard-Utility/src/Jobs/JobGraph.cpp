@@ -64,6 +64,7 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 		{
 			m_StageIndex++;
             m_JobSystem->OnGraphFinished(this);
+            m_OnFinishedCallback.Invoke();
 			m_HasFinished = true;
 			m_HasFinished.notify_all();
 			return;
@@ -84,6 +85,7 @@ void JobGraph::OnJobFailed(Ref<Job> job)
 	if (m_Info.Flags & JOB_GRAPH_TERMINATE_ON_ERROR)
 	{
         m_JobSystem->OnGraphFinished(this);
+        m_OnFinishedCallback.Invoke();
 		m_HasFinished = true;
 		m_HasFinished.notify_all();
 

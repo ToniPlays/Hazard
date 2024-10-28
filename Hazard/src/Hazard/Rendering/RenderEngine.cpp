@@ -65,7 +65,6 @@ namespace Hazard
 	}
 	void RenderEngine::Init()
 	{
-		return;
 		ShaderLibrary::Init(m_RenderContextManager->GetWindow().GetWindowInfo().SelectedAPI);
 
 		s_Resources->Initialize();
