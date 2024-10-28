@@ -75,9 +75,9 @@ bool EnvironmentAssetImporter::ImportFromNew()
 		settings.TargetPath = path;
 		settings.Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
 
-		/*AssetManager::SaveAsset(asset, settings).ContinueWith([assetPanel](const auto& results) mutable {
+		AssetManager::SaveAsset(asset, settings).ContinueWith([assetPanel](const auto& results) mutable {
 			assetPanel.Refresh();
-		});*/
+		});
 	});
 
     return true; //TODO: Maybe fix

@@ -134,7 +134,7 @@ namespace UI
 			m_EditorCamera.SetViewport(m_Width, m_Height);
 		}
 
-		//ImUI::Image(m_FrameBuffer->GetImage(), m_ImageSampler, size);
+		ImUI::Image(m_FrameBuffer->GetImage(), m_ImageSampler, size);
 		if (ImGui::IsItemClicked())
 		{
 			m_DrawSettings = false;

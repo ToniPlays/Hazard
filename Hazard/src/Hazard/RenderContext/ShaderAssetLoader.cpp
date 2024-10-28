@@ -147,7 +147,7 @@ namespace Hazard
 			buf->Write(code[(RenderAPI)header.ApiFlags][header.StageFlags]);
 		}
 
-		//info.Job->SetResult(buf);
+		info.Result(buf);
 	}
 	void ShaderAssetLoader::LoadShaderAsset(JobInfo& info, AssetHandle handle)
 	{
@@ -168,6 +168,6 @@ namespace Hazard
 			shader->ShaderCode[(RenderAPI)header.ApiFlags][header.StageFlags] = source;
 		}
 
-		//info.Job->SetResult(shader);
+		info.Result(shader);
 	}
 }

@@ -65,7 +65,9 @@ public:
     
     void AddOnFinished(const std::function<void()>& callback)
     {
-        m_OnFinishedCallback.Add(callback);
+        if (m_HasFinished)
+            callback();
+        else m_OnFinishedCallback.Add(callback);
     }
     
     void AddOnFailed(const std::function<void(JobException)>&& callback)
@@ -77,13 +79,20 @@ public:
 
 
 	template<typename T>
-	static Ref<JobGraph> EmptyWithResult(T value)
+	static Ref<JobGraph> EmptyWithResult(const std::vector<T> value)
 	{
-		Ref<Job> job = Job::Create();
+        std::vector<Ref<Job>> jobs(value.size(), Job::Create());
+        for (uint32_t i = 0; i < jobs.size(); i++)
+        {
+            jobs[i]->SetResult(value[i]);
+        }
 		
 		JobGraphInfo info = {};
-		info.Stages = { { "", 1.0f, { job }} };
+		info.Stages = { { "", 1.0f, jobs } };
+
 		auto graph = Ref<JobGraph>::Create(info);
+        graph->m_HasFinished = true;
+        graph->m_StageIndex = 1;
 		return graph;
 	}
 

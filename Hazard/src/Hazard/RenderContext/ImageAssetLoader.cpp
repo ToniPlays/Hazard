@@ -71,7 +71,7 @@ namespace Hazard
 	{
 		if (path.empty())
 		{
-			//info.Job->SetResult(TextureHeader());
+			info.Result(TextureHeader());
 			return;
 		}
 
@@ -82,7 +82,7 @@ namespace Hazard
 		if (!header.ImageData.Data)
 			throw JobException("Image load from source failed");
 
-		//info.Job->SetResult(header);
+		info.Result(header);
 	}
 
 	void ImageAssetLoader::CreateImageFromData(JobInfo& info, CreateSettings settings)
@@ -97,7 +97,7 @@ namespace Hazard
 			asset->Invalidate(header.ImageData);
 		}
 
-		//info.Job->SetResult(asset);
+		info.Result(asset);
 		header.ImageData.Release();
 	}
 

@@ -67,6 +67,7 @@ namespace Hazard
 
 	AssetHandle AssetManager::AssetHandleFromFile(const std::filesystem::path& file)
 	{
+		HZR_PROFILE_FUNCTION();
 		auto path = File::GetFileAbsolutePath(file);
 
 		if (s_Registry.Contains(path))
@@ -75,6 +76,7 @@ namespace Hazard
 		for (auto& [p, metadata] : s_Registry)
 		{
 			auto abs = File::GetFileAbsolutePath(metadata.SourceFile);
+
 			if (abs.compare(path) == 0 && !abs.empty())
 				return metadata.Handle;
 		}
@@ -115,10 +117,9 @@ namespace Hazard
 		Ref<JobGraph> graph = s_AssetLoader.Load(metadata, settings);
 		if (!graph) return nullptr;
 
-		/*graph->AddOnCompleted([handle = metadata.Handle](JobGraph& graph) mutable {
-			Ref<Asset> asset = graph.GetResult<Ref<Asset>>();
+		graph->AddOnFinished([graph, handle = metadata.Handle]() mutable {
+			Ref<Asset> asset = graph->GetResults<Ref<Asset>>()[0];
 			if (!asset) return;
-
 
 			AssetMetadata& metadata = GetMetadata(handle);
 			asset->m_Handle = metadata.Handle;
@@ -129,7 +130,7 @@ namespace Hazard
 			s_LoadedAssets[asset->GetHandle()] = asset;
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
 		});
-         */
+         
 		return graph;
 	}
 
@@ -147,9 +148,9 @@ namespace Hazard
 		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);
 		if (!graph) return nullptr;
         
-		/*graph->AddOnCompleted([asset, settings](JobGraph& graph) {
+		graph->AddOnFinished([graph, asset, settings]() {
 
-			Ref<CachedBuffer> result = graph.GetResult<Ref<CachedBuffer>>();
+			Ref<CachedBuffer> result = graph->GetResults<Ref<CachedBuffer>>()[0];
 			if (!result)
 				throw JobException("Did not receive asset data");
 
@@ -192,7 +193,6 @@ namespace Hazard
 
 			HZR_CORE_INFO("Saved asset: {} ({})", asset->GetSourceFilePath().string(), Utils::AssetTypeToString(asset->GetType()));
 		});
-         */
 
 		return graph;
 	}

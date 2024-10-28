@@ -19,9 +19,10 @@ class Job : public RefCount
 
 public:
     
-    ~Job() {
+    ~Job() 
+    {
         if(m_ResultBuffer)
-            delete m_ResultBuffer;
+            hdelete m_ResultBuffer;
     }
     
 	const std::string& GetName() const { return m_JobName; }
@@ -38,7 +39,7 @@ public:
     template<typename T>
     void SetResult(T value)
     {
-        m_ResultBuffer = (void*)new T(value);
+        m_ResultBuffer = (void*)hnew T(value);
     }
     template<typename T>
     T GetResult() const

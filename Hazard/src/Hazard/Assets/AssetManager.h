@@ -162,10 +162,16 @@ namespace Hazard
 			Promise<Ref<T>> promise = GetAssetAsync<T>(handle, settings);
 			promise.Wait();
 
-
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
             return promise.GetResults()[0];
 		}
+
+		template<typename T>
+		static Promise<Ref<T>> GetAssetAsync(const std::filesystem::path& path, LoadAssetSettings settings = LoadAssetSettings())
+		{
+			return GetAssetAsync<T>(AssetHandleFromFile(path), settings);
+		}
+
 		template<typename T>
 		static Promise<Ref<T>> GetAssetAsync(AssetHandle handle, LoadAssetSettings settings = LoadAssetSettings())
 		{
@@ -177,8 +183,8 @@ namespace Hazard
 			if (s_LoadedAssets[handle])
 			{
 				s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
-				Ref<JobGraph> graph = JobGraph::EmptyWithResult(s_LoadedAssets[handle]);
-				return Promise<Ref<T>>();
+				Ref<JobGraph> graph = JobGraph::EmptyWithResult<Ref<T>>({ s_LoadedAssets[handle] });
+				return Promise<Ref<T>>::Create(graph);
 			}
 
 			AssetMetadata& metadata = GetMetadata(handle);

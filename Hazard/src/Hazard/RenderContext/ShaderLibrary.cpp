@@ -16,131 +16,144 @@ namespace Hazard
 	{
 		HZR_PROFILE_SCOPE();
 		HZR_TIMED_FUNCTION();
-        
+
 		DescriptorSetLayout setLayout = { { SHADER_STAGE_ALL_GRAPHICS, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
 										  { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 										  { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
 										  { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D }
 		};
 		{
-			BufferLayout layout = LineVertex::Layout();
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Debug/LineShader.glsl");
+			AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Debug/LineShader.glsl").ContinueWith([api, setLayout](const auto& results) {
+				Ref<ShaderAsset> asset = results[0];
+				BufferLayout layout = LineVertex::Layout();
 
-			PipelineSpecification specs = {
-				.DebugName = "Pipeline LineShader",
-				.Usage = PipelineUsage::GraphicsBit,
-				.pBufferLayout = &layout,
-				.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST | PIPELINE_DRAW_LINE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST,
-				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { setLayout },
-			};
+				PipelineSpecification specs = {
+					.DebugName = "Pipeline LineShader",
+					.Usage = PipelineUsage::GraphicsBit,
+					.pBufferLayout = &layout,
+					.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST | PIPELINE_DRAW_LINE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST,
+					.Shaders = asset->ShaderCode[api],
+					.SetLayouts = { setLayout },
+				};
 
-			s_LoadedPipelines["LineShader"] = Pipeline::Create(&specs);
+				s_LoadedPipelines["LineShader"] = Pipeline::Create(&specs);
+				}).Wait();
 		}
 		{
-			BufferLayout layout = CircleVertex::Layout();
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/2D/CircleShader.glsl");
+			AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/2D/CircleShader.glsl").ContinueWith([api, setLayout](const auto& results) {
+				Ref<ShaderAsset> asset = results[0];
+				BufferLayout layout = CircleVertex::Layout();
 
-			PipelineSpecification specs = {
-				.DebugName = "Pipeline CircleShader",
-				.Usage = PipelineUsage::GraphicsBit,
-				.pBufferLayout = &layout,
-				.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST,
-				.Shaders = asset->ShaderCode[api],
-			};
+				PipelineSpecification specs = {
+					.DebugName = "Pipeline CircleShader",
+					.Usage = PipelineUsage::GraphicsBit,
+					.pBufferLayout = &layout,
+					.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST,
+					.Shaders = asset->ShaderCode[api],
+				};
 
-			s_LoadedPipelines["CircleShader"] = Pipeline::Create(&specs);
+				s_LoadedPipelines["CircleShader"] = Pipeline::Create(&specs);
+				}).Wait();
 		}
 		{
-			BufferLayout layout = QuadVertex::Layout();
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/2D/QuadShader.glsl");
+			AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/2D/QuadShader.glsl").ContinueWith([api, setLayout](const auto& results) {
+				Ref<ShaderAsset> asset = results[0];
+				BufferLayout layout = QuadVertex::Layout();
 
-			DescriptorSetLayout samplerSet = { { SHADER_STAGE_FRAGMENT_BIT, "u_Textures", 0, 32, DESCRIPTOR_TYPE_SAMPLER_2D} };
+				DescriptorSetLayout samplerSet = { { SHADER_STAGE_FRAGMENT_BIT, "u_Textures", 0, 32, DESCRIPTOR_TYPE_SAMPLER_2D} };
 
-			PipelineSpecification specs = {
-				.DebugName = "Pipeline QuadShader",
-				.Usage = PipelineUsage::GraphicsBit,
-				.pBufferLayout = &layout,
-				.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST,
-				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { setLayout, samplerSet },
-			};
+				PipelineSpecification specs = {
+					.DebugName = "Pipeline QuadShader",
+					.Usage = PipelineUsage::GraphicsBit,
+					.pBufferLayout = &layout,
+					.Flags = PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST,
+					.Shaders = asset->ShaderCode[api],
+					.SetLayouts = { setLayout, samplerSet },
+				};
 
-			s_LoadedPipelines["QuadShader"] = Pipeline::Create(&specs);
+				s_LoadedPipelines["QuadShader"] = Pipeline::Create(&specs);
+				}).Wait();
 		}
 		{
-			BufferLayout layout = Vertex3D::Layout();
+			AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/PBR_Static.glsl").ContinueWith([api, setLayout](const auto& results) {
+				Ref<ShaderAsset> asset = results[0];
+				BufferLayout layout = Vertex3D::Layout();
 
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/PBR_Static.glsl");
+				DescriptorSetLayout materialLayout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Albedo", 0, 1, DESCRIPTOR_TYPE_SAMPLER_2D } };
 
-			DescriptorSetLayout materialLayout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Albedo", 0, 1, DESCRIPTOR_TYPE_SAMPLER_2D } };
+				PipelineSpecification specs = {
+					.DebugName = "Pipeline PBR_Static",
+					.Usage = PipelineUsage::GraphicsBit,
+					.pBufferLayout = &layout,
+					.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+					.Shaders = asset->ShaderCode[api],
+					.SetLayouts = { setLayout, materialLayout },
+					.PushConstants = { { "Albedo", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float4, 0 },
+									   { "Metalness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 4 },
+									   { "Roughness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 5 }
+									 },
+				};
 
-			PipelineSpecification specs = {
-				.DebugName = "Pipeline PBR_Static",
-				.Usage = PipelineUsage::GraphicsBit,
-				.pBufferLayout = &layout,
-				.Flags = PIPELINE_DRAW_FILL | PIPELINE_CULL_BACK_FACE | PIPELINE_DEPTH_WRITE | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { setLayout, materialLayout },
-				.PushConstants = { { "Albedo", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float4, 0 },
-								   { "Metalness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 4 },
-								   { "Roughness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 5 } 
-								 },
-			};
-
-			s_LoadedPipelines["PBR_Static"] = Pipeline::Create(&specs);
+				s_LoadedPipelines["PBR_Static"] = Pipeline::Create(&specs);
+				}).Wait();
 		}
 		{
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Skybox.glsl");
+			AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Skybox.glsl").ContinueWith([api, setLayout](const auto& results) {
+				Ref<ShaderAsset> asset = results[0];
 
-			PipelineSpecification specs = {
-				.DebugName = "Pipeline Skybox",
-				.Usage = PipelineUsage::GraphicsBit,
-				.Flags = PIPELINE_DRAW_FILL | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
-				.DepthOperator = DepthOp::LessOrEqual,
-				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { setLayout },
-				.PushConstants = { { "LodLevel", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, 0 },
-								   { "Intensity", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) } 
-								 },
-			};
+				PipelineSpecification specs = {
+					.DebugName = "Pipeline Skybox",
+					.Usage = PipelineUsage::GraphicsBit,
+					.Flags = PIPELINE_DRAW_FILL | PIPELINE_DEPTH_TEST | PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+					.DepthOperator = DepthOp::LessOrEqual,
+					.Shaders = asset->ShaderCode[api],
+					.SetLayouts = { setLayout },
+					.PushConstants = { { "LodLevel", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, 0 },
+									   { "Intensity", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) }
+									 },
+				};
 
-			s_LoadedPipelines["Skybox"] = Pipeline::Create(&specs);
+				s_LoadedPipelines["Skybox"] = Pipeline::Create(&specs);
+				}).Wait();
 		}
 		{
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Compute/EquirectangularToCubemap.glsl");
+			AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Compute/EquirectangularToCubemap.glsl").ContinueWith([api, setLayout](const auto& results) {
+				Ref<ShaderAsset> asset = results[0];
 
-			DescriptorSetLayout layout = {
-				{ SHADER_STAGE_COMPUTE_BIT, "o_CubeMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE },
-				{ SHADER_STAGE_COMPUTE_BIT, "u_EquirectangularTexture", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE }
-			};
+				DescriptorSetLayout layout = {
+					{ SHADER_STAGE_COMPUTE_BIT, "o_CubeMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE },
+					{ SHADER_STAGE_COMPUTE_BIT, "u_EquirectangularTexture", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE }
+				};
 
-			PipelineSpecification specs = {
-				.DebugName = "Pipeline EquirectangularToCubemap",
-				.Usage = PipelineUsage::ComputeBit,
-				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { layout },
-			};
+				PipelineSpecification specs = {
+					.DebugName = "Pipeline EquirectangularToCubemap",
+					.Usage = PipelineUsage::ComputeBit,
+					.Shaders = asset->ShaderCode[api],
+					.SetLayouts = { layout },
+				};
 
-			s_LoadedPipelines["EquirectangularToCubemap"] = Pipeline::Create(&specs);
+				s_LoadedPipelines["EquirectangularToCubemap"] = Pipeline::Create(&specs);
+				}).Wait();
 		}
 		{
-			Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Compute/EnvironmentIrradiance.glsl");
+			AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/Compute/EnvironmentIrradiance.glsl").ContinueWith([api, setLayout](const auto& results) {
+				Ref<ShaderAsset> asset = results[0];
 
-			DescriptorSetLayout layout = {
-				{ SHADER_STAGE_COMPUTE_BIT, "o_IrradianceMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE },
-				{ SHADER_STAGE_COMPUTE_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE }
-			};
+				DescriptorSetLayout layout = {
+					{ SHADER_STAGE_COMPUTE_BIT, "o_IrradianceMap", 0, DESCRIPTOR_TYPE_STORAGE_IMAGE },
+					{ SHADER_STAGE_COMPUTE_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE }
+				};
 
-			PipelineSpecification specs = {
-				.DebugName = "Pipeline EnvironmentIrradiance",
-				.Usage = PipelineUsage::ComputeBit,
-				.Shaders = asset->ShaderCode[api],
-				.SetLayouts = { layout },
-				.PushConstants = { { "Samples", SHADER_STAGE_COMPUTE_BIT, ShaderDataType::UInt, 0 } },
-			};
+				PipelineSpecification specs = {
+					.DebugName = "Pipeline EnvironmentIrradiance",
+					.Usage = PipelineUsage::ComputeBit,
+					.Shaders = asset->ShaderCode[api],
+					.SetLayouts = { layout },
+					.PushConstants = { { "Samples", SHADER_STAGE_COMPUTE_BIT, ShaderDataType::UInt, 0 } },
+				};
 
-			s_LoadedPipelines["EnvironmentIrradiance"] = Pipeline::Create(&specs);
+				s_LoadedPipelines["EnvironmentIrradiance"] = Pipeline::Create(&specs);
+				}).Wait();
 		}
 	}
 

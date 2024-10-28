@@ -111,8 +111,11 @@ void EditorAssetManager::ImportEngineShaders()
 
 			AssetManager::SaveAsset(asset, settings);
         });
-        promise.Wait();
+		promises.emplace_back(promise);
 	}
+
+	for (auto& promise : promises)
+		promise.Wait();
 }
 
 void EditorAssetManager::ImportEngineEnvironments()
