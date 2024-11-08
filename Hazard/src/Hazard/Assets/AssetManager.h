@@ -101,7 +101,7 @@ namespace Hazard
 				s_LoadedAssets[asset->GetHandle()] = asset;
                 s_Registry[metadata.SourceFile] = metadata;
 
-				HZR_CORE_INFO("Created asset {}", settings.SourcePath.string());
+				//HZR_CORE_INFO("Created asset {}", settings.SourcePath.string());
 				}).Catch([](const JobException& e) {
 					HZR_CORE_ERROR("Something went wrong: {0}", e.what());
 				});

@@ -13,33 +13,31 @@ void Job::Execute(JobInfo& info)
 	m_Status = JobStatus::Executing;
 	Timer timer;
 
-	if (!m_JobCallback)
-	{
-		m_Progress = 1.0f;
-		m_Status = JobStatus::Success;
-		m_JobGraph->OnJobFinished(this);
-		return;
-	}
+	if (!m_JobCoroutine)
+		m_JobCoroutine = m_JobCallback(info);
 
 	try
 	{
-		m_JobCallback(info);
-		m_Status = JobStatus::Success;
-		m_Progress = 1.0f;
-		m_ExecutionTime = timer.ElapsedMillis();
+		m_JobCoroutine.MoveNext();
+		if (m_JobCoroutine.Done())
+		{
+			m_Progress = 1.0f;
+			m_ExecutionTime = timer.ElapsedMillis();
 
-		m_JobGraph->OnJobFinished(this);
+			m_Status = JobStatus::Success;
+			if (m_JobGraph)
+				m_JobGraph->OnJobFinished(this);
+		}
 	}
 	catch (JobException e)
 	{
 		m_Status = JobStatus::Failure;
 		m_ExecutionTime = timer.ElapsedMillis();
-        m_Exception = e;
-		m_JobGraph->OnJobFailed(this);
+		m_Exception = e;
+		if (m_JobGraph)
+			m_JobGraph->OnJobFailed(this);
 		throw e;
 	}
-
-	m_Progress = 1.0f;
 }
 
 void Job::Progress(float progress)
@@ -50,5 +48,5 @@ void Job::Progress(float progress)
 
 void JobInfo::ContinueWith(const std::vector<Ref<Job>>& jobs)
 {
-    Graph->ContinueWith(jobs);
+	Graph->ContinueWith(jobs);
 }

@@ -16,12 +16,12 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		Ref<Job> createJob = Job::Create(fmt::format("ImageLoad: {}", metadata.FilePath.string()), CreateImageFromBinary, metadata.Handle);
+		//Ref<Job> createJob = Job::Create(fmt::format("ImageLoad: {}", metadata.FilePath.string()), CreateImageFromBinary, metadata.Handle);
 
 		JobGraphInfo info = {
 			.Name = "Image load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Create", 1.0f, { createJob } } }
+			.Stages = { { "Create", 1.0f, { } } }
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -32,14 +32,14 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(settings.Flags & ASSET_MANAGER_COMBINE_ASSET, "Cannot override image source file");
 
-		Ref<Job> readbackJob = Job::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
-		Ref<Job> processJob = Job::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
+		//Ref<Job> readbackJob = Job::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
+		//Ref<Job> processJob = Job::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
 
 		JobGraphInfo info = {
 			.Name = "Image save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Readback", 0.5f, { readbackJob } },
-						{ "Process", 0.5f, { processJob } } }
+			.Stages = { { "Readback", 0.5f, {  } },
+						{ "Process", 0.5f, {  } } }
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -53,14 +53,14 @@ namespace Hazard
 		if (settings.Settings)
 			imageSpec = *(CreateSettings*)settings.Settings;
 
-		Ref<Job> sourceLoad = Job::Create(fmt::format("Image data load from: {0}", file.string()), ImageDataLoadFromSource, file, imageSpec);
-		Ref<Job> createImage = Job::Create(fmt::format("Image {}", File::GetName(file)), CreateImageFromData, imageSpec);
+		//Ref<Job> sourceLoad = Job::Create(fmt::format("Image data load from: {0}", file.string()), ImageDataLoadFromSource, file, imageSpec);
+		//Ref<Job> createImage = Job::Create(fmt::format("Image {}", File::GetName(file)), CreateImageFromData, imageSpec);
 
 		JobGraphInfo info = {
 			.Name = "Image load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load data", 0.8f, { sourceLoad } },
-						{ "Create", 0.2f, { createImage } }
+			.Stages = { { "Load data", 0.8f, {  } },
+						{ "Create", 0.2f, {  } }
 			}
 		};
 
@@ -148,12 +148,9 @@ namespace Hazard
 				.Offset = 0
 			};
 
-			//Buffer data = readbackBuffer->ReadData(region);
-			//info.Job->SetResult(Ref<CachedBuffer>::Create(data));
-			//info.ParentGraph->Continue();
+			Buffer data = readbackBuffer->ReadData(region);
+			info.Result(Ref<CachedBuffer>::Create(data));
 		});
-
-		//info.ParentGraph->Halt();
 	}
 
 	void ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
@@ -170,7 +167,7 @@ namespace Hazard
 		buf->Write(file);
 		buf->Write(imageData->GetData(), imageData->GetSize());
 
-		//info.Job->SetResult(buf);
+		info.Result(buf);
 	}
 
 	void ImageAssetLoader::CreateImageFromBinary(JobInfo& info, AssetHandle handle)

@@ -27,10 +27,14 @@ class JobGraph : public RefCount
 {
 	friend class GraphStage;
 	friend class Job;
+    friend class JobSystem;
     friend class JobPromise;
 public:
 	JobGraph(const JobGraphInfo& info);
-	~JobGraph() = default;
+    ~JobGraph() {
+        m_HasFinished = true;
+        m_HasFinished.notify_all();
+    };
 
 	const std::string& GetName() const { return m_Info.Name; }
 	uint32_t GetFlags() const { return m_Info.Flags; }
@@ -43,7 +47,6 @@ public:
 	void ContinueWith(const std::vector<Ref<Job>>& jobs);
     bool Wait() const 
 	{
-        if(!m_JobSystem) return false;
         m_HasFinished.wait(false);
         return true;
     }

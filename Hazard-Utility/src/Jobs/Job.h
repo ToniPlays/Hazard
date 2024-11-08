@@ -5,6 +5,7 @@
 #include "JobException.h"
 #include "JobFlags.h"
 #include "Callback.h"
+#include "Coroutine.h"
 
 class JobGraph;
 class Thread;
@@ -15,7 +16,7 @@ class Job : public RefCount
 {
 	friend class JobSystem;
 	friend class JobGraph;
-	using JobCallback = std::function<void(JobInfo&)>;
+	using JobCallback = std::function<Coroutine(JobInfo&)>;
 
 public:
     
@@ -27,6 +28,7 @@ public:
     
 	const std::string& GetName() const { return m_JobName; }
 	JobStatus GetStatus() const { return m_Status; }
+    const Coroutine& GetCoroutine() const { return m_JobCoroutine; }
 
 	void Execute(JobInfo& info);
 	void Progress(float progress);
@@ -69,17 +71,17 @@ public:
     }
     
 private:
-    
     Job() = default;
     
     template<typename Fn, typename... Args>
     Job(const std::string& name, Fn&& callback, Args&&... args) : m_JobName(name)
     {
-        m_JobCallback = std::bind(&callback, std::placeholders::_1, std::forward<Args>(args)...);
+        //m_JobCallback = std::bind(&callback, std::placeholders::_1, std::forward<Args>(args)...);
     }
 
 private:
 
+    Coroutine m_JobCoroutine;
 	JobCallback m_JobCallback;
 	std::string m_JobName;
 
@@ -96,8 +98,9 @@ private:
 
 struct JobInfo
 {
+    friend class Job;
+
     Ref<Job> Current;
-    Ref<Thread> Thread;
     Ref<JobGraph> Graph;
     uint32_t StageIndex;
     uint32_t ExecutionID;
@@ -107,5 +110,6 @@ struct JobInfo
     {
         Current->SetResult<T>(value);
     };
+
     void ContinueWith(const std::vector<Ref<Job>>& jobs);
 };

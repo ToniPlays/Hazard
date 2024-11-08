@@ -26,12 +26,12 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		Ref<Job> loadJob = Job::Create("Load", CreateMeshFromSource, metadata.Handle);
+		//Ref<Job> loadJob = Job::Create("Load", CreateMeshFromSource, metadata.Handle);
 
 		JobGraphInfo info = {
 			.Name = "Mesh load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Source load", 1.0f, { loadJob }} },
+			.Stages = { { "Source load", 1.0f, { }} },
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -39,14 +39,14 @@ namespace Hazard
 
 	Ref<JobGraph> MeshAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		Ref<Job> saveJob = Job::Create("Save", ReadMeshDataFromGPU, asset.As<Mesh>());
-		Ref<Job> compileMesh = Job::Create("Mesh compile", CompileMesh, asset.As<Mesh>());
+		//Ref<Job> saveJob = Job::Create("Save", ReadMeshDataFromGPU, asset.As<Mesh>());
+		//Ref<Job> compileMesh = Job::Create("Mesh compile", CompileMesh, asset.As<Mesh>());
 
 		JobGraphInfo info = {
 			.Name = "Mesh save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Process", 0.8f, { saveJob } },
-						{ "Compile", 0.2f, { compileMesh } }
+			.Stages = { { "Process", 0.8f, { } },
+						{ "Compile", 0.2f, { } }
 			},
 		};
 
@@ -61,15 +61,15 @@ namespace Hazard
 
 		Ref<AssimpImporter> importer = Ref<AssimpImporter>::Create(settings.SourcePath);
 
-		Ref<Job> preprocessJob = Job::Create(fmt::format("Mesh: {}", settings.SourcePath.string()), PreprocessDependencies, importer, importSettings);
-		Ref<Job> finalize = Job::Create(fmt::format("Finalize Mesh: {}", settings.SourcePath.string()), FinalizeMesh, importer);
+		//Ref<Job> preprocessJob = Job::Create(fmt::format("Mesh: {}", settings.SourcePath.string()), PreprocessDependencies, importer, importSettings);
+		//Ref<Job> finalize = Job::Create(fmt::format("Finalize Mesh: {}", settings.SourcePath.string()), FinalizeMesh, importer);
 
 		JobGraphInfo info = {
 			.Name = "Mesh create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Preprocess", 0.1f, { preprocessJob } },
+			.Stages = { { "Preprocess", 0.1f, { } },
 						{ "Dependency load", 0.8f, { } },
-						{ "Finalize", 0.1f, { finalize } }
+						{ "Finalize", 0.1f, { } }
 			},
 		};
 
@@ -79,9 +79,10 @@ namespace Hazard
 	void MeshAssetLoader::PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings)
 	{
 		Job& job = *info.Current.Raw();
+
 		importer->AddImportProgressCallback([&job](float progress) {
 			job.Progress(progress);
-			});
+		});
 
 		auto metadata = importer->GetSceneMetadata();
 		if (metadata.MeshCount == 0)
@@ -95,8 +96,8 @@ namespace Hazard
 
 		for (auto& mesh : meshes)
 		{
-			Ref<Job> processMeshJob = Job::Create(fmt::format("Mesh: {}", mesh.Name), ProcessMeshNode, importer, mesh);
-			generateJobs.push_back(processMeshJob);
+			//Ref<Job> processMeshJob = Job::Create(fmt::format("Mesh: {}", mesh.Name), ProcessMeshNode, importer, mesh);
+			//generateJobs.push_back(processMeshJob);
 		}
 
 		if (settings.Flags & MESH_CREATE_INCLUDE_MATERIALS)
@@ -104,15 +105,15 @@ namespace Hazard
 			auto materials = importer->GetMaterials();
 			for (auto& material : materials)
 			{
-				Ref<Job> processMeshJob = Job::Create(fmt::format("Material: {}", material.Name), ProcessMaterial, importer, material, settings.MaterialPath);
-				generateJobs.push_back(processMeshJob);
+				//Ref<Job> processMeshJob = Job::Create(fmt::format("Material: {}", material.Name), ProcessMaterial, importer, material, settings.MaterialPath);
+				//generateJobs.push_back(processMeshJob);
 			}
 
 			auto textures = importer->GetTextures();
 			for (auto& texture : textures)
 			{
-				Ref<Job> processMeshJob = Job::Create(fmt::format("Material: {}", texture.Name), ProcessTexture, importer, texture, settings.TexturePath);
-				generateJobs.push_back(processMeshJob);
+				//Ref<Job> processMeshJob = Job::Create(fmt::format("Material: {}", texture.Name), ProcessTexture, importer, texture, settings.TexturePath);
+				//generateJobs.push_back(processMeshJob);
 			}
 		}
 
@@ -147,23 +148,24 @@ namespace Hazard
 
 		auto props = importer->GetMaterial(material.MaterialIndex);
 
-		Ref<JobGraph> loadGraph = AssetManager::GetCreateGraph(settings);
-		Ref<Material> asset = AssetManager::CreateAsset<Material>(settings);
-		SetMaterialProperties(asset, props);
+		AssetManager::CreateAssetAsync<Material>(settings).ContinueWith([settings, props, material, info](const auto& results) {
+			Ref<Material> asset = results[0];
+			SetMaterialProperties(asset, props);
 
+			SaveAssetSettings saveSettings = {
+				.TargetPath = settings.SourcePath,
+				.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
+			};
 
-		SaveAssetSettings saveSettings = {
-			.TargetPath = settings.SourcePath,
-			.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
-		};
-		AssetManager::SaveAsset(asset, saveSettings);
+			MeshDependencyData result = {
+				.Handle = asset->GetHandle(),
+				.MaterialIndex = material.MaterialIndex
+			};
 
-		MeshDependencyData result = {
-			.Handle = asset->GetHandle(),
-			.MaterialIndex = material.MaterialIndex
-		};
-
-		info.Result(result);
+			AssetManager::SaveAsset(asset, saveSettings).ContinueWith([info, asset, result](const auto& result) mutable {
+				info.Result(result);
+				});
+			});
 	}
 
 	void MeshAssetLoader::ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot)
@@ -303,8 +305,7 @@ namespace Hazard
 
 			info.Result(result);
 
-			});
-		cmdBuffer->Wait();
+		});
 	}
 
 	void MeshAssetLoader::CompileMesh(JobInfo& info, Ref<Mesh> mesh)
@@ -400,13 +401,13 @@ namespace Hazard
 		Buffer indices = pack.AssetData->Read<Buffer>(header.IndexCount * sizeof(uint32_t));
 
 		mesh->GenerateMesh(submeshes, vertices, indices);
-
 		info.Result(mesh);
 	}
 
 	void MeshAssetLoader::SetMaterialProperties(Ref<Material> material, const MeshImporter::MaterialData& materialData)
 	{
-#define HZR_SET_MAT_PROP(mat, key, type) if(prop.Name == key) {						\
+
+	#define HZR_SET_MAT_PROP(mat, key, type) if(prop.Name == key) {							\
 												material->Set(type, prop.Data.Data);	\
 												continue;								\
 											}																								

@@ -12,15 +12,15 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		Ref<Job> preprocessJob = Job::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle, settings);
-		Ref<Job> finalizeJob = Job::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
+		//Ref<Job> preprocessJob = Job::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle, settings);
+		//Ref<Job> finalizeJob = Job::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
 
 		JobGraphInfo pipeline = {
 			.Name = "World load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Preprocess", 0.1f, { preprocessJob } },
+			.Stages = { { "Preprocess", 0.1f, { } },
 						{ "Asset load", 0.8f, { } },
-						{ "Finalize",   0.1f, { finalizeJob } },
+						{ "Finalize",   0.1f, { } },
 			}
 		};
 
@@ -31,12 +31,12 @@ namespace Hazard
 		Ref<World> world = asset.As<World>();
 		WorldSerializer serializer(world);
 
-		Ref<Job> contentJob = Job::Create("GetWorldContent", GetWorldContent, serializer, settings.Flags);
+		//Ref<Job> contentJob = Job::Create("GetWorldContent", GetWorldContent, serializer, settings.Flags);
 
 		JobGraphInfo pipeline = {
 			.Name = "World save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = {	{ "Processing", 1.0f, { contentJob } } }
+			.Stages = {	{ "Processing", 1.0f, { } } }
 		};
 
 		return Ref<JobGraph>::Create(pipeline);
@@ -45,12 +45,12 @@ namespace Hazard
 	{
 		auto& file = settings.SourcePath;
 
-		Ref<Job> createJob = Job::Create("GetWorldContent", CreateWorld, file);
+		//Ref<Job> createJob = Job::Create("GetWorldContent", CreateWorld, file);
 
 		JobGraphInfo pipeline = {
 			.Name = "World create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = {	{ "Create", 1.0f, { createJob } } }
+			.Stages = {	{ "Create", 1.0f, { } } }
 		};
 
 		return Ref<JobGraph>::Create(pipeline);
@@ -83,11 +83,11 @@ namespace Hazard
 		std::vector<Ref<Job>> assetJobs;
 		assetJobs.reserve(assets.Assets.size());
 
-		for (auto& [meta, count] : assets.Assets)
-			assetJobs.push_back(Job::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
+		//for (auto& [meta, count] : assets.Assets)
+			//assetJobs.push_back(Job::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
 
 		if (assetJobs.size() == 0)
-			info.ContinueWith({ Job::Lambda("Dummy", [](JobInfo&) {}) });
+			//info.ContinueWith({ Job::Lambda("Dummy", [](JobInfo&) {}) });
 		info.ContinueWith(assetJobs);
 	}
 	void WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)

@@ -42,7 +42,6 @@ namespace Memory
 			Init();
 
 		void* memory = malloc(size);
-
 		{
 			std::scoped_lock<std::mutex> lock(s_Data->m_Mutex);
 			MemoryAllocation& alloc = s_Data->m_AllocationMap[memory];

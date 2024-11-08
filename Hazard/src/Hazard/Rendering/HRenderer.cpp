@@ -66,18 +66,21 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_TIMED_FUNCTION();
 
-		if (!meshComponent.SubmeshHandle) return;
-
 		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
 
 		if (!mesh) return;
-		if (!mesh->IsValidSubmesh(meshComponent.SubmeshHandle)) return;
+		//if (!mesh->IsValidSubmesh(meshComponent.SubmeshHandle)) return;
 
-		SubmeshData submesh = mesh->GetSubmesh(meshComponent.SubmeshHandle);
-		Ref<Material> material = AssetManager::GetAsset<Material>(meshComponent.MaterialHandle);
-		if (!material)
-			material = AssetManager::GetAsset<Material>(submesh.DefaultMaterialHandle);
-		SubmitMesh(transform.GetWorldSpaceTransform() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
+		for (auto& [handle, submesh] : mesh->GetSubmeshData())
+		{
+			//SubmeshData submesh = mesh->GetSubmesh(meshComponent.SubmeshHandle);
+			Ref<Material> material = AssetManager::GetAsset<Material>(meshComponent.MaterialHandle);
+
+			if (!material)
+				material = AssetManager::GetAsset<Material>(submesh.DefaultMaterialHandle);
+
+			SubmitMesh(transform.GetWorldSpaceTransform() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
+		}
 	}
 
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<Material> material, uint64_t count, int id)
@@ -98,7 +101,7 @@ namespace Hazard
 		if (!material) return;
 
 		auto& drawList = s_Engine->GetDrawList();
-        MeshKey key = { vertexBuffer, indexBuffer, material, static_cast<uint32_t>(count) };
+		MeshKey key = { vertexBuffer, indexBuffer, material, static_cast<uint32_t>(count) };
 
 		if (!drawList.GeometryPass.contains(key))
 		{

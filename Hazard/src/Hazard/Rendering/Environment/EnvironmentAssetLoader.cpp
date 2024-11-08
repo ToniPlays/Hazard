@@ -26,16 +26,16 @@ namespace Hazard
 
 		CreateSettings create = pack.AssetData->Read<CreateSettings>();
 
-		Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, metadata.SourceFile);
-		Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
-		Ref<Job> createJob = Job::Create("Create", CreateEnvironmentAsset, create.Samples);
+		//Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, metadata.SourceFile);
+		//Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
+		//Ref<Job> createJob = Job::Create("Create", CreateEnvironmentAsset, create.Samples);
 
 		JobGraphInfo info = {
 			.Name = "Environment map load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load", 0.3f, { loadJob } },
-						{ "Convert", 0.5f, { genJob } },
-						{ "Finalize", 0.2f, { createJob } }
+			.Stages = { { "Load", 0.3f, {  } },
+						{ "Convert", 0.5f, {  } },
+						{ "Finalize", 0.2f, {  } }
 			}
 		};
 
@@ -44,12 +44,12 @@ namespace Hazard
 
 	Ref<JobGraph> EnvironmentAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		Ref<Job> saveJob = Job::Create("Environment map save", SaveEnvironmentAsset, asset.As<EnvironmentMap>());
+		//Ref<Job> saveJob = Job::Create("Environment map save", SaveEnvironmentAsset, asset.As<EnvironmentMap>());
 
 		JobGraphInfo info = {
 			.Name = "Environment map save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Save", 1.0f, { saveJob } },
+			.Stages = { { "Save", 1.0f, { } },
 			}
 		};
 
@@ -64,16 +64,16 @@ namespace Hazard
 		if (settings.Settings)
 			create = *(CreateSettings*)settings.Settings;
 
-		Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, settings.SourcePath);
-		Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
-		Ref<Job> createJob = Job::Create("Create", CreateEnvironmentAsset, create.Samples);
+		//Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, settings.SourcePath);
+		//Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
+		//Ref<Job> createJob = Job::Create("Create", CreateEnvironmentAsset, create.Samples);
 
 		JobGraphInfo info = {
 			.Name = "Environment map create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load", 0.3f, { loadJob } },
-						{ "Convert", 0.5f, { genJob } },
-						{ "Create", 0.2f, { createJob } }
+			.Stages = { { "Load", 0.3f, {  } },
+						{ "Convert", 0.5f, {  } },
+						{ "Create", 0.2f, {  } }
 			}
 		};
 

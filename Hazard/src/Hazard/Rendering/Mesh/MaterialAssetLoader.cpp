@@ -13,12 +13,12 @@ namespace Hazard
 {
 	Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
-		Ref<Job> loadMaterialJob = Job::Create(fmt::format("Material {}", metadata.Handle), LoadMaterialAsset, metadata.FilePath);
+		//Ref<Job> loadMaterialJob = Job::Create(fmt::format("Material {}", metadata.Handle), LoadMaterialAsset, metadata.FilePath);
 
 		JobGraphInfo info = {
 			.Name = "Material load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load", 1.0f, { loadMaterialJob } },
+			.Stages = { { "Load", 1.0f, { } },
 			},
 		};
 
@@ -27,12 +27,12 @@ namespace Hazard
 
 	Ref<JobGraph> MaterialAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		Ref<Job> saveAssetJob = Job::Create("Material save", SaveMaterialAsset, asset);
+		//Ref<Job> saveAssetJob = Job::Create("Material save", SaveMaterialAsset, asset);
 
 		JobGraphInfo info = {
 			.Name = "Material save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Save", 1.0f, { saveAssetJob } } }
+			.Stages = { { "Save", 1.0f, { } } }
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -42,12 +42,12 @@ namespace Hazard
 	{
 		HZR_CORE_ASSERT(settings.Settings, "Material settings required, no defaults available");
 		CreateSettings matSettings = *(CreateSettings*)settings.Settings;
-		Ref<Job> createAssetJob = Job::Create("Material create", CreateMaterialAsset, matSettings);
+		//Ref<Job> createAssetJob = Job::Create("Material create", CreateMaterialAsset, matSettings);
 
 		JobGraphInfo info = {
 			.Name = "Material create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Create", 1.0f, { createAssetJob } } }
+			.Stages = { { "Create", 1.0f, { } } }
 		};
 
 		return Ref<JobGraph>::Create(info);

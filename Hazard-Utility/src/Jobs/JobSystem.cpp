@@ -4,7 +4,7 @@
 #include <spdlog/fmt/fmt.h>
 #include <Profiling/Timer.h>
 
-void Thread::Execute(Ref<Job> job)
+void Thread::Execute(JobSystem* system, Ref<Job> job)
 {
 	if (job == nullptr) return;
 
@@ -14,7 +14,6 @@ void Thread::Execute(Ref<Job> job)
 	{
 		m_LastError = "";
 		JobInfo info = {};
-		info.Thread = this;
 
 		m_Status = ThreadStatus::Executing;
 		job->Execute(info);
@@ -36,6 +35,7 @@ JobSystem::JobSystem(uint32_t threads) : m_Running(true)
 	{
 		m_Threads[i] = Ref<Thread>::Create(i);
 		m_Threads[i]->m_Thread = std::thread(&JobSystem::ThreadFunc, this, m_Threads[i]);
+
 	}
 }
 JobSystem::~JobSystem()
@@ -57,37 +57,25 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 		m_JobCount.wait(0);
 		if (!m_Running) break;
 
-		m_JobMutex.lock();
-		Ref<Job> job = FindAvailableJob();
-
-		if (!job)
+		Ref<Job> job;
 		{
-			m_JobMutex.unlock();
-			continue;
+			std::scoped_lock lock(m_JobMutex);
+			job = FindAvailableJob();
+
+			if (!job)
+				continue;
+
+			RemoveJob(job);
 		}
-
-		m_RunningJobCount++;
-		{
-			auto it = std::find(m_Jobs.begin(), m_Jobs.end(), job);
-
-			if (it != m_Jobs.end())
-				m_Jobs.erase(it);
-		}
-
-		m_JobMutex.unlock();
-		m_RunningJobCount.notify_all();
-
-		m_JobCount = m_Jobs.size();
-		m_JobCount.notify_one();
 
 		try
 		{
 			//Execute job
 			thread->m_CurrentJob = job;
-
 			m_StatusHook.Invoke(thread, ThreadStatus::Executing);
-			m_StatusHook.Invoke(thread, thread->GetStatus());
-			thread->Execute(job);
+			thread->Execute(this, job);
+
+			m_StatusHook.Invoke(thread, ThreadStatus::Finished);
 		}
 		catch (JobException e)
 		{
@@ -97,9 +85,6 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 		}
 
 		thread->m_CurrentJob = nullptr;
-
-		m_RunningJobCount--;
-		m_RunningJobCount.notify_all();
 	}
 
 	thread->m_Status = ThreadStatus::Terminated;
@@ -113,16 +98,26 @@ bool JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 {
 	if (jobs.size() == 0) return false;
 
-	m_JobMutex.lock();
+	std::scoped_lock lock(m_JobMutex);
 	m_Jobs.insert(m_Jobs.end(), jobs.begin(), jobs.end());
 	m_JobCount = m_Jobs.size();
-	m_JobMutex.unlock();
 
 	m_JobCount.notify_all();
 
 	std::string msg = fmt::format("Queued {} jobs", jobs.size());
+	std::cout << msg << std::endl;
 	SendMessage(Severity::Info, msg);
 	return true;
+}
+
+void JobSystem::RemoveJob(Ref<Job> job)
+{
+	std::cout << "Removing: " << job->GetName() << std::this_thread::get_id() << std::endl;
+	
+	m_Jobs.erase(std::find(m_Jobs.begin(), m_Jobs.end(), job));
+
+	m_JobCount = m_Jobs.size();
+	m_JobCount.notify_one();
 }
 
 void JobSystem::TerminateGraphJobs(Ref<JobGraph> graph)
@@ -172,13 +167,10 @@ void JobSystem::Terminate()
 	m_JobCount.notify_all();
 }
 
-
 uint64_t JobSystem::WaitForUpdate()
 {
 	if (m_JobCount != 0)
 		m_JobCount.wait(m_JobCount);
-	if (m_RunningJobCount != 0)
-		m_RunningJobCount.wait(m_RunningJobCount);
 
 	return m_JobCount;
 }
@@ -186,7 +178,10 @@ uint64_t JobSystem::WaitForUpdate()
 Ref<Job> JobSystem::FindAvailableJob()
 {
 	for (auto& job : m_Jobs)
-		return job;
+	{
+		if (job->GetCoroutine().CanContinue())
+			return job;
+	}
 
 	return nullptr;
 }

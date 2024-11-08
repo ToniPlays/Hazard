@@ -32,7 +32,7 @@ public:
 		return *this;
 	}
 
-	Promise<T> ContinueWith(const std::function<void(std::vector<T>)>& callback) {
+	Promise<T> ContinueWith(const std::function<void(const std::vector<T>&)>& callback) {
 		if (m_JobGraph)
 			m_JobGraph->AddOnFinished([callback, graph = m_JobGraph]() {
 				callback(graph->template GetResults<T>());
@@ -53,6 +53,19 @@ public:
 			return m_JobGraph->GetResults<T>();
 		else return std::vector<T>();
 	}
+
+	std::vector<T> await_resume() noexcept { return GetResults(); }
+	bool await_ready() { return false; }
+	void await_suspend(Coroutine::handle_type handle) 
+	{
+		if (!m_JobGraph) return;
+
+		handle.promise().m_Dependencies++;
+		ContinueWith([handle](const auto&) {
+			if (--handle.promise().m_Dependencies == 0)
+				job->Requeue();	//TODO: Fix
+		});
+	};
 
 	static Promise<T> Create(Ref<JobGraph> graph)
 	{

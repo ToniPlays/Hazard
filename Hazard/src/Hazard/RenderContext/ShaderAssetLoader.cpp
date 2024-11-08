@@ -12,18 +12,19 @@
 
 #include "Hazard/RenderContext/ShaderCompiler.h"
 
+
 namespace Hazard
 {
 	Ref<JobGraph> ShaderAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
 		using namespace HazardRenderer;
 
-		Ref<Job> loadingJob = Job::Create(fmt::format("Shader load: {}", metadata.Handle), LoadShaderAsset, metadata.Handle);
+		//Ref<Job> loadingJob = Job::Create(fmt::format("Shader load: {}", metadata.Handle), LoadShaderAsset, metadata.Handle);
 
 		JobGraphInfo info = {
 			.Name = "Shader load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "File load", 1.0f, { loadingJob } } },
+			.Stages = { { "File load", 1.0f, { } } },
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -31,12 +32,12 @@ namespace Hazard
 
 	Ref<JobGraph> ShaderAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		Ref<Job> binaryJob = Job::Create(fmt::format("{}", settings.TargetPath.string()), GenerateShaderAssetBinary, asset);
+		//Ref<Job> binaryJob = Job::Create(fmt::format("{}", settings.TargetPath.string()), GenerateShaderAssetBinary, asset);
 
 		JobGraphInfo info = {
 			.Name = "Shader save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "", 1.0f, { binaryJob } } },
+			.Stages = { { "", 1.0f, { } } },
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -46,20 +47,22 @@ namespace Hazard
 	{
 		auto& file = settings.SourcePath;
 
-		Ref<Job> loadingJob = Job::Create(fmt::format("ShaderLoad: {0}", file.string()), LoadShaderSource, file);
-		Ref<Job> createJob = Job::Create(fmt::format("Shader create: {0}", file.string()), CreateShaderAsset);
+		//Ref<Job> loadingJob = Job::Create(fmt::format("ShaderLoad: {0}", file.string()), LoadShaderSource, file);
+		//Ref<Job> createJob = Job::Create(fmt::format("Shader create: {0}", file.string()), CreateShaderAsset);
 
 		JobGraphInfo info = {
 			.Name = "Shader load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Preprocess", 0.1f, { loadingJob } },
+			.Stages = { { "Preprocess", 0.1f, { } },
 						{ "Compile", 0.8f, { } },
-						{ "Validate", 0.1f, { createJob } }
+						{ "Validate", 0.1f, { } }
 			}
 		};
 
 		return Ref<JobGraph>::Create(info);
 	}
+
+
 
 	void ShaderAssetLoader::LoadShaderSource(JobInfo& info, const std::filesystem::path& path)
 	{
@@ -67,19 +70,20 @@ namespace Hazard
 		std::unordered_map<uint32_t, std::string> sources = ShaderCompiler::GetShaderSources(path);
 
 		std::vector<Ref<Job>> loadingJobs;
-        //TODO: Fix
+        
 		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
 		{
 			for (auto& [stage, source] : sources)
 			{
-				Ref<Job> job = Job::Create(fmt::format("{} {} shader {}", RenderAPIToString((RenderAPI)api), Utils::ShaderStageToString(stage), File::GetName(path)), CompileShaderSourceCode, api, stage);
-				loadingJobs.push_back(job);
+				//Ref<Job> job = Job::Create(fmt::format("{} {} shader {}", RenderAPIToString((RenderAPI)api), Utils::ShaderStageToString(stage), File::GetName(path)), CompileShaderSourceCode, api, stage);
+				//loadingJobs.push_back(job);
 			}
 		}
 
         info.Result(sources);
 		info.ContinueWith(loadingJobs);
 	}
+
 	void ShaderAssetLoader::CompileShaderSourceCode(JobInfo& info, uint32_t api, uint32_t stageFlags)
 	{
 		using namespace HazardRenderer;
@@ -107,6 +111,7 @@ namespace Hazard
 			throw JobException(fmt::format("Compile error: {}", e.what()));
 		}
 	}
+
 	void ShaderAssetLoader::CreateShaderAsset(JobInfo& info)
 	{
 		using namespace HazardRenderer;
@@ -119,6 +124,7 @@ namespace Hazard
 
 		info.Result(asset);
 	}
+
 	void ShaderAssetLoader::GenerateShaderAssetBinary(JobInfo& info, Ref<ShaderAsset> asset)
 	{
 		using namespace HazardRenderer;
@@ -149,6 +155,7 @@ namespace Hazard
 
 		info.Result(buf);
 	}
+
 	void ShaderAssetLoader::LoadShaderAsset(JobInfo& info, AssetHandle handle)
 	{
 		using namespace HazardRenderer;

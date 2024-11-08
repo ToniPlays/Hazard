@@ -31,7 +31,7 @@ public:
 
 private:
 
-	void Execute(Ref<Job> job);
+	void Execute(JobSystem* system, Ref<Job> job);
 private:
 
 	std::thread m_Thread;
@@ -117,6 +117,7 @@ public:
 
 private:
 	bool QueueJobs(const std::vector<Ref<Job>>& jobs);
+    void RemoveJob(Ref<Job> job);
 	void TerminateGraphJobs(Ref<JobGraph> graph);
 	void OnGraphFinished(Ref<JobGraph> graph);
 
@@ -128,19 +129,17 @@ private:
         });
 	}
 
-
 	Ref<Job> FindAvailableJob();
 	void ThreadFunc(Ref<Thread> thread);
 
 private:
 	std::vector<Ref<JobGraph>> m_QueuedGraphs;
-
 	std::vector<Ref<Thread>> m_Threads;
 	std::vector<Ref<Job>> m_Jobs;
+
 	std::atomic_bool m_Running = false;
 
 	std::atomic_uint64_t m_JobCount = 0;
-	std::atomic_uint64_t m_RunningJobCount = 0;
 
 	std::mutex m_JobMutex;
 	std::mutex m_RunningJobMutex;

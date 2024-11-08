@@ -1,6 +1,7 @@
 
 #include "Hazard/Assets/IAssetLoader.h"
 #include "Core/RenderContextCreateInfo.h"
+#include "Coroutine.h"
 
 
 namespace Hazard
