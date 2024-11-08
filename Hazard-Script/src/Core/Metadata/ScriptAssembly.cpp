@@ -1,6 +1,6 @@
 
 #include "ScriptAssembly.h"
-#include "File.h"
+#include "Filesystem/File.h"
 
 namespace HazardScript
 {

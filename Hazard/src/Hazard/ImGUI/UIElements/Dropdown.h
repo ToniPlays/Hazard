@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "Color.h"
+#include "Math/Color.h"
 #include <imgui_internal.h>
 
 namespace Hazard::ImUI

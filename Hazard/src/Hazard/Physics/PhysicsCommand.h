@@ -1,6 +1,6 @@
 #pragma once
 
-#include <box2d/box2d.h>
+//#include <box2d/box2d.h>
 #include "Hazard/ECS/World.h"
 #include "Physics2D/Physics2D.h"
 
@@ -27,8 +27,8 @@ namespace Hazard::Physics
 
 		static void AddContact2DCallback(ContactCallback callback) { s_Physics2D->AddContactCallback(callback); }
 
-		static glm::vec2 GetPosition(void* handle) { return s_Physics2D->GetPosition(handle); };
-		static float GetAngle(void* handle) { return s_Physics2D->GetAngle(handle); };
+        static glm::vec2 GetPosition(void* handle) { return glm::vec2(); /* s_Physics2D->GetPosition(handle); */ };
+        static float GetAngle(void* handle) { return  0.0f; /*s_Physics2D->GetAngle(handle);*/ };
 
 		static void SetGravity(float gravity) {};
 		static void Step(double delta);

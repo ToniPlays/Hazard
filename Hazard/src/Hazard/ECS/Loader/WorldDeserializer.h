@@ -8,8 +8,8 @@
 #include "Hazard/Scripting/ScriptSerializer.h"
 #include "Hazard/Assets/Asset.h"
 
-#include "UID.h"
-#include "Callback.h"
+#include "Utility/UID.h"
+#include "Utility/Callback.h"
 
 #define REFERENCE_SOURCE(references, key, msg) { AssetHandle handle;																							\
 if (YamlUtils::Deserialize<AssetHandle>(comp, key, handle, 0))														\

@@ -5,7 +5,7 @@
 #include "ValueWrapper.h"
 #include "Attribute.h"
 #include "FieldValueStorageBase.h"
-#include "MathCore.h"
+#include "Math/MathCore.h"
 #include "Core/Metadata/FieldMetadata.h"
 
 namespace HazardScript

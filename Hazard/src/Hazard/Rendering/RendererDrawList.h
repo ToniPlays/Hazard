@@ -7,8 +7,6 @@
 #include "Core/Rendering/GPUBuffer.h"
 #include "Environment/EnvironmentMap.h"
 
-#include "AddressableVector.h"
-
 namespace Hazard
 {
 	using namespace HazardRenderer;

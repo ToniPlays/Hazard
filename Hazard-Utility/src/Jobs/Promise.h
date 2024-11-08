@@ -62,8 +62,8 @@ public:
 
 		handle.promise().m_Dependencies++;
 		ContinueWith([handle](const auto&) {
-			if (--handle.promise().m_Dependencies == 0)
-				job->Requeue();	//TODO: Fix
+			//if (--handle.promise().m_Dependencies == 0)
+			//	job->Requeue();	//TODO: Fix
 		});
 	};
 

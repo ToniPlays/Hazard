@@ -17,7 +17,8 @@ public:
 
 	void MoveNext()
 	{
-		m_Handle.resume();
+        if(m_Handle.promise().m_Dependencies == 0)
+            m_Handle.resume();
 	}
 
 	bool CanContinue() const 

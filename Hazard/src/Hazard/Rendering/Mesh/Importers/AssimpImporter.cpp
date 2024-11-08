@@ -4,9 +4,9 @@
 #include "Hazard/RenderContext/TextureFactory.h"
 
 #include <assimp/postprocess.h>
-#include "Callback.h"
+#include "Utility/Callback.h"
 #include "spdlog/fmt/fmt.h"
-#include <Hooks.h>
+#include <Utility/Hooks.h>
 
 namespace Hazard
 {
@@ -59,7 +59,7 @@ namespace Hazard
 			aiMaterial* mat = scene->mMaterials[materialIndex];
 
 			auto& material = materials.emplace_back();
-			material.Name = mat->GetName().C_Str();
+            material.Name = ""; //mat->GetName().C_Str();
 			material.MaterialIndex = materialIndex;
 			material.PropertyCount = mat->mNumProperties;
 			material.TextureCount = 0;

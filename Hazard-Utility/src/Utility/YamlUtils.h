@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Color.h"
+#include "Math/Color.h"
 
 #include "yaml-cpp/yaml.h"
 #include <glm/glm.hpp>

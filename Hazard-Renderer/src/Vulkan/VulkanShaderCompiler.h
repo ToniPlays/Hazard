@@ -3,7 +3,7 @@
 #include "Core/Core.h"
 #ifdef HZR_SHADER_COMPILER
 
-#include "File.h"
+#include "Filesystem/File.h"
 #include "Core/CompileInfo.h"
 #include "Buffer/Buffer.h"
 

@@ -17,13 +17,12 @@
 #include "Hazard/Logging/Logger.h"
 
 #include "Core/Core.h"
-#include "File.h"
+#include "Filesystem/File.h"
 
 #include "Event.h"
 
 #include "Hazard/Math/Time.h"
-#include "MathCore.h"
-#include "Random.h"
+#include "Math/MathCore.h"
 
 #ifdef HZR_PLATFORM_WINDOWS
 //#include "optick.h"

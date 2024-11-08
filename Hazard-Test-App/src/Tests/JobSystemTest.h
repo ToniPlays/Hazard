@@ -7,7 +7,7 @@
 
 #include <spdlog/fmt/fmt.h>
 #include <Profiling/Timer.h>
-#include <Random.h>
+#include "Math/Random.h"
 #include <Jobs/JobSystem.h>
 
 class JobGraphTest : public Test

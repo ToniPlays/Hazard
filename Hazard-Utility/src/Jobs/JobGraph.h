@@ -2,10 +2,10 @@
 
 #include <Ref.h>
 #include "JobFlags.h"
-#include "Callback.h"
+#include "Utility/Callback.h"
 #include "Job.h"
 #include <functional>
-#include <MathCore.h>
+#include "Math/MathCore.h"
 
 class JobSystem;
 

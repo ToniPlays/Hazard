@@ -9,6 +9,7 @@ CommandQueue::CommandQueue(uint32_t size)
 	m_CommandBufferPtr = m_CommandBuffer;
 	memset(m_CommandBuffer, 0, size);
 }
+
 CommandQueue::~CommandQueue()
 {
 	uint8_t* buffer = m_CommandBuffer;
@@ -25,6 +26,7 @@ CommandQueue::~CommandQueue()
 	}
 	hdelete[] m_CommandBuffer;
 }
+
 void* CommandQueue::Allocate(CommandFn func, uint32_t size)
 {
 	*(CommandFn*)m_CommandBufferPtr = func;

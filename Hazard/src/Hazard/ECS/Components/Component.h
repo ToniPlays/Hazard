@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Color.h"
-#include "MathCore.h"
+#include "Math/Color.h"
+#include "Math/MathCore.h"
 #include "Hazard/Assets/Asset.h"
-#include "UID.h"
+#include "Utility/UID.h"
 #include "Ref.h"
 #include "Hazard/Rendering/Mesh/Mesh.h"
 #include "Hazard/Rendering/Mesh/Material.h"

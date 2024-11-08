@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Color.h"
+#include "Math/Color.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Hazard/Core/Core.h"
 #include "HazardRendererCore.h"

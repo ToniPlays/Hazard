@@ -1,7 +1,7 @@
 
 #include "HazardRenderer.h"
 #include "Event.h"
-#include "Color.h"
+#include "Math/Color.h"
 #include "Application/Test.h"
 
 #include "vendor/stb_image.h"

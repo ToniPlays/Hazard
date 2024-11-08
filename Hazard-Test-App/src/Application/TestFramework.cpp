@@ -1,13 +1,16 @@
 #include "TestFramework.h"
 #include "Hazard/Input/InputManager.h"
-#include "Hazard/RenderContext/RenderContextManager.h"
-#include "Hazard/RenderContext/ShaderCompiler.h"
 
+#include "Hazard/RenderContext/RenderContextManager.h"
+//#include "Hazard/RenderContext/ShaderCompiler.h"
+
+#include "Tests/CoroutineTest.h"
+/*
 #include "Tests/JobSystemTest.h"
 #include "Tests/TriangleTest.h"
 #include "Tests/TexturedQuad.h"
 #include "Tests/UniformBufferTest.h"
-#include "Tests/ComputeShaderTest.h"
+#include "Tests/ComputeShaderTest.h"*/
 
 using namespace Hazard;
 
@@ -34,7 +37,7 @@ void TestFramework::PreInit()
 void TestFramework::Init()
 {
 	auto& window = Application::GetModule<RenderContextManager>().GetWindow();
-	window.AddDebugCallback([](const RenderMessage& msg) {
+    window.AddDebugCallback([](const HazardRenderer::RenderMessage& msg) {
 		std::cout << msg.Description << std::endl;
 		std::cout << msg.StackTrace << std::endl;
 	});
@@ -65,11 +68,12 @@ void TestFramework::Init()
 
 	Application::GetModule<InputManager>().InvalidateSchema(schema);
 
+    m_Tests.push_back(new CoroutineTest());/*
     m_Tests.push_back(new JobGraphTest());
 	m_Tests.push_back(new TriangleTest());
 	m_Tests.push_back(new TexturedQuadTest());
 	m_Tests.push_back(new UniformBufferTest());
-	m_Tests.push_back(new ComputeShaderTest());
+	m_Tests.push_back(new ComputeShaderTest());*/
 
     GenerateShaders();
 
@@ -84,6 +88,7 @@ void TestFramework::Update()
 
 void TestFramework::GenerateShaders()
 {
+    /*
 #if defined HZR_PLATFORM_MACOS || defined HZR_PLATFORM_WINDOWS
 	std::filesystem::path outputDir = "assets/compiled/shaders/";
 	std::vector<RenderAPI> compileFor = { RenderAPI::Metal, RenderAPI::Vulkan, RenderAPI::OpenGL };
@@ -126,6 +131,7 @@ void TestFramework::GenerateShaders()
 		}
 	}
 #endif
+     */
 }
 
 void TestFramework::RestartTest()

@@ -1,7 +1,7 @@
 
 #include "hzrpch.h"
 #include "CameraProcessingComponent.h"
-#include "MathCore.h"
+#include "Math/MathCore.h"
 
 namespace Hazard {
 

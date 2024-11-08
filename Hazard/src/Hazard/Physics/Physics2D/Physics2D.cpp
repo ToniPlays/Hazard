@@ -13,26 +13,26 @@ namespace Hazard::Physics
 {
 	void Physics2D::Begin(float gravity)
 	{
-		m_World2D = hnew b2World({ 0.0f, gravity });
-		Physics2DContactListener* listener = hnew Physics2DContactListener(this);
-		m_World2D->SetContactListener(listener);
+		//m_World2D = hnew b2World({ 0.0f, gravity });
+		//Physics2DContactListener* listener = hnew Physics2DContactListener(this);
+		//m_World2D->SetContactListener(listener);
 
 	}
 
 	void Physics2D::Step(float timeStep)
 	{
-		m_World2D->Step(timeStep, velocityIterations, positionIterations);
+		//m_World2D->Step(timeStep, velocityIterations, positionIterations);
 	}
 
 	void Physics2D::End()
 	{
-		hdelete m_World2D;
-		m_World2D = nullptr;
+		//hdelete m_World2D;
+		//m_World2D = nullptr;
 	}
 
 	void* Physics2D::CreatePhysicsObject(Physics2DObjectCreateInfo* createInfo)
 	{
-		uint32_t* data = (uint32_t*)&createInfo->Handle;
+		/*uint32_t* data = (uint32_t*)&createInfo->Handle;
 		b2BodyUserData userData;
 		userData.pointer = *data;
 
@@ -46,11 +46,13 @@ namespace Hazard::Physics
 
 		b2Body* body = m_World2D->CreateBody(&bodyDef);
 		body->SetFixedRotation(createInfo->FixedRotation);
-		return body;
+        */
+		return nullptr;
 	}
 
 	void* Physics2D::CreateCollider(PhysicsCollider2DCreateInfo* createInfo)
 	{
+        /*
 		if (createInfo->Body == nullptr)
 		{
 			HZR_CORE_WARN("Cannot create Collider for null body");
@@ -98,7 +100,7 @@ namespace Hazard::Physics
 			{
 
 			}
-		}
+		}*/
 		return nullptr;
 	}
 }

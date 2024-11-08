@@ -7,7 +7,7 @@
 #include "Core/Renderer.h"
 #include "MTLUtils.h"
 
-#include "MathCore.h"
+#include "Math/MathCore.h"
 
 namespace HazardRenderer::Metal
 {

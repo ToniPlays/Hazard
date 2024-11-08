@@ -1,7 +1,7 @@
 
 #include "EditorCamera.h"
 #include "Input.h"
-#include "MathCore.h"
+#include "Math/MathCore.h"
 #include "Hazard/Math/Time.h"
 
 #define GLM_ENABLE_EXPERIMENTAL

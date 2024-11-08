@@ -2,7 +2,7 @@
 
 #ifdef HZR_INCLUDE_METAL
 
-#include "MathCore.h"
+#include "Math/MathCore.h"
 #include "MTLUtils.h"
 #include "Core/Renderer.h"
 

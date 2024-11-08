@@ -4,7 +4,7 @@
 #include "Metadata/ScriptAssembly.h"
 #include "Coral/HostInstance.hpp"
 
-#include "Callback.h"
+#include "Utility/Callback.h"
 
 namespace HazardScript 
 {

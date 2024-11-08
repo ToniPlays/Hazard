@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Color.h"
+#include "Math/Color.h"
 #include "ComponentBase.h"
 
 namespace Hazard 

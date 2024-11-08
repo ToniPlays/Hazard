@@ -4,9 +4,9 @@
 #include "assimp/Importer.hpp"
 #include <assimp/scene.h>
 #include <assimp/ProgressHandler.hpp>
-#include "MathCore.h"
+#include "Math/MathCore.h"
 
-#include "Callback.h"
+#include "Utility/Callback.h"
 
 namespace Hazard
 {

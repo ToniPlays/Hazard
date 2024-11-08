@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Color.h"
+#include "Math/Color.h"
 #include "Core.h"
 #include "Hazard/Assets/Asset.h"
 #include "HazardRendererCore.h"

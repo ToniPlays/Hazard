@@ -5,7 +5,7 @@
 
 #include "Core/Window.h"
 #include "Input.h"
-#include "Callback.h"
+#include "Utility/Callback.h"
 #include <GLFW/glfw3.h>
 
 namespace HazardRenderer {

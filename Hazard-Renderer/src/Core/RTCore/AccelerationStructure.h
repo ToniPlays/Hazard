@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Ref.h"
-#include "BoundingBox.h"
+#include "Math/BoundingBox.h"
 #include "Core/Rendering/GPUBuffer.h"
 
 namespace HazardRenderer

@@ -4,7 +4,7 @@
 #include "HazardRendererCore.h"
 #include "Core/Rendering/ShaderDataType.h"
 
-#include "BoundingBox.h"
+#include "Math/BoundingBox.h"
 #include <Hazard/Rendering/Vertices.h>
 
 namespace Hazard

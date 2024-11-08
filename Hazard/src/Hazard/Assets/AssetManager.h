@@ -3,7 +3,7 @@
 #include "Asset.h"
 #include "AssetRegistry.h"
 #include "AssetLoader.h"
-#include "UID.h"
+#include "Utility/UID.h"
 #include "Profiling/PerformanceProfiler.h"
 #include "Jobs.h"
 

@@ -5,7 +5,7 @@
 #ifdef HZR_SHADER_COMPILER
 
 #include "Core/CompileInfo.h"
-#include "File.h"
+#include "Filesystem/File.h"
 #include "Buffer/Buffer.h"
 
 namespace HazardRenderer::OpenGL

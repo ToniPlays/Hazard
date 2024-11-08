@@ -1,8 +1,8 @@
 #pragma once
 
 #include "HazardScript.h"
-#include "Random.h"
-#include "MathCore.h"
+#include "Math/Random.h"
+#include "Math/MathCore.h"
 #include "Hazard/Math/Time.h"
 
 namespace Hazard

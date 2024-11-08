@@ -1,6 +1,6 @@
 #pragma once
 
-#include "box2d/box2d.h"
+//#include "box2d/box2d.h"
 
 namespace Hazard::Physics
 {
@@ -74,17 +74,17 @@ namespace Hazard::Physics
 				callback(data);
 		}
 
-		glm::vec2 GetPosition(void* handle)
+		/*glm::vec2 GetPosition(void* handle)
 		{
 			b2Vec2 pos = ((b2Body*)handle)->GetPosition();
 			return { pos.x, pos.y };
-		};
-		float GetAngle(void* handle) { return ((b2Body*)handle)->GetAngle(); }
+		};*/
+		//float GetAngle(void* handle) { return ((b2Body*)handle)->GetAngle(); }
 
-		b2World* GetWorld() { return m_World2D; }
+		//b2World* GetWorld() { return m_World2D; }
 
 	private:
-		b2World* m_World2D = nullptr;
+		//b2World* m_World2D = nullptr;
 		int32_t velocityIterations = 6;
 		int32_t positionIterations = 2;
 

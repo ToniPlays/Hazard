@@ -7,7 +7,7 @@
 #include <format>
 
 #include "spdlog/fmt/fmt.h"
-#include <Directory.h>
+#include "Filesystem/Directory.h"
 
 #if defined HZR_PLATFORM_WINDOWS || defined HZR_PLATFORM_MACOS
 

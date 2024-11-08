@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HazardScript.h"
-#include "UID.h"
+#include "Utility/UID.h"
 
 namespace Hazard 
 {

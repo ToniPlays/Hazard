@@ -2,7 +2,7 @@
 
 #ifdef HZR_SHADER_COMPILER
 
-#include "MathCore.h"
+#include "Math/MathCore.h"
 #include "Profiling/Timer.h"
 #include "Core/Rendering/Shader.h"
 

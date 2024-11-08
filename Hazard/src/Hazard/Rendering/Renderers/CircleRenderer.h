@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Batch.h"
+#include "Math/Batch.h"
 
 #include "Core/Rendering/GPUBuffer.h"
 #include "Core/Rendering/Pipeline.h"

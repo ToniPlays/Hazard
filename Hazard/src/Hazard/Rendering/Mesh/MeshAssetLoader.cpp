@@ -10,7 +10,7 @@
 
 #include "Hazard/Core/Application.h"
 #include "Mesh.h"
-#include <Directory.h>
+#include <Filesystem/Directory.h>
 
 namespace Hazard
 {
@@ -162,7 +162,7 @@ namespace Hazard
 				.MaterialIndex = material.MaterialIndex
 			};
 
-			AssetManager::SaveAsset(asset, saveSettings).ContinueWith([info, asset, result](const auto& result) mutable {
+			AssetManager::SaveAsset(asset, saveSettings).ContinueWith([info, asset, r = result](const auto& result) mutable {
 				info.Result(result);
 				});
 			});

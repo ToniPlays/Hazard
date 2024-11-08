@@ -16,10 +16,12 @@ std::vector<std::string> StringUtil::SplitString(const std::string& string, char
 	}
 	return result;
 }
+
 std::string StringUtil::RemoveAtEnd(std::string& source, char val)
 {
 	return source.substr(0, source.find_first_of(val));
 }
+
 uint64_t StringUtil::OffsetOf(const std::string& source, char delim, uint64_t offset)
 {
 	std::string offsetValue = source;
@@ -49,6 +51,7 @@ std::string StringUtil::BytesToString(const int64_t& bytes)
 	else snprintf(buffer, bufSize, "%.2f bytes", (float)bytes);
 	return std::string(buffer);
 }
+
 std::string StringUtil::Replace(const std::string& value, const std::string& find, const std::string& replaceWith)
 {
 	if (find.empty())
@@ -65,13 +68,15 @@ std::string StringUtil::Replace(const std::string& value, const std::string& fin
 
 	return result;
 }
+
 std::string& StringUtil::ToLower(std::string& string)
 {
 	std::transform(string.begin(), string.end(), string.begin(),
 		[](unsigned char c) { return std::tolower(c); });
 	return string;
 }
-bool StringUtil::IsMatching(const std::string& value, const std::string& compareTo, bool caseSensitive, bool stripWhiteSpaces, bool stripUnderScores) 
+
+bool StringUtil::IsMatching(const std::string& value, const std::string& compareTo, bool caseSensitive, bool stripWhiteSpaces, bool stripUnderScores)
 {
 	if (compareTo.empty())
 		return true;
@@ -94,6 +99,7 @@ bool StringUtil::IsMatching(const std::string& value, const std::string& compare
 
 	return Contains(nameSanitized, searchString);
 }
+
 std::string_view StringUtil::Between(const std::string_view& source, const std::string& start, const std::string& end)
 {
 	uint64_t startPos = source.find(start);
@@ -101,6 +107,7 @@ std::string_view StringUtil::Between(const std::string_view& source, const std::
 
 	return source.substr(startPos + start.length(), endPos - startPos - end.length());
 }
+
 std::string StringUtil::GetPreprocessor(const char* type, const std::string& source, uint64_t endPosition, uint64_t* offset)
 {
 	uint64_t valueOffset = OffsetOf(source, type, endPosition);
