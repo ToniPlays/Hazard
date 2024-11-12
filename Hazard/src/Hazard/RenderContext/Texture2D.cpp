@@ -41,6 +41,6 @@ namespace Hazard
 		m_ImageInfo.Data = imageData;
 
 		m_SourceImage2D = Image2D::Create(&m_ImageInfo);
-		m_ImageSampler = RenderEngine::GetResources().DefaultImageSampler;
+        m_ImageSampler = RenderContextManager::GetDefaultSampler();
 	}
 }

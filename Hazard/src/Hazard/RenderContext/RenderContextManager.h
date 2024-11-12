@@ -16,9 +16,10 @@ namespace Hazard
 		void PostRender() override;
 
 		HazardRenderer::Window& GetWindow() { return *m_Window; }
+        static Ref<HazardRenderer::Sampler> GetDefaultSampler() { return s_DefaultSampler; }
 
 	private:
 		HazardRenderer::Window* m_Window;
-
+        inline static Ref<HazardRenderer::Sampler> s_DefaultSampler;
 	};
 }

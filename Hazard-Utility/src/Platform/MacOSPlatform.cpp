@@ -6,13 +6,43 @@
 #include "File.h"
 #include "Directory.h"
 
+#include <spawn.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <cstdlib>
+
+extern char** environ;
+
 int OS::SysCall(const char* command)
 {
     return system(command);
 }
 void* OS::BackgroundProcess(const char* path, const char* arguments)
 {
-    return nullptr;
+    pid_t pid;
+    posix_spawnattr_t attr;
+    
+    std::istringstream iss(arguments);
+    std::vector<std::string> tokens;
+    std::string token;
+    while (iss >> token) {
+        tokens.push_back(token);
+    }
+    
+    std::vector<char*> argv;
+    for (auto& t : tokens) {
+        argv.push_back(t.data());
+    }
+    
+    posix_spawnattr_init(&attr);
+    posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSID);
+    int status = posix_spawnp(&pid, path, nullptr, &attr, argv.data(), environ);
+    
+    posix_spawnattr_destroy(&attr);
+    
+    return (void*)pid;
+    
 }
 void OS::WaitForProcess(void* handle)
 {
@@ -20,15 +50,15 @@ void OS::WaitForProcess(void* handle)
 }
 bool OS::HasEnv(const char* key)
 {
-    return false;
+    return GetEnv(key) != nullptr;
 }
 const char* OS::GetEnv(const char* key)
 {
-    return "";
+    return getenv(key);
 }
 bool OS::SetEnv(const char* key, const char* value)
 {
-    return false;
+    return setenv(key, value, 1) == 0;
 }
 void OS::Dialog(const char* title, const char* description)
 {

@@ -59,7 +59,6 @@ namespace Hazard
 
 		Ref<Cubemap> BlackCubemap;
 		Ref<Cubemap> WhiteCubemap;
-		Ref<Sampler> DefaultImageSampler;
 		Ref<Texture2DAsset> BRDFLut;
 
 		void Initialize()
@@ -97,15 +96,6 @@ namespace Hazard
 
 			WhiteCubemap = Cubemap::Create(&whiteCubemap);
 			data.Release();
-			
-			SamplerCreateInfo samplerInfo = {
-				.DebugName = "DefaultImageSampler",
-				.MinFilter = FilterMode::LinearMip,
-				.MagFilter = FilterMode::LinearMip,
-				.Wrapping = ImageWrap::Repeat,
-			};
-
-			DefaultImageSampler = Sampler::Create(&samplerInfo);
 
 			BRDFLut = AssetManager::GetAsset<Texture2DAsset>(AssetManager::AssetHandleFromFile("res/Textures/BRDF_LUT.tga"));
 		}

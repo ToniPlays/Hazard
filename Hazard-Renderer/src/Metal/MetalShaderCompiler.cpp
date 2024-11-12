@@ -34,7 +34,6 @@ namespace HazardRenderer::Metal
     }
     bool MetalShaderCompiler::Compile(CompileInfo* compileInfo)
     {
-        
         HZR_PROFILE_FUNCTION();
         Timer timer;
 
@@ -71,6 +70,7 @@ namespace HazardRenderer::Metal
         {
             std::vector<uint32_t> res(result.cbegin(), result.cend());
             m_ResultBinary = Buffer::Copy(res.data(), res.size() * sizeof(uint32_t));
+            std::cout << res.size() << std::endl;
         }
         else
             m_ErrorMessage = result.GetErrorMessage();
@@ -87,7 +87,7 @@ namespace HazardRenderer::Metal
         m_ErrorMessage.clear();
         
         spirv_cross::CompilerMSL::Options options = {};
-        options.set_msl_version(3, 2);
+        options.set_msl_version(3, 1);
         options.vertex_for_tessellation = tesellation;
         options.texture_buffer_native = true;
         

@@ -7,9 +7,8 @@
 static Ref<JobGraph> GetDummyGraph()
 {
 	Ref<Job> job = Job::Lambda("Dumb", [](JobInfo& info) -> Coroutine {
-		std::cout << "Slep\n";
-		std::this_thread::sleep_for(2000ms);
-		std::cout << "Woke up\n";
+        std::this_thread::sleep_for(2000ms);
+        info.Result(234.04332f);
 		co_return;
 	});
 
@@ -37,11 +36,13 @@ void JobGraphTest::Init()
 
 	Ref<Job> preprocess = Job::Lambda("Preload", [&](JobInfo& info) -> Coroutine {
 		HZR_INFO("Executing function");
-		Promise<float> promise = m_JobSystem->Submit<float>(GetDummyGraph());
-
-		std::vector<float> result = co_await promise;
-
+		std::vector<float> results = co_await m_JobSystem->Submit<float>(GetDummyGraph());
+        for(float f : results)
+        {
+            HZR_INFO(f);
+        }
 		HZR_INFO("Finished executing function");
+        co_return;
 	});
 
 	JobInfo info = {};

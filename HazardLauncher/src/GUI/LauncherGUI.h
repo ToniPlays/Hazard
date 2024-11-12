@@ -5,7 +5,7 @@
 #include "Core/HazardLauncherManager.h"
 
 //TODO: FIX
-#define CONFIG_PATH "launcherConfig.hzrcfg"
+#define CONFIG_PATH "LauncherConfig.hzrcfg"
 
 class LauncherGUI : public Hazard::ImUI::GUIRenderable
 {

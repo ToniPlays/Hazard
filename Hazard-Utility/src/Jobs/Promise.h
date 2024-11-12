@@ -1,14 +1,16 @@
 #pragma once
 
 #include "JobFlags.h"
-#include "JobGraph.h"
+
 #include "Ref.h"
+#include "Utility/Awaitable.h"
+#include "JobGraph.h"
 
 class Job;
 class JobSystem;
 
 template<typename T>
-class Promise
+class Promise : public Awaitable<std::vector<T>>
 {
 	friend class JobSystem;
 
@@ -47,25 +49,21 @@ public:
 		return *this;
 	}
 
-	std::vector<T> GetResults()
+	std::vector<T> GetResults() override
 	{
 		if (m_JobGraph)
 			return m_JobGraph->GetResults<T>();
 		else return std::vector<T>();
 	}
 
-	std::vector<T> await_resume() noexcept { return GetResults(); }
-	bool await_ready() { return false; }
-	void await_suspend(Coroutine::handle_type handle) 
+    void OnSuspend() override
 	{
 		if (!m_JobGraph) return;
-
-		handle.promise().m_Dependencies++;
-		ContinueWith([handle](const auto&) {
-			//if (--handle.promise().m_Dependencies == 0)
-			//	job->Requeue();	//TODO: Fix
+        
+		ContinueWith([instance = this](const auto&) mutable {
+            instance->Resolve();
 		});
-	};
+	}
 
 	static Promise<T> Create(Ref<JobGraph> graph)
 	{

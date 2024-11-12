@@ -47,6 +47,7 @@ namespace HazardRenderer::Metal
             SetData(region);
         }
     }
+
     MetalGPUBuffer::~MetalGPUBuffer()
     {
         m_LocalBuffer.Release();
@@ -54,19 +55,21 @@ namespace HazardRenderer::Metal
             buffer->release();
         });
     }
+
     void MetalGPUBuffer::SetData(const BufferCopyRegion& copyRegion)
     {
         Ref<MetalGPUBuffer> instance = this;
         m_LocalBuffer.Allocate(copyRegion.Size);
-        m_LocalBuffer.Write(copyRegion.Data, copyRegion.Size, copyRegion.Offset);
+        m_LocalBuffer.Write(copyRegion.Data, copyRegion.Size);
         Renderer::Submit([instance, copyRegion]() mutable {
             instance->SetData_RT(copyRegion);
         });
     }
+
     void MetalGPUBuffer::SetData_RT(const BufferCopyRegion& copyRegion)
     {
         void* data = m_Buffer->contents();
-        memcpy((uint8_t*)data, m_LocalBuffer.Data, m_LocalBuffer.Size);
+        memcpy((uint8_t*)data + copyRegion.Offset, m_LocalBuffer.Data, m_LocalBuffer.Size);
         m_LocalBuffer.Release();
     }
 

@@ -1,9 +1,11 @@
 
+#pragma once
+
 #include "HazardRenderer.h"
 #include "Application/Test.h"
 
-#include "Awaitable.h"
-#include "Coroutine.h"
+#include "Utility/Awaitable.h"
+#include "Utility/Coroutine.h"
 
 class TestAwaitable : public Awaitable<int>
 {

@@ -15,11 +15,13 @@ namespace Editor
 		spec.TargetWorld = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
 		s_WorldRenderer = Ref<WorldRenderer>::Create(&spec);
 	}
+
 	void EditorWorldManager::Update()
 	{
 		HZR_PROFILE_FUNCTION();
 		s_WorldRenderer->Submit();
 	}
+
 	void EditorWorldManager::LoadWorld(AssetHandle handle)
 	{
 		Timer timer;
@@ -30,7 +32,9 @@ namespace Editor
 
 			SetWorld(result);
 			HZR_INFO("World was loaded in {}ms", timer.ElapsedMillis());
-		});
+        }).Catch([](auto& e) {
+            HZR_ERROR("World loading failure {}", e.what());
+        });
 	}
 	void EditorWorldManager::SetWorld(Ref<Hazard::World> world)
 	{

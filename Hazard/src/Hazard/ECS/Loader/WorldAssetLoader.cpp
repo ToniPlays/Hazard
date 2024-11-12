@@ -12,59 +12,64 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		//Ref<Job> preprocessJob = Job::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle, settings);
-		//Ref<Job> finalizeJob = Job::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
+		Ref<Job> preprocessJob = Job::Create(fmt::format("Preprocess: {}", metadata.Handle), PreprocessWorldFile, metadata.Handle, settings);
+		Ref<Job> finalizeJob = Job::Create(fmt::format("Finalize world: {}", metadata.Handle), FinalizeWorld, metadata.Handle);
 
 		JobGraphInfo pipeline = {
 			.Name = "World load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Preprocess", 0.1f, { } },
+            .Stages = { { "Preprocess", 0.1f, { preprocessJob } },
 						{ "Asset load", 0.8f, { } },
-						{ "Finalize",   0.1f, { } },
+                { "Finalize",   0.1f, { finalizeJob } },
 			}
 		};
 
 		return Ref<JobGraph>::Create(pipeline);
 	}
+
 	Ref<JobGraph> WorldAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
 		Ref<World> world = asset.As<World>();
 		WorldSerializer serializer(world);
 
-		//Ref<Job> contentJob = Job::Create("GetWorldContent", GetWorldContent, serializer, settings.Flags);
+		Ref<Job> contentJob = Job::Create("GetWorldContent", GetWorldContent, serializer, settings.Flags);
 
 		JobGraphInfo pipeline = {
 			.Name = "World save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = {	{ "Processing", 1.0f, { } } }
+            .Stages = {	{ "Processing", 1.0f, { contentJob } } }
 		};
 
 		return Ref<JobGraph>::Create(pipeline);
 	}
+
 	Ref<JobGraph> WorldAssetLoader::Create(const CreateAssetSettings& settings)
 	{
 		auto& file = settings.SourcePath;
 
-		//Ref<Job> createJob = Job::Create("GetWorldContent", CreateWorld, file);
+		Ref<Job> createJob = Job::Create("CreateWorld", CreateWorld, file);
 
 		JobGraphInfo pipeline = {
 			.Name = "World create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = {	{ "Create", 1.0f, { } } }
+            .Stages = {	{ "Create", 1.0f, { createJob } } }
 		};
 
 		return Ref<JobGraph>::Create(pipeline);
 	}
-	void WorldAssetLoader::GetWorldContent(JobInfo& info, WorldSerializer serializer, uint32_t assetSaveFlags)
+
+    Coroutine WorldAssetLoader::GetWorldContent(JobInfo& info, WorldSerializer serializer, uint32_t assetSaveFlags)
 	{
 		std::string result = serializer.Serialize();
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(Buffer::Copy(result.c_str(), result.length()));
 		info.Result(buffer);
+        co_return;
 	}
-	void WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings)
+
+    Coroutine WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings)
 	{
 		if (settings.Flags & ASSET_MANAGER_NO_DEPENENCY_LOADING) 
-			return;
+            co_return;
 
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 		std::string source;
@@ -87,13 +92,14 @@ namespace Hazard
 			//assetJobs.push_back(Job::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
 
 		if (assetJobs.size() == 0)
-			//info.ContinueWith({ Job::Lambda("Dummy", [](JobInfo&) {}) });
-		info.ContinueWith(assetJobs);
+            info.ContinueWith({ Job::Lambda("Dummy", [](JobInfo&) -> Coroutine { co_return; }) });
+		else info.ContinueWith(assetJobs);
 	}
-	void WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)
+
+    Coroutine WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-		if (!metadata.IsValid()) return;
+        if (!metadata.IsValid()) co_return;;
 		
 		Ref<JobGraph> loadGraph = AssetManager::GetLoadGraph(metadata);
         /*//Promise promise = info.ParentGraph->SubGraph(loadGraph);
@@ -104,7 +110,8 @@ namespace Hazard
 
 		info.ParentGraph->Halt();*/
 	}
-	void WorldAssetLoader::FinalizeWorld(JobInfo& info, AssetHandle handle)
+
+    Coroutine WorldAssetLoader::FinalizeWorld(JobInfo& info, AssetHandle handle)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 		std::string source;
@@ -115,11 +122,16 @@ namespace Hazard
 		WorldDeserializer deserializer(File::GetName(metadata.SourceFile), source);
 
 		Ref<World> world = deserializer.Deserialize();
+        world->SetSourceFilePath(metadata.SourceFile);
 		info.Result(world);
+        co_return;
 	}
-	void WorldAssetLoader::CreateWorld(JobInfo& info, const std::filesystem::path& file)
+
+	Coroutine WorldAssetLoader::CreateWorld(JobInfo& info, const std::filesystem::path& file)
 	{
 		Ref<World> world = Ref<World>::Create(file.string());
+        world->SetSourceFilePath(file);
 		info.Result(world);
+        co_return;
 	}
 }

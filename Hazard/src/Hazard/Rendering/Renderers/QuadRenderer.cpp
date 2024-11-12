@@ -68,7 +68,7 @@ namespace Hazard
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
-			set->Write(0, i, m_Data.TextureSlots[i], RenderEngine::GetResources().DefaultImageSampler);
+            set->Write(0, i, m_Data.TextureSlots[i], RenderContextManager::GetDefaultSampler());
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_QuadBatch->GetIndexCount(), 0);
 	}
@@ -200,7 +200,7 @@ namespace Hazard
 
 		m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("QuadShader"));
 
-		Ref<Sampler> sampler = RenderEngine::GetResources().DefaultImageSampler;
+		Ref<Sampler> sampler = RenderContextManager::GetDefaultSampler();
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
 
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)

@@ -22,7 +22,6 @@ namespace Hazard
 
 	void WorldRenderer::SubmitCamera(const WorldCameraData& camera)
 	{
-		
 		m_CameraData.push_back(camera);
 		if (m_CameraData.size() <= m_CameraDescriptors.size()) return;
 

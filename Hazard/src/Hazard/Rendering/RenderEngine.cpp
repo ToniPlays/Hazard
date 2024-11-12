@@ -120,17 +120,18 @@ namespace Hazard
 				Ref<DescriptorSet> cameraDescriptor = worldDrawList.WorldRenderer->GetCameraDescriptor(cameraIndex);
 				cameraDescriptor->Write(0, s_Resources->CameraUniformBuffer, sizeof(CameraData), camRegion.Offset);
 
+                Ref<Sampler> defaultSampler = RenderContextManager::GetDefaultSampler();
 				if (worldDrawList.Environment.RadianceMap)
 				{
-					cameraDescriptor->Write(1, 0, worldDrawList.Environment.RadianceMap, s_Resources->DefaultImageSampler, false);
-					cameraDescriptor->Write(2, 0, worldDrawList.Environment.IrradianceMap, s_Resources->DefaultImageSampler, false);
-					cameraDescriptor->Write(3, 0, s_Resources->BRDFLut->GetSourceImage(), s_Resources->DefaultImageSampler, false);
+					cameraDescriptor->Write(1, 0, worldDrawList.Environment.RadianceMap, defaultSampler, false);
+					cameraDescriptor->Write(2, 0, worldDrawList.Environment.IrradianceMap, defaultSampler, false);
+					cameraDescriptor->Write(3, 0, s_Resources->BRDFLut->GetSourceImage(), defaultSampler, false);
 				}
 				else
 				{
-					cameraDescriptor->Write(1, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
-					cameraDescriptor->Write(2, 0, s_Resources->WhiteCubemap, s_Resources->DefaultImageSampler, false);
-					cameraDescriptor->Write(3, 0, m_RenderContextManager->GetWindow().GetContext()->GetDefaultResources().WhiteTexture, s_Resources->DefaultImageSampler, false);
+					cameraDescriptor->Write(1, 0, s_Resources->WhiteCubemap, defaultSampler, false);
+					cameraDescriptor->Write(2, 0, s_Resources->WhiteCubemap, defaultSampler, false);
+					cameraDescriptor->Write(3, 0, m_RenderContextManager->GetWindow().GetContext()->GetDefaultResources().WhiteTexture, defaultSampler, false);
 				}
 
 

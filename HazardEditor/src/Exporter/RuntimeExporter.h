@@ -2,6 +2,7 @@
 
 #include "Project/ProjectSettingsSchema.h"
 #include "Jobs.h"
+#include "Utility/Coroutine.h"
 
 class RuntimeExporter
 {
@@ -19,9 +20,9 @@ private:
 	std::vector<Ref<Job>> GetDependencyJobs();
 	std::vector<Ref<Job>> GetSaveWorldJobs();
 	
-	static void GetAssetDependenciesJob(JobInfo& job, const std::filesystem::path& sourcePath);
-	static void DispatchAssetJobs(JobInfo& job, std::filesystem::path& assetPath);
-	static void SaveWorldAssetJob(JobInfo& job, std::filesystem::path& assetPath, AssetHandle handle);
+	static Coroutine GetAssetDependenciesJob(JobInfo& job, const std::filesystem::path& sourcePath);
+	static Coroutine DispatchAssetJobs(JobInfo& job, std::filesystem::path& assetPath);
+	static Coroutine SaveWorldAssetJob(JobInfo& job, std::filesystem::path& assetPath, AssetHandle handle);
 
 private:
 	Platform m_Platform;

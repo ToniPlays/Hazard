@@ -3,10 +3,10 @@
 #include "UtilityCore.h"
 #include "Utility/YamlUtils.h"
 #include "Hazard/Assets/Asset.h"
-#include "Directory.h"
+#include "Filesystem/Directory.h"
 
 #include "ProjectSettingsSchema.h"
-#include "File.h"
+#include "Filesystem/File.h"
 
 class HazardProject
 {

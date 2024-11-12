@@ -26,16 +26,16 @@ namespace Hazard
 
 		CreateSettings create = pack.AssetData->Read<CreateSettings>();
 
-		//Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, metadata.SourceFile);
-		//Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
-		//Ref<Job> createJob = Job::Create("Create", CreateEnvironmentAsset, create.Samples);
+		Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, metadata.SourceFile);
+		Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
+		Ref<Job> createJob = Job::Create("Create", CreateEnvironmentAsset, create.Samples);
 
 		JobGraphInfo info = {
 			.Name = "Environment map load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load", 0.3f, {  } },
-						{ "Convert", 0.5f, {  } },
-						{ "Finalize", 0.2f, {  } }
+			.Stages = { { "Load", 0.3f, { loadJob } },
+						{ "Convert", 0.5f, { genJob } },
+						{ "Finalize", 0.2f, { createJob } }
 			}
 		};
 
@@ -44,12 +44,12 @@ namespace Hazard
 
 	Ref<JobGraph> EnvironmentAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		//Ref<Job> saveJob = Job::Create("Environment map save", SaveEnvironmentAsset, asset.As<EnvironmentMap>());
+		Ref<Job> saveJob = Job::Create("Environment map save", SaveEnvironmentAsset, asset.As<EnvironmentMap>());
 
 		JobGraphInfo info = {
 			.Name = "Environment map save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Save", 1.0f, { } },
+            .Stages = { { "Save", 1.0f, { saveJob } },
 			}
 		};
 
@@ -64,22 +64,23 @@ namespace Hazard
 		if (settings.Settings)
 			create = *(CreateSettings*)settings.Settings;
 
-		//Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, settings.SourcePath);
-		//Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
-		//Ref<Job> createJob = Job::Create("Create", CreateEnvironmentAsset, create.Samples);
+		Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, settings.SourcePath);
+		Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
+		Ref<Job> createJob = Job::Create("Create", CreateEnvironmentAsset, create.Samples);
 
 		JobGraphInfo info = {
 			.Name = "Environment map create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load", 0.3f, {  } },
-						{ "Convert", 0.5f, {  } },
-						{ "Create", 0.2f, {  } }
+			.Stages = { { "Load", 0.3f, { loadJob } },
+                        { "Convert", 0.5f, { genJob } },
+						{ "Create", 0.2f, { createJob } }
 			}
 		};
 
 		return Ref<JobGraph>::Create(info);
 	}
-	void EnvironmentAssetLoader::SaveEnvironmentAsset(JobInfo& info, Ref<EnvironmentMap> map)
+
+    Coroutine EnvironmentAssetLoader::SaveEnvironmentAsset(JobInfo& info, Ref<EnvironmentMap> map)
 	{
 		CreateSettings create = {
 			.Resolution = map->GetSpec().Resolution,
@@ -89,8 +90,10 @@ namespace Hazard
 		Buffer buf = Buffer::Copy(&create, sizeof(CreateSettings));
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(buf);
 		info.Result(buffer);
+        co_return;
 	}
-	void EnvironmentAssetLoader::CreateImageFromSource(JobInfo& info, const std::filesystem::path& sourcePath)
+
+    Coroutine EnvironmentAssetLoader::CreateImageFromSource(JobInfo& info, const std::filesystem::path& sourcePath)
 	{
 		using namespace HazardRenderer;
 		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(sourcePath, true);
@@ -111,8 +114,10 @@ namespace Hazard
 		info.Result(image);
 
 		header.ImageData.Release();
+        co_return;
 	}
-	void EnvironmentAssetLoader::GenerateEnvironmentMap(JobInfo& info, const CreateSettings& settings)
+
+    Coroutine EnvironmentAssetLoader::GenerateEnvironmentMap(JobInfo& info, const CreateSettings& settings)
 	{
 		using namespace HazardRenderer;
 
@@ -152,8 +157,8 @@ namespace Hazard
 		cmdBuffer->Begin();
 		cmdBuffer->ImageMemoryBarrier(barrier);
 
-		computeSet->Write(0, 0, cubemap, RenderEngine::GetResources().DefaultImageSampler, true);
-		computeSet->Write(1, 0, image, RenderEngine::GetResources().DefaultImageSampler, true);
+		computeSet->Write(0, 0, cubemap, RenderContextManager::GetDefaultSampler(), true);
+		computeSet->Write(1, 0, image, RenderContextManager::GetDefaultSampler(), true);
 
 		cmdBuffer->SetPipeline(pipeline);
 		cmdBuffer->SetDescriptorSet(computeSet, 0);
@@ -168,8 +173,10 @@ namespace Hazard
 
 		cubemap->RegenerateMips();
 		info.Result(cubemap);
+        co_return;
 	}
-	void EnvironmentAssetLoader::CreateEnvironmentAsset(JobInfo& info, uint32_t samples)
+
+    Coroutine EnvironmentAssetLoader::CreateEnvironmentAsset(JobInfo& info, uint32_t samples)
 	{
 		using namespace HazardRenderer;
 		Ref<Cubemap> cubemap = info.Graph->GetResults<Ref<Cubemap>>()[0];
@@ -182,5 +189,6 @@ namespace Hazard
 		asset->Invalidate();
 
 		info.Result(asset);
+        co_return;
 	}
 }

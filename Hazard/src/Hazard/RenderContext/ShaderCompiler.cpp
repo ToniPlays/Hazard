@@ -93,10 +93,10 @@ namespace Hazard
 			{
 				Metal::MetalShaderCompiler compiler;
 				std::vector<ShaderDefine> defines = { { "METAL_API" } };
-
+                
 				//Compile to Vulkan SPV, convert to MSL later
 				CompileInfo compileInfo = {
-					.Name  = "MSLShader",
+					.Name  = "VkToMSLShader",
 					.Renderer = RenderAPI::Vulkan,
 					.Optimization = Optimization::None,
 					.Stage = type,

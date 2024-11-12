@@ -5,7 +5,7 @@
 #include "JobException.h"
 #include "JobFlags.h"
 #include "Utility/Callback.h"
-#include "Coroutine.h"
+#include "Utility/Coroutine.h"
 
 class JobGraph;
 class Thread;
@@ -76,11 +76,10 @@ private:
     template<typename Fn, typename... Args>
     Job(const std::string& name, Fn&& callback, Args&&... args) : m_JobName(name)
     {
-        //m_JobCallback = std::bind(&callback, std::placeholders::_1, std::forward<Args>(args)...);
+        m_JobCallback = std::bind(std::forward<Fn>(callback), std::placeholders::_1, std::forward<Args>(args)...);
     }
 
 private:
-
     Coroutine m_JobCoroutine;
 	JobCallback m_JobCallback;
 	std::string m_JobName;

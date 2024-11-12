@@ -74,7 +74,7 @@ bool File::WriteBinaryFile(const std::filesystem::path& path, void* data, uint64
 }
 bool File::WriteFile(const std::filesystem::path& file, const std::string& content)
 {
-	std::ofstream out(file);
+    std::ofstream out(file);
 
 	if (!out.is_open()) return false;
 

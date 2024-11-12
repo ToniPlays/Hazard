@@ -53,26 +53,26 @@ namespace Hazard
 		if (settings.Settings)
 			imageSpec = *(CreateSettings*)settings.Settings;
 
-		//Ref<Job> sourceLoad = Job::Create(fmt::format("Image data load from: {0}", file.string()), ImageDataLoadFromSource, file, imageSpec);
-		//Ref<Job> createImage = Job::Create(fmt::format("Image {}", File::GetName(file)), CreateImageFromData, imageSpec);
+		Ref<Job> sourceLoad = Job::Create(fmt::format("Image data load from: {0}", file.string()), ImageDataLoadFromSource, file, imageSpec);
+		Ref<Job> createImage = Job::Create(fmt::format("Image {}", File::GetName(file)), CreateImageFromData, imageSpec);
 
 		JobGraphInfo info = {
 			.Name = "Image load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load data", 0.8f, {  } },
-						{ "Create", 0.2f, {  } }
+			.Stages = { { "Load data", 0.8f, { sourceLoad } },
+                { "Create", 0.2f, { createImage } }
 			}
 		};
 
 		return Ref<JobGraph>::Create(info);
 	}
 
-	void ImageAssetLoader::ImageDataLoadFromSource(JobInfo& info, const std::filesystem::path& path, CreateSettings settings)
+    Coroutine ImageAssetLoader::ImageDataLoadFromSource(JobInfo& info, const std::filesystem::path& path, CreateSettings settings)
 	{
 		if (path.empty())
 		{
 			info.Result(TextureHeader());
-			return;
+			co_return;
 		}
 
 		if (!File::Exists(path))
@@ -85,7 +85,7 @@ namespace Hazard
 		info.Result(header);
 	}
 
-	void ImageAssetLoader::CreateImageFromData(JobInfo& info, CreateSettings settings)
+    Coroutine ImageAssetLoader::CreateImageFromData(JobInfo& info, CreateSettings settings)
 	{
 		TextureHeader header = info.Graph->GetResults<TextureHeader>()[0];
 
@@ -99,9 +99,10 @@ namespace Hazard
 
 		info.Result(asset);
 		header.ImageData.Release();
+        co_return;
 	}
 
-	void ImageAssetLoader::ReadImageDataFromGPU(JobInfo& info, Ref<HazardRenderer::Image2D> image)
+	Coroutine ImageAssetLoader::ReadImageDataFromGPU(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
 		using namespace HazardRenderer;
 
@@ -151,9 +152,10 @@ namespace Hazard
 			Buffer data = readbackBuffer->ReadData(region);
 			info.Result(Ref<CachedBuffer>::Create(data));
 		});
+        co_return;
 	}
 
-	void ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
+	Coroutine ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
 	{
 		Ref<CachedBuffer> imageData = info.Graph->GetResults<Ref<CachedBuffer>>()[0];
 
@@ -168,9 +170,10 @@ namespace Hazard
 		buf->Write(imageData->GetData(), imageData->GetSize());
 
 		info.Result(buf);
+        co_return;
 	}
 
-	void ImageAssetLoader::CreateImageFromBinary(JobInfo& info, AssetHandle handle)
+	Coroutine ImageAssetLoader::CreateImageFromBinary(JobInfo& info, AssetHandle handle)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 
@@ -188,6 +191,7 @@ namespace Hazard
 		asset->SetMaxMipLevels(1);
 		asset->Invalidate(pack.AssetData->Read<Buffer>(pack.AssetData->GetSize() - pack.AssetData->GetCursor()));
 
-		//info.Job->SetResult(asset);
+        info.Result(asset);
+        co_return;
 	}
 }

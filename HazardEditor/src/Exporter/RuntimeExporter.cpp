@@ -40,7 +40,7 @@ std::vector<Ref<Job>> RuntimeExporter::GetDependencyJobs()
 	jobs.reserve(m_TargetWorlds.size());
 
 	for (auto& target : m_TargetWorlds)
-		jobs.push_back(Job::Create(File::GetNameNoExt(target.SourceFile), GetAssetDependenciesJob, target.SourceFile));
+		jobs.emplace_back(Job::Create(File::GetNameNoExt(target.SourceFile), GetAssetDependenciesJob, target.SourceFile));
 
 	return jobs;
 }
@@ -59,7 +59,7 @@ std::vector<Ref<Job>> RuntimeExporter::GetSaveWorldJobs()
 	return jobs;
 }
 
-void RuntimeExporter::GetAssetDependenciesJob(JobInfo& job, const std::filesystem::path& sourcePath)
+Coroutine RuntimeExporter::GetAssetDependenciesJob(JobInfo& job, const std::filesystem::path& sourcePath)
 {
 	if (!File::Exists(sourcePath))
 		throw JobException(fmt::format("File does not exist: {}", sourcePath.string()));
@@ -77,9 +77,11 @@ void RuntimeExporter::GetAssetDependenciesJob(JobInfo& job, const std::filesyste
 	for (auto& [metadata, messages] : referencedAssets.MissingAssets)
 		for (auto& message : messages)
 			HZR_WARN(message);
+    
+    co_return;
 }
 
-void RuntimeExporter::DispatchAssetJobs(JobInfo& job, std::filesystem::path& assetPath)
+Coroutine RuntimeExporter::DispatchAssetJobs(JobInfo& job, std::filesystem::path& assetPath)
 {
 	using namespace Hazard;
 	std::unordered_map<AssetHandle, uint32_t> handles;
@@ -111,9 +113,10 @@ void RuntimeExporter::DispatchAssetJobs(JobInfo& job, std::filesystem::path& ass
 		});
 	}
     */
+    co_return;
 }
 
-void RuntimeExporter::SaveWorldAssetJob(JobInfo& job, std::filesystem::path& assetPath, AssetHandle handle)
+Coroutine RuntimeExporter::SaveWorldAssetJob(JobInfo& job, std::filesystem::path& assetPath, AssetHandle handle)
 {
 	using namespace Hazard;
 
@@ -138,4 +141,5 @@ void RuntimeExporter::SaveWorldAssetJob(JobInfo& job, std::filesystem::path& ass
 		});
 	});
      */
+    co_return;
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UtilityCore.h"
-#include "Color.h"
+#include "Math/Color.h"
 #include "Hazard/ImGUI/UILibrary.h"
 #include "Hazard/ImGUI/StyleManager.h"
 #include <imgui_internal.h>

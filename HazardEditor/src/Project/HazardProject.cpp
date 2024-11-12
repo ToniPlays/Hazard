@@ -1,7 +1,7 @@
 
 #include "HazardProject.h"
-#include "File.h"
-#include "Directory.h"
+#include "Filesystem/File.h"
+#include "Filesystem/Directory.h"
 #include "Hazard.h"
 #include "Core/EditorAssetManager.h"
 

@@ -3,9 +3,9 @@
 #include "Hazard/Assets/AssetManager.h"
 #include <Hazard/RenderContext/ShaderAsset.h>
 #include "Hazard.h"
-#include "File.h"
+#include "Filesystem/File.h"
 
-#include <FileCache.h>
+#include <Filesystem/FileCache.h>
 #include <Hazard/Rendering/Mesh/MeshAssetLoader.h>
 #include <Hazard/RenderContext/ImageAssetLoader.h>
 

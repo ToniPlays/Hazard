@@ -3,7 +3,6 @@
 #include "imgui.h"
 #include <glm/gtc/type_ptr.hpp>
 
-#include "MathCore.h"
 #include "HazardRenderer.h"
 
 #include "imgui_internal.h"

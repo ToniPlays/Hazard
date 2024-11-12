@@ -18,6 +18,7 @@ bool Directory::Exists(const std::filesystem::path& dir)
 
 bool Directory::Create(const std::filesystem::path& dir)
 {
+    if(std::filesystem::exists(dir)) return true;
 	return std::filesystem::create_directories(dir);
 }
 

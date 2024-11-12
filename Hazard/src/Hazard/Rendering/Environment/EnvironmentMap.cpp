@@ -69,8 +69,8 @@ namespace Hazard
 		computeBuffer->Begin();
 		computeBuffer->ImageMemoryBarrier(imageBarrier);
 
-		descriptor->Write(0, 0, m_IrradianceMap.As<Image>(), RenderEngine::GetResources().DefaultImageSampler, false);
-		descriptor->Write(1, 0, m_RadianceMap.As<Image>(), RenderEngine::GetResources().DefaultImageSampler, false);
+		descriptor->Write(0, 0, m_IrradianceMap.As<Image>(), RenderContextManager::GetDefaultSampler(), false);
+		descriptor->Write(1, 0, m_RadianceMap.As<Image>(), RenderContextManager::GetDefaultSampler(), false);
 
 		computeBuffer->SetPipeline(compute);
 		computeBuffer->SetDescriptorSet(descriptor, 0);

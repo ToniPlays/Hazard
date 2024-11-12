@@ -65,6 +65,7 @@ bool EnvironmentAssetImporter::ImportFromNew()
     Promise<Ref<EnvironmentMap>> promise = AssetManager::CreateAssetAsync<EnvironmentMap>(settings);
 
 	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
+    
 	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
 
 	promise.ContinueWith([path, assetPanel](const auto& results) {

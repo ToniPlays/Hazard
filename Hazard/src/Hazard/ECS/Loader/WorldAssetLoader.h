@@ -26,13 +26,13 @@ namespace Hazard
 		Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 
 	private:
-		static void GetWorldContent(JobInfo& info, WorldSerializer serializer, uint32_t assetSaveFlags);
+		static Coroutine GetWorldContent(JobInfo& info, WorldSerializer serializer, uint32_t assetSaveFlags);
 
-		static void PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings);
-		static void LoadRequiredAsset(JobInfo& info, AssetHandle handle);
-		static void FinalizeWorld(JobInfo& info, AssetHandle handle);
+		static Coroutine PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings);
+		static Coroutine LoadRequiredAsset(JobInfo& info, AssetHandle handle);
+		static Coroutine FinalizeWorld(JobInfo& info, AssetHandle handle);
 
-		static void CreateWorld(JobInfo& info, const std::filesystem::path& file);
+		static Coroutine CreateWorld(JobInfo& info, const std::filesystem::path& file);
 	};
 
 	struct WorldAssetHeader

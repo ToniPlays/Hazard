@@ -4,13 +4,13 @@
 
 #include "Hazard/ImGUI/UIElements/Table.h"
 #include "Hazard/ImGUI/UILibrary.h"
-#include <Directory.h>
+#include <Filesystem/Directory.h>
 #include <Platform/OS.h>
 
 LauncherGUI::LauncherGUI() 
 {
-	m_EnvVarExists = OS::GetEnv("HAZARD_DIR");
 	m_Manager.LoadFromConfigFile(CONFIG_PATH);
+    m_EnvVarExists = !m_Manager.GetInstallationLocation().empty();
 }
 
 void LauncherGUI::Render()
@@ -104,7 +104,7 @@ void LauncherGUI::Render()
 		{
 			std::filesystem::path hazardDir = Directory::OpenFolderDialog();
 			if (!hazardDir.empty())
-				if (OS::SetEnv("HAZARD_DIR", hazardDir.string().c_str()))
+                if (m_Manager.SetInstallationLocation(hazardDir))
 				{
 					m_EnvVarExists = true;
 					ImGui::CloseCurrentPopup();

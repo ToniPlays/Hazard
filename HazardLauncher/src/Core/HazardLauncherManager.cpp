@@ -1,7 +1,7 @@
 #include "HazardLauncherManager.h"
 #include "Hazard.h"
 
-#include "Directory.h"
+#include "Filesystem/Directory.h"
 #include "Platform/OS.h"
 
 HazardLauncherManager::HazardLauncherManager()
@@ -11,10 +11,22 @@ HazardLauncherManager::HazardLauncherManager()
 
 bool HazardLauncherManager::OpenProject(const HazardProject& project)
 {
+#ifdef HZR_PLATFORM_WINDOWS
+    std::string executable = "Debug-Windows-x86_64/HazardEditor/HazardEditor.exe";
+#elif HZR_PLATFORM_MACOS
+    std::string executable = "Debug-macosx-universal/HazardEditor/HazardEditor";
+#endif
+    
+    std::string proc = fmt::format("{}/bin/{}", m_InstallationLocation.string(), executable);
+    
 	std::stringstream ss;
-	ss << "-wdir C:/dev/Hazard/HazardEditor";
+	ss << "-wdir ";
+    ss << m_InstallationLocation.string();
+    ss << "/HazardEditor";
 	ss << " -hprj " << StringUtil::Replace((project.Path / "Project.hzrproj").string(), "\\", "/");
-	return OS::BackgroundProcess("C:/dev/Hazard/bin/Debug-windows-x86_64/HazardEditor/HazardEditor.exe", ss.str().c_str());
+    
+    HZR_INFO("Starting: {} {}", proc, ss.str());
+    return OS::BackgroundProcess(proc.c_str(), ss.str().c_str());
 }
 
 bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
@@ -44,25 +56,37 @@ bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)
 
 bool HazardLauncherManager::LoadFromConfigFile(const std::filesystem::path& path)
 {
+    m_ConfigFilePath = path;
 	if (!File::Exists(path)) return false;
-
+    
+    
+    
 	YAML::Node root = YAML::LoadFile(path.string());
-	YAML::Node projectNode = root["Projects"];
+    
+    std::string loc;
+    YamlUtils::Deserialize<std::string>(root, "Editor", loc, "");
+    m_InstallationLocation = loc;
+    
+    YAML::Node projectNode = root["Projects"];
 
 	for (uint64_t i = 0; i < projectNode.size(); i++) {
 		auto node = projectNode[i]["Project"];
 		std::string projectPath = node["Path"].as<std::string>();
-		ImportProject(projectPath + "\\" + "Project.hzrproj");
+		ImportProject(projectPath + "/" + "Project.hzrproj");
 	}
+    
 	return true;
 }
 
 void HazardLauncherManager::SaveConfigToFile(const std::filesystem::path& path)
 {
-	std::ofstream file(path);
+    m_ConfigFilePath = path;
+    
 	YAML::Emitter out;
 
 	out << YAML::BeginMap;
+    
+    YamlUtils::Serialize(out, "Editor", m_InstallationLocation.string());
 
 	YamlUtils::Sequence(out, "Projects", [&]() {
 		for (HazardProject project : m_LoadedProjects) {
@@ -75,7 +99,8 @@ void HazardLauncherManager::SaveConfigToFile(const std::filesystem::path& path)
 		}
 		});
 	out << YAML::EndMap;
-	file << out.c_str();
+    
+    HZR_ASSERT(File::WriteFile(path, out.c_str()), "Failed to write configs");
 }
 
 bool HazardLauncherManager::CreateProject(const HazardProject& project)
@@ -128,8 +153,13 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		Directory::Create(project.Path / "Assets" / "Worlds");
 		Directory::Create(project.Path / "Assets" / "Editor");
 	}
-
+    
+#ifdef HZR_PLATFORM_WINDOWS
 	std::filesystem::path genProjectPath = project.Path / "Project" / "Win-CreateScriptProject.bat";
+#elif HZR_PLATFORM_MACOS
+    std::filesystem::path genProjectPath = project.Path / "Project" / "Mac-CreateScriptProject.bat";
+#endif
+    
 	void* id = OS::BackgroundProcess(genProjectPath.string().c_str(), "");
 	OS::WaitForProcess(id);
 	
@@ -143,15 +173,9 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 	return true;
 }
 
-std::string HazardLauncherManager::GenerateMetaFileContent(const std::filesystem::path& path, const AssetType& type)
+bool HazardLauncherManager::SetInstallationLocation(const std::filesystem::path &path)
 {
-	using namespace Hazard;
-	YAML::Emitter out;
-
-	out << YAML::BeginMap;
-	YamlUtils::Serialize(out, "UID", AssetHandle());
-	YamlUtils::Serialize(out, "Type", type);
-	YamlUtils::Serialize(out, "Path", path);
-	out << YAML::EndMap;
-	return out.c_str();
+    m_InstallationLocation = path;
+    SaveConfigToFile(m_ConfigFilePath);
+    return true;
 }

@@ -55,6 +55,15 @@ namespace Hazard
 					break;
 			}
 		});
+        
+        SamplerCreateInfo samplerInfo = {
+            .DebugName = "DefaultImageSampler",
+            .MinFilter = FilterMode::LinearMip,
+            .MagFilter = FilterMode::LinearMip,
+            .Wrapping = ImageWrap::Repeat,
+        };
+
+        s_DefaultSampler = Sampler::Create(&samplerInfo);
 	}
 
 	void RenderContextManager::PreRender()

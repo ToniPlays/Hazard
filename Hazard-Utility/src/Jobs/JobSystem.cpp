@@ -112,8 +112,6 @@ bool JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 
 void JobSystem::RemoveJob(Ref<Job> job)
 {
-	std::cout << "Removing: " << job->GetName() << std::this_thread::get_id() << std::endl;
-	
 	m_Jobs.erase(std::find(m_Jobs.begin(), m_Jobs.end(), job));
 
 	m_JobCount = m_Jobs.size();

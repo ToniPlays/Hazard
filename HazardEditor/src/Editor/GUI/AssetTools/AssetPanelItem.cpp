@@ -2,11 +2,11 @@
 #include "AssetPanelItem.h"
 
 #include "Hazard.h"
-#include "MathCore.h"
+#include "Math/MathCore.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Core/EditorAssetManager.h"
 #include "AssetPanel.h"
-#include "Directory.h"
+#include "Filesystem/Directory.h"
 
 #include "Editor/GUI/AssetTools/AssetImporterPanel.h"
 

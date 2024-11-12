@@ -4,7 +4,7 @@
 #include "Editor/EditorWorldManager.h"
 #include "Hazard/Rendering/HRenderer.h"
 
-#include "MedianPoint.h"
+#include "Math/MedianPoint.h"
 #include "Core/EditorAssetManager.h"
 #include "Hazard/Rendering/RenderEngine.h"
 
@@ -34,7 +34,7 @@ namespace UI
 
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
 
-		m_ImageSampler = RenderEngine::GetResources().DefaultImageSampler;
+        m_ImageSampler = RenderContextManager::GetDefaultSampler();
 	}
 
 	void Viewport::Update()
@@ -387,15 +387,15 @@ namespace UI
 		ImGui::BeginChild("##mode", { 90, 36 });
 		ImGui::SameLine(0, 0);
 
-		/*const Editor::EditorMode& mode = Editor::EditorModeManager::GetCurrentMode();
+        const int mode = 1;
 
-		if (mode == Editor::EditorMode::Edit)
+		if (mode == 0)
 			ImGui::BeginDisabled();
 		if (ImUI::ColoredButton((const char*)ICON_FK_STOP, { 0, 0, 0, 0 }, style.Window.Text, { 30, 36 }))
 		{
-			Editor::EditorModeManager::EndPlayMode();
+			//Editor::EditorModeManager::EndPlayMode();
 		}
-		if (mode == Editor::EditorMode::Edit)
+		if (mode == 0)
 			ImGui::EndDisabled();
 
 		ImGui::SameLine(0, 0);
@@ -406,17 +406,15 @@ namespace UI
 
 		ImGui::SameLine(0, 0);
 
-		if (mode != Editor::EditorMode::Edit)
+		if (mode != 1)
 			ImGui::BeginDisabled();
 
 		if (ImUI::ColoredButton((const char*)ICON_FK_PLAY, { 0, 0, 0, 0 }, style.Window.Text, { 30, 36 }))
 		{
-			Editor::EditorModeManager::BeginPlayMode();
+			//Editor::EditorModeManager::BeginPlayMode();
 		}
-		if (mode != Editor::EditorMode::Edit)
+		if (mode != 1)
 			ImGui::EndDisabled();
-
-		*/
 
 		ImGui::EndChild();
 		ImGui::PopStyleColor();

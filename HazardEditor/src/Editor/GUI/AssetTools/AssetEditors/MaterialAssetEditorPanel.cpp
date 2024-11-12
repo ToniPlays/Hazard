@@ -28,7 +28,7 @@ namespace UI
 
 		m_RenderPass = RenderPass::Create(&renderPassInfo);
 
-		m_ImageSampler = Hazard::RenderEngine::GetResources().DefaultImageSampler;
+		m_ImageSampler = Hazard::RenderContextManager::GetDefaultSampler();
 		m_Projection = glm::perspective<float>(glm::radians(50.0), m_FrameBuffer->GetAspectRatio(), 0.03f, 400.0f);
 		m_View = Math::ToTransformMatrix(m_Position, glm::angleAxis(glm::radians(-20.0f), glm::vec3{ 1, 0, 0 }));
 		m_View = glm::inverse(m_View);

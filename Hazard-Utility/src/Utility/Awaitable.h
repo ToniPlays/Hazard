@@ -4,11 +4,12 @@
 //
 //  Created by Toni Simoska on 9.11.2024.
 //
+#pragma once
 
-#include <coroutine.h>
+#include <coroutine>
 #include <condition_variable>
 
-#include "Coroutine.h"
+#include "Utility/Coroutine.h"
 #include "Utility/Callback.h"
 
 template<typename T>
@@ -17,8 +18,9 @@ class Awaitable
 public:
     
     virtual void OnSuspend() {};
+    virtual T GetResults() { return T(); }
     
-    T await_resume() noexcept { return false; }
+    T await_resume() noexcept { return GetResults(); }
     bool await_ready() { return false; }
     void await_suspend(Coroutine::handle_type handle)
     {
@@ -34,6 +36,7 @@ public:
     {
         m_OnResolved();
     }
+    
 private:
     std::function<void()> m_OnResolved;
 };

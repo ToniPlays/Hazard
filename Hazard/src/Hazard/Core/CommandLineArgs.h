@@ -10,7 +10,7 @@ namespace Hazard
 
 		static void Init(std::string cmdLine) 
 		{
-			std::cout << cmdLine << std::endl;
+			std::cout << "Command line " << cmdLine << std::endl;
 			ProcessArgs(cmdLine);
 
 			//Check if config exists

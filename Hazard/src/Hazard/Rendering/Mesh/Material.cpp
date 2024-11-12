@@ -33,7 +33,7 @@ namespace Hazard
 		for (auto& binding : spec.SetLayouts[1])
 		{
 			if (binding.Name != name) continue;
-			m_DescriptorSet->Write(binding.Binding, 0, cubemap.As<Image>(), RenderEngine::GetResources().DefaultImageSampler, true);
+			m_DescriptorSet->Write(binding.Binding, 0, cubemap.As<Image>(), RenderContextManager::GetDefaultSampler(), true);
 		}
 	}
 
@@ -45,7 +45,7 @@ namespace Hazard
 		for (auto& binding : spec.SetLayouts[1])
 		{
 			if (binding.Name != name) continue;
-			m_DescriptorSet->Write(binding.Binding, 0, image.As<Image>(), RenderEngine::GetResources().DefaultImageSampler, true);
+			m_DescriptorSet->Write(binding.Binding, 0, image.As<Image>(), RenderContextManager::GetDefaultSampler(), true);
 		}
 	}
 

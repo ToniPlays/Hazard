@@ -2,7 +2,7 @@
 
 #include "UtilityCore.h"
 #include "Hazard/Assets/Asset.h"
-#include "Color.h"
+#include "Math/Color.h"
 #include <imgui_internal.h>
 #include "Hazard/ImGUI/StyleManager.h"
 #include "Hazard/ImGUI/UILibrary.h"

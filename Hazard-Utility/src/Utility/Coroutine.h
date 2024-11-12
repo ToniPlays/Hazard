@@ -33,28 +33,28 @@ public:
 	}
 
 	struct promise_type
-	{
-		handle_type handle()
-		{
-			return handle_type::from_promise(*this);
-		}
-		auto initial_suspend()
-		{
-			return std::suspend_always();
-		}
-		auto final_suspend() noexcept
-		{
-			return std::suspend_always();
-		}
-		auto get_return_object() noexcept
-		{
-			return Coroutine(handle());
-		}
-
-		auto return_void() {}
+    {
+        handle_type handle()
+        {
+            return handle_type::from_promise(*this);
+        }
+        auto initial_suspend()
+        {
+            return std::suspend_always();
+        }
+        auto final_suspend() noexcept
+        {
+            return std::suspend_always();
+        }
+        auto get_return_object() noexcept
+        {
+            return Coroutine(handle());
+        }
+        auto return_void() {}
 		void unhandled_exception() {}
 
 		std::atomic_uint32_t m_Dependencies = 0;
+        void* m_Value = nullptr;
 	};
 
 	operator bool() { return m_Handle.address(); }

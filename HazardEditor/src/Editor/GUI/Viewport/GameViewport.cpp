@@ -64,9 +64,9 @@ namespace UI
 			m_Width = size.x;
 			m_Height = size.y;
 		}
-		if (!m_HasCamera || true) return;
+		if (!m_HasCamera) return;
 
-		//else ImUI::Image(m_FrameBuffer->GetImage(), size);
+        else ImUI::Image(m_FrameBuffer->GetImage(), RenderContextManager::GetDefaultSampler(), size);
 	}
 	bool GameViewport::OnEvent(Event& e)
 	{

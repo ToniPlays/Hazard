@@ -2,8 +2,8 @@
 
 #include "UtilityCore.h"
 #include "Utility/YamlUtils.h"
-#include "File.h"
-#include "Directory.h"
+#include "Filesystem/File.h"
+#include "Filesystem/Directory.h"
 
 #include "Hazard/Assets/Asset.h"
 #include "Hazard/Assets/AssetManager.h"
