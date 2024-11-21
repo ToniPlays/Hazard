@@ -1,8 +1,6 @@
 #include <hzrpch.h>
 #include "ShaderCompiler.h"
 
-#ifdef HZR_SHADER_COMPILER
-
 #include "Math/MathCore.h"
 #include "CompileException.h"
 #include "Utility/StringUtil.h"
@@ -20,6 +18,7 @@ namespace Hazard
 
 	std::string ShaderCompiler::GetShaderFromSource(uint32_t type, const std::string& source, RenderAPI api)
 	{
+#ifdef SHADER_COMPILER
 		switch (api)
 		{
 			case RenderAPI::OpenGL:
@@ -117,6 +116,9 @@ namespace Hazard
 			}
 			default: return "";
 		}
+    #else
+        return "";
+    #endif
 	}
 
 	std::unordered_map<uint32_t, std::string> ShaderCompiler::GetShaderSources(const std::filesystem::path& path)
@@ -179,4 +181,3 @@ namespace Hazard
 		return success;
 	}
 }
-#endif

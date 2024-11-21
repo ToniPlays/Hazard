@@ -7,10 +7,10 @@
 #include "Tests/CoroutineTest.h"
 #include "Tests/JobSystemTest.h"
 
-/*#include "Tests/TriangleTest.h"
+#include "Tests/TriangleTest.h"
 #include "Tests/TexturedQuad.h"
 #include "Tests/UniformBufferTest.h"
-#include "Tests/ComputeShaderTest.h"*/
+#include "Tests/ComputeShaderTest.h"
 
 using namespace Hazard;
 
@@ -69,11 +69,11 @@ void TestFramework::Init()
 	Application::GetModule<InputManager>().InvalidateSchema(schema);
 
     //m_Tests.push_back(new CoroutineTest());
-    m_Tests.push_back(new JobGraphTest());/*
+    //m_Tests.push_back(new JobGraphTest());/*
 	m_Tests.push_back(new TriangleTest());
 	m_Tests.push_back(new TexturedQuadTest());
 	m_Tests.push_back(new UniformBufferTest());
-	m_Tests.push_back(new ComputeShaderTest());*/
+	m_Tests.push_back(new ComputeShaderTest());
 
     GenerateShaders();
 
@@ -84,6 +84,12 @@ void TestFramework::Update()
 {
 	if (m_CurrentTest)
 		m_CurrentTest->Run();
+}
+
+bool TestFramework::OnEvent(Event& e)
+{
+    std::cout << e.ToString() << std::endl;
+    return false;
 }
 
 void TestFramework::GenerateShaders()

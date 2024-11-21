@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Event.h"
+
 class Test
 {
 public:
@@ -9,6 +11,7 @@ public:
 	virtual void Init() = 0;
 	virtual void Run() = 0;
 	virtual void Terminate() = 0;
+    virtual void OnEvent(Event& e) = 0;
 
 	virtual const char* GetName() = 0;
 };

@@ -1,5 +1,7 @@
 #include <hzrpch.h>
+#if defined(HZR_PLATFORM_WINDOWS) || defined(HZR_PLATFORM_MACOS)
 #include "AssimpImporter.h"
+
 
 #include "Hazard/RenderContext/TextureFactory.h"
 
@@ -483,3 +485,4 @@ namespace Hazard
 	}
 
 }
+#endif

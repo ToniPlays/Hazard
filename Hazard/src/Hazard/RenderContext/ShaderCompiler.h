@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Core.h"
-#ifdef HZR_SHADER_COMPILER
 
 #include "Core/Rendering/Shader.h"
 #include "Core/RenderContextCreateInfo.h"
@@ -114,4 +113,3 @@ namespace Hazard
 		static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
 	};
 }
-#endif

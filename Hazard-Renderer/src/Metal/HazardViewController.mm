@@ -4,11 +4,14 @@
 #include <iostream>
 #import "HazardViewController.h"
 #import "GestureDelegate.h"
+#include "Core/Window.h"
 #include "Input.h"
+#include "IOSUtils.h"
 
 @implementation HazardViewController
 {
     MTKView* m_MTKView;
+    HazardRenderer::IOSWindow* m_Window;
 }
 
 - (void)viewDidLoad
@@ -19,6 +22,7 @@
     [self SetupRecognizers];
     [self OnViewLoaded];
 }
+
 - (MTKView *)GetMTKView
 {
     return m_MTKView;
@@ -28,11 +32,21 @@
 {
     HZR_ASSERT(false, "Must override ViewController");
 }
+
+- (void)SetWindow: (HazardRenderer::IOSWindow*)window
+{
+    m_Window = window;
+}
+
 - (void)SetupRecognizers
 {
     GestureDelegate* delegate = [[GestureDelegate alloc] initWithTarget: self action: @selector(handleGesture:)];
     
     [[self view] addGestureRecognizer: delegate];
+    
+    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:[UIDevice currentDevice]];
+    
 }
 - (void)handleGesture:(GestureDelegate*)delegate
 {
@@ -63,6 +77,16 @@
         default: return;
     }
 }
+- (void)orientationChanged: (NSNotification*) note
+{
+    using namespace HazardRenderer;
+    UIDevice* device = note.object;
+    Orientation orientation = IOSUtils::GetWindowOrientation(0);
+    if((uint8_t)orientation == 0) return;
+    
+    HazardRenderer::IOSUtils::OnDeviceOrientationChanged(orientation);
+}
+
 @end
 
 #endif

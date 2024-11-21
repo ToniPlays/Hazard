@@ -21,6 +21,8 @@
             UIApplication* app = [UIApplication sharedApplication];
             HazardViewController* controller = (HazardViewController*)[[[app delegate] window] rootViewController];
             
+            [controller SetWindow: &(IOSWindow&)window];
+            
             MTKView* view = [controller GetMTKView];
             view.drawableSize = size;
             view.backgroundColor = [UIColor whiteColor];
@@ -41,7 +43,7 @@
             metalLayer.frame.size = { (CGFloat)m_Width, (CGFloat)m_Height };
             metalLayer.drawableSize = metalLayer.frame.size;
         }
-
+        
         CA::MetalDrawable* MetalWindowLayer::GetNextDrawable()
         {
             CAMetalLayer* metalLayer = (__bridge CAMetalLayer*)m_Layer;

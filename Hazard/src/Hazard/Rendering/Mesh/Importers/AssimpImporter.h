@@ -1,5 +1,7 @@
 #pragma once
 
+#if defined(HZR_PLATFORM_WINDOWS) || defined(HZR_PLATFORM_MACOS)
+
 #include "MeshImporter.h"
 #include "assimp/Importer.hpp"
 #include <assimp/scene.h>
@@ -67,3 +69,4 @@ namespace Hazard
 		std::function<void(float)> m_Func;
 	};
 }
+#endif

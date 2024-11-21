@@ -4,6 +4,7 @@
 #ifdef HZR_PLATFORM_IOS
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @implementation GestureDelegate
 
@@ -13,6 +14,7 @@
     {
         
     }
+    
     return self;
 }
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event

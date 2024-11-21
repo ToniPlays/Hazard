@@ -39,6 +39,7 @@ namespace HazardRenderer
 
         unsigned int GetWidth() const override { return m_WindowData.Width; }
         unsigned int GetHeight() const override { return m_WindowData.Height; }
+        SafeArea GetSafeArea() const override;
 
         bool IsVSync() const override { return m_WindowData.VSync; }
         bool IsFocused() const override { return m_WindowData.focus; }
@@ -54,15 +55,9 @@ namespace HazardRenderer
         WindowProps& GetWindowInfo() override { return m_WindowData; }
         GraphicsContext* GetContext() const override { return m_Context; };
         Ref<Swapchain> GetSwapchain() override { return m_Context->GetSwapchain(); }
-        void SetDebugCallback(const RendererMessageCallback& callback) override
-        {
-            s_DebugCallback = callback;
-            
-            for (auto& m : s_QueueMessages)
-                s_DebugCallback(m);
-            
-            s_QueueMessages.clear();
-        }
+        
+        void AddDebugCallback(const RendererMessageCallback& callback) override;
+        
     private:
         void SetCallbacks();
         

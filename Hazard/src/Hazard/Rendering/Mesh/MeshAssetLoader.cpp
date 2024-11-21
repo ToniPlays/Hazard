@@ -55,6 +55,7 @@ namespace Hazard
 
 	Ref<JobGraph> MeshAssetLoader::Create(const CreateAssetSettings& settings)
 	{
+#if defined(HZR_PLATFORM_WINDOWS) || defined(HZR_PLATFORM_MACOS)
 		CreateSettings importSettings;
 		if (settings.Settings != nullptr)
 			importSettings = *(CreateSettings*)settings.Settings;
@@ -74,6 +75,9 @@ namespace Hazard
 		};
 
 		return Ref<JobGraph>::Create(info);
+#else
+        return nullptr;
+#endif
 	}
 
 	void MeshAssetLoader::PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings)

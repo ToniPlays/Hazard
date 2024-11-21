@@ -4,7 +4,6 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "MetalPhysicalDevice.h"
-#include <GLFW/glfw3.h>
 
 namespace HazardRenderer::Metal
 {

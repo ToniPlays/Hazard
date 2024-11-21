@@ -21,6 +21,8 @@ namespace HazardRenderer::Metal {
 
     void MetalSwapchain::Create(uint32_t* width, uint32_t* height, bool vsync)
     {
+        if(*width == 0 || *height == 0) return;
+        
         m_RenderCommandBuffer = RenderCommandBuffer::CreateFromSwapchain("Swapchain");
         
         if (m_DefaultFramebuffer)

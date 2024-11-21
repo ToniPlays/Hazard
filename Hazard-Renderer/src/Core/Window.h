@@ -15,6 +15,24 @@ namespace HazardRenderer
 	class Window;
 	class Swapchain;
 
+    enum class Orientation : uint8_t
+    {
+        LandscapeLeft = BIT(0),
+        LandscapeRight = BIT(1),
+        Portrait = BIT(2),
+        PortraitInverse = BIT(3),
+        AnyPortrait = Portrait | PortraitInverse,
+        AnyLandscape = LandscapeLeft | LandscapeRight,
+    };
+
+    struct SafeArea
+    {
+        uint32_t Top;
+        uint32_t Right;
+        uint32_t Bottom;
+        uint32_t Left;
+    };
+
 	struct WindowProps
     {
 		friend class Window;
@@ -25,6 +43,7 @@ namespace HazardRenderer
 
 		uint32_t Width = 0;
 		uint32_t Height = 0;
+        uint8_t Orientation = (uint8_t)Orientation::LandscapeLeft;
 		float RefreshRate = 0.0f;
 
 		bool VSync = false;
@@ -84,6 +103,7 @@ namespace HazardRenderer
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
+        virtual SafeArea GetSafeArea() const = 0;
 
 		virtual const WindowProps& GetWindowInfo() = 0;
 		virtual GraphicsContext* GetContext() const = 0;

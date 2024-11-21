@@ -1,31 +1,33 @@
 #pragma once
 
 #include "Event.h"
+#include "Core/Window.h"
 #include <sstream>
 #include "GamepadCodes.h"
+#include <spdlog/fmt/fmt.h>
 
 class WindowResizeEvent : public Event
 {
 public:
-	WindowResizeEvent(unsigned int width, unsigned int height)
-		: m_Width(width), m_Height(height)
+    WindowResizeEvent(uint32_t width, uint32_t height, uint8_t orientation = (uint8_t)HazardRenderer::Orientation::LandscapeLeft)
+		: m_Width(width), m_Height(height), m_Orientation(orientation)
 	{
 	}
 
-	inline unsigned int GetWidth() const { return m_Width; }
-	inline unsigned int GetHeight() const { return m_Height; }
+	inline uint32_t GetWidth() const { return m_Width; }
+	inline uint32_t GetHeight() const { return m_Height; }
+    inline uint8_t GetOrientation() const { return m_Orientation; }
 
 	std::string ToString() const override
 	{
-		std::stringstream ss;
-		ss << "Window resized: " << m_Width << "x" << m_Height;
-		return ss.str();
+        return fmt::format("Window resize event: {}x{} ({})", m_Width, m_Height, m_Orientation);
 	}
 	EVENT_CLASS_TYPE(WindowResize);
 	EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
 private:
-	unsigned int m_Width, m_Height;
+	uint32_t m_Width, m_Height;
+    uint8_t m_Orientation;
 };
 
 class WindowCloseEvent : public Event

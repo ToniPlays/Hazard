@@ -74,3 +74,11 @@ void TriangleTest::Terminate()
 {
     
 }
+
+void TriangleTest::OnEvent(Event& e)
+{
+    if(e.GetEventType() == WindowResizeEvent::GetStaticType())
+    {
+        float i = 0;
+    }
+}
