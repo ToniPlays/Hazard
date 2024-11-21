@@ -89,7 +89,6 @@ namespace Hazard
 	void ScriptEngine::ReloadAssemblies()
 	{
 		Application::Get().SubmitMainThread([&]() {
-
 			for (auto& [uid, ctx] : m_WorldContext)
 			{
 				//Destroy all instances

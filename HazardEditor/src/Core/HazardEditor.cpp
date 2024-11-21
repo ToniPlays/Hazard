@@ -55,9 +55,9 @@ void HazardEditorApplication::PreInit()
 	EntityComponentCreateInfo entity = {};
 
 	std::filesystem::path projectPath = CommandLineArgs::Get<std::filesystem::path>("hprj");
-	std::filesystem::path dllFile = File::GetName(projectPath) + ".dll";
-	std::filesystem::path coreAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / "HazardScripting.dll";
-	std::filesystem::path appAssemblyPath = projectPath / "Library" / "Scripts" / "Binaries" / dllFile;
+	std::filesystem::path dllFile = File::GetNameNoExt(projectPath) + ".dll";
+    std::filesystem::path coreAssemblyPath = std::filesystem::current_path().parent_path() / "HazardScripting" / "bin" / "Debug" / "net8.0" / "HazardScripting.dll";
+	std::filesystem::path appAssemblyPath = projectPath.parent_path() / "Library" / "Scripts" / "Binaries" / dllFile;
 
 	ScriptEngineCreateInfo scriptEngine = {
 		.CoralDirectory = projectPath.parent_path() / "Library" / "Scripts" / "Binaries",
@@ -113,14 +113,6 @@ bool HazardEditorApplication::OnEvent(Event& e)
 void HazardEditorApplication::InitJobsystemHooks()
 {
 	JobSystem& system = Application::Get().GetJobSystem();
-	
-	system.Hook(JobSystemHook::Finished, [](Ref<JobGraph> graph) {
-		//HZR_TRACE("Job graph {} finished", graph->GetName());
-	});
-	
-	system.Hook(JobSystemHook::Failure, [](Ref<JobGraph> graph) {
-		HZR_ERROR("Job graph {} has failed at {}", graph->GetName(), graph->GetStageName());
-	});
 
 	system.Hook(JobSystemHook::Message, [](Severity severity, const std::string& message) {
         return;

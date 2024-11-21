@@ -132,8 +132,17 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		stream.close();
 
 		std::ofstream out(project.Path / "Project" / "Win-CreateScriptProject.bat");
-		out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", OS::GetEnv("HAZARD_DIR"));
+        out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", m_InstallationLocation);
 	}
+    {
+        std::ifstream stream(project.Path / "Project" / "Mac-CreateScriptProject.sh");
+        std::stringstream ss;
+        ss << stream.rdbuf();
+        stream.close();
+
+        std::ofstream out(project.Path / "Project" / "Mac-CreateScriptProject.sh");
+        out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", m_InstallationLocation);
+    }
 	{
 		std::ifstream stream(project.Path / "Project" / "BuildSolution.bat");
 		std::stringstream ss;
@@ -157,7 +166,7 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 #ifdef HZR_PLATFORM_WINDOWS
 	std::filesystem::path genProjectPath = project.Path / "Project" / "Win-CreateScriptProject.bat";
 #elif HZR_PLATFORM_MACOS
-    std::filesystem::path genProjectPath = project.Path / "Project" / "Mac-CreateScriptProject.bat";
+    std::filesystem::path genProjectPath = project.Path / "Project" / "Mac-CreateScriptProject.sh";
 #endif
     
 	void* id = OS::BackgroundProcess(genProjectPath.string().c_str(), "");
@@ -165,8 +174,13 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 	
 	HZR_THREAD_DELAY(500ms);
 	{
+#ifdef HZR_PLATFORM_WINDOWS
 		std::filesystem::path buildPath = project.Path / "Project" / "BuildSolution.bat";
-		OS::SysCall(buildPath.string().c_str());
+        OS::SysCall(buildPath.string().c_str());
+#elif defined(HZR_PLATFORM_MACOS)
+        //std::filesystem::path buildPath = project.Path / "Project" / "BuildSolution.bat";
+#endif
+        
 	}
 
 	m_LoadedProjects.push_back(project);

@@ -45,7 +45,7 @@ namespace UI
 		});
 
 		AddMenuItem("Tools/Task list", [&]() {
-			//Application::Get().GetModule<GUIManager>().SetPanelOpen<ProjectTodoPanel>(true);
+			
 		});
 
 		AddMenuItem("Tools/World", nullptr);
@@ -108,6 +108,10 @@ namespace UI
 			auto& manager = Application::Get().GetModule<GUIManager>();
 			manager.GetExistingOrNew<PerformanceDebugPanel>().BringToFront();
 		});
+        AddMenuItem("Window/Debug/Script debugger", [&]() {
+            auto& manager = Application::Get().GetModule<GUIManager>();
+            manager.GetExistingOrNew<ScriptDebugPanel>().BringToFront();
+        });
 
 		AddMenuItem("Help/About");
 	}

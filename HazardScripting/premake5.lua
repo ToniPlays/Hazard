@@ -1,7 +1,7 @@
 project "HazardScripting"
 	kind "SharedLib"
 	language "C#"
-	dotnetframework "net7.0"
+	dotnetframework "net8.0"
 	clr "unsafe"
 
 	files

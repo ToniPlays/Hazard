@@ -1,2 +1,2 @@
 cd ..
-/users/Hazard/vendor/premake/bin/premake5 vs2019
+%HAZARD_DIR%/vendor/premake/bin/premake5 vs2022

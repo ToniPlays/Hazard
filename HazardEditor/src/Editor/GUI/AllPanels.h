@@ -9,6 +9,7 @@
 #include "Debug/PerformanceDebugPanel.h"
 #include "Debug/AssetManagerDebugPanel.h"
 #include "Debug/Console.h"
+#include "Debug/ScriptDebugPanel.h"
 
 #include "Overlays/ProgressOverlay.h"
 

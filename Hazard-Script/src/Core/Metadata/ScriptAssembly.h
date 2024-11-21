@@ -26,13 +26,16 @@ namespace HazardScript
 
 		std::string GetName() const { return File::GetNameNoExt(m_Path); }
 		std::string_view GetQualifiedName() const { return m_Assembly.GetName(); }
+        const std::vector<Coral::Type*> GetTypes() const { return m_Assembly.GetTypes(); }
 
 		Coral::Type& GetTypeByName(std::string_view typeName) const { return m_Assembly.GetType(typeName); }
 
 		void SetSourcePath(const std::filesystem::path& path) { m_Path = path; }
 		std::filesystem::path GetSourcePath() const { return m_Path; }
 
-		std::vector<ReferencedAssembly>& GetReferencedAssemblies() { return m_ReferencedAssemblies; }
+        std::vector<ReferencedAssembly>& GetReferencedAssemblies() {
+            return m_ReferencedAssemblies;
+        }
 
 		bool HasScript(const std::string& name) const
 		{

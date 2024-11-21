@@ -31,9 +31,8 @@ void* OS::BackgroundProcess(const char* path, const char* arguments)
     }
     
     std::vector<char*> argv;
-    for (auto& t : tokens) {
+    for (auto& t : tokens)
         argv.push_back(t.data());
-    }
     
     posix_spawnattr_init(&attr);
     posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSID);

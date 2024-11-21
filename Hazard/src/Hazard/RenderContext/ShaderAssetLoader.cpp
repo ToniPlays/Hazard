@@ -104,7 +104,6 @@ namespace Hazard
 				.Flags = stageFlags
 			};
             
-            HZR_CORE_INFO("Shader compiled {} for {}", Utils::ShaderStageToString(stageFlags), HazardRenderer::RenderAPIToString((RenderAPI)api));
             info.Result(result);
 		}
         catch (CompileException e)

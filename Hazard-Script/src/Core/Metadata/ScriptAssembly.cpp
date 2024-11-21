@@ -11,8 +11,10 @@ namespace HazardScript
 		std::string path = File::GetFileAbsolutePath(m_Path).lexically_normal().string();
 		m_Host = host;
 		m_Assembly = context.LoadAssembly(path);
-
-		return m_Assembly.GetLoadStatus() == Coral::AssemblyLoadStatus::Success;
+        
+		bool loaded = m_Assembly.GetLoadStatus() == Coral::AssemblyLoadStatus::Success;
+        HZR_VERIFY(loaded, "Assembly loaded");
+        return loaded;
 	}
 	
 	void ScriptAssembly::AddInternalCall(std::string_view className, std::string_view functionName, void* funcPtr)

@@ -24,9 +24,11 @@
 #ifdef HZR_DEBUG
 	#ifndef HZR_ASSERT
 		#define HZR_ASSERT(x, m) if(!(x)) { std::cout << (m) << std::endl; assert(false); }
+        #define HZR_VERIFY(x, m) if(x) { std::cout << (m) << std::endl; }
 	#endif
 #else
 #define HZR_ASSERT(x, m) (x)
+#define HZR_VERIFY(x, m) (x)
 #endif
 
 #if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)

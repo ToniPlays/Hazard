@@ -70,7 +70,6 @@ namespace HazardRenderer::Metal
         {
             std::vector<uint32_t> res(result.cbegin(), result.cend());
             m_ResultBinary = Buffer::Copy(res.data(), res.size() * sizeof(uint32_t));
-            std::cout << res.size() << std::endl;
         }
         else
             m_ErrorMessage = result.GetErrorMessage();

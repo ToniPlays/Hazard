@@ -47,7 +47,6 @@ namespace HazardScript
 	}
 	void HazardScriptEngine::Reload()
 	{
-		return;
 		HZR_PROFILE_FUNCTION();
 		std::scoped_lock lock(m_ReloadMutex);
 		Coral::GC::Collect();
@@ -102,7 +101,6 @@ namespace HazardScript
 				std::cout << msg << std::endl;
 			}),
 		};
-
-		//HZR_ASSERT(m_HostInstance.Initialize(settings), "Failed to initialize Coral");
+		HZR_ASSERT(m_HostInstance.Initialize(settings) == Coral::CoralInitStatus::Success, "Failed to initialize Coral");
 	}
 }

@@ -8,7 +8,6 @@ namespace Hazard.Rendering
 {
     public struct IndexBufferCreateInfo
     {
-        public BufferUsage Usage;
         public uint Size;
         public uint[] Data;
     }

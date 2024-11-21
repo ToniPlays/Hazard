@@ -4,10 +4,9 @@ ProjectName = "%PROJECT_NAME%"
 HazardDirectory = os.getenv("HAZARD_DIR");
 
 workspace "%{ProjectName}"
-  architecture "x64"
   targetdir "build"
   startproject "%{ProjectName}"
-  dotnetframework "4.7.1"
+  dotnetframework "net8.0"
   
 
   configurations {

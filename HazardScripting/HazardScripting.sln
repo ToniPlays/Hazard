@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.810.25
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HazardScripting", "HazardScripting.csproj", "{AA90A497-103F-4F6C-8787-5395C5E6078D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+		Dist|x64 = Dist|x64
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Debug|x64.ActiveCfg = Debug|x64
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Debug|x64.Build.0 = Debug|x64
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Release|x64.ActiveCfg = Release|x64
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Release|x64.Build.0 = Release|x64
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Dist|x64.ActiveCfg = Dist|x64
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Dist|x64.Build.0 = Dist|x64
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA90A497-103F-4F6C-8787-5395C5E6078D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6AA9D71A-4A50-41E1-A5EA-40EA6ED3B7AD}
+	EndGlobalSection
+EndGlobal

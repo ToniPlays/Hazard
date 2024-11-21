@@ -54,6 +54,7 @@ namespace HazardRenderer {
 
         unsigned int GetWidth() const override { return m_WindowData.Width; }
         unsigned int GetHeight() const override { return m_WindowData.Height; }
+        SafeArea GetSafeArea() const override { return SafeArea(); };
 
         bool IsVSync() const override { return m_WindowData.VSync; }
         bool IsFocused() const override { return m_WindowData.focus; }
