@@ -55,9 +55,9 @@ void HazardEditorApplication::PreInit()
 	EntityComponentCreateInfo entity = {};
 
 	std::filesystem::path projectPath = CommandLineArgs::Get<std::filesystem::path>("hprj");
-	std::filesystem::path dllFile = File::GetNameNoExt(projectPath) + ".dll";
+	std::filesystem::path dllFile = File::GetNameNoExt(projectPath.parent_path()) + ".dll";
     std::filesystem::path coreAssemblyPath = std::filesystem::current_path().parent_path() / "HazardScripting" / "bin" / "Debug" / "net8.0" / "HazardScripting.dll";
-	std::filesystem::path appAssemblyPath = projectPath.parent_path() / "Library" / "Scripts" / "Binaries" / dllFile;
+	std::filesystem::path appAssemblyPath = projectPath.parent_path() / "Library" / "Scripts" / "Binaries" / "net8.0" / dllFile;
 
 	ScriptEngineCreateInfo scriptEngine = {
 		.CoralDirectory = std::filesystem::current_path() / "res" / "Scripting" / "Core",

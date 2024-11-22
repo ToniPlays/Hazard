@@ -6,6 +6,7 @@
 
 #include "Platform/OS.h"
 #include <Exporter/RuntimeExporter.h>
+#include "EditorScripting/EditorScriptManager.h"
 
 namespace UI
 {
@@ -32,9 +33,12 @@ namespace UI
 		AddMenuItem("Edit/Cut", nullptr);
 		AddMenuItem("Edit/Copy", nullptr);
 		AddMenuItem("Edit/Paste", nullptr);
-		//AddMenuItem("Edit/Reload assemblies", []() {
-		//	((HazardEditorApplication&)Application::Get()).GetScriptManager().RecompileAndLoad();
-		//});
+		AddMenuItem("Edit/Scripting/Reload", []() {
+            EditorScriptManager::RecompileScripts();
+		});
+        AddMenuItem("Edit/Scripting/Generate projects", []() {
+            EditorScriptManager::GenerateScriptProjects();
+        });
 
 		AddMenuItem("Assets/Import", nullptr);
 		AddMenuItem("Assets/Export", nullptr);

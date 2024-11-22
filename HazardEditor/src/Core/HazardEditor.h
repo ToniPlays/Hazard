@@ -32,6 +32,4 @@ public:
 private:
 	void InitJobsystemHooks();
 	void InitializeGUIPanels();
-
-private:
 };

@@ -28,7 +28,7 @@ namespace Hazard
 		template<typename T>
 		T* GetRenderable(uint32_t id)
 		{
-			return FindRenderable<T>(id);
+			return (T*)FindRenderable<T>(id);
 		}
 
 		template<typename T>

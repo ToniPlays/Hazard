@@ -6,47 +6,39 @@
 #include "File.h"
 #include "Directory.h"
 
+#include <iostream>
 #include <spawn.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <cstdlib>
-
-extern char** environ;
+#include <stdio.h>
+#include <spdlog/fmt/fmt.h>
 
 int OS::SysCall(const char* command)
 {
     return system(command);
 }
-void* OS::BackgroundProcess(const char* path, const char* arguments)
+std::string OS::BackgroundProcess(const char* path, const char* arguments)
 {
-    pid_t pid;
-    posix_spawnattr_t attr;
-    
-    std::istringstream iss(arguments);
-    std::vector<std::string> tokens;
-    std::string token;
-    while (iss >> token) {
-        tokens.push_back(token);
+    std::string command = fmt::format("{} {}", path, arguments);
+    std::array<char, 128> buffer;
+    std::stringstream ss;
+
+    FILE* pipe = popen(command.c_str(), "r");
+    if (!pipe) {
+        std::cerr << "Could not run command" << std::endl;
+        return nullptr;
     }
-    
-    std::vector<char*> argv;
-    for (auto& t : tokens)
-        argv.push_back(t.data());
-    
-    posix_spawnattr_init(&attr);
-    posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSID);
-    int status = posix_spawnp(&pid, path, nullptr, &attr, argv.data(), environ);
-    
-    posix_spawnattr_destroy(&attr);
-    
-    return (void*)pid;
-    
+
+    while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
+        ss << buffer.data(); // Log to console in real time
+    }
+
+    pclose(pipe);
+    return ss.str();
 }
-void OS::WaitForProcess(void* handle)
-{
-    
-}
+
 bool OS::HasEnv(const char* key)
 {
     return GetEnv(key) != nullptr;

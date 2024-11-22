@@ -1,7 +1,6 @@
 include "Project/Includes/functional.lua"
 
 ProjectName = "%PROJECT_NAME%"
-HazardDirectory = os.getenv("HAZARD_DIR");
 
 workspace "%{ProjectName}"
   targetdir "build"
@@ -29,5 +28,5 @@ workspace "%{ProjectName}"
       "Assets/**.cs"
     }
     links {
-      "%{HazardDirectory}/HazardScripting/bin/debug/net7.0/HazardScripting.dll"
+      "Library/Scripts/Binaries/HazardScripting.dll"
     }

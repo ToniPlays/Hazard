@@ -79,6 +79,7 @@ namespace UI
 			m_CreateInfo.Path = path;
 			Application::Get().SubmitMainThread([this]() {
 				CreateFiles();
+                Close();
 			});
 		}
 		ImGui::EndDisabled();
@@ -136,19 +137,22 @@ namespace UI
 	}
 	void ScriptCreatePanel::CreateFiles()
 	{
-		AssetHandle handle = INVALID_ASSET_HANDLE;
+        std::string methodList = "";
 
-		if (handle != INVALID_ASSET_HANDLE)
-		{
-			std::string methodList = "";
+        for (auto& [key, method] : m_CreateInfo.Methods)
+            methodList += method + "\n";
 
-			for (auto& [key, method] : m_CreateInfo.Methods)
-				methodList += method + "\n";
-
-			std::string source = File::ReadFile("res/ScriptTemplate/TemplateScript.cs");
-			source = StringUtil::Replace(source, "%ScriptName%", m_CreateInfo.ClassName);
-			source = StringUtil::Replace(source, "%DerivesFrom%", " : " + m_CreateInfo.Derives);
-			source = StringUtil::Replace(source, "%MethodList%", methodList);
-		}
+        auto path = fmt::format("res/Scripting/Templates/{}.cs", m_CreateInfo.Derives.empty() ? "Generic" : m_CreateInfo.Derives);
+        if(!File::Exists(path))
+        {
+            HZR_CORE_WARN("Cannot create file, missing template for {}", m_CreateInfo.Derives);
+            return;
+        }
+        
+        std::string source = File::ReadFile(path);
+        source = StringUtil::Replace(source, "%ScriptName%", m_CreateInfo.ClassName);
+        source = StringUtil::Replace(source, "%DerivesFrom%", " : " + m_CreateInfo.Derives);
+        source = StringUtil::Replace(source, "%MethodList%", methodList);
+        File::WriteFile(m_CreateInfo.Path, source);
 	}
 }

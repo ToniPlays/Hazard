@@ -126,61 +126,12 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		out << StringUtil::Replace(ss.str(), "%PROJECT_NAME%", project.Name);
 	}
 	{
-		std::ifstream stream(project.Path / "Project" / "Win-CreateScriptProject.bat");
-		std::stringstream ss;
-		ss << stream.rdbuf();
-		stream.close();
-
-		std::ofstream out(project.Path / "Project" / "Win-CreateScriptProject.bat");
-        out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", m_InstallationLocation.string());
-	}
-    {
-        std::ifstream stream(project.Path / "Project" / "Mac-CreateScriptProject.sh");
-        std::stringstream ss;
-        ss << stream.rdbuf();
-        stream.close();
-
-        std::ofstream out(project.Path / "Project" / "Mac-CreateScriptProject.sh");
-        out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", m_InstallationLocation.string());
-    }
-	{
-		std::ifstream stream(project.Path / "Project" / "BuildSolution.bat");
-		std::stringstream ss;
-		ss << stream.rdbuf();
-		stream.close();
-
-		std::string csProj = project.Path.string() + "\\" + (project.Name + ".csproj");
-		std::ofstream out(project.Path / "Project" / "BuildSolution.bat");
-		std::string res = StringUtil::Replace(ss.str(), "%CSPROJ_PATH%", project.Path.string() + "/" + project.Name);
-		out << StringUtil::Replace(res, "%CSPROJ%", csProj);
-	}
-	{
 		Directory::Create(project.Path / "Assets" / "Scripts");
 		Directory::Create(project.Path / "Assets" / "Materials");
 		Directory::Create(project.Path / "Assets" / "Sprites");
 		Directory::Create(project.Path / "Assets" / "Models");
 		Directory::Create(project.Path / "Assets" / "Worlds");
 		Directory::Create(project.Path / "Assets" / "Editor");
-	}
-    
-#ifdef HZR_PLATFORM_WINDOWS
-	std::filesystem::path genProjectPath = project.Path / "Project" / "Win-CreateScriptProject.bat";
-#elif HZR_PLATFORM_MACOS
-    std::filesystem::path genProjectPath = project.Path / "Project" / "Mac-CreateScriptProject.sh";
-#endif
-    
-	void* id = OS::BackgroundProcess(genProjectPath.string().c_str(), "");
-	OS::WaitForProcess(id);
-	
-	HZR_THREAD_DELAY(500ms);
-	{
-#ifdef HZR_PLATFORM_WINDOWS
-		std::filesystem::path buildPath = project.Path / "Project" / "BuildSolution.bat";
-        OS::SysCall(buildPath.string().c_str());
-#elif defined(HZR_PLATFORM_MACOS)
-        //std::filesystem::path buildPath = project.Path / "Project" / "BuildSolution.bat";
-#endif
-        
 	}
 
 	m_LoadedProjects.push_back(project);

@@ -6,8 +6,7 @@ class OS
 {
 public:
 	static int SysCall(const char* command);
-	static void* BackgroundProcess(const char* path, const char* arguments);
-	static void WaitForProcess(void* handle);
+	static std::string BackgroundProcess(const char* path, const char* arguments);
 
 	static bool HasEnv(const char* key);
 	static const char* GetEnv(const char* key);
