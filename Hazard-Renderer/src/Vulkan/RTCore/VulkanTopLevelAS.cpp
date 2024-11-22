@@ -8,7 +8,7 @@
 #include "spdlog/fmt/fmt.h"
 
 #include "VulkanBottomLevelAS.h"
-#include <MathCore.h>
+#include <Math/MathCore.h>
 #include <vulkan/vulkan.h>
 
 static PFN_vkCmdBuildAccelerationStructuresKHR fpCmdBuildAccelerationStructuresKHR;

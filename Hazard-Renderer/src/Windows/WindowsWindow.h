@@ -6,7 +6,7 @@
 #include "Core/Window.h"
 #include "Input.h"
 #include <GLFW/glfw3.h>
-#include "Callback.h"
+#include "Utility/Callback.h"
 
 namespace HazardRenderer {
 
@@ -53,6 +53,7 @@ namespace HazardRenderer {
 
 		unsigned int GetWidth() const override { return m_WindowData.Width; }
 		unsigned int GetHeight() const override { return m_WindowData.Height; }
+		SafeArea GetSafeArea() const override { return SafeArea(); }
 
 		bool IsVSync() const override { return m_WindowData.VSync; }
 		bool IsFocused() const override { return m_WindowData.focus; }

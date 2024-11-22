@@ -8,7 +8,7 @@
 #include "VulkanContext.h"
 
 #include <vulkan/vulkan.h>
-#include <MathCore.h>
+#include <Math/MathCore.h>
 
 inline PFN_vkSetDebugUtilsObjectNameEXT fpSetDebugUtilsObjectNameEXT;
 inline PFN_vkCmdBeginDebugUtilsLabelEXT fpCmdBeginDebugUtilsLabelEXT;

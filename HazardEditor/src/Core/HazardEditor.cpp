@@ -60,7 +60,7 @@ void HazardEditorApplication::PreInit()
 	std::filesystem::path appAssemblyPath = projectPath.parent_path() / "Library" / "Scripts" / "Binaries" / dllFile;
 
 	ScriptEngineCreateInfo scriptEngine = {
-		.CoralDirectory = projectPath.parent_path() / "Library" / "Scripts" / "Binaries",
+		.CoralDirectory = std::filesystem::current_path() / "res" / "Scripting" / "Core",
 		.CoreAssemblyPath = coreAssemblyPath,
 		.AppAssemblyPath = appAssemblyPath
 	};

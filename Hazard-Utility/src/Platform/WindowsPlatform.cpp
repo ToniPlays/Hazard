@@ -6,8 +6,8 @@
 #include <commdlg.h>
 #include <Psapi.h>
 #include <Profiling/MemoryDiagnostic.h>
-#include "File.h"
-#include "Directory.h"
+#include "Filesystem/File.h"
+#include "Filesystem/Directory.h"
 
 int OS::SysCall(const char* command) 
 {

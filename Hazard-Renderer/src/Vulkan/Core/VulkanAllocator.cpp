@@ -5,7 +5,7 @@
 #include "../VKUtils.h"
 
 #include "Utility/StringUtil.h"
-#include <MathCore.h>
+#include <Math/MathCore.h>
 
 namespace HazardRenderer::Vulkan {
 

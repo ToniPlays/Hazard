@@ -132,7 +132,7 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
 		stream.close();
 
 		std::ofstream out(project.Path / "Project" / "Win-CreateScriptProject.bat");
-        out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", m_InstallationLocation);
+        out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", m_InstallationLocation.string());
 	}
     {
         std::ifstream stream(project.Path / "Project" / "Mac-CreateScriptProject.sh");
@@ -141,7 +141,7 @@ bool HazardLauncherManager::CreateProject(const HazardProject& project)
         stream.close();
 
         std::ofstream out(project.Path / "Project" / "Mac-CreateScriptProject.sh");
-        out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", m_InstallationLocation);
+        out << StringUtil::Replace(ss.str(), "%HAZARD_DIR%", m_InstallationLocation.string());
     }
 	{
 		std::ifstream stream(project.Path / "Project" / "BuildSolution.bat");

@@ -312,6 +312,9 @@
     <ClInclude Include="src\Hazard\Physics\PhysicsCommand.h">
       <Filter>src\Hazard\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\CompileException.h">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\ImageAssetLoader.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
@@ -495,7 +498,6 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\CompileException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

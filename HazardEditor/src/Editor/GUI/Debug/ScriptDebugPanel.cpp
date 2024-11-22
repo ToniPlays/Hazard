@@ -28,6 +28,7 @@ namespace UI
         table.SetColumns({ "Assembly", "Type" });
         table.RowHeight(24.0f);
         table.RowContent([&](uint32_t, TypeData& type) {
+            ImUI::ShiftX(4.0f);
             ImGui::Text("%s", type.Assembly.c_str());
             ImGui::TableNextColumn();
             ImUI::ShiftX(4.0f);
