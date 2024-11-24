@@ -18,7 +18,7 @@ namespace UI
 		});
 
 		scriptEngine.AddDebugCallback([this](const HazardScript::ScriptMessage& message) {
-			AddMessage({ message.Message, message.StackTrace, GetMessageFlagsFromSeverity(Severity::Error) });
+			AddMessage({ message.Message, message.StackTrace, GetMessageFlagsFromSeverity(message.Severity) });
 		});
 
 		JobSystem& system = Application::Get().GetJobSystem();

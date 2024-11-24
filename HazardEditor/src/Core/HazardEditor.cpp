@@ -46,8 +46,8 @@ void HazardEditorApplication::PreInit()
 	RenderContextCreateInfo renderContextInfo = {
 		.Renderer = RenderAPI::Auto,
 		.Title = fmt::format("Hazard Editor | {} | {}", RenderAPIToString(RenderAPI::Auto), GetBuildType()),
-		.Width = 1920,
-		.Height = 1080,
+		.Width = 1440,
+		.Height = 900,
 		.VSync = CommandLineArgs::Get<bool>("VSync"),
 	};
 
@@ -108,6 +108,26 @@ void HazardEditorApplication::Update()
 bool HazardEditorApplication::OnEvent(Event& e)
 {
 	return false;
+}
+
+void HazardEditorApplication::BeginPlayMode(Ref<Hazard::World> world)
+{
+    using namespace Hazard;
+    m_EditorWorld = world;
+    auto& handler = GetModule<WorldHandler>();
+    handler.SetWorld(World::Copy(world));
+    handler.SetFlags(WorldFlags_UpdateScript | WorldFlags_Render);
+    handler.OnBegin();
+}
+
+void HazardEditorApplication::EndPlayMode()
+{
+    using namespace Hazard;
+    auto& handler = GetModule<WorldHandler>();
+    handler.OnEnd();
+    handler.SetWorld(m_EditorWorld);
+    handler.SetFlags(WorldFlags_Render);
+    m_EditorWorld = nullptr;
 }
 
 void HazardEditorApplication::InitJobsystemHooks()

@@ -32,7 +32,7 @@ std::string OS::BackgroundProcess(const char* path, const char* arguments)
     }
 
     while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
-        ss << buffer.data(); // Log to console in real time
+        ss << buffer.data();
     }
 
     pclose(pipe);
@@ -70,7 +70,9 @@ bool OS::OpenDirectory(const std::filesystem::path& path)
     auto abs = File::GetFileAbsolutePath(path);
     if (!File::Exists(path)) return false;
 
-    return false;
+    SysCall(fmt::format("open {}", path.string()).c_str());
+    
+    return true;
 }
 bool OS::OpenInDefault(const std::filesystem::path& path)
 {

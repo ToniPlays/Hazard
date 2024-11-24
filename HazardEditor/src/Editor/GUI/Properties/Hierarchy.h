@@ -11,7 +11,8 @@
 
 namespace UI 
 {
-	class Hierarchy : public Hazard::ImUI::Panel {
+	class Hierarchy : public Hazard::ImUI::Panel
+    {
 	public:
 		Hierarchy();
 
@@ -23,7 +24,7 @@ namespace UI
 
 	private:
 		void DrawModifiers(Hazard::Entity& e, Hazard::TagComponent& tag);
-		void DrawContextMenu(Hazard::World& world);
+		void DrawContextMenu();
 		void SelectEntity(const Hazard::Entity& entity);
 		void DeselectEntity(const Hazard::Entity& entity);
 		void ClearSelected();

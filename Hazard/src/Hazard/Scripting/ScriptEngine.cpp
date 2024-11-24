@@ -15,6 +15,7 @@ namespace Hazard
 	{
 		m_Info = *info;
 	}
+
 	void ScriptEngine::PreInit()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -56,6 +57,7 @@ namespace Hazard
 
 		RegisterScriptGlueFor<InternalCalls>(coreAssembly);
 	}
+
 	void ScriptEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
@@ -86,6 +88,7 @@ namespace Hazard
 		HZR_CORE_INFO(message.Message);
 		m_Engine->SendDebugMessage(message);
 	}
+
 	void ScriptEngine::ReloadAssemblies()
 	{
 		Application::Get().SubmitMainThread([&]() {
@@ -139,10 +142,12 @@ namespace Hazard
 		m_Instances[entity.GetUID()] = targetWorld->GetHandle();
 		m_WorldContext[targetWorld->GetHandle()] = targetWorld;
 	}
+
 	void ScriptEngine::RemoveComponent(Ref<World> targetWorld, const Entity& entity)
 	{
 		m_Instances.erase(entity.GetUID());
 	}
+
 	const std::vector<Ref<ScriptAssembly>>& ScriptEngine::GetAssemblies()
 	{
 		return m_Engine->GetAssemblies();

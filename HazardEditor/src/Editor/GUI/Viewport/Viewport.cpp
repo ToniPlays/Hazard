@@ -1,6 +1,7 @@
 
 #include "Viewport.h"
 #include "Hazard/Math/Time.h"
+#include "Core/HazardEditor.h"
 #include "Editor/EditorWorldManager.h"
 #include "Hazard/Rendering/HRenderer.h"
 
@@ -147,8 +148,9 @@ namespace UI
 			OnMouseClicked(pos);
 		}
 
-		ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle assetHandle) {
-			Application::Get().SubmitMainThread([handle = assetHandle]() mutable {
+        ImUI::DropTarget<std::filesystem::path>(AssetType::World, [](const auto& path) {
+			Application::Get().SubmitMainThread([path]() mutable {
+                auto handle = AssetManager::AssetHandleFromFile(path);
 				Editor::EditorWorldManager::LoadWorld(handle);
 			});
 		});
@@ -387,15 +389,18 @@ namespace UI
 		ImGui::BeginChild("##mode", { 90, 36 });
 		ImGui::SameLine(0, 0);
 
-        const int mode = 1;
+        static int mode = 0;
+        const int m = mode;
 
-		if (mode == 0)
+		if (m == 0)
 			ImGui::BeginDisabled();
 		if (ImUI::ColoredButton((const char*)ICON_FK_STOP, { 0, 0, 0, 0 }, style.Window.Text, { 30, 36 }))
 		{
-			//Editor::EditorModeManager::EndPlayMode();
+            HazardEditorApplication& app = (HazardEditorApplication&)Application::Get();
+            app.EndPlayMode();
+            mode = 0;
 		}
-		if (mode == 0)
+		if (m == 0)
 			ImGui::EndDisabled();
 
 		ImGui::SameLine(0, 0);
@@ -406,14 +411,20 @@ namespace UI
 
 		ImGui::SameLine(0, 0);
 
-		if (mode != 1)
+		if (m == 1)
 			ImGui::BeginDisabled();
 
 		if (ImUI::ColoredButton((const char*)ICON_FK_PLAY, { 0, 0, 0, 0 }, style.Window.Text, { 30, 36 }))
 		{
-			//Editor::EditorModeManager::BeginPlayMode();
+            auto renderer = Editor::EditorWorldManager::GetWorldRender();
+            Ref<World> world = renderer->GetTargetWorld();
+            
+            HazardEditorApplication& app = (HazardEditorApplication&)Application::Get();
+            app.BeginPlayMode(world);
+            mode = 1;
 		}
-		if (mode != 1)
+        
+		if (m == 1)
 			ImGui::EndDisabled();
 
 		ImGui::EndChild();

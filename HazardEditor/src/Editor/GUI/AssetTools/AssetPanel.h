@@ -64,7 +64,7 @@ namespace UI
 		void DrawCurrentFolderPath();
 
 		void DrawFolderTreeItem(const FolderStructureData& folder);
-		Ref<Hazard::Texture2DAsset> GetItemIcon(const Hazard::AssetMetadata& metadata);
+		Ref<Hazard::Texture2DAsset> GetItemIcon(const std::filesystem::path& metadata);
 
 		std::vector<FolderStructureData> GenerateFolderStructure();
 		std::vector<FolderStructureData> GenerateSubFolderData(const std::filesystem::path& folder);
@@ -86,7 +86,7 @@ namespace UI
 		uint64_t m_CurrentPathSelection = 0;
 
 		std::vector<Ref<Hazard::Texture2DAsset>> m_Textures;
-		std::unordered_map<AssetHandle, Ref<Hazard::Texture2DAsset>> m_Icons;
+		std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> m_Icons;
 
 		Hazard::ImUI::TextField m_SearchField;
 

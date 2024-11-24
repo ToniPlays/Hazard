@@ -58,7 +58,7 @@ namespace UI
 
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
 
-		if (!IsFolder())
+        if (!File::IsDirectory(m_SourcePath))
 		{
 			auto color = style.BackgroundColor;
 			if (ImGui::IsMouseHoveringRect(topLeft, bottomRight))
@@ -92,7 +92,7 @@ namespace UI
 		ImUI::Shift(edgeOffset, edgeOffset);
 		std::string name = GetName();
 
-		if (IsFolder())
+        if (File::IsDirectory(m_SourcePath))
 		{
 			ImGui::BeginVertical((std::string("InfoPanel") + name).c_str(), ImVec2(thumbnailSize - edgeOffset * 2.0f, infoPanelHeight - edgeOffset));
 			{
@@ -138,11 +138,18 @@ namespace UI
 
 		ImGui::EndGroup();
 
-		if (!IsFolder())
+        if (!File::IsDirectory(m_SourcePath))
 		{
-			ImUI::DragSource(GetMetadata().Type, &m_Handle, [&]() {
+            AssetType type = Hazard::Utils::AssetTypeFromExtension(m_SourcePath);
+            if(File::GetFileExtension(m_SourcePath) == ".hasset")
+            {
+                AssetHandle handle = AssetManager::AssetHandleFromFile(m_SourcePath);
+                type = AssetManager::GetMetadata(handle).Type;
+            }
+            
+            ImUI::DragSource(type, &m_SourcePath, [&]() {
 				ImGui::Text("%s", name.c_str());
-				ImGui::Text("%s", Hazard::Utils::AssetTypeToString(GetMetadata().Type));
+                ImGui::Text("%s", Hazard::Utils::AssetTypeToString(type));
 			});
 		}
 
@@ -157,7 +164,7 @@ namespace UI
 			else
 			{
 				auto& panel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<AssetImporterPanel>();
-				panel.Open(GetMetadata().Handle);
+				//panel.Open(GetMetadata().Handle);
 			}
 		}
 
@@ -182,11 +189,9 @@ namespace UI
 
 	std::string AssetPanelItem::GetName()
 	{
-		if (IsFolder())
+        if (File::IsDirectory(m_SourcePath))
 			return File::GetName(m_SourcePath);
-
-		const AssetMetadata& metadata = GetMetadata();
-		return File::GetNameNoExt(metadata.FilePath);
+        return File::GetNameNoExt(m_SourcePath);
 	}
 
 	void AssetPanelItem::DrawItemName(const char* name, float edgeOffset)
@@ -222,12 +227,12 @@ namespace UI
 		if (newName == GetName())
 			return;
 
-		if (IsFolder())
+        if (File::IsDirectory(m_SourcePath))
 			Directory::Rename(m_SourcePath, newName);
 		else
 		{
-			auto& metadata = Hazard::AssetManager::GetMetadata(m_Handle);
-			metadata.FilePath = newName;
+			//auto& metadata = Hazard::AssetManager::GetMetadata(m_Handle);
+			//metadata.FilePath = newName;
 		}
 
 		Application::Get().GetModule<GUIManager>().GetExistingOrNew<AssetPanel>().Refresh();
@@ -240,6 +245,7 @@ namespace UI
 
 	void AssetPanelItem::OnItemDoubleClicked()
 	{
+        /*
 		switch (GetType())
 		{
 			case AssetType::World:
@@ -261,5 +267,6 @@ namespace UI
 			}
             default: break;
 		}
+         */
 	}
 }

@@ -90,8 +90,24 @@ namespace HazardScript
 				std::string msg = std::string(message);
 				std::string exception = msg.substr(0, msg.find_first_of("\n"));
 				std::string trace = exception.length() + 1 < msg.length() ? msg.substr(exception.length() + 1) : "";
-				m_DebugCallbacks.Invoke<ScriptMessage>({ Severity::Error, exception, trace });
-				std::cout << msg << std::endl;
+                
+                Severity severity = Severity::Trace;
+                switch(level)
+                {
+                    case Coral::MessageLevel::Info:
+                        severity = Severity::Debug;
+                        break;
+                    case Coral::MessageLevel::Warning:
+                        severity = Severity::Warning;
+                        break;
+                    case Coral::MessageLevel::Error:
+                        severity = Severity::Error;
+                        break;
+                    default: break;
+                }
+                
+				m_DebugCallbacks.Invoke<ScriptMessage>({ severity, exception, trace });
+
 			},
 			.ExceptionCallback = ([&](std::string_view message) {
 				std::string msg = std::string(message);

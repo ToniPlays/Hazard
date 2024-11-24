@@ -114,7 +114,7 @@ namespace HazardRenderer
             monitor = glfwGetPrimaryMonitor();
             const GLFWvidmode* mode = glfwGetVideoMode(monitor);
             glfwSetWindowPos(m_Window, mode->width / 2.0f - m_WindowData.Width / 2.0f, mode->height / 2.0f - m_WindowData.Height / 2.0f);
-
+            
             glfwSetWindowUserPointer(m_Window, &m_WindowData);
             for (uint32_t i = 0; i < GLFW_JOYSTICK_LAST; i++)
                 glfwSetJoystickUserPointer(i, &m_WindowData);

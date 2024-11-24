@@ -417,7 +417,7 @@ namespace UI
 			bool changed = ImUI::TextFieldWithHint(c.ModuleName, "Script class");
 
 			ImUI::DropTarget<AssetHandle>(AssetType::Script, [&](AssetHandle handle) {
-	
+                
 			});
 
 			if (changed)

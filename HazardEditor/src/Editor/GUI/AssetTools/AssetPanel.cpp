@@ -235,8 +235,7 @@ namespace UI
 
 		for (auto& item : m_CurrentItems)
 		{
-			const AssetMetadata& metadata = item.GetMetadata();
-			Ref<Texture2DAsset> itemIcon = m_Icons[metadata.Handle];
+            Ref<Texture2DAsset> itemIcon = GetItemIcon(item.GetPath());
 
 			if (!itemIcon) continue;
 
@@ -361,38 +360,35 @@ namespace UI
 	{
 		std::vector<AssetPanelItem> directories;
 		std::vector<AssetPanelItem> files;
-		std::unordered_map<AssetHandle, Ref<Hazard::Texture2DAsset>> icons;
+		std::unordered_map<std::string, Ref<Hazard::Texture2DAsset>> icons;
 
 		for (auto& item : Directory::GetAllInDirectory(m_CurrentPath))
 		{
-			if (File::GetFileExtension(item) == ".hasset")
+            if(File::GetNameNoExt(item).length() == 0) continue;
+			if (File::IsDirectory(item))
 			{
-				AssetHandle handle = AssetManager::AssetHandleFromFile(item);
-				if (handle == INVALID_ASSET_HANDLE) continue;
-
-				AssetPanelItem assetItem = AssetPanelItem(handle, File::GetPathNoExt(item));
-				files.push_back(assetItem);
-			}
-			else if (File::IsDirectory(item))
-			{
-				AssetPanelItem folder(INVALID_ASSET_HANDLE, item);
+				AssetPanelItem folder(item);
 				directories.push_back(folder);
 			}
+            else
+            {
+                if(File::GetFileExtension(item) == ".hazard") continue;
+                
+                AssetPanelItem assetItem = AssetPanelItem(item);
+                files.push_back(assetItem);
+            }
 		}
 
 		m_CurrentItems.clear();
 
 		AssetHandle handle = EditorAssetManager::GetIconHandle("Folder");
-		icons[0] = AssetManager::GetAsset<Texture2DAsset>(handle);
+		icons["Folder"] = AssetManager::GetAsset<Texture2DAsset>(handle);
 
 		for (auto& dir : directories)
 			m_CurrentItems.push_back(dir);
 
 		for (auto& f : files)
-		{
-			icons[f.GetHandle()] = GetItemIcon(f.GetMetadata());
 			m_CurrentItems.push_back(f);
-		}
 
 		m_Icons = icons;
 		m_Paths.clear();
@@ -469,45 +465,42 @@ namespace UI
 		}
 	}
 
-	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const AssetMetadata& metadata)
+    Ref<Texture2DAsset> AssetPanel::GetItemIcon(const std::filesystem::path& path)
 	{
-		AssetHandle handle = EditorAssetManager::GetIconHandle("Default");
-
-		switch (metadata.Type)
-		{
-			case AssetType::EnvironmentMap:
-			{
-				break;
-			}
-			case AssetType::Image:
-			{
-				if (metadata.LoadState == LoadState::Loading)
-					break;
-				if (metadata.LoadState == LoadState::None)
-				{
-                    Promise promise = AssetManager::GetAssetAsync<Texture2DAsset>(metadata.Handle);
-					promise.ContinueWith([&](const auto& results) {
-						Application::Get().SubmitMainThread([&]() {
-							Refresh();
-						});
-					});
-
-					break;
-				}
-
-				handle = metadata.Handle;
-				break;
-			}
-			case AssetType::Script:
-				handle = EditorAssetManager::GetIconHandle("Script"); break;
-			case AssetType::World:
-				handle = EditorAssetManager::GetIconHandle("World"); break;
-			default:
-				handle = EditorAssetManager::GetIconHandle("Default"); break;
-
-		}
-
-		return AssetManager::GetAsset<Texture2DAsset>(handle);
+        if(File::IsDirectory(path))
+        {
+            AssetHandle handle = EditorAssetManager::GetIconHandle("Folder");
+            return AssetManager::GetAsset<Texture2DAsset>(handle);
+        }
+        
+        auto ext = File::GetFileExtension(path);
+        
+        std::unordered_map<std::string, std::string> keys = { { ".cs", "Script" } };
+        
+        for(auto& [key, value] : keys)
+        {
+            if(key == ext)
+            {
+                AssetHandle handle = EditorAssetManager::GetIconHandle(value);
+                return AssetManager::GetAsset<Texture2DAsset>(handle);
+            }
+        }
+        if(ext == ".hasset")
+        {
+            AssetMetadata& meta = AssetManager::GetMetadata(AssetManager::AssetHandleFromFile(path));
+            switch(meta.Type)
+            {
+                case AssetType::World:
+                {
+                    AssetHandle handle = EditorAssetManager::GetIconHandle("World");
+                    return AssetManager::GetAsset<Texture2DAsset>(handle);
+                }
+                default: break;
+            }
+        }
+        
+        AssetHandle handle = EditorAssetManager::GetIconHandle("Default");
+        return AssetManager::GetAsset<Texture2DAsset>(handle);
 	}
 
 	std::vector<FolderStructureData> AssetPanel::GenerateFolderStructure()
@@ -524,6 +517,7 @@ namespace UI
 		}
 		return result;
 	}
+
 	std::vector<FolderStructureData> AssetPanel::GenerateSubFolderData(const std::filesystem::path& folder)
 	{
 		std::vector<FolderStructureData> result;
@@ -539,6 +533,7 @@ namespace UI
 
 		return result;
 	}
+
 	void AssetPanel::GoToFolderDepth(uint32_t index)
 	{
 		std::filesystem::path newPath = m_CurrentPath;
@@ -548,6 +543,7 @@ namespace UI
 
 		SetSelectedFolder(newPath);
 	}
+
 	void AssetPanel::CreateFolder(const std::filesystem::path& path)
 	{
 		std::filesystem::path directoryPath = path;

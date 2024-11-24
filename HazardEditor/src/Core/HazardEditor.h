@@ -18,7 +18,8 @@ inline static std::string GetBuildType()
 }
 
 
-class HazardEditorApplication : public Hazard::Application {
+class HazardEditorApplication : public Hazard::Application
+{
 
 public:
 	HazardEditorApplication() = default;
@@ -28,8 +29,15 @@ public:
 	void Init() override;
 	void Update() override;
 	bool OnEvent(Event& e) override;
+    
+    //TODO: Move
+    void BeginPlayMode(Ref<Hazard::World> world);
+    void EndPlayMode();
 
 private:
 	void InitJobsystemHooks();
 	void InitializeGUIPanels();
+    
+private:
+    Ref<Hazard::World> m_EditorWorld;
 };

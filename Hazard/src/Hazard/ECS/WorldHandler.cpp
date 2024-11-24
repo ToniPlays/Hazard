@@ -40,7 +40,6 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		if (m_Flags & WorldFlags_UpdateScript)
 		{
-
 			auto view = m_World->GetEntitiesWith<ScriptComponent>();
 			float delta = (float)Time::s_DeltaTime;
 
