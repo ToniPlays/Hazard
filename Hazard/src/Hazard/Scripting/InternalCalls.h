@@ -18,25 +18,27 @@ namespace Hazard
 		{
 			HZR_PROFILE_FUNCTION();
 
-			RegisterComponent(TagComponent, assembly);
-			RegisterComponent(TransformComponent, assembly);
-			RegisterComponent(ScriptComponent, assembly);
-			RegisterComponent(MeshComponent, assembly);
-			RegisterComponent(SpriteRendererComponent, assembly);
+            Clear();
+            
+			RegisterComponent<TagComponent>("Hazard.TagComponent", assembly);
+			RegisterComponent<TransformComponent>("Hazard.TransformComponent", assembly);
+			//RegisterComponent(ScriptComponent, assembly);
+			//RegisterComponent(MeshComponent, assembly);
+			//RegisterComponent(SpriteRendererComponent, assembly);
 
-			RegisterComponent(CameraComponent, assembly);
+			//RegisterComponent(CameraComponent, assembly);
 
-			RegisterComponent(SkyLightComponent, assembly);
-			RegisterComponent(DirectionalLightComponent, assembly);
-			RegisterComponent(PointLightComponent, assembly);
+			//RegisterComponent(SkyLightComponent, assembly);
+			//RegisterComponent(DirectionalLightComponent, assembly);
+			//RegisterComponent(PointLightComponent, assembly);
 
-			RegisterComponent(Rigidbody2DComponent, assembly);
-			RegisterComponent(BoxCollider2DComponent, assembly);
-			RegisterComponent(CircleCollider2DComponent, assembly);
+			//RegisterComponent(Rigidbody2DComponent, assembly);
+			//RegisterComponent(BoxCollider2DComponent, assembly);
+			//RegisterComponent(CircleCollider2DComponent, assembly);
 
-			RegisterComponent(RigidbodyComponent, assembly);
-			RegisterComponent(BoxColliderComponent, assembly);
-			RegisterComponent(SphereColliderComponent, assembly);
+			//RegisterComponent(RigidbodyComponent, assembly);
+			//RegisterComponent(BoxColliderComponent, assembly);
+			//RegisterComponent(SphereColliderComponent, assembly);
 
 			//Entity -------------------------------------------
 			BIND_ICALL(Entity_IsVisible_Native);

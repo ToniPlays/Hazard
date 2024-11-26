@@ -112,7 +112,7 @@ namespace Hazard
 				for (auto& e : view)
 				{
 					Entity entity(e, ctx.Raw());
-					InitializeComponent(ctx, entity);
+					InitializeComponent(entity);
 				}
 			}
 		});
@@ -128,7 +128,7 @@ namespace Hazard
 		m_QueuedMessages.clear();
 	}
 
-	void ScriptEngine::InitializeComponent(Ref<World> targetWorld, const Entity& entity)
+	void ScriptEngine::InitializeComponent(const Entity& entity)
 	{
 		HZR_PROFILE_FUNCTION();
 		auto& component = entity.GetComponent<ScriptComponent>();
@@ -139,11 +139,11 @@ namespace Hazard
 		ScriptMetadata script = GetScript(component.ModuleName);
 		component.m_Handle = script.CreateObject<uint64_t>((uint64_t)entity.GetUID());
 
-		m_Instances[entity.GetUID()] = targetWorld->GetHandle();
-		m_WorldContext[targetWorld->GetHandle()] = targetWorld;
+        m_Instances[entity.GetUID()] = entity.GetWorld().GetHandle();
+        m_WorldContext[entity.GetWorld().GetHandle()] = &entity.GetWorld();
 	}
 
-	void ScriptEngine::RemoveComponent(Ref<World> targetWorld, const Entity& entity)
+    void ScriptEngine::DeinitializeComponent(const Entity& entity)
 	{
 		m_Instances.erase(entity.GetUID());
 	}

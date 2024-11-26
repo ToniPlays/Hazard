@@ -13,8 +13,9 @@ namespace Hazard
 	{
 		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);
 		auto& tag = entity.GetComponent<TagComponent>();
-		return Coral::String();
-	}
+        return Coral::String::New(tag.Tag.c_str());
+    }
+
 	static void TagComponent_SetName_Native(uint64_t id, Coral::String tag)
 	{
 		auto entity = ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id);

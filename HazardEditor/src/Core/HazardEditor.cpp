@@ -112,22 +112,32 @@ bool HazardEditorApplication::OnEvent(Event& e)
 
 void HazardEditorApplication::BeginPlayMode(Ref<Hazard::World> world)
 {
-    using namespace Hazard;
-    m_EditorWorld = world;
-    auto& handler = GetModule<WorldHandler>();
-    handler.SetWorld(World::Copy(world));
-    handler.SetFlags(WorldFlags_UpdateScript | WorldFlags_Render);
-    handler.OnBegin();
+    SubmitMainThread([this, world](){
+        using namespace Hazard;
+        m_EditorWorld = world;
+        auto& handler = GetModule<WorldHandler>();
+        handler.SetWorld(World::Copy(world));
+        handler.SetFlags(WorldFlags_UpdateScript | WorldFlags_Render);
+        handler.OnBegin();
+        
+        auto renderer = Editor::EditorWorldManager::GetWorldRender();
+        renderer->SetTargetWorld(handler.GetCurrentWorld());
+    });
 }
 
 void HazardEditorApplication::EndPlayMode()
 {
-    using namespace Hazard;
-    auto& handler = GetModule<WorldHandler>();
-    handler.OnEnd();
-    handler.SetWorld(m_EditorWorld);
-    handler.SetFlags(WorldFlags_Render);
-    m_EditorWorld = nullptr;
+    SubmitMainThread([this](){
+        using namespace Hazard;
+        auto& handler = GetModule<WorldHandler>();
+        handler.OnEnd();
+        handler.SetWorld(m_EditorWorld);
+        handler.SetFlags(WorldFlags_Render);
+        m_EditorWorld = nullptr;
+        
+        auto renderer = Editor::EditorWorldManager::GetWorldRender();
+        renderer->SetTargetWorld(handler.GetCurrentWorld());
+    });
 }
 
 void HazardEditorApplication::InitJobsystemHooks()

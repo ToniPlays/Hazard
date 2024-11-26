@@ -3,8 +3,8 @@
 #include "World.h"
 #include "entt.hpp"
 
-namespace Hazard {
-
+namespace Hazard
+{
 	class Entity 
 	{
 		friend class World;

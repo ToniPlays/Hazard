@@ -40,8 +40,8 @@ namespace Hazard
 
 		void ReloadAssemblies();
 		void AddDebugCallback(ScriptMessageCallback callback);
-		void InitializeComponent(Ref<World> targetWorld, const Entity& entity);
-		void RemoveComponent(Ref<World> targetWorld, const Entity& entity);
+		void InitializeComponent(const Entity& entity);
+		void DeinitializeComponent(const Entity& entity);
 
 		static Ref<World> GetTargetWorldForEntity(UID entity)
 		{

@@ -4,19 +4,6 @@
 #include "Hazard/Scripting/ScriptEngine.h"
 #include "Hazard/ECS/Entity.h"
 
-#define RegisterComponent(T, Assembly) {																				\
-		Coral::TypeId coralType = Assembly->GetTypeByName("Hazard." #T).GetTypeId();									\
-		if (coralType)																									\
-		{																												\
-			hasComponentFuncs[coralType] = [](uint64_t id) {															\
-				return ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).HasComponent<T>();				\
-			};																											\
-			createComponentFuncs[coralType] = [](uint64_t id) {															\
-				return ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).GetComponent<T>();				\
-			};																											\
-		}																												\
-	}																													\
-
 namespace Hazard 
 {
 	std::unordered_map<Coral::TypeId, std::function<bool(uint64_t)>> hasComponentFuncs;
@@ -24,6 +11,30 @@ namespace Hazard
 	std::unordered_map<Coral::TypeId, std::function<void(uint64_t)>> createComponentFuncs;
 
 	using namespace HazardScript;
+
+    static void Clear()
+    {
+        hasComponentFuncs.clear();
+        getComponentFuncs.clear();
+        createComponentFuncs.clear();
+    }
+
+    template<typename C>
+    static void RegisterComponent(const char* className, Ref<ScriptAssembly> assembly)
+    {
+        Coral::TypeId coralType = assembly->GetTypeByName(className).GetTypeId();
+        HZR_ASSERT(coralType != -1, "Type not found");
+        HZR_INFO(coralType);
+        if (coralType)
+        {
+            hasComponentFuncs[coralType] = [](uint64_t id) {
+                return ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).HasComponent<C>();
+            };
+            createComponentFuncs[coralType] = [](uint64_t id) {
+                return ScriptEngine::GetTargetWorldForEntity(id)->GetEntityFromUID(id).GetComponent<C>();
+            };
+        }
+    }
 
 	static uint64_t Entity_InstantiateOrigin_Native(Coral::String name)
 	{

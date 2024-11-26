@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -24,10 +24,10 @@ namespace Hazard
         internal static delegate*<ulong, Bool32, void> Entity_SetVisible_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, Type, Bool32> Entity_HasComponent_Native;
+        internal static delegate*<ulong, ReflectionType, Bool32> Entity_HasComponent_Native;
 
         [Todo("Binding", Status.Awaiting)]
-        internal static delegate*<ulong, Type, Bool32> Entity_CreateComponent_Native;
+        internal static delegate*<ulong, ReflectionType, Bool32> Entity_CreateComponent_Native;
 
         [Todo("Binding", Status.Awaiting)]
         internal static delegate*<string, ulong> Entity_InstantiateOrigin_Native;

@@ -427,10 +427,7 @@ namespace UI
 
 				if (scriptEngine.FindModule(c.ModuleName))
 				{
-					Application::Get().SubmitMainThread([e = entities[0]]() {
-						ScriptEngine& scriptEngine = Application::Get().GetModule<ScriptEngine>();
-						scriptEngine.InitializeComponent(&e.GetWorld(), e);
-					});
+                    //TODO: Init variable storage
 				}
 			}
 			if (c.m_Handle)
@@ -442,6 +439,7 @@ namespace UI
 				ImGui::Columns();
 			}
 		});
+        
 		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
 			ImUI::MenuHeader("Component menu");
 			ImUI::MenuItem("Copy", []() {});

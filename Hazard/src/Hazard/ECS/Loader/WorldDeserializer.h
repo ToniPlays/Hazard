@@ -131,11 +131,10 @@ namespace Hazard
 		template<>
 		static void Deserialize<ScriptComponent>(Entity entity, const YAML::Node& comp)
 		{
-			std::string moduleName;
-			bool active;
+            auto& sc = entity.AddComponent<ScriptComponent>();
 
-			YamlUtils::Deserialize(comp, "Active", active, true);
-			YamlUtils::Deserialize(comp, "ModuleName", moduleName, std::string(""));
+            YamlUtils::Deserialize(comp, "Active", sc.Active, true);
+            YamlUtils::Deserialize(comp, "ModuleName", sc.ModuleName, std::string(""));
 		};
 
 		template<>

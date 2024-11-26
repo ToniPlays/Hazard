@@ -15,6 +15,6 @@ namespace Hazard
 		if (metadata.Handle == INVALID_ASSET_HANDLE)
 			return Coral::String();
 
-		return Coral::String();
+        return Coral::String::New(metadata.FilePath.string().c_str());
 	}
 }

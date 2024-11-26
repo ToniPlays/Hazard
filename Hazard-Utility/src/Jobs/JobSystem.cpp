@@ -105,7 +105,6 @@ bool JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 	m_JobCount.notify_all();
 
 	std::string msg = fmt::format("Queued {} jobs", jobs.size());
-	std::cout << msg << std::endl;
 	SendMessage(Severity::Info, msg);
 	return true;
 }

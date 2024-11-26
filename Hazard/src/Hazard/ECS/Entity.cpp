@@ -70,6 +70,7 @@ namespace Hazard
 			result = parent.GetTransform().GetTransformMat4() * result;
 			parent = parent.GetParent();
 		}
+        
 		tc.WorldTransform = result;
 	}
 }
