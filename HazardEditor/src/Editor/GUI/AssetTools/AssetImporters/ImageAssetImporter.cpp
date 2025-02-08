@@ -78,10 +78,10 @@ bool ImageAssetImporter::ImportFromNew()
 		settings.TargetPath = path;
 		settings.Flags |= ASSET_MANAGER_COMBINE_ASSET;
 
-		//AssetManager::SaveAsset(asset, settings).Then([assetPanel](JobGraph&) mutable {
-		//	assetPanel.Refresh();
-		//});
+		AssetManager::SaveAsset(asset, settings).ContinueWith([assetPanel](const auto&) mutable {
+			assetPanel.Refresh();
 		});
+	});
 
 	return true; //TODO: Maybe fix
 }

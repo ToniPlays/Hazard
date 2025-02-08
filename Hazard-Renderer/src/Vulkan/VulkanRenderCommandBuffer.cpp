@@ -267,10 +267,10 @@ namespace HazardRenderer::Vulkan
 			instance->m_ActiveCommandBuffer = nullptr;
 		});
 	}
-	void VulkanRenderCommandBuffer::Submit()
+	RenderCommandBufferAwaitable VulkanRenderCommandBuffer::Submit()
 	{
 		HZR_PROFILE_FUNCTION();
-		if (m_OwnedBySwapchain) return;
+		if (m_OwnedBySwapchain) return RenderCommandBufferAwaitable(this);
 
 		Ref<VulkanRenderCommandBuffer> instance = this;
 		Renderer::Submit([instance]() mutable {
@@ -297,11 +297,13 @@ namespace HazardRenderer::Vulkan
 				VK_CHECK_RESULT(vkWaitForFences(device->GetVulkanDevice(), 1, &instance->m_WaitFences[index], VK_TRUE, UINT64_MAX), "");
 			}
 
-			instance->m_OnCompletion.Invoke();
-			instance->m_OnCompletion.Clear();
+			instance->m_OnComplete.Invoke();
+			instance->m_OnComplete.Clear();
 
 			//instance->GetQueryPoolResults_RT();
 		});
+
+		return RenderCommandBufferAwaitable(this);
 	}
 	void VulkanRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)
 	{

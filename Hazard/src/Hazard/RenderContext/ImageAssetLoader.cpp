@@ -16,12 +16,12 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 
-		//Ref<Job> createJob = Job::Create(fmt::format("ImageLoad: {}", metadata.FilePath.string()), CreateImageFromBinary, metadata.Handle);
+		Ref<Job> loadJob = Job::Create(fmt::format("ImageLoad: {}", metadata.FilePath.string()), CreateImageFromBinary, metadata.Handle);
 
 		JobGraphInfo info = {
 			.Name = "Image load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Create", 1.0f, { } } }
+			.Stages = { { "Create", 1.0f, { loadJob } } }
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -32,14 +32,14 @@ namespace Hazard
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(settings.Flags & ASSET_MANAGER_COMBINE_ASSET, "Cannot override image source file");
 
-		//Ref<Job> readbackJob = Job::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
-		//Ref<Job> processJob = Job::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
+		Ref<Job> readbackJob = Job::Create("Readback", ReadImageDataFromGPU, asset.As<Texture2DAsset>()->GetSourceImage());
+		Ref<Job> processJob = Job::Create("Process", GenerateImageBinary, asset.As<Texture2DAsset>()->GetSourceImage());
 
 		JobGraphInfo info = {
 			.Name = "Image save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Readback", 0.5f, {  } },
-						{ "Process", 0.5f, {  } } }
+			.Stages = { { "Readback", 0.5f, { readbackJob } },
+						{ "Process", 0.5f, { processJob } } }
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -67,14 +67,8 @@ namespace Hazard
 		return Ref<JobGraph>::Create(info);
 	}
 
-    Coroutine ImageAssetLoader::ImageDataLoadFromSource(JobInfo& info, const std::filesystem::path& path, CreateSettings settings)
+    Coroutine ImageAssetLoader::ImageDataLoadFromSource(JobInfo info, const std::filesystem::path& path, CreateSettings settings)
 	{
-		if (path.empty())
-		{
-			info.Result(TextureHeader());
-			co_return;
-		}
-
 		if (!File::Exists(path))
 			throw JobException(fmt::format("Image source file does not exist: {}", path.string()));
 
@@ -83,9 +77,10 @@ namespace Hazard
 			throw JobException("Image load from source failed");
 
 		info.Result(header);
+		co_return;
 	}
 
-    Coroutine ImageAssetLoader::CreateImageFromData(JobInfo& info, CreateSettings settings)
+    Coroutine ImageAssetLoader::CreateImageFromData(JobInfo info, CreateSettings settings)
 	{
 		TextureHeader header = info.Graph->GetResults<TextureHeader>()[0];
 
@@ -102,7 +97,7 @@ namespace Hazard
         co_return;
 	}
 
-	Coroutine ImageAssetLoader::ReadImageDataFromGPU(JobInfo& info, Ref<HazardRenderer::Image2D> image)
+	Coroutine ImageAssetLoader::ReadImageDataFromGPU(JobInfo info, Ref<HazardRenderer::Image2D> image)
 	{
 		using namespace HazardRenderer;
 
@@ -141,23 +136,26 @@ namespace Hazard
 
 		cmdBuffer->ImageMemoryBarrier(barrier);
 		cmdBuffer->End();
-		cmdBuffer->Submit();
-		cmdBuffer->OnCompleted([info, readbackBuffer]() mutable {
+		
+		co_await cmdBuffer->Submit();
 
-			BufferCopyRegion region = {
+		BufferCopyRegion bufferRegion = {
 				.Size = readbackBuffer->GetSize(),
 				.Offset = 0
-			};
+		};
 
-			Buffer data = readbackBuffer->ReadData(region);
-			info.Result(Ref<CachedBuffer>::Create(data));
-		});
+		Buffer data = readbackBuffer->ReadData(bufferRegion);
+		info.Result(Ref<CachedBuffer>::Create(data));
+
+		info.Current->Finish();
         co_return;
 	}
 
-	Coroutine ImageAssetLoader::GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image)
+	Coroutine ImageAssetLoader::GenerateImageBinary(JobInfo info, Ref<HazardRenderer::Image2D> image)
 	{
 		Ref<CachedBuffer> imageData = info.Graph->GetResults<Ref<CachedBuffer>>()[0];
+		if (!imageData)
+			throw JobException("Invalid image data");
 
 		ImageAssetFileHeader file = {
 			.Extent = image->GetExtent(),
@@ -173,7 +171,7 @@ namespace Hazard
         co_return;
 	}
 
-	Coroutine ImageAssetLoader::CreateImageFromBinary(JobInfo& info, AssetHandle handle)
+	Coroutine ImageAssetLoader::CreateImageFromBinary(JobInfo info, AssetHandle handle)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 

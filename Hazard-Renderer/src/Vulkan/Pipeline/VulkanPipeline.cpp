@@ -64,7 +64,8 @@ namespace HazardRenderer::Vulkan
 	void VulkanPipeline::Bind(VkCommandBuffer commandBuffer)
 	{
 		auto bindingPoint = GetBindingPoint();
-		vkCmdBindPipeline(commandBuffer, bindingPoint, m_Pipelines.at(m_CurrentRenderpass));
+		VkPipeline pipeline = m_Pipelines[m_CurrentRenderpass];
+		vkCmdBindPipeline(commandBuffer, bindingPoint, pipeline);
 
 		if (m_Specs.Flags & PIPELINE_DRAW_LINE)
 			vkCmdSetLineWidth(commandBuffer, 5.0f);

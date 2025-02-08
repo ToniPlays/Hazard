@@ -4,7 +4,7 @@
 #include "Hazard.h"
 #include "Hazard/ImGUI/GUIManager.h"
 #include "Editor/GUI/Debug/Console.h"
-#include "MessageFlags.h"
+#include "Core/MessageFlags.h"
 
 void EditorScriptManager::GenerateScriptProjects()
 {

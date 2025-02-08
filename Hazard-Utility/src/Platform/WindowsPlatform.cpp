@@ -13,7 +13,7 @@ int OS::SysCall(const char* command)
 {
 	return system(command);
 }
-void* OS::BackgroundProcess(const char* path, const char* arguments)
+std::string OS::BackgroundProcess(const char* path, const char* arguments)
 {
 	STARTUPINFOA si;
 	PROCESS_INFORMATION pi;
@@ -36,12 +36,9 @@ void* OS::BackgroundProcess(const char* path, const char* arguments)
 		&pi
 	);
 
-	return (void*)id;
+	return "";
 }
-void OS::WaitForProcess(void* handle)
-{
 
-}
 bool OS::HasEnv(const char* key)
 {
 	HKEY hKey;

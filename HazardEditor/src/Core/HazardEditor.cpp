@@ -34,7 +34,7 @@ void HazardEditorApplication::PreInit()
 	ApplicationCreateInfo appInfo = {
 		.AppName = "Hazard Editor",
 		.BuildVersion = HZR_BUILD_VERSION,
-		.MaxWorkers = 1,
+		.MaxWorkers = std::thread::hardware_concurrency(),
 	};
 
 #ifdef HZR_RELEASE
@@ -46,8 +46,8 @@ void HazardEditorApplication::PreInit()
 	RenderContextCreateInfo renderContextInfo = {
 		.Renderer = RenderAPI::Auto,
 		.Title = fmt::format("Hazard Editor | {} | {}", RenderAPIToString(RenderAPI::Auto), GetBuildType()),
-		.Width = 1440,
-		.Height = 900,
+		.Width = 1920,
+		.Height = 1080,
 		.VSync = CommandLineArgs::Get<bool>("VSync"),
 	};
 

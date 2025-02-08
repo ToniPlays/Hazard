@@ -216,6 +216,9 @@
     <ClInclude Include="src\EditorScripting\EditorScriptGlue.h">
       <Filter>src\EditorScripting</Filter>
     </ClInclude>
+    <ClInclude Include="src\EditorScripting\EditorScriptManager.h">
+      <Filter>src\EditorScripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Exporter\RuntimeExporter.h">
       <Filter>src\Exporter</Filter>
     </ClInclude>
@@ -333,6 +336,9 @@
       <Filter>src\Editor\GUI\Viewport</Filter>
     </ClCompile>
     <ClCompile Include="src\EditorScripting\EditorScriptGlue.cpp">
+      <Filter>src\EditorScripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorScripting\EditorScriptManager.cpp">
       <Filter>src\EditorScripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Exporter\RuntimeExporter.cpp">

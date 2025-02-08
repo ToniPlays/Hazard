@@ -26,7 +26,8 @@ bool HazardLauncherManager::OpenProject(const HazardProject& project)
 	ss << " -hprj " << StringUtil::Replace((project.Path / "Project.hzrproj").string(), "\\", "/");
     
     HZR_INFO("Starting: {} {}", proc, ss.str());
-    return OS::BackgroundProcess(proc.c_str(), ss.str().c_str());
+    OS::BackgroundProcess(proc.c_str(), ss.str().c_str());
+	return true;
 }
 
 bool HazardLauncherManager::ImportProject(const std::filesystem::path& path)

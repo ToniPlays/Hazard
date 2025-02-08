@@ -8,6 +8,8 @@
 #include "Cubemap.h"
 #include "DescriptorSet.h"
 
+#include "Utility/Awaitable.h"
+
 namespace HazardRenderer
 {
 	using GroupSize = glm::uvec3;
@@ -75,6 +77,10 @@ namespace HazardRenderer
 		//Ref<ShaderBindingTable> pBindingTable;
 	};
 
+	
+	class RenderCommandBufferAwaitable;
+
+
 	class RenderCommandBuffer : public RefCount
 	{
 		friend class Pipeline;
@@ -83,7 +89,7 @@ namespace HazardRenderer
 
 		virtual void Begin() = 0;
 		virtual void End() = 0;
-		virtual void Submit() = 0;
+		virtual RenderCommandBufferAwaitable Submit() = 0;
 
 		virtual void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) = 0;
 		virtual void EndRenderPass() = 0;
@@ -119,12 +125,29 @@ namespace HazardRenderer
 
 		virtual void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory) = 0;
 
-		virtual void OnCompleted(std::function<void()> callback) = 0;
+		virtual void OnCompleted(const std::function<void()>& cb) = 0;
 
 		virtual uint32_t GetFrameIndex() = 0;
 
 	public:
 		static Ref<RenderCommandBuffer> Create(const std::string& debugName = "", DeviceQueue queue = DeviceQueue::GraphicsBit, uint32_t count = 0);
 		static Ref<RenderCommandBuffer> CreateFromSwapchain(const std::string& debugName = "");
+	};
+
+
+
+	class RenderCommandBufferAwaitable : public Awaitable<void>
+	{
+	public:
+
+		RenderCommandBufferAwaitable(Ref<RenderCommandBuffer> commandBuffer) : m_Buffer(commandBuffer) {}
+
+		void OnSuspend() override {
+			m_Buffer->OnCompleted([instance = this]() {
+				instance->Resolve();
+				});
+		}
+	private:
+		Ref<RenderCommandBuffer> m_Buffer;
 	};
 }

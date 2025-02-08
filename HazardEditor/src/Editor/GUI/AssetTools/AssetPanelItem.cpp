@@ -140,14 +140,15 @@ namespace UI
 
         if (!File::IsDirectory(m_SourcePath))
 		{
-            AssetType type = Hazard::Utils::AssetTypeFromExtension(m_SourcePath);
+			AssetHandle handle = AssetManager::AssetHandleFromFile(m_SourcePath);
+
+            AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(m_SourcePath));
             if(File::GetFileExtension(m_SourcePath) == ".hasset")
             {
-                AssetHandle handle = AssetManager::AssetHandleFromFile(m_SourcePath);
                 type = AssetManager::GetMetadata(handle).Type;
             }
             
-            ImUI::DragSource(type, &m_SourcePath, [&]() {
+            ImUI::DragSource<AssetHandle>(type, &handle, [&]() {
 				ImGui::Text("%s", name.c_str());
                 ImGui::Text("%s", Hazard::Utils::AssetTypeToString(type));
 			});

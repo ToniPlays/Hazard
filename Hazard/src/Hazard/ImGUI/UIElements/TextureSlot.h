@@ -39,6 +39,9 @@ namespace Hazard::ImUI
 			ImUI::TextField text(metadata.FilePath.empty() ? "None" : metadata.FilePath.string());
 			text.Render();
 
+			if (!m_DropType.empty())
+				ImUI::DropTarget<AssetHandle>(m_DropType.c_str(), m_Callback);
+
 			ImGui::NextColumn();
 
 			if (metadata.IsValid())
@@ -65,9 +68,6 @@ namespace Hazard::ImUI
 			{
 				ImUI::Image(asset->GetSourceImage(), asset->GetSampler(), { size, size });
 			}
-
-			if (!m_DropType.empty())
-				ImUI::DropTarget<AssetHandle>(m_DropType.c_str(), m_Callback);
 
 			ImGui::Columns();
 			ImGui::PopID();

@@ -19,17 +19,11 @@ void Job::Execute(JobInfo& info)
 	try
 	{
 		m_JobCoroutine.MoveNext();
+		m_ExecutionTime += timer.ElapsedMillis();
 		if (m_JobCoroutine.Done())
-		{
-			m_Progress = 1.0f;
-			m_ExecutionTime = timer.ElapsedMillis();
-
-			m_Status = JobStatus::Success;
-			if (m_JobGraph)
-				m_JobGraph->OnJobFinished(this);
-		}
+			Finish();
 	}
-	catch (JobException e)
+	catch (JobException& e)
 	{
 		m_Status = JobStatus::Failure;
 		m_ExecutionTime = timer.ElapsedMillis();
@@ -38,6 +32,15 @@ void Job::Execute(JobInfo& info)
 			m_JobGraph->OnJobFailed(this);
 		throw e;
 	}
+}
+
+void Job::Finish()
+{
+	m_Progress = 1.0f;
+
+	m_Status = JobStatus::Success;
+	if (m_JobGraph)
+		m_JobGraph->OnJobFinished(this);
 }
 
 void Job::Progress(float progress)

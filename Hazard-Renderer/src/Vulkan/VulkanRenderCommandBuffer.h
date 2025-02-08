@@ -33,7 +33,7 @@ namespace HazardRenderer::Vulkan
 
 		void Begin() override;
 		void End() override;
-		void Submit() override;
+		RenderCommandBufferAwaitable Submit() override;
 
 		void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) override;
 		void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
@@ -64,9 +64,8 @@ namespace HazardRenderer::Vulkan
 
 		void ImageMemoryBarrier(const ImageMemoryInfo& imageMemory);
 
-		virtual void OnCompleted(std::function<void()> callback)
-		{
-			m_OnCompletion.Add(callback);
+		void OnCompleted(const std::function<void()>& cb) override {
+			m_OnComplete.Add(cb);
 		};
 
 		//Vulkan specific
@@ -101,7 +100,8 @@ namespace HazardRenderer::Vulkan
 
 		Ref<VulkanPipeline> m_CurrentPipeline = nullptr;
 
-		Callback<void()> m_OnCompletion;
+		Callback<void()> m_OnComplete;
+
 		VkQueue m_SubmitQueue = VK_NULL_HANDLE;
 	};
 }

@@ -132,6 +132,7 @@ namespace Hazard
 		if (handle == INVALID_ASSET_HANDLE) return;
 
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
+		if (!map) return;
 		Ref<Material> material = map->GetMaterial();
 		if (!material) return;
 

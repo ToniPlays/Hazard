@@ -31,11 +31,11 @@ namespace Hazard
 		};
 
 	private:
-		static Coroutine ImageDataLoadFromSource(JobInfo& info, const std::filesystem::path& path, CreateSettings settings);
-		static Coroutine CreateImageFromData(JobInfo& info, CreateSettings settings);
+		static Coroutine ImageDataLoadFromSource(JobInfo info, const std::filesystem::path& path, CreateSettings settings);
+		static Coroutine CreateImageFromData(JobInfo info, CreateSettings settings);
 
-		static Coroutine ReadImageDataFromGPU(JobInfo& info, Ref<HazardRenderer::Image2D> image);
-		static Coroutine GenerateImageBinary(JobInfo& info, Ref<HazardRenderer::Image2D> image);
-		static Coroutine CreateImageFromBinary(JobInfo& info, AssetHandle handle);
+		static Coroutine ReadImageDataFromGPU(JobInfo info, Ref<HazardRenderer::Image2D> image);
+		static Coroutine GenerateImageBinary(JobInfo info, Ref<HazardRenderer::Image2D> image);
+		static Coroutine CreateImageFromBinary(JobInfo info, AssetHandle handle);
 	};
 }

@@ -31,6 +31,7 @@ public:
     const Coroutine& GetCoroutine() const { return m_JobCoroutine; }
 
 	void Execute(JobInfo& info);
+    void Finish();
 	void Progress(float progress);
 
 	float GetExecutionTime() const { return m_ExecutionTime; }
