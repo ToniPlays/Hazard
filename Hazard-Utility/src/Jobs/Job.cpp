@@ -36,6 +36,8 @@ void Job::Execute(JobInfo& info)
 
 void Job::Finish()
 {
+	if (m_Status == JobStatus::Success) return;
+
 	m_Progress = 1.0f;
 
 	m_Status = JobStatus::Success;

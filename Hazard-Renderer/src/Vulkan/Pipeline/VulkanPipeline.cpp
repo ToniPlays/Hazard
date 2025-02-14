@@ -21,7 +21,7 @@ namespace HazardRenderer::Vulkan
 		if (device->GetPhysicalDevice()->SupportsRaytracing())
 			GET_DEVICE_PROC_ADDR(device->GetVulkanDevice(), CreateRayTracingPipelinesKHR);
 
-		m_Shader = Shader::Create(specs->Shaders).As<VulkanShader>();
+		m_Shader = Shader::Create(specs->DebugName, specs->Shaders).As<VulkanShader>();
 
 		if (specs->pBufferLayout)
 			m_Layout = BufferLayout::Copy(*specs->pBufferLayout);

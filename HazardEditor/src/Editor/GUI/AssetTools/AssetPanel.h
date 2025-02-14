@@ -63,6 +63,8 @@ namespace UI
 		void DrawContextMenu();
 		void DrawCurrentFolderPath();
 
+		AssetHandle GetItemHandle(const std::filesystem::path& item);
+
 		void DrawFolderTreeItem(const FolderStructureData& folder);
 		Ref<Hazard::Texture2DAsset> GetItemIcon(const std::filesystem::path& metadata);
 
@@ -73,6 +75,9 @@ namespace UI
 
 	private:
 		void CreateFolder(const std::filesystem::path& path);
+
+		void CreateMaterialAsset();
+		void CreateEnvironmentMapAsset();
 
 	private:
 		std::filesystem::path m_RootPath;

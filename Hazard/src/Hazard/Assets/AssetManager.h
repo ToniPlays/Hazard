@@ -15,7 +15,7 @@
 
 namespace Hazard
 {
-	class AssetPack;
+	struct AssetPack;
 
 	enum AssetManagerFlags : uint32_t
 	{
@@ -38,6 +38,7 @@ namespace Hazard
 	struct CreateAssetSettings
 	{
 		AssetType Type;
+		std::filesystem::path AccessPath;
 		std::filesystem::path SourcePath;
 		void* Settings = nullptr;
 	};
@@ -61,6 +62,7 @@ namespace Hazard
 		}
 
 		static AssetHandle Import(const std::filesystem::path& path);
+		static AssetPack OpenAssetPack(const std::filesystem::path& path);
 		static AssetHandle AssetHandleFromFile(const std::filesystem::path& file);
 		static bool IsAssetLoaded(AssetHandle handle);
 
@@ -70,12 +72,14 @@ namespace Hazard
 		{
 			HZR_PROFILE_FUNCTION();
 			Promise<Ref<T>> promise = CreateAssetAsync<T>(settings);
+			if (!promise) return nullptr;
 			return promise.Wait().GetResults()[0];
 
 		}
 		template<typename T>
 		static Promise<Ref<T>> CreateAssetAsync(const CreateAssetSettings& settings)
 		{
+			HZR_CORE_ASSERT(!settings.AccessPath.empty(), "Access path must not be empty");
 			Ref<JobGraph> graph = GetCreateGraph(settings);
 			if (!graph) return Promise<Ref<T>>();
 
@@ -93,15 +97,15 @@ namespace Hazard
 					.Handle = asset->GetHandle(),
 					.Type = asset->GetType(),
 					.LoadState = LoadState::Loaded,
-					.FilePath = "",
+					.FilePath = settings.AccessPath,
 					.SourceFile = settings.SourcePath,
 				};
 
 				std::scoped_lock mutex(s_AssetMutex);
 				s_LoadedAssets[asset->GetHandle()] = asset;
-                s_Registry[metadata.SourceFile] = metadata;
+                s_Registry[settings.AccessPath] = metadata;
 
-				//HZR_CORE_INFO("Created asset {}", settings.SourcePath.string());
+				HZR_CORE_INFO("Created asset {}", settings.SourcePath.string());
 				}).Catch([](const JobException& e) {
 					HZR_CORE_ERROR("Something went wrong: {0}", e.what());
 				});
@@ -121,17 +125,15 @@ namespace Hazard
 
 		static void Unload(AssetHandle handle);
 		template<typename T>
-		static Promise<T> Reload(AssetHandle handle)
+		static Promise<Ref<T>> Reload(AssetHandle handle)
 		{
 			std::scoped_lock lock(s_AssetMutex);
 
 			AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-			if (metadata.LoadState == LoadState::None) return Promise<T>();
+			metadata.LoadState = LoadState::None;
 
-			Ref<JobGraph> graph = s_AssetLoader.Load(metadata, LoadAssetSettings());
-			if (!graph) return Promise<T>();
-
-            Ref<Asset> oldAsset = s_LoadedAssets[handle];
+			Ref<JobGraph> graph = GetLoadGraph(metadata, LoadAssetSettings());
+			if (!graph) return Promise<Ref<T>>();
 
 			return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
 		}

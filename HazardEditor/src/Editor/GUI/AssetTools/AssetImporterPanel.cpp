@@ -16,6 +16,7 @@ namespace UI
 		RegisterImporter<MeshAssetImporter>(AssetType::Mesh);
 		RegisterImporter<EnvironmentAssetImporter>(AssetType::EnvironmentMap);
 	}
+
 	void AssetImporterPanel::OnPanelRender()
 	{
 		using namespace Hazard;
@@ -27,6 +28,7 @@ namespace UI
 		importer->RenderUI();
 		DrawBottomBar();
 	}
+
 	void AssetImporterPanel::Open(AssetHandle handle)
 	{
 		using namespace Hazard;
@@ -44,6 +46,7 @@ namespace UI
 
 		m_Title = fmt::format("{} Import options", Utils::AssetTypeToString(m_CurrentImportType));
 	}
+
 	void AssetImporterPanel::Open(const std::filesystem::path& sourceFile)
 	{
 		using namespace Hazard;
@@ -61,6 +64,7 @@ namespace UI
 
 		m_Title = fmt::format("New {} Import options", Utils::AssetTypeToString(m_CurrentImportType));
 	}
+
 	void AssetImporterPanel::DrawTopBar()
 	{
 		using namespace Hazard;
@@ -77,6 +81,7 @@ namespace UI
 		}
 		ImGui::EndChild();
 	}
+
 	void AssetImporterPanel::DrawBottomBar()
 	{
 		using namespace Hazard;

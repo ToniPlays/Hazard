@@ -36,6 +36,7 @@ namespace Editor
             HZR_ERROR("World loading failure {}", e.what());
         });
 	}
+
 	void EditorWorldManager::SetWorld(Ref<Hazard::World> world)
 	{
 		auto& handler = Application::Get().GetModule<WorldHandler>();

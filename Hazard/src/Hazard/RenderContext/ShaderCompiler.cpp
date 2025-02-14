@@ -117,7 +117,7 @@ namespace Hazard
 			default: return "";
 		}
     #else
-        return "";
+        return "UNSUPPORTED";
     #endif
 	}
 

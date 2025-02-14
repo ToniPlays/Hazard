@@ -20,8 +20,8 @@ namespace Hazard
 
 		HRenderer::s_Engine = this;
 
-		AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
-		AssetManager::RegisterLoader<MaterialAssetLoader>(AssetType::Material);
+		//AssetManager::RegisterLoader<MeshAssetLoader>(AssetType::Mesh);
+		//AssetManager::RegisterLoader<MaterialAssetLoader>(AssetType::Material);
 		AssetManager::RegisterLoader<EnvironmentAssetLoader>(AssetType::EnvironmentMap);
 
 		s_Resources = hnew RenderResources();

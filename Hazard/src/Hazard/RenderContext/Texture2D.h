@@ -21,6 +21,7 @@ namespace Hazard
 		void SetExtent(const HazardRenderer::Extent& extent);
 		void SetMaxResolution(uint32_t resolution);
 		void SetMaxMipLevels(uint32_t maxMips);
+		void SetImageFormat(HazardRenderer::ImageFormat format) { m_ImageInfo.Format = format;  }
 		void Invalidate(Buffer imageData);
 
 		Ref<HazardRenderer::Image2D> GetSourceImage() const { return m_SourceImage2D; }

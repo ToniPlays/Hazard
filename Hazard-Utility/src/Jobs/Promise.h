@@ -61,7 +61,7 @@ public:
 		if (!m_JobGraph) return;
         
 		ContinueWith([instance = this](const auto&) mutable {
-            instance->Resolve();
+			instance->Resolve();
 		});
 	}
 
@@ -69,6 +69,8 @@ public:
 	{
 		return Promise<T>(graph);
 	}
+
+	operator bool() { return m_JobGraph; }
 
 private:
 	Promise(Ref<JobGraph> graph) : m_JobGraph(graph) {}

@@ -23,10 +23,10 @@ namespace Hazard
         };
 
     private:
-        static Coroutine SaveEnvironmentAsset(JobInfo& info, Ref<EnvironmentMap> map);
-        static Coroutine CreateImageFromSource(JobInfo& info, const std::filesystem::path& sourcePath);
-        static Coroutine GenerateEnvironmentMap(JobInfo& info, const CreateSettings& settings);
-        static Coroutine CreateEnvironmentAsset(JobInfo& info, uint32_t samples);
+        static Coroutine SaveEnvironmentAsset(JobInfo info, Ref<EnvironmentMap> map);
+        static Coroutine CreateImageFromSource(JobInfo info, const std::filesystem::path& sourcePath);
+        static Coroutine GenerateEnvironmentMap(JobInfo info, const CreateSettings& settings);
+        static Coroutine CreateEnvironmentAsset(JobInfo info, uint32_t samples);
     };
 }
 #pragma once

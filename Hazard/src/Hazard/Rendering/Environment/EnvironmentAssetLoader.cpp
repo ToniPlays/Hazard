@@ -8,6 +8,7 @@
 #include "Hazard/Rendering/RenderEngine.h"
 
 #include "Hazard/Assets/AssetPack.h"
+#include <Hazard/RenderContext/ImageAssetLoader.h>
 
 namespace Hazard
 {
@@ -16,7 +17,7 @@ namespace Hazard
 		if (!File::Exists(metadata.FilePath))
 		{
 			HZR_CORE_ERROR("File does not exist");
-			return nullptr;
+			throw JobException("File not found");
 		}
 
 		Ref<CachedBuffer> data = File::ReadBinaryFile(metadata.FilePath);
@@ -24,7 +25,10 @@ namespace Hazard
 		AssetPack pack = {};
 		pack.FromBuffer(data);
 
-		CreateSettings create = pack.AssetData->Read<CreateSettings>();
+
+		CreateSettings create = {};
+		if (pack.AssetData->Available())
+			create = pack.AssetData->Read<CreateSettings>();
 
 		Ref<Job> loadJob = Job::Create("Environment map source load", CreateImageFromSource, metadata.SourceFile);
 		Ref<Job> genJob = Job::Create("Environment map generate", GenerateEnvironmentMap, create);
@@ -49,7 +53,7 @@ namespace Hazard
 		JobGraphInfo info = {
 			.Name = "Environment map save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-            .Stages = { { "Save", 1.0f, { saveJob } },
+			.Stages = { { "Save", 1.0f, { saveJob } },
 			}
 		};
 
@@ -58,8 +62,6 @@ namespace Hazard
 
 	Ref<JobGraph> EnvironmentAssetLoader::Create(const CreateAssetSettings& settings)
 	{
-		HZR_CORE_ASSERT(!settings.SourcePath.empty(), "Source path cannot be empty");
-
 		CreateSettings create = {};
 		if (settings.Settings)
 			create = *(CreateSettings*)settings.Settings;
@@ -72,7 +74,7 @@ namespace Hazard
 			.Name = "Environment map create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
 			.Stages = { { "Load", 0.3f, { loadJob } },
-                        { "Convert", 0.5f, { genJob } },
+						{ "Convert", 0.5f, { genJob } },
 						{ "Create", 0.2f, { createJob } }
 			}
 		};
@@ -80,7 +82,7 @@ namespace Hazard
 		return Ref<JobGraph>::Create(info);
 	}
 
-    Coroutine EnvironmentAssetLoader::SaveEnvironmentAsset(JobInfo& info, Ref<EnvironmentMap> map)
+	Coroutine EnvironmentAssetLoader::SaveEnvironmentAsset(JobInfo info, Ref<EnvironmentMap> map)
 	{
 		CreateSettings create = {
 			.Resolution = map->GetSpec().Resolution,
@@ -90,36 +92,27 @@ namespace Hazard
 		Buffer buf = Buffer::Copy(&create, sizeof(CreateSettings));
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(buf);
 		info.Result(buffer);
-        co_return;
+		co_return;
 	}
 
-    Coroutine EnvironmentAssetLoader::CreateImageFromSource(JobInfo& info, const std::filesystem::path& sourcePath)
+	Coroutine EnvironmentAssetLoader::CreateImageFromSource(JobInfo info, const std::filesystem::path& sourcePath)
 	{
 		using namespace HazardRenderer;
-		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(sourcePath, true);
-
-		if (!header.ImageData)
-			throw JobException("Data not loaded");
-
-		Image2DCreateInfo sourceImage = {
-			.DebugName = fmt::format("Env map source: {}", sourcePath.string()),
-			.Usage = ImageUsage::Texture,
-			.Format = ImageFormat::RGBA32F,
-			.Extent = header.Extent,
-			.MaxMips = 1,
-			.Data = header.ImageData,
-		};
-
-		Ref<Image2D> image = Image2D::Create(&sourceImage);
-		info.Result(image);
-
-		header.ImageData.Release();
-        co_return;
+		if (!File::Exists(sourcePath))
+			co_return;
+		
+		Ref<Texture2DAsset> source = (co_await AssetManager::GetAssetAsync<Texture2DAsset>(sourcePath))[0];
+		info.Result(source);
+		info.Current->Finish();
 	}
 
-    Coroutine EnvironmentAssetLoader::GenerateEnvironmentMap(JobInfo& info, const CreateSettings& settings)
+	Coroutine EnvironmentAssetLoader::GenerateEnvironmentMap(JobInfo info, const CreateSettings& settings)
 	{
 		using namespace HazardRenderer;
+
+		Ref<Texture2DAsset> image = info.Graph->GetResults<Ref<Texture2DAsset>>()[0];
+		if (!image)
+			co_return;
 
 		CubemapCreateInfo cubemapSpec = {
 			.DebugName = fmt::format("Env map {}", settings.Resolution),
@@ -138,7 +131,6 @@ namespace Hazard
 			.pLayout = &layout,
 		};
 
-		Ref<Image2D> image = info.Graph->GetResults<Ref<Image2D>>()[0];
 		Ref<Cubemap> cubemap = Cubemap::Create(&cubemapSpec);
 		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("EquirectangularToCubemap");
 		Ref<DescriptorSet> computeSet = DescriptorSet::Create(&setInfo);
@@ -158,7 +150,7 @@ namespace Hazard
 		cmdBuffer->ImageMemoryBarrier(barrier);
 
 		computeSet->Write(0, 0, cubemap, RenderContextManager::GetDefaultSampler(), true);
-		computeSet->Write(1, 0, image, RenderContextManager::GetDefaultSampler(), true);
+		computeSet->Write(1, 0, image->GetSourceImage(), RenderContextManager::GetDefaultSampler(), true);
 
 		cmdBuffer->SetPipeline(pipeline);
 		cmdBuffer->SetDescriptorSet(computeSet, 0);
@@ -173,22 +165,23 @@ namespace Hazard
 
 		cubemap->RegenerateMips();
 		info.Result(cubemap);
-        co_return;
+		co_return;
 	}
 
-    Coroutine EnvironmentAssetLoader::CreateEnvironmentAsset(JobInfo& info, uint32_t samples)
+	Coroutine EnvironmentAssetLoader::CreateEnvironmentAsset(JobInfo info, uint32_t samples)
 	{
 		using namespace HazardRenderer;
 		Ref<Cubemap> cubemap = info.Graph->GetResults<Ref<Cubemap>>()[0];
 
 		Ref<EnvironmentMap> asset = Ref<EnvironmentMap>::Create();
 		asset->m_RadianceMap = cubemap;
-		asset->m_Spec.Resolution = cubemap->GetExtent().Width;
+		asset->m_Spec.Resolution = cubemap ? cubemap->GetExtent().Width : 2048;
 		asset->m_Spec.Samples = samples;
 
-		asset->Invalidate();
+		if (cubemap)
+			asset->Invalidate();
 
 		info.Result(asset);
-        co_return;
+		co_return;
 	}
 }

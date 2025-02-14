@@ -12,7 +12,7 @@
 
 namespace HazardRenderer::Vulkan
 {
-	VulkanShader::VulkanShader(const std::unordered_map<uint32_t, std::string>& shaderModules)
+	VulkanShader::VulkanShader(const std::string& debugName, const std::unordered_map<uint32_t, std::string>& shaderModules) : m_DebugName(debugName)
 	{
 		HZR_PROFILE_FUNCTION();
 
@@ -25,9 +25,11 @@ namespace HazardRenderer::Vulkan
 	{
 		HZR_PROFILE_FUNCTION();
 		Renderer::SubmitResourceFree([modules = m_ShaderModules]() mutable {
+
 			const auto device = VulkanContext::GetLogicalDevice()->GetVulkanDevice();
-		for (auto& shader : modules)
-			vkDestroyShaderModule(device, shader, nullptr);
+
+			for (auto& shader : modules)
+				vkDestroyShaderModule(device, shader, nullptr);
 			});
 	}
 	void VulkanShader::Reload()

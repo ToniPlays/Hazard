@@ -20,7 +20,7 @@ namespace Hazard
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
             .Stages = { { "Preprocess", 0.1f, { preprocessJob } },
 						{ "Asset load", 0.8f, { } },
-                { "Finalize",   0.1f, { finalizeJob } },
+						{ "Finalize",   0.1f, { finalizeJob } },
 			}
 		};
 
@@ -58,7 +58,7 @@ namespace Hazard
 		return Ref<JobGraph>::Create(pipeline);
 	}
 
-    Coroutine WorldAssetLoader::GetWorldContent(JobInfo& info, WorldSerializer serializer, uint32_t assetSaveFlags)
+    Coroutine WorldAssetLoader::GetWorldContent(JobInfo info, WorldSerializer serializer, uint32_t assetSaveFlags)
 	{
 		std::string result = serializer.Serialize();
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(Buffer::Copy(result.c_str(), result.length()));
@@ -66,7 +66,7 @@ namespace Hazard
         co_return;
 	}
 
-    Coroutine WorldAssetLoader::PreprocessWorldFile(JobInfo& info, AssetHandle handle, const LoadAssetSettings& settings)
+    Coroutine WorldAssetLoader::PreprocessWorldFile(JobInfo info, AssetHandle handle, const LoadAssetSettings& settings)
 	{
 		if (settings.Flags & ASSET_MANAGER_NO_DEPENENCY_LOADING) 
             co_return;
@@ -88,30 +88,24 @@ namespace Hazard
 		std::vector<Ref<Job>> assetJobs;
 		assetJobs.reserve(assets.Assets.size());
 
-		//for (auto& [meta, count] : assets.Assets)
-			//assetJobs.push_back(Job::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
+		for (auto& [meta, count] : assets.Assets)
+			assetJobs.push_back(Job::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
 
 		if (assetJobs.size() == 0)
             info.ContinueWith({ Job::Lambda("Dummy", [](JobInfo&) -> Coroutine { co_return; }) });
 		else info.ContinueWith(assetJobs);
 	}
 
-    Coroutine WorldAssetLoader::LoadRequiredAsset(JobInfo& info, AssetHandle handle)
+    Coroutine WorldAssetLoader::LoadRequiredAsset(JobInfo info, AssetHandle handle)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
-        if (!metadata.IsValid()) co_return;;
+        if (!metadata.IsValid()) co_return;
 		
-		Ref<JobGraph> loadGraph = AssetManager::GetLoadGraph(metadata);
-        /*//Promise promise = info.ParentGraph->SubGraph(loadGraph);
-
-		promise.Then([info](JobGraph&) mutable {
-			info.ParentGraph->Continue();
-		});
-
-		info.ParentGraph->Halt();*/
+		co_await AssetManager::GetAssetAsync<Asset>(handle);
+		info.Current->Finish();
 	}
 
-    Coroutine WorldAssetLoader::FinalizeWorld(JobInfo& info, AssetHandle handle)
+    Coroutine WorldAssetLoader::FinalizeWorld(JobInfo info, AssetHandle handle)
 	{
 		AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 		std::string source;
@@ -127,7 +121,7 @@ namespace Hazard
         co_return;
 	}
 
-	Coroutine WorldAssetLoader::CreateWorld(JobInfo& info, const std::filesystem::path& file)
+	Coroutine WorldAssetLoader::CreateWorld(JobInfo info, const std::filesystem::path& file)
 	{
 		Ref<World> world = Ref<World>::Create(file.string());
         world->SetSourceFilePath(file);

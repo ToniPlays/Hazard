@@ -34,6 +34,13 @@ namespace Hazard
 
 	World::~World()
 	{
+		auto view = GetEntitiesWith<RelationshipComponent>();
+		for (auto& e : view)
+		{
+			Entity entity = { e, this };
+			entity.SetParent({});
+		}
+
 		m_Registry.clear();
 	}
 
@@ -80,9 +87,8 @@ namespace Hazard
 		entt::registry& sourceRegistry = other.GetWorld().GetWorldRegistry();
 
 		CopyComponentIfExists<TagComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
-		UID id = UID();
-		entity.GetTag().Uid = id;
-		m_EntityUIDMap[id] = entity;
+		entity.GetTag().Uid = other.GetUID();
+		m_EntityUIDMap[other.GetUID()] = entity;
 
 		CopyComponentIfExists<RelationshipComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
 		CopyComponentIfExists<TransformComponent>(entity.GetHandle(), other.GetHandle(), m_Registry, sourceRegistry);
@@ -147,6 +153,17 @@ namespace Hazard
 			copied->m_EntityUIDMap[destEntity.GetUID()] = destEntity;
 		}
 
+		const auto& entities = copied->GetEntitiesWith<RelationshipComponent>();
+
+		for (auto entity : entities)
+		{
+			Entity e = { entity, copied.Raw() };
+			auto& rsc = e.GetComponent<RelationshipComponent>();
+			if (rsc.ParentHandle == 0) continue;
+
+			e.SetParent(copied->GetEntityFromUID(rsc.ParentHandle));
+		}
+
 		return copied;
 	}
 
@@ -156,7 +173,7 @@ namespace Hazard
 		Entity e = { entity, this };
 		auto& rsc = e.GetComponent<RelationshipComponent>();
 		Entity parent = TryGetEntityFromUID(rsc.ParentHandle);
-		if (!parent) return;
+		if (!parent.IsValid()) return;
 
 		parent.GetComponent<RelationshipComponent>().ChildHandles.push_back(e.GetUID());
 	}
@@ -166,6 +183,8 @@ namespace Hazard
 		auto& component = e.GetComponent<RelationshipComponent>();
 		Entity parent = TryGetEntityFromUID(component.ParentHandle);
 
+		if (!parent.IsValid()) return;
+
 		for (auto& childEntity : component.ChildHandles)
 		{
 			Entity child = TryGetEntityFromUID(childEntity);
@@ -174,7 +193,6 @@ namespace Hazard
 
 		if (!parent) return;
 
-		HZR_CORE_INFO("Removing child {} of {}", e.GetTag().Tag, parent.GetTag().Tag);
 		parent.RemoveChild(e);
 	}
 

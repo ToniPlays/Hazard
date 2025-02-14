@@ -24,6 +24,8 @@ private:
 
 private:
 	std::filesystem::path m_SourcePath;
+	Hazard::AssetHandle m_Handle;
 	Hazard::ImUI::Dropdown m_Resolution;
 	Hazard::ImUI::InputNumber<uint32_t> m_SampleCount;
+	Hazard::ImUI::Dropdown m_SourceDropdown = Hazard::ImUI::Dropdown("Source", 150.0f);
 };

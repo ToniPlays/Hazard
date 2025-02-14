@@ -145,14 +145,13 @@ void HazardEditorApplication::InitJobsystemHooks()
 	JobSystem& system = Application::Get().GetJobSystem();
 
 	system.Hook(JobSystemHook::Message, [](Severity severity, const std::string& message) {
-        return;
 		switch (severity)
 		{
 			case Severity::Warning:
-				HZR_WARN("Warn: {}", message);
+				HZR_WARN("JobSystem Warn: {}", message);
 				break;
 			case Severity::Error:
-				HZR_ERROR("Error: {}", message);
+				HZR_ERROR("JobSystem Error: {}", message);
 				break;
             default: break;
 		}

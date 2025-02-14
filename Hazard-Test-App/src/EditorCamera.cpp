@@ -186,7 +186,6 @@ namespace Editor {
 
 	void EditorCamera::MouseZoom(float delta)
 	{
-		/*
 		if (m_Is2DEnabled)
 		{
 			size2D -= delta * size2D * 0.25f;
@@ -194,7 +193,6 @@ namespace Editor {
 			SetIs2D(true);
 			return;
 		}
-		*/
 
 		m_Distance -= delta * ZoomSpeed();
 		const glm::vec3 forwardDir = GetForwardDirection();

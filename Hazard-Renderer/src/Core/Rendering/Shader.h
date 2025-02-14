@@ -127,6 +127,6 @@ namespace HazardRenderer
 		virtual std::unordered_map<uint32_t, Buffer> GetShaderCode() const = 0;
 		virtual void SetShaderCode(const std::unordered_map<uint32_t, Buffer>& shaderCode) = 0;
 
-		static Ref<Shader> Create(const std::unordered_map<uint32_t, std::string>& shaderModules);
+		static Ref<Shader> Create(const std::string& debugName, const std::unordered_map<uint32_t, std::string>& shaderModules);
 	};
 }

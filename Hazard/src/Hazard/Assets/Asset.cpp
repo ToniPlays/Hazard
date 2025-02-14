@@ -10,6 +10,12 @@ namespace Hazard
 		AssetManager::Unload(m_Handle);
 	}
 
+	void Asset::SetSourceFilePath(const std::filesystem::path& newPath)
+	{
+		m_SourceAssetPath = newPath; 
+		AssetManager::GetMetadata(m_Handle).SourceFile = newPath;
+	}
+
 	bool Asset::IsValid() const
 	{
 		return m_Handle != INVALID_ASSET_HANDLE && GetType() != AssetType::Undefined;

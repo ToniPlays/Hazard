@@ -48,7 +48,7 @@ namespace Hazard::Utils
 		if (ext == ".jpeg")		return AssetType::Image;
 		if (ext == ".jpg")		return AssetType::Image;
 		if (ext == ".png")		return AssetType::Image;
-		if (ext == ".hdr")		return AssetType::EnvironmentMap;
+		if (ext == ".hdr")		return AssetType::Image;
 		if (ext == ".tga")		return AssetType::Image;
 		if (ext == ".mp3")		return AssetType::AudioClip;
 		if (ext == ".ogg")		return AssetType::AudioClip;

@@ -45,6 +45,7 @@ void EditorAssetManager::LoadEditorAssets()
 	{
 		CreateAssetSettings settings = {
 			.Type = AssetType::Image,
+			.AccessPath = texture.Path,
 			.SourcePath = texture.Path,
 		};
 
@@ -57,9 +58,9 @@ void EditorAssetManager::LoadEditorAssets()
 			asset->IncRefCount();
             
 			}).Catch([texture](const JobException& e) {
-				HZR_ERROR("Failed to load {} with {}", texture.Path, e.what());
+				HZR_ERROR("Failed to load image {} with {}", texture.Path, e.what());
 				});
-        
+
         promise.Wait();
 	}
 }
@@ -170,6 +171,7 @@ void EditorAssetManager::ImportEngineMeshes()
 
 		CreateAssetSettings settings = {
 			.Type = AssetType::Mesh,
+			.AccessPath = file,
 			.SourcePath = file
 		};
 
@@ -220,7 +222,8 @@ void EditorAssetManager::ImportEngineImages()
 			SaveAssetSettings settings = {};
 			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
 			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
-			});
+			AssetManager::SaveAsset(asset, settings);
+		});
 	}
 }
 

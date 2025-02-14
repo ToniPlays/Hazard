@@ -24,6 +24,7 @@ namespace Hazard::ImUI
 		bool DidChange() { return m_DidChange; }
 		const std::string& GetSelectedValue() { return m_Options[m_Selected]; }
 
+
 	private:
 		std::string m_Title = "Undefined";
 		float m_Width = 0.0f;

@@ -17,12 +17,14 @@ EnvironmentAssetImporter::EnvironmentAssetImporter()
 void EnvironmentAssetImporter::Init(AssetHandle handle)
 {
 	m_SourcePath = "";
+	m_Handle = handle;
 	InitializeSettings();
 }
 
 void EnvironmentAssetImporter::Init(const std::filesystem::path& sourcePath)
 {
 	m_SourcePath = sourcePath;
+	m_Handle = INVALID_ASSET_HANDLE;
 	InitializeSettings();
 }
 
@@ -30,6 +32,7 @@ void EnvironmentAssetImporter::RenderUI()
 {
 	m_Resolution.Render();
 	m_SampleCount.Render(150.0f);
+	m_SourceDropdown.Render();
 }
 
 bool EnvironmentAssetImporter::Import()
@@ -37,7 +40,7 @@ bool EnvironmentAssetImporter::Import()
 	if (!m_SourcePath.empty())
 		return ImportFromNew();
 
-	return false;
+	return ReimportExisting();
 }
 
 void EnvironmentAssetImporter::InitializeSettings()
@@ -45,11 +48,24 @@ void EnvironmentAssetImporter::InitializeSettings()
 	m_SampleCount.SetRange(1, 1024);
 	m_SampleCount.SetValue(256);
 	m_Resolution.SetSelected(3);
+
+	std::vector<std::string> options;
+
+	for(auto& [key, metadata] : Hazard::AssetManager::GetMetadataRegistry())
+	{
+		if (metadata.Type == AssetType::Image)
+			options.push_back(metadata.FilePath.string());
+	}
+
+	m_SourceDropdown.SetOptions(options);
 }
 
 bool EnvironmentAssetImporter::ImportFromNew()
 {
 	using namespace Hazard;
+
+	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
+	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
 
 	EnvironmentAssetLoader::CreateSettings envSettings = {
 		.Resolution = (uint32_t)BIT(m_Resolution.GetSelected() + 9),
@@ -58,15 +74,12 @@ bool EnvironmentAssetImporter::ImportFromNew()
 
 	CreateAssetSettings settings = {
 		.Type = AssetType::EnvironmentMap,
+		.AccessPath = path,
 		.SourcePath = m_SourcePath,
 		.Settings = &envSettings,
 	};
 
     Promise<Ref<EnvironmentMap>> promise = AssetManager::CreateAssetAsync<EnvironmentMap>(settings);
-
-	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
-    
-	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
 
 	promise.ContinueWith([path, assetPanel](const auto& results) {
         Ref<Asset> asset = results[0];
@@ -86,5 +99,21 @@ bool EnvironmentAssetImporter::ImportFromNew()
 
 bool EnvironmentAssetImporter::ReimportExisting()
 {
-	return false;
+	using namespace Hazard;
+	AssetManager::GetAssetAsync<EnvironmentMap>(m_Handle).ContinueWith([value = m_SourceDropdown.GetSelectedValue(), handle = m_Handle](const auto& results) {
+		Ref<EnvironmentMap> env = results[0];
+		env->SetSourceFilePath(value);
+		AssetMetadata metadata = AssetManager::GetMetadata(env->GetHandle());
+
+		SaveAssetSettings settings = {
+			.TargetPath = metadata.FilePath,
+			.Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET,
+		};
+
+		AssetManager::SaveAsset(env, settings).ContinueWith([handle](const std::vector<Ref<EnvironmentMap>>& results) {
+			AssetManager::Reload<EnvironmentMap>(handle);
+		});
+		});
+
+	return true;
 }

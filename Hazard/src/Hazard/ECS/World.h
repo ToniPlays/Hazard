@@ -16,8 +16,10 @@ namespace Hazard
 		friend class Entity;
 		friend class WorldAssetLoader;
 		friend class WorldDeserializer;
+		friend class WorldHandler;
 
 	public:
+
 		World(const std::string& debugName);
 		World(World& other) = delete;
 		~World();

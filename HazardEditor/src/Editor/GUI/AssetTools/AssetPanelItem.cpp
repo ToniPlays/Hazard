@@ -144,9 +144,7 @@ namespace UI
 
             AssetType type = Hazard::Utils::AssetTypeFromExtension(File::GetFileExtension(m_SourcePath));
             if(File::GetFileExtension(m_SourcePath) == ".hasset")
-            {
                 type = AssetManager::GetMetadata(handle).Type;
-            }
             
             ImUI::DragSource<AssetHandle>(type, &handle, [&]() {
 				ImGui::Text("%s", name.c_str());
@@ -165,7 +163,7 @@ namespace UI
 			else
 			{
 				auto& panel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<AssetImporterPanel>();
-				//panel.Open(GetMetadata().Handle);
+				panel.Open(AssetManager::AssetHandleFromFile(m_SourcePath));
 			}
 		}
 
@@ -246,28 +244,29 @@ namespace UI
 
 	void AssetPanelItem::OnItemDoubleClicked()
 	{
-        /*
-		switch (GetType())
+		AssetHandle handle = AssetManager::AssetHandleFromFile(m_SourcePath);
+		AssetMetadata metadata = AssetManager::GetMetadata(handle);
+
+		switch (metadata.Type)
 		{
 			case AssetType::World:
-				Editor::EditorWorldManager::LoadWorld(m_Handle);
+				Editor::EditorWorldManager::LoadWorld(handle);
 				break;
 			case AssetType::Mesh:
 			{
 				auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<MeshAssetEditorPanel>();
 				panel.BringToFront();
-				panel.SetMeshHandle(m_Handle);
+				panel.SetMeshHandle(handle);
 				break;
 			}
 			case AssetType::Material:
 			{
 				auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<MaterialAssetEditorPanel>();
 				panel.BringToFront();
-				panel.SetMaterialHandle(m_Handle);
+				panel.SetMaterialHandle(handle);
 				break;
 			}
             default: break;
 		}
-         */
 	}
 }

@@ -55,7 +55,7 @@ namespace Hazard
 		AssetHandle GetHandle() const { return m_Handle; }
 		uint32_t GetFlags() const { return m_Flags; }
 		const std::filesystem::path& GetSourceFilePath() const { return m_SourceAssetPath; }
-		void SetSourceFilePath(const std::filesystem::path& newPath) { m_SourceAssetPath = newPath; }
+		void SetSourceFilePath(const std::filesystem::path& newPath);
 		bool IsValid() const;
 
 	private:

@@ -51,11 +51,7 @@ namespace Hazard
 	AssetHandle AssetManager::Import(const std::filesystem::path& path)
 	{
 		HZR_PROFILE_FUNCTION();
-		Ref<CachedBuffer> buffer = File::ReadBinaryFile(path);
-		AssetPack pack = {};
-		pack.FromBuffer(buffer);
-
-		HZR_CORE_ASSERT(!(pack.Flags & ASSET_PACK_HEADER && pack.Flags & ASSET_PACK_ELEMENT), "Invalid asset");
+		AssetPack pack = OpenAssetPack(path);
 
 		if (pack.Flags & ASSET_PACK_HEADER)
 			return ImportAssetPack(path, pack);
@@ -63,6 +59,16 @@ namespace Hazard
 			return ImportAsset(path, pack);
 
 		return INVALID_ASSET_HANDLE;
+	}
+
+	AssetPack AssetManager::OpenAssetPack(const std::filesystem::path& path)
+	{
+		Ref<CachedBuffer> buffer = File::ReadBinaryFile(path);
+		AssetPack pack = {};
+		pack.FromBuffer(buffer);
+
+		HZR_CORE_ASSERT(!(pack.Flags & ASSET_PACK_HEADER && pack.Flags & ASSET_PACK_ELEMENT), "Invalid asset");
+		return pack;
 	}
 
 	AssetHandle AssetManager::AssetHandleFromFile(const std::filesystem::path& file)
@@ -75,9 +81,9 @@ namespace Hazard
 
 		for (auto& [p, metadata] : s_Registry)
 		{
-			auto abs = File::GetFileAbsolutePath(metadata.SourceFile);
+			auto absSource = File::GetFileAbsolutePath(metadata.SourceFile);
 
-			if (abs.compare(path) == 0 && !abs.empty())
+			if (absSource.compare(path) == 0 && !absSource.empty())
 				return metadata.Handle;
 		}
 

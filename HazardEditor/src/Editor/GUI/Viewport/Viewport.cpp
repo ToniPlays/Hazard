@@ -148,9 +148,8 @@ namespace UI
 			OnMouseClicked(pos);
 		}
 
-        ImUI::DropTarget<std::filesystem::path>(AssetType::World, [](const auto& path) {
-			Application::Get().SubmitMainThread([path]() mutable {
-                auto handle = AssetManager::AssetHandleFromFile(path);
+        ImUI::DropTarget<AssetHandle>(AssetType::World, [](AssetHandle handle) {
+			Application::Get().SubmitMainThread([handle]() mutable {
 				Editor::EditorWorldManager::LoadWorld(handle);
 			});
 		});

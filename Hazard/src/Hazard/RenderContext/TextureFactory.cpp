@@ -31,11 +31,11 @@ namespace Hazard
 		return 0;
 	}
 
-	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip)
+	TextureHeader TextureFactory::LoadTextureFromSourceFile(const std::filesystem::path& path, bool verticalFlip, bool hdr)
 	{
 		HZR_PROFILE_FUNCTION();
 		stbi_set_flip_vertically_on_load(verticalFlip);
-		return File::GetFileExtension(path) == ".hdr" ? LoadFloatTextureFromFile(path) : LoadByteTextureFromFile(path);
+		return hdr ? LoadFloatTextureFromFile(path) : LoadByteTextureFromFile(path);
 	}
 
 	TextureHeader TextureFactory::LoadTextureFromMemory(Buffer buffer)

@@ -36,7 +36,6 @@ namespace Hazard
 		AssetMetadata& metadata = AssetManager::GetMetadata(m_Handle);
 
 		m_ImageInfo.DebugName = fmt::format("Image: {}", metadata.FilePath.string());
-		m_ImageInfo.Format = ImageFormat::RGBA;
 		m_ImageInfo.Usage = ImageUsage::Texture;
 		m_ImageInfo.Data = imageData;
 

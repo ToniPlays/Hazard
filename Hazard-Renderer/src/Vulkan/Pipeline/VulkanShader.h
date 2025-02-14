@@ -16,7 +16,7 @@ namespace HazardRenderer::Vulkan
 	class VulkanShader : public Shader
 	{
 	public:
-		VulkanShader(const std::unordered_map<uint32_t, std::string>& shaderModules);
+		VulkanShader(const std::string& debugName, const std::unordered_map<uint32_t, std::string>& shaderModules);
 		~VulkanShader();
 
 		void Reload() override;
@@ -33,6 +33,8 @@ namespace HazardRenderer::Vulkan
 
 	private:
 		void CreateShaderModules();
+
+		std::string m_DebugName;
 
 		std::unordered_map<uint32_t, Buffer> m_ShaderCode;
 		std::unordered_map<std::string, PushConstantRange> m_PushConstantRanges;

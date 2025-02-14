@@ -37,7 +37,7 @@ namespace Hazard
 		JobGraphInfo info = {
 			.Name = "Shader save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-            .Stages = { { "", 1.0f, { binaryJob } } },
+            .Stages = { { "Generate", 1.0f, { binaryJob } } },
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -62,8 +62,6 @@ namespace Hazard
 		return Ref<JobGraph>::Create(info);
 	}
 
-
-
 	Coroutine ShaderAssetLoader::LoadShaderSource(JobInfo& info, const std::filesystem::path& path)
 	{
 		using namespace HazardRenderer;
@@ -82,6 +80,7 @@ namespace Hazard
 
         info.Result(sources);
 		info.ContinueWith(loadingJobs);
+
         co_return;
 	}
 
@@ -96,6 +95,9 @@ namespace Hazard
 		try
 		{
 			auto& source = sources[stageFlags];
+			if (source.empty())
+				throw JobException("Shader source is empty");
+
 			auto compiled = ShaderCompiler::GetShaderFromSource(stageFlags, source, (RenderAPI)api);
 
 			ShaderCompileResult result = {

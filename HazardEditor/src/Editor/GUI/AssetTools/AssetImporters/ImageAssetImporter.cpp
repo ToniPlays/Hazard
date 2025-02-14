@@ -20,6 +20,7 @@ void ImageAssetImporter::Init(AssetHandle handle)
 
 	m_SourcePath = "";
 	m_Handle = handle;
+
 	InitializeSettings();
 }
 void ImageAssetImporter::Init(const std::filesystem::path& sourceFile)
@@ -60,16 +61,17 @@ bool ImageAssetImporter::ImportFromNew()
 	ImageAssetLoader::CreateSettings imageSettings = {};
 	imageSettings.Resolution = BIT(m_ResolutionDropdown.GetSelected() + 6);
 
+	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
+	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
+
 	CreateAssetSettings settings = {
 		.Type = AssetType::Image,
+		.AccessPath = path,
 		.SourcePath = m_SourcePath,
 		.Settings = &imageSettings
 	};
 
 	Promise<Ref<Texture2DAsset>> promise = AssetManager::CreateAssetAsync<Texture2DAsset>(settings);
-
-	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
-	auto path = File::FindAvailableName(assetPanel.GetOpenDirectory(), File::GetNameNoExt(m_SourcePath), ".hasset");
 
 	promise.ContinueWith([path, assetPanel](const auto& results) {
 		Ref<Asset> asset = results[0];
@@ -96,11 +98,11 @@ bool ImageAssetImporter::ReimportExisting()
 
 	SaveAssetSettings settings = {};
 	settings.Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
-
-	/*Promise<bool> promise = AssetManager::SaveAsset(asset, settings);
+	 
+	Promise<Ref<Texture2DAsset>> promise = AssetManager::SaveAsset<Texture2DAsset>(asset, settings);
 	promise.ContinueWith([handle = asset->GetHandle()](const auto& results) {
-		AssetManager::Reload(handle).Wait();
+		AssetManager::Reload<Texture2DAsset>(handle).Wait();
 	});
-	 */
+
 	return false;
 }

@@ -60,7 +60,7 @@ namespace Hazard
 			.Name = "Image load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
 			.Stages = { { "Load data", 0.8f, { sourceLoad } },
-                { "Create", 0.2f, { createImage } }
+					    { "Create", 0.2f, { createImage } }
 			}
 		};
 
@@ -72,7 +72,7 @@ namespace Hazard
 		if (!File::Exists(path))
 			throw JobException(fmt::format("Image source file does not exist: {}", path.string()));
 
-		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(path, settings.FlipOnLoad);
+		TextureHeader header = TextureFactory::LoadTextureFromSourceFile(path, settings.FlipOnLoad, File::GetFileExtension(path) == ".hdr");
 		if (!header.ImageData.Data)
 			throw JobException("Image load from source failed");
 
@@ -87,6 +87,7 @@ namespace Hazard
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
 		if (header.ImageData)
 		{
+			asset->SetImageFormat(header.Format);
 			asset->SetExtent(header.Extent);
 			asset->SetMaxMipLevels(header.Mips);
 			asset->Invalidate(header.ImageData);
@@ -111,7 +112,7 @@ namespace Hazard
 		BufferCreateInfo bufferInfo = {
 			.Name = "Image readback",
 			.UsageFlags = BUFFER_USAGE_STORAGE_BUFFER_BIT | BUFFER_USAGE_DYNAMIC,
-			.Size = region.Extent.Width * region.Extent.Height * region.Extent.Depth * sizeof(float),
+			.Size = region.Extent.Width * region.Extent.Height * region.Extent.Depth * 4 * TextureFactory::PixelSize(image->GetFormat()),
 		};
 
 		Ref<GPUBuffer> readbackBuffer = GPUBuffer::Create(&bufferInfo);
@@ -186,6 +187,7 @@ namespace Hazard
 
 		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
 		asset->SetExtent(header.Extent);
+		asset->SetImageFormat(header.Format);
 		asset->SetMaxMipLevels(1);
 		asset->Invalidate(pack.AssetData->Read<Buffer>(pack.AssetData->GetSize() - pack.AssetData->GetCursor()));
 

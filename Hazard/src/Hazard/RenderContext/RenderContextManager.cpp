@@ -43,8 +43,8 @@ namespace Hazard
 		m_Window = Window::Create(&rendererInfo);
 		m_Window->Show();
 
-		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 		AssetManager::RegisterLoader<ShaderAssetLoader>(AssetType::Shader);
+		AssetManager::RegisterLoader<ImageAssetLoader>(AssetType::Image);
 
 		m_Window->AddDebugCallback([this](const RenderMessage& message) {
 			switch (message.Severity)
@@ -58,9 +58,6 @@ namespace Hazard
         
         SamplerCreateInfo samplerInfo = {
             .DebugName = "DefaultImageSampler",
-            .MinFilter = FilterMode::LinearMip,
-            .MagFilter = FilterMode::LinearMip,
-            .Wrapping = ImageWrap::Repeat,
         };
 
         s_DefaultSampler = Sampler::Create(&samplerInfo);

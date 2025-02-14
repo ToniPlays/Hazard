@@ -6,6 +6,7 @@
 #include "Hazard/ImGUI/UIElements/Treenode.h"
 
 #include "Core/Defines.h"
+#include "Hazard/Assets/AssetPack.h"
 
 #include "imgui.h"
 #include <Filesystem/Directory.h>
@@ -77,7 +78,7 @@ namespace UI
 			m_PathSelection[m_CurrentPathSelection] = folder;
 			m_CurrentPathSelection++;
 			Refresh();
-		});
+			});
 	}
 
 	void AssetPanel::SetPreviouslySelectedFolder(uint32_t index)
@@ -88,7 +89,7 @@ namespace UI
 			m_CurrentPath = m_PathSelection[index - 1];
 			m_CurrentPathSelection = index;
 			Refresh();
-		});
+			});
 	}
 
 	void AssetPanel::OpenImport()
@@ -194,22 +195,22 @@ namespace UI
 				ImUI::Treenode favorites("Favorites", true);
 				favorites.Content([&]() {
 					ImUI::ScopedStyleColor color(ImGuiCol_ChildBg, style.Frame.FrameColor);
-				});
+					});
 
 				ImUI::Treenode folders(ProjectManager::GetCurrentProject().GetSettings().RuntimeConfig.ProjectName, true);
 				folders.DefaultOpen();
 				folders.Content([&]() {
 					for (const auto& folder : m_FolderData)
 						DrawFolderTreeItem(folder);
-				});
+					});
 				favorites.Render();
 				folders.Render();
 
 				ImUI::ContextMenu([&]() {
 					ImUI::MenuItem("Refresh", [&]() {
 						m_FolderData = GenerateFolderStructure();
+						});
 					});
-				});
 			}
 		}
 		ImGui::EndChild();
@@ -235,7 +236,7 @@ namespace UI
 
 		for (auto& item : m_CurrentItems)
 		{
-            Ref<Texture2DAsset> itemIcon = GetItemIcon(item.GetPath());
+			Ref<Texture2DAsset> itemIcon = GetItemIcon(item.GetPath());
 
 			if (!itemIcon) continue;
 
@@ -277,41 +278,27 @@ namespace UI
 			ImUI::MenuItem("New folder", [&]() {
 				CreateFolder(GetOpenDirectory() / "Folder");
 				changed = true;
-			});
+				});
 			ImUI::MenuHeader("Import");
 			ImUI::MenuItem("Import asset", [&]() {
 				OpenImport();
-			});
+				});
 
 			ImUI::MenuHeader("Quick create");
 			ImUI::MenuItem("Script", [&]() {
 				auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<ScriptCreatePanel>();
 				panel.SetDirectory(GetOpenDirectory());
 				panel.Open();
-			});
+				});
 			ImUI::MenuItem("World", [&]() {
-                Ref<World> world = AssetManager::CreateAsset<World>(CreateAssetSettings());
+				Ref<World> world = AssetManager::CreateAsset<World>(CreateAssetSettings());
 				Editor::EditorWorldManager::SetWorld(world);
 				changed = true;
-			});
+				});
 			ImUI::MenuItem("Material", [&]() {
-				
-				MaterialAssetLoader::CreateSettings matSettings = {};
-				CreateAssetSettings settings = {
-					.SourcePath = "",
-					.Settings = &matSettings
-				};
-
-				Ref<Material> material = AssetManager::CreateAsset<Material>(settings);
-
-				SaveAssetSettings saveSettings = {
-					.TargetPath = File::FindAvailableName(m_CurrentPath, "New material", ".hasset"),
-					.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
-				};
-
-				AssetManager::SaveAsset<Material>(material, saveSettings);
+				CreateMaterialAsset();
 				changed = true;
-			});
+				});
 
 			ImUI::MenuHeader("Advanced assets");
 
@@ -321,17 +308,17 @@ namespace UI
 					auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<ScriptCreatePanel>();
 					panel.SetDirectory(GetOpenDirectory());
 					panel.Open();
+					});
 				});
-			});
 			ImUI::Submenu("Editor", nullptr);
 			ImUI::Submenu("Materials and textures", [&]() {
 				ImUI::MenuItem("Material", nullptr);
 				ImUI::MenuItem("Shader", nullptr);
 				ImUI::MenuItem("Environment map", [&]() {
-					//AssetManager::CreateNewAsset(AssetType::EnvironmentMap, path, File::Relative(m_RootPath, path));
+					CreateEnvironmentMapAsset();
 					changed = true;
+					});
 				});
-			});
 			ImUI::Submenu("Physics", nullptr);
 			ImUI::Submenu("Sounds", nullptr);
 			ImUI::Submenu("User interface", nullptr);
@@ -339,15 +326,15 @@ namespace UI
 			ImUI::MenuHeader("Other");
 			ImUI::MenuItem(LBL_SHOW_IN_EXPLORER, [&]() {
 				OS::OpenDirectory(m_CurrentPath);
+				});
 			});
-		});
 
 		if (!changed) return;
 
 		Application::Get().SubmitMainThread([&]() {
 			GenerateFolderStructure();
 			RefreshFolderItems();
-		});
+			});
 	}
 
 	void AssetPanel::Refresh()
@@ -364,19 +351,18 @@ namespace UI
 
 		for (auto& item : Directory::GetAllInDirectory(m_CurrentPath))
 		{
-            if(File::GetNameNoExt(item).length() == 0) continue;
 			if (File::IsDirectory(item))
 			{
-				AssetPanelItem folder(item);
-				directories.push_back(folder);
+				directories.push_back(AssetPanelItem(item));
+				continue;
 			}
-            else
-            {
-                if(File::GetFileExtension(item) == ".hazard") continue;
-                
-                AssetPanelItem assetItem = AssetPanelItem(item);
-                files.push_back(assetItem);
-            }
+
+			if (File::GetFileExtension(item) != ".hasset") continue;
+
+			AssetHandle handle = GetItemHandle(item);
+			if (!handle) continue;
+
+			files.push_back(AssetPanelItem(item));
 		}
 
 		m_CurrentItems.clear();
@@ -417,7 +403,7 @@ namespace UI
 			ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
 				//EditorAssetManager::MoveAssetToFolder(handle, m_RootPath);
 				Refresh();
-			});
+				});
 		}
 
 		for (uint64_t i = m_Paths.size(); i > 0; i--)
@@ -435,10 +421,25 @@ namespace UI
 				ImUI::DropTarget<AssetHandle>((AssetType)j, [&, path](AssetHandle handle) {
 					//EditorAssetManager::MoveAssetToFolder(handle, path);
 					Refresh();
-				});
+					});
 			}
 		}
 	}
+	AssetHandle AssetPanel::GetItemHandle(const std::filesystem::path& item)
+	{
+		AssetHandle handle = AssetManager::AssetHandleFromFile(item);
+		if (handle != INVALID_ASSET_HANDLE) return handle;
+
+		HZR_INFO("Found asset that has moved: {}", item.string());
+
+		AssetPack pack = AssetManager::OpenAssetPack(item);
+
+		AssetManager::GetMetadata(pack.Handle).FilePath = item;
+		AssetManager::GetMetadataRegistry()[item] = AssetManager::GetMetadata(pack.Handle);
+		return pack.Handle;
+	}
+
+
 	void AssetPanel::DrawFolderTreeItem(const FolderStructureData& folder)
 	{
 		ImUI::Treenode treenode(File::GetName(folder.Path).c_str(), false);
@@ -449,11 +450,11 @@ namespace UI
 				SetSelectedFolder(folder.Path);
 				Application::Get().SubmitMainThread([&]() {
 					RefreshFolderItems();
-				});
+					});
 			}
 			for (const auto& subfolder : folder.SubFolders)
 				DrawFolderTreeItem(subfolder);
-		});
+			});
 		treenode.Render();
 
 		for (uint32_t i = 0; i < (uint32_t)AssetType::Last; i++)
@@ -461,46 +462,54 @@ namespace UI
 			ImUI::DropTarget<AssetHandle>((AssetType)i, [&](AssetHandle handle) {
 				//EditorAssetManager::MoveAssetToFolder(handle, path);
 				Refresh();
-			});
+				});
 		}
 	}
 
-    Ref<Texture2DAsset> AssetPanel::GetItemIcon(const std::filesystem::path& path)
+	Ref<Texture2DAsset> AssetPanel::GetItemIcon(const std::filesystem::path& path)
 	{
-        if(File::IsDirectory(path))
-        {
-            AssetHandle handle = EditorAssetManager::GetIconHandle("Folder");
-            return AssetManager::GetAsset<Texture2DAsset>(handle);
-        }
-        
-        auto ext = File::GetFileExtension(path);
-        
-        std::unordered_map<std::string, std::string> keys = { { ".cs", "Script" } };
-        
-        for(auto& [key, value] : keys)
-        {
-            if(key == ext)
-            {
-                AssetHandle handle = EditorAssetManager::GetIconHandle(value);
-                return AssetManager::GetAsset<Texture2DAsset>(handle);
-            }
-        }
-        if(ext == ".hasset")
-        {
-            AssetMetadata& meta = AssetManager::GetMetadata(AssetManager::AssetHandleFromFile(path));
-            switch(meta.Type)
-            {
-                case AssetType::World:
-                {
-                    AssetHandle handle = EditorAssetManager::GetIconHandle("World");
-                    return AssetManager::GetAsset<Texture2DAsset>(handle);
-                }
-                default: break;
-            }
-        }
-        
-        AssetHandle handle = EditorAssetManager::GetIconHandle("Default");
-        return AssetManager::GetAsset<Texture2DAsset>(handle);
+		if (File::IsDirectory(path))
+		{
+			AssetHandle handle = EditorAssetManager::GetIconHandle("Folder");
+			return AssetManager::GetAsset<Texture2DAsset>(handle);
+		}
+
+		auto ext = File::GetFileExtension(path);
+
+		std::unordered_map<std::string, std::string> keys = { { ".cs", "Script" } };
+
+		for (auto& [key, value] : keys)
+		{
+			if (key == ext)
+			{
+				AssetHandle handle = EditorAssetManager::GetIconHandle(value);
+				return AssetManager::GetAsset<Texture2DAsset>(handle);
+			}
+		}
+		if (ext == ".hasset")
+		{
+			AssetMetadata& meta = AssetManager::GetMetadata(AssetManager::AssetHandleFromFile(path));
+			switch (meta.Type)
+			{
+				case AssetType::World:
+				{
+					AssetHandle handle = EditorAssetManager::GetIconHandle("World");
+					return AssetManager::GetAsset<Texture2DAsset>(handle);
+				}
+				case AssetType::Image:
+				{
+					AssetHandle handle = AssetManager::AssetHandleFromFile(path);
+					if (AssetManager::IsAssetLoaded(handle))
+						return AssetManager::GetAsset<Texture2DAsset>(handle);
+
+					AssetManager::GetAssetAsync<Texture2DAsset>(handle);
+				}
+				default: break;
+			}
+		}
+
+		AssetHandle handle = EditorAssetManager::GetIconHandle("Default");
+		return AssetManager::GetAsset<Texture2DAsset>(handle);
 	}
 
 	std::vector<FolderStructureData> AssetPanel::GenerateFolderStructure()
@@ -555,5 +564,33 @@ namespace UI
 		Directory::Create(directoryPath);
 
 		Refresh();
+	}
+
+	void AssetPanel::CreateMaterialAsset() {
+
+	}
+
+	void AssetPanel::CreateEnvironmentMapAsset() {
+
+		auto path = File::FindAvailableName(m_CurrentPath, "Environment", ".hasset");
+
+		CreateAssetSettings settings = {
+			.Type = AssetType::EnvironmentMap,
+			.AccessPath = path,
+			.SourcePath = "",
+		};
+
+		Promise<Ref<EnvironmentMap>> promise = AssetManager::CreateAssetAsync<EnvironmentMap>(settings);
+		promise.ContinueWith([path](const std::vector<Ref<EnvironmentMap>>& results) {
+			Ref<EnvironmentMap> asset = results[0];
+			if (!asset) return;
+
+			SaveAssetSettings saveSettings = {
+				.TargetPath = path,
+				.Flags = ASSET_PACK_REFERENCES_FILE | ASSET_MANAGER_SAVE_AND_UPDATE,
+			};
+
+			AssetManager::SaveAsset<EnvironmentMap>(asset, saveSettings);
+			});
 	}
 }
