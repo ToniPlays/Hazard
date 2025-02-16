@@ -6,6 +6,7 @@
 
 namespace Hazard 
 {
+
 	class Material;
 
 	enum MeshCreateFlags
@@ -56,17 +57,19 @@ namespace Hazard
 		Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 
 	private:
-		static void PreprocessDependencies(JobInfo& info, Ref<MeshImporter> importer, const CreateSettings& settings);
-		static void ProcessMeshNode(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh);
-		static void ProcessMaterial(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot);
-		static void ProcessTexture(JobInfo& info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot);
-		static void FinalizeMesh(JobInfo& info, Ref<MeshImporter> importer);
+		static Coroutine CreateMeshFromSource(JobInfo info, AssetMetadata& metadata);
 
-		static void ReadMeshDataFromGPU(JobInfo& info, Ref<Mesh> mesh);
-		static void CompileMesh(JobInfo& info, Ref<Mesh> mesh);
+		static Coroutine PreprocessDependencies(JobInfo info, Ref<MeshImporter> importer, const CreateSettings& settings);
+		static Coroutine ProcessMeshNode(JobInfo info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh);
+		static Coroutine ProcessMaterial(JobInfo info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot);
+		static Coroutine ProcessTexture(JobInfo info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot);
+		static Coroutine FinalizeMesh(JobInfo info, Ref<MeshImporter> importer);
 
-		static void CreateMeshFromSource(JobInfo& info, AssetHandle handle);
+		static Coroutine ReadMeshDataFromGPU(JobInfo info, Ref<Mesh> mesh);
+		static Coroutine CompileMesh(JobInfo info, Ref<Mesh> mesh);
+
 
 		static void SetMaterialProperties(Ref<Material> material, const MeshImporter::MaterialData& materialData);
+		static void SetMaterialTextures(Ref<Material> material, std::unordered_map<MeshImporter::TextureType, MeshImporter::TextureMetadata>& textures, const std::unordered_map<std::string, AssetHandle> assets);
 	};
 }

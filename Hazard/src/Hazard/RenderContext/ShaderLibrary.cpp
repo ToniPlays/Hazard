@@ -79,7 +79,8 @@ namespace Hazard
 				Ref<ShaderAsset> asset = results[0];
 				BufferLayout layout = Vertex3D::Layout();
 
-				DescriptorSetLayout materialLayout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Albedo", 0, 1, DESCRIPTOR_TYPE_SAMPLER_2D } };
+				DescriptorSetLayout materialLayout = { { SHADER_STAGE_FRAGMENT_BIT, "u_Albedo", 0, 1, DESCRIPTOR_TYPE_SAMPLER_2D },
+													   { SHADER_STAGE_FRAGMENT_BIT, "u_NormalMap", 1, 1, DESCRIPTOR_TYPE_SAMPLER_2D } };
 
 				PipelineSpecification specs = {
 					.DebugName = "Pipeline PBR_Static",

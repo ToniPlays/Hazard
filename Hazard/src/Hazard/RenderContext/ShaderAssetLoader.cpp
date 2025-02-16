@@ -62,7 +62,7 @@ namespace Hazard
 		return Ref<JobGraph>::Create(info);
 	}
 
-	Coroutine ShaderAssetLoader::LoadShaderSource(JobInfo& info, const std::filesystem::path& path)
+	Coroutine ShaderAssetLoader::LoadShaderSource(JobInfo info, const std::filesystem::path& path)
 	{
 		using namespace HazardRenderer;
 		std::unordered_map<uint32_t, std::string> sources = ShaderCompiler::GetShaderSources(path);
@@ -84,7 +84,7 @@ namespace Hazard
         co_return;
 	}
 
-    Coroutine ShaderAssetLoader::CompileShaderSourceCode(JobInfo& info, uint32_t api, uint32_t stageFlags)
+    Coroutine ShaderAssetLoader::CompileShaderSourceCode(JobInfo info, uint32_t api, uint32_t stageFlags)
 	{
 		using namespace HazardRenderer;
 
@@ -115,7 +115,7 @@ namespace Hazard
         co_return;
 	}
 
-    Coroutine ShaderAssetLoader::CreateShaderAsset(JobInfo& info)
+    Coroutine ShaderAssetLoader::CreateShaderAsset(JobInfo info)
 	{
 		using namespace HazardRenderer;
         std::vector<ShaderCompileResult> results = info.Graph->GetResults<ShaderCompileResult>();
@@ -129,7 +129,7 @@ namespace Hazard
         co_return;
 	}
 
-	Coroutine ShaderAssetLoader::GenerateShaderAssetBinary(JobInfo& info, Ref<ShaderAsset> asset)
+	Coroutine ShaderAssetLoader::GenerateShaderAssetBinary(JobInfo info, Ref<ShaderAsset> asset)
 	{
 		using namespace HazardRenderer;
 		auto& code = asset->ShaderCode;
@@ -161,7 +161,7 @@ namespace Hazard
         co_return;
 	}
 
-    Coroutine ShaderAssetLoader::LoadShaderAsset(JobInfo& info, AssetHandle handle)
+    Coroutine ShaderAssetLoader::LoadShaderAsset(JobInfo info, AssetHandle handle)
 	{
 		using namespace HazardRenderer;
 

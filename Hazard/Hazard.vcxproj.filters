@@ -498,6 +498,8 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\ShaderParameterField.h" />
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\InputColor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -701,5 +703,7 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\ShaderParameterField.cpp" />
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\InputColor.cpp" />
   </ItemGroup>
 </Project>

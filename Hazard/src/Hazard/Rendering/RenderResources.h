@@ -61,6 +61,8 @@ namespace Hazard
 		Ref<Cubemap> WhiteCubemap;
 		Ref<Texture2DAsset> BRDFLut;
 
+		Ref<Material> DefaultPBRMaterial;
+
 		void Initialize()
 		{
 			BufferCreateInfo cameraUBO = {
@@ -98,6 +100,16 @@ namespace Hazard
 			data.Release();
 
 			BRDFLut = AssetManager::GetAsset<Texture2DAsset>(AssetManager::AssetHandleFromFile("res/Textures/BRDF_LUT.tga"));
+
+			auto& defaultResources = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources();
+
+			DefaultPBRMaterial = Ref<Material>::Create(ShaderLibrary::GetPipeline("PBR_Static"));
+			for (auto& [name, texture] : DefaultPBRMaterial->GetTextureParams())
+				DefaultPBRMaterial->Set(name, defaultResources.WhiteTexture);
+
+			DefaultPBRMaterial->SetConstant("Roughness", 0.5f);
+			DefaultPBRMaterial->SetConstant("Metalness", 0.5f);
+			DefaultPBRMaterial->SetConstant("Albedo", glm::vec3(1.0f));
 		}
 	};
 }

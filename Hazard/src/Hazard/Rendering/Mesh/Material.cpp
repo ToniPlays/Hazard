@@ -25,32 +25,47 @@ namespace Hazard
 		Invalidate();
 	}
 
-	void Material::Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap)
+	bool Material::Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap)
 	{
+		if (!m_Pipeline) return false;
+
 		auto& spec = m_Pipeline->GetSpecifications();
-		if (spec.SetLayouts.size() <= 1) return;
+		if (spec.SetLayouts.size() <= 1) return false;
 
 		for (auto& binding : spec.SetLayouts[1])
 		{
 			if (binding.Name != name) continue;
+			m_TextureParams[binding.Name].Value = cubemap;
 			m_DescriptorSet->Write(binding.Binding, 0, cubemap.As<Image>(), RenderContextManager::GetDefaultSampler(), true);
+
+			return true;
 		}
+		return false;
 	}
 
-	void Material::Set(const std::string& name, Ref<HazardRenderer::Image2D> image)
+	bool Material::Set(const std::string& name, Ref<HazardRenderer::Image2D> image)
 	{
+		if (!m_Pipeline) return false;
+
 		auto& spec = m_Pipeline->GetSpecifications();
-		if (spec.SetLayouts.size() <= 1) return;
+
+		if (spec.SetLayouts.size() <= 1) return false;
 
 		for (auto& binding : spec.SetLayouts[1])
 		{
 			if (binding.Name != name) continue;
+
+			m_TextureParams[binding.Name].Value = image;
 			m_DescriptorSet->Write(binding.Binding, 0, image.As<Image>(), RenderContextManager::GetDefaultSampler(), true);
+			return true;
 		}
+		return false;
 	}
 
 	void Material::Invalidate()
 	{
+		if (!m_Pipeline) return;
+
 		//Descriptor set 0 reserved for world info
 		auto& spec = m_Pipeline->GetSpecifications();
 		if (spec.SetLayouts.size() > 1)
@@ -63,6 +78,8 @@ namespace Hazard
 			};
 
 			m_DescriptorSet = DescriptorSet::Create(&setInfo);
+
+			InvalidateDescriptorSet();
 		}
 
 		InvalidatePushConstants();
@@ -87,5 +104,22 @@ namespace Hazard
 		}
 		m_PushConstants.Allocate(requiredSize);
 		m_PushConstants.ZeroInitialize();
+	}
+	void Material::InvalidateDescriptorSet()
+	{
+		m_TextureParams.clear();
+		if (!m_DescriptorSet) return;
+
+		const DescriptorSetLayout& layout = m_DescriptorSet->GetLayout();
+
+		for (auto& param : layout.GetElements())
+		{
+			if (param.Type & ~(DESCRIPTOR_TYPE_SAMPLER_2D, DESCRIPTOR_TYPE_SAMPLER_CUBE)) continue;
+
+			m_TextureParams[param.Name] = TextureParam {
+				.Name = param.Name,
+				.Binding = param.Binding,
+			};
+		}
 	}
 }

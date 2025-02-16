@@ -679,7 +679,6 @@ namespace UI
 
 			uint32_t flags = 0;
 			AssetHandle mesh = firstMc.MeshHandle;
-			AssetHandle material = 0;// firstMc.MaterialHandle;
 
 			for (auto& entity : entities)
 			{
@@ -689,11 +688,6 @@ namespace UI
 					mesh = INVALID_ASSET_HANDLE;
 					flags |= BIT(0);
 				}
-				/*if (mc.MaterialHandle != material)
-				{
-					material = INVALID_ASSET_HANDLE;
-					flags |= BIT(1);
-				}*/
 			}
 
 			std::string meshName = "";
@@ -702,11 +696,6 @@ namespace UI
 				meshName = File::GetNameNoExt(AssetManager::GetMetadata(mesh).FilePath);
 			else if (flags & BIT(0))
 				meshName = "---";
-
-			if (material)
-				materialName = File::GetNameNoExt(AssetManager::GetMetadata(material).FilePath);
-			else if (flags & BIT(1))
-				materialName = "---";
 
 			ImUI::TextField meshField(meshName);
 			meshField.SetHint("Mesh asset");
@@ -718,18 +707,8 @@ namespace UI
 						entity.GetComponent<MeshComponent>().MeshHandle = handle;
 				});
 			});
-
-			ImUI::TextField materialField("Material");
-			materialField.SetHint("Material asset");
-			materialField.Render();
-
-			ImUI::DropTarget<AssetHandle>(AssetType::Material, [&](AssetHandle handle) {
-				Application::Get().SubmitMainThread([handle, entities]() {
-					for (auto entity : entities)
-						entity.GetComponent<MeshComponent>().MaterialHandle = handle;
-				});
-			});
 		});
+
 		treenode.Menu((const char*)ICON_FK_LIST_UL, [&]() {
 			ImUI::MenuHeader("Component menu");
 			ImUI::MenuItem("Copy", []() {});

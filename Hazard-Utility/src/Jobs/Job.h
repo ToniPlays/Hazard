@@ -16,7 +16,7 @@ class Job : public RefCount
 {
 	friend class JobSystem;
 	friend class JobGraph;
-	using JobCallback = std::function<Coroutine(JobInfo&)>;
+	using JobCallback = std::function<Coroutine(JobInfo)>;
 
 public:
     
@@ -82,18 +82,18 @@ private:
 
 private:
     Coroutine m_JobCoroutine;
-	JobCallback m_JobCallback;
 	std::string m_JobName;
 
 	std::atomic<float> m_Progress = 0.0f;
 	std::atomic<float> m_ExecutionTime = 0.0f;
+	JobStatus m_Status = JobStatus::None;
 	
 	uint32_t m_InvocationId = 0;
+
+    std::optional<JobException> m_Exception;
 	JobGraph* m_JobGraph = nullptr;
     void* m_ResultBuffer = nullptr;
-
-	JobStatus m_Status = JobStatus::None;
-    std::optional<JobException> m_Exception;
+	JobCallback m_JobCallback;
 };
 
 struct JobInfo

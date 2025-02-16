@@ -2,6 +2,10 @@
 #include <Hazard/Rendering/RenderEngine.h>
 #include "Hazard/ECS/Entity.h"
 
+#include "Hazard/ImGUI/UIElements/ShaderParameterField.h"
+#include "Hazard/ImGUI/UIElements/Treenode.h"
+#include "Hazard/ImGUI/UIElements/TextureSlot.h"
+
 namespace UI
 {
 	using namespace HazardRenderer;
@@ -57,6 +61,11 @@ namespace UI
 		m_Renderer->Submit();
 	}
 
+	void MaterialAssetEditorPanel::OnOpen()
+	{
+		ListEnvironmentMaps();
+	}
+
 	void MaterialAssetEditorPanel::OnPanelRender()
 	{
 		using namespace Hazard;
@@ -92,24 +101,30 @@ namespace UI
 	void MaterialAssetEditorPanel::SetMaterialHandle(AssetHandle handle)
 	{
 		using namespace Hazard;
+
+		m_MaterialHandle = handle;
+
 		Ref<World> world = m_Renderer->GetTargetWorld();
 		auto view = world->GetEntitiesWith<MeshComponent>();
 
 		for (auto& e : view)
 		{
-			Entity entity = world->GetEntity(e);
-			entity.GetComponent<MeshComponent>().MaterialHandle = handle;
+			Entity entity = { e, world.Raw() };
+			AssetHandle meshHandle = entity.GetComponent<MeshComponent>().MeshHandle;
+
+			auto mesh = AssetManager::GetAsset<Mesh>(meshHandle);
+			for (auto& [node, submesh] : mesh->GetSubmeshData())
+				mesh->SetSubmeshMaterialHandle(node, handle);
 		}
-		ListEnvironmentMaps();
 	}
 
 	void MaterialAssetEditorPanel::SetMeshHandle(AssetHandle handle)
 	{
 		using namespace Hazard;
 		Ref<World> world = m_Renderer->GetTargetWorld();
-        Promise<Ref<Mesh>> promise = AssetManager::GetAssetAsync<Mesh>(handle);
+		Promise<Ref<Mesh>> promise = AssetManager::GetAssetAsync<Mesh>(handle);
 		promise.ContinueWith([world, handle](auto results) mutable {
-            Ref<Mesh> mesh = results[0];
+			Ref<Mesh> mesh = results[0];
 			auto view = world->GetEntitiesWith<MeshComponent>();
 			for (auto& e : view)
 			{
@@ -124,8 +139,9 @@ namespace UI
 					break;
 				}
 			}
-		});
-		ListEnvironmentMaps();
+			});
+
+		SetMaterialHandle(m_MaterialHandle);
 	}
 
 	void MaterialAssetEditorPanel::RenderSidebar()
@@ -138,14 +154,62 @@ namespace UI
 		if (m_EnvironmentDropdown.DidChange())
 		{
 			AssetHandle handle = m_EnvironmentMaps[m_EnvironmentDropdown.GetSelected()].Handle;
-			Ref<World> world = m_Renderer->GetTargetWorld();
-			auto view = world->GetEntitiesWith<SkyLightComponent>();
-			for (auto& entity : view)
-			{
-				Entity e = { entity, world.Raw() };
-				e.GetComponent<SkyLightComponent>().EnvironmentMapHandle = handle;
-			}
+			SetEnvironmentMap(handle);
 		}
+
+		Ref<Material> material = AssetManager::GetAsset<Material>(m_MaterialHandle);
+
+		ImUI::Treenode node = ImUI::Treenode("Properties", true);
+		node.DefaultOpen();
+
+		node.Content([material]() mutable {
+
+			for (auto& [name, data] : material->GetMaterialParams())
+			{
+				ImUI::ShaderParameterField field(name, data.Type);
+				field.SetValue(material->GetConstant<void*>(name));
+				field.Render();
+
+				if (field.DidChange())
+					material->SetConstant(name, field.ValuePtr());
+
+				ImUI::ShiftY(4.0f);
+			}
+			});
+
+		ImUI::Treenode textureNode = ImUI::Treenode("Textures", true);
+		textureNode.DefaultOpen();
+
+		textureNode.Content([material]() mutable {
+			auto textures = material->GetTextureParams();
+
+			for (auto& [name, texture] : textures)
+			{
+				ImUI::TextureSlot slot(name.c_str());
+				slot.SetImage(texture.Value);
+
+				slot.SetDropCallback(AssetType::Image, [name, material](AssetHandle handle) {
+					AssetManager::GetAssetAsync<Texture2DAsset>(handle).ContinueWith([name, material](const auto& results) mutable {
+						Ref<Texture2DAsset> image = results[0];
+						Application::Get().SubmitMainThread([material, name, image]() mutable {
+							material->Set(name, image->GetSourceImage());
+							});
+						});
+					});
+
+				slot.Render();
+			}
+			});
+
+		node.Render();
+		textureNode.Render();
+
+
+		ImUI::ShiftY(ImGui::GetContentRegionAvail().y - 52);
+		ImUI::ShiftX(4.0f);
+
+		if (ImGui::Button("Save", { 100, 48 }))
+			AssetManager::SaveAsset(material);
 
 		ImGui::EndChild();
 	}
@@ -203,19 +267,17 @@ namespace UI
 		Ref<World> world = Ref<World>::Create("Material editor world");
 		Entity skylight = world->CreateEntity("Skylight");
 
-		SkyLightComponent& comp = skylight.AddComponent<SkyLightComponent>();
-		comp.EnvironmentMapHandle = AssetManager::AssetHandleFromFile("res/Textures/lythwood_terrace_4k.hdr");
-		comp.Intensity = 4.0f;
-		comp.LodLevel = 0.1f;
+		skylight.AddComponent<SkyLightComponent>();
 
 		Entity mesh = world->CreateEntity("Material Preview");
 		auto& mc = mesh.AddComponent<MeshComponent>();
 		mc.MeshHandle = AssetManager::AssetHandleFromFile("res/Meshes/Cube.glb");
-        Promise<Ref<Mesh>> promise = AssetManager::GetAssetAsync<Mesh>(mc.MeshHandle);
+		Promise<Ref<Mesh>> promise = AssetManager::GetAssetAsync<Mesh>(mc.MeshHandle);
+
 		promise.ContinueWith([&mc](const auto& results) mutable {
-            Ref<Mesh> asset = results[0];
+			Ref<Mesh> asset = results[0];
 			mc.SubmeshHandle = asset->GetSubmesh(asset->GetSubmeshNodeFromName("Cube")).NodeID;
-		});
+			});
 
 		WorldRendererSpec spec = {
 			.DebugName = "Mesh editor",
@@ -233,12 +295,29 @@ namespace UI
 		for (auto& [path, metadata] : registry)
 		{
 			if (metadata.Type != AssetType::EnvironmentMap) continue;
+
 			m_EnvironmentMaps.push_back(metadata);
 			options.push_back(File::GetName(metadata.SourceFile));
 		}
 
 		m_EnvironmentDropdown.SetOptions(options);
-
 		m_EnvironmentDropdown.SetSelected(0);
+
+		SetEnvironmentMap(m_EnvironmentMaps[0].Handle);
+	}
+
+	void MaterialAssetEditorPanel::SetEnvironmentMap(AssetHandle handle)
+	{
+		using namespace Hazard;
+
+		Promise promise = AssetManager::GetAssetAsync<EnvironmentMap>(handle).ContinueWith([handle, renderer = m_Renderer](const auto& results) {
+			Ref<World> world = renderer->GetTargetWorld();
+			auto view = world->GetEntitiesWith<SkyLightComponent>();
+			for (auto& entity : view)
+			{
+				Entity e = { entity, world.Raw() };
+				e.GetComponent<SkyLightComponent>().EnvironmentMapHandle = handle;
+			}
+			});
 	}
 }

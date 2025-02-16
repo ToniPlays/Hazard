@@ -69,16 +69,10 @@ namespace Hazard
 		Ref<Mesh> mesh = AssetManager::GetAsset<Mesh>(meshComponent.MeshHandle);
 
 		if (!mesh) return;
-		//if (!mesh->IsValidSubmesh(meshComponent.SubmeshHandle)) return;
 
 		for (auto& [handle, submesh] : mesh->GetSubmeshData())
 		{
-			//SubmeshData submesh = mesh->GetSubmesh(meshComponent.SubmeshHandle);
-			Ref<Material> material = AssetManager::GetAsset<Material>(meshComponent.MaterialHandle);
-
-			if (!material)
-				material = AssetManager::GetAsset<Material>(submesh.DefaultMaterialHandle);
-
+			Ref<Material> material = AssetManager::GetAsset<Material>(submesh.DefaultMaterialHandle);
 			SubmitMesh(transform.GetWorldSpaceTransform() * submesh.Transform, mesh->GetVertexBuffer(submesh.NodeID), mesh->GetIndexBuffer(submesh.NodeID), material, id);
 		}
 	}
@@ -98,7 +92,8 @@ namespace Hazard
 	void HRenderer::SubmitMesh(const glm::mat4& transform, Ref<GPUBuffer> vertexBuffer, Ref<GPUBuffer> indexBuffer, Ref<Material> material, uint64_t count, int id)
 	{
 		HZR_PROFILE_FUNCTION();
-		if (!material) return;
+		if (!material)
+			material = s_Engine->GetResources().DefaultPBRMaterial;
 
 		auto& drawList = s_Engine->GetDrawList();
 		MeshKey key = { vertexBuffer, indexBuffer, material, static_cast<uint32_t>(count) };

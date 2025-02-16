@@ -14,21 +14,24 @@ namespace UI
 		~MaterialAssetEditorPanel() = default;
 
 		void Update() override;
+		void OnOpen() override;
 
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 
-		void SetMaterialHandle(AssetHandle handle);
 		void SetMeshHandle(AssetHandle handle);
-		
+		void SetMaterialHandle(AssetHandle handle);
+
 	private:
 		void RenderSidebar();
 		void RenderToolbar(ImVec2 corner);
 		void CreateWorldRenderer();
 		void ListEnvironmentMaps();
+		void SetEnvironmentMap(AssetHandle handle);
 
 	private:
 		uint32_t m_Width = 0, m_Height = 0;
+		AssetHandle m_MaterialHandle = INVALID_ASSET_HANDLE;
 
 		Ref<Hazard::WorldRenderer> m_Renderer;
 

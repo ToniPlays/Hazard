@@ -7,6 +7,8 @@ namespace Hazard::ImUI
 {
 	void Dropdown::Render()
 	{
+		m_DidChange = false;
+
 		const Style& style = StyleManager::GetCurrent();
 		ImGui::Columns(2, 0, false);
 		ImGui::SetColumnWidth(0, m_Width);

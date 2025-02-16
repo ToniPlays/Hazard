@@ -6,6 +6,8 @@
 #include "Utility/Awaitable.h"
 #include "JobGraph.h"
 
+#include "spdlog/fmt/fmt.h"
+
 class Job;
 class JobSystem;
 
@@ -58,11 +60,20 @@ public:
 
     void OnSuspend() override
 	{
-		if (!m_JobGraph) return;
+		if (!m_JobGraph)
+		{
+			this->Resolve();
+			return;
+		}
         
 		ContinueWith([instance = this](const auto&) mutable {
 			instance->Resolve();
 		});
+
+		Catch([instance = this](const JobException& err) {
+			std::cout << fmt::format("Promise failed with: {0}", err.what()) << std::endl;
+			instance->Resolve();
+			});
 	}
 
 	static Promise<T> Create(Ref<JobGraph> graph)

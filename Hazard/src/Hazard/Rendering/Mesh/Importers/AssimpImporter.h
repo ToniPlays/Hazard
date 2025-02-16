@@ -42,6 +42,9 @@ namespace Hazard
 
 		void PrintHierarchy(const aiNode* node, uint32_t level);
 		std::unordered_map<MeshImporter::TextureType, uint32_t> GetMaterialTextures(aiMaterial* material);
+
+		TextureType AiTextureTypeToType(aiTextureType type);
+
 	private:
 
 		static HazardRenderer::ShaderDataType AiPropertyToShaderType(const aiMaterialProperty& material);
@@ -52,6 +55,8 @@ namespace Hazard
 
 		Callback<void(float)> m_LoadCallback;
 	};
+
+
 
 
 	class AssimpProgressHandler : public Assimp::ProgressHandler

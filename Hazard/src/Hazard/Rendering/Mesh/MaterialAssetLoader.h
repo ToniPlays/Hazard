@@ -27,8 +27,8 @@ namespace Hazard
         Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 
     private:
-        static void LoadMaterialAsset(JobInfo& info, const std::filesystem::path& path);
-        static void CreateMaterialAsset(JobInfo& info, const CreateSettings& settings);
-        static void SaveMaterialAsset(JobInfo& info, Ref<Material> material);
+        static Coroutine LoadMaterialAsset(JobInfo info, const std::filesystem::path& path);
+        static Coroutine CreateMaterialAsset(JobInfo info, const CreateSettings& settings);
+        static Coroutine SaveMaterialAsset(JobInfo info, Ref<Material> material);
     };
 }

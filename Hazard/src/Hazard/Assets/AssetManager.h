@@ -32,7 +32,7 @@ namespace Hazard
 	struct SaveAssetSettings
 	{
 		std::filesystem::path TargetPath;
-		uint32_t Flags = ASSET_MANAGER_SAVE_AND_UPDATE;
+		uint32_t Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
 	};
 
 	struct CreateAssetSettings
@@ -81,7 +81,10 @@ namespace Hazard
 		{
 			HZR_CORE_ASSERT(!settings.AccessPath.empty(), "Access path must not be empty");
 			Ref<JobGraph> graph = GetCreateGraph(settings);
-			if (!graph) return Promise<Ref<T>>();
+			if (!graph)
+			{
+				return Promise<Ref<T>>();
+			}
 
 			Promise<Ref<T>> promise = Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
 
@@ -105,7 +108,8 @@ namespace Hazard
 				s_LoadedAssets[asset->GetHandle()] = asset;
                 s_Registry[settings.AccessPath] = metadata;
 
-				HZR_CORE_INFO("Created asset {}", settings.SourcePath.string());
+				HZR_CORE_INFO("Created asset: {}", metadata.FilePath.string());
+
 				}).Catch([](const JobException& e) {
 					HZR_CORE_ERROR("Something went wrong: {0}", e.what());
 				});

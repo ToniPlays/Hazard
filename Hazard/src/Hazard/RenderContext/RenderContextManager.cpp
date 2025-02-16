@@ -61,6 +61,7 @@ namespace Hazard
         };
 
         s_DefaultSampler = Sampler::Create(&samplerInfo);
+		
 	}
 
 	void RenderContextManager::PreRender()

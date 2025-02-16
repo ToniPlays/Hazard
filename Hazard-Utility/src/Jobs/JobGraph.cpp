@@ -48,7 +48,18 @@ void JobGraph::ContinueWith(const std::vector<Ref<Job>>& jobs)
 
 float JobGraph::GetProgress()
 {
-	return 0.0f;
+	float progress = 0.0f;
+
+	for (auto& stage : m_Info.Stages)
+	{
+		float total = 0.0f;
+		for (auto& job : stage.Jobs)
+			total += job->GetProgress();
+
+		progress += total / (float)stage.Jobs.size() * stage.Weight;
+	}
+
+	return progress;
 }
 
 void JobGraph::OnJobFinished(Ref<Job> job)
@@ -85,7 +96,7 @@ void JobGraph::OnJobFailed(Ref<Job> job)
 	if (m_Info.Flags & JOB_GRAPH_TERMINATE_ON_ERROR)
 	{
         m_JobSystem->OnGraphFinished(this);
-        m_OnFinishedCallback.Invoke();
+        m_OnFailedCallback.Invoke(job->GetException().value());
 		m_HasFinished = true;
 		m_HasFinished.notify_all();
 

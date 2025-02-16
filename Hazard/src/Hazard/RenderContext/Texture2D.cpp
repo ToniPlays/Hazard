@@ -35,7 +35,7 @@ namespace Hazard
 		using namespace HazardRenderer;
 		AssetMetadata& metadata = AssetManager::GetMetadata(m_Handle);
 
-		m_ImageInfo.DebugName = fmt::format("Image: {}", metadata.FilePath.string());
+		m_ImageInfo.DebugName = fmt::format("Image: {}", File::GetName(metadata.FilePath));
 		m_ImageInfo.Usage = ImageUsage::Texture;
 		m_ImageInfo.Data = imageData;
 

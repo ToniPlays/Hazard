@@ -35,7 +35,7 @@ namespace Hazard {
 		friend class Entity;
 	private:
 		glm::vec3 Translation = { 0.0f, 0.0f, 0.0f };
-		glm::quat Rotation;
+		glm::quat Rotation = glm::quat({ 0.0f, 0.0f, 0.0f });
 		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
 		glm::mat4 LocalTransform = glm::mat4(1.0f);
 		glm::mat4 WorldTransform = glm::mat4(1.0f);
@@ -101,6 +101,5 @@ namespace Hazard {
 	{
 		AssetHandle MeshHandle = INVALID_ASSET_HANDLE;
 		uint64_t SubmeshHandle = 0;
-		AssetHandle MaterialHandle = INVALID_ASSET_HANDLE;
 	};
 }

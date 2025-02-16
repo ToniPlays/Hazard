@@ -34,28 +34,40 @@ namespace Hazard::ImUI
 
 			ImGui::SetNextItemWidth(width);
 
-			AssetMetadata& metadata = AssetManager::GetMetadata(m_Handle);
-
-			ImUI::TextField text(metadata.FilePath.empty() ? "None" : metadata.FilePath.string());
-			text.Render();
-
-			if (!m_DropType.empty())
-				ImUI::DropTarget<AssetHandle>(m_DropType.c_str(), m_Callback);
-
-			ImGui::NextColumn();
-
-			if (metadata.IsValid())
+			if (m_Image2D)
 			{
-				/*
-				if (metadata.LoadState == LoadState::None)
-                 Promise promise = AssetManager::GetAssetAsync(m_Handle);
-				else if (metadata.LoadState == LoadState::Loading)
-					m_Handle = INVALID_ASSET_HANDLE;
-				*/
+				ImUI::TextField text(m_Image2D->GetDebugName().empty() ? "None" : m_Image2D->GetDebugName());
+				text.Render();
+
+				if (!m_DropType.empty())
+					ImUI::DropTarget<AssetHandle>(m_DropType.c_str(), m_Callback);
 			}
-			else m_Handle = INVALID_ASSET_HANDLE;
+			else {
+				AssetMetadata& metadata = AssetManager::GetMetadata(m_Handle);
+
+				ImUI::TextField text(metadata.FilePath.empty() ? "None" : metadata.FilePath.string());
+				text.Render();
+
+				if (!m_DropType.empty())
+					ImUI::DropTarget<AssetHandle>(m_DropType.c_str(), m_Callback);
+
+				ImGui::NextColumn();
+
+				if (metadata.IsValid())
+				{
+					/*
+					if (metadata.LoadState == LoadState::None)
+					 Promise promise = AssetManager::GetAssetAsync(m_Handle);
+					else if (metadata.LoadState == LoadState::Loading)
+						m_Handle = INVALID_ASSET_HANDLE;
+					*/
+				}
+				else m_Handle = INVALID_ASSET_HANDLE;
+			}
 
 			Ref<Texture2DAsset> asset = AssetManager::GetAsset<Texture2DAsset>(m_Handle);
+			if (asset)
+				m_Image2D = asset->GetSourceImage();
 
 			ImUI::ShiftX(-8.0f);
 
@@ -66,7 +78,7 @@ namespace Hazard::ImUI
 			}
 			else
 			{
-				ImUI::Image(asset->GetSourceImage(), asset->GetSampler(), { size, size });
+				ImUI::Image(m_Image2D, asset->GetSampler(), { size, size });
 			}
 
 			ImGui::Columns();
@@ -82,9 +94,12 @@ namespace Hazard::ImUI
 		bool DidChange() { return m_DidChange; }
 		AssetHandle GetValue() { return m_Handle; }
 
+		void SetImage(Ref<Image2D> image) { m_Image2D = image; };
+
 	private:
 		std::string m_Title;
 		AssetHandle m_Handle;
+		Ref<HazardRenderer::Image2D> m_Image2D = nullptr;
 		std::string m_DropType;
 		std::function<void(AssetHandle)> m_Callback;
 		bool m_DidChange = false;

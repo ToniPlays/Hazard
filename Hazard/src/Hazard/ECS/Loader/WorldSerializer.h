@@ -115,7 +115,6 @@ namespace Hazard
 				YamlUtils::Serialize(out, "Active", component.Active);
 				YamlUtils::Serialize(out, "Mesh", component.MeshHandle);
 				YamlUtils::Serialize(out, "Submesh", component.SubmeshHandle);
-				YamlUtils::Serialize(out, "Material", component.MaterialHandle);
 			});
 		}
 		template<>

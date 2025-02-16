@@ -27,6 +27,7 @@ namespace Hazard
 
 		//Create descriptor for current camera
 		Ref<Pipeline> pbrShader = ShaderLibrary::GetPipeline("PBR_Static");
+
 		auto layout = pbrShader->GetSpecifications().SetLayouts[0];
 
 		DescriptorSetCreateInfo setInfo = {

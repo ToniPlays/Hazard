@@ -20,6 +20,7 @@ namespace Hazard
 			Specular,
 			Emission,
 			Metalness,
+			Roughness,
 			Normal,
 			Height,
 			Shininess,

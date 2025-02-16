@@ -92,7 +92,7 @@ namespace Hazard
 			assetJobs.push_back(Job::Create(fmt::format("AssetLoad: {0}", handle), LoadRequiredAsset, meta.Handle));
 
 		if (assetJobs.size() == 0)
-            info.ContinueWith({ Job::Lambda("Dummy", [](JobInfo&) -> Coroutine { co_return; }) });
+            info.ContinueWith({ Job::Lambda("Dummy", [](JobInfo) -> Coroutine { co_return; }) });
 		else info.ContinueWith(assetJobs);
 	}
 

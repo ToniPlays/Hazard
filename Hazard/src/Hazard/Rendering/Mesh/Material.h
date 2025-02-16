@@ -11,54 +11,82 @@
 
 namespace Hazard
 {
-    struct MaterialParam
-    {
-        std::string Name;
-        HazardRenderer::ShaderDataType Type;
-        uint32_t Offset;
-    };
+	struct MaterialParam
+	{
+		std::string Name;
+		HazardRenderer::ShaderDataType Type;
+		uint32_t Offset;
+	};
 
-    class Material : public Asset
-    {
-    public:
-        Material() = default;
-        Material(Ref<HazardRenderer::Pipeline> pipeline);
-        ~Material();
+	struct TextureParam
+	{
+		std::string Name;
+		uint32_t Binding;
+		Ref<HazardRenderer::Image> Value;
+	};
 
-        AssetType GetType() const override { return AssetType::Material; }
-        
-        const std::unordered_map<std::string, MaterialParam> GetMaterialParams() const { return m_MaterialParams; }
-        Buffer GetPushConstantData() const { return m_PushConstants; }
-        void SetPushConstantData(Buffer data) { return m_PushConstants.Write(data.Data, data.Size); }
+	class Material : public Asset
+	{
+	public:
+		Material() = default;
+		Material(Ref<HazardRenderer::Pipeline> pipeline);
+		~Material();
 
-        Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; };
-        Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; };
+		AssetType GetType() const override { return AssetType::Material; }
 
-        void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline);
-        void Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap);
-        void Set(const std::string& name, Ref<HazardRenderer::Image2D> texture);
+		const std::unordered_map<std::string, MaterialParam> GetMaterialParams() const { return m_MaterialParams; }
+		const std::unordered_map<std::string, TextureParam> GetTextureParams() const { return m_TextureParams; }
 
-        template<typename T>
-        void Set(const std::string& name, T value) 
-        {
-            if (!m_MaterialParams.contains(name)) return;
+		Buffer GetPushConstantData() const { return m_PushConstants; }
+		void SetPushConstantData(Buffer data) { return m_PushConstants.Write(data.Data, data.Size); }
 
-            auto& param = m_MaterialParams[name];
-            if constexpr (std::is_same<T, void*>::value)
-                m_PushConstants.Write(value, ShaderDataTypeSize(param.Type), param.Offset);
-            else
-                m_PushConstants.Write(&value, ShaderDataTypeSize(param.Type), param.Offset);
-        }
+		Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; };
+		Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; };
 
-    private:
-        void Invalidate();
-        void InvalidatePushConstants();
+		void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline);
+		bool Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap);
+		bool Set(const std::string& name, Ref<HazardRenderer::Image2D> texture);
 
-    private:
-        Ref<HazardRenderer::Pipeline> m_Pipeline;
-        Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;
-        std::unordered_map<std::string, MaterialParam> m_MaterialParams;
+		template<typename T>
+		T GetConstant(const std::string& name)
+		{
+			if constexpr (std::is_same<T, void*>::value)
+			{
+				if (!m_MaterialParams.contains(name)) return nullptr;
 
-        Buffer m_PushConstants;
-    };
+				auto& param = m_MaterialParams[name];
+				return m_PushConstants.ReadBytes(ShaderDataTypeSize(param.Type), param.Offset);
+			}
+			else 
+			{
+				if (!m_MaterialParams.contains(name)) return T();
+
+				auto& param = m_MaterialParams[name];
+				return m_PushConstants.Read<T>(param.Offset);
+			}
+		}
+
+		template<typename T>
+		void SetConstant(const std::string& name, T value)
+		{
+			auto& param = m_MaterialParams[name];
+			if constexpr (std::is_same<T, void*>::value)
+				m_PushConstants.Write(value, ShaderDataTypeSize(param.Type), param.Offset);
+			else
+				m_PushConstants.Write(&value, ShaderDataTypeSize(param.Type), param.Offset);
+		}
+
+	private:
+		void Invalidate();
+		void InvalidatePushConstants();
+		void InvalidateDescriptorSet();
+
+	private:
+		Ref<HazardRenderer::Pipeline> m_Pipeline;
+		Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;
+		std::unordered_map<std::string, MaterialParam> m_MaterialParams;
+		std::unordered_map<std::string, TextureParam> m_TextureParams;
+
+		Buffer m_PushConstants;
+	};
 }

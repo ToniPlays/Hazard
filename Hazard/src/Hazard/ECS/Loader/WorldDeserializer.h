@@ -173,7 +173,6 @@ namespace Hazard
 			YamlUtils::Deserialize(comp, "Active", c.Active, true);
 			YamlUtils::Deserialize<AssetHandle>(comp, "Mesh", c.MeshHandle, INVALID_ASSET_HANDLE);
 			YamlUtils::Deserialize<uint64_t>(comp, "Submesh", c.SubmeshHandle, 0);
-			YamlUtils::Deserialize<AssetHandle>(comp, "Material", c.MaterialHandle, INVALID_ASSET_HANDLE);
 		};
 
 		template<>

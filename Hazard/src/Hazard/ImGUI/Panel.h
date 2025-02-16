@@ -18,12 +18,18 @@ namespace Hazard::ImUI
 
 		const std::string& GetTitle() const { return m_Title; }
 		
+		virtual void OnOpen() {}
+		virtual void OnClose() {}
+
 		void Render() override;
 
 		void BringToFront()
 		{
 			ImGuiWindow* window = ImGui::FindWindowByName(m_Title.c_str());
+			OnOpen();
+
 			if (!window) return;
+
 
 			m_IsOpen = true;
 			ImGui::BringWindowToFocusFront(window);

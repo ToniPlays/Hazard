@@ -25,12 +25,12 @@ namespace Hazard
 		Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 
 	private:
-		static Coroutine LoadShaderSource(JobInfo& info, const std::filesystem::path& path);
-		static Coroutine CompileShaderSourceCode(JobInfo& info, uint32_t api, uint32_t stageFlags);
-		static Coroutine CreateShaderAsset(JobInfo& info);
+		static Coroutine LoadShaderSource(JobInfo info, const std::filesystem::path& path);
+		static Coroutine CompileShaderSourceCode(JobInfo info, uint32_t api, uint32_t stageFlags);
+		static Coroutine CreateShaderAsset(JobInfo info);
 
-		static Coroutine GenerateShaderAssetBinary(JobInfo& info, Ref<ShaderAsset> asset);
-		static Coroutine LoadShaderAsset(JobInfo& info, AssetHandle handle);
+		static Coroutine GenerateShaderAssetBinary(JobInfo info, Ref<ShaderAsset> asset);
+		static Coroutine LoadShaderAsset(JobInfo info, AssetHandle handle);
 
 		struct ShaderCompileResult
 		{

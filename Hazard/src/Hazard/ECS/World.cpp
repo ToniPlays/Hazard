@@ -131,7 +131,10 @@ namespace Hazard
 	{
 		//TODO: Call some functions before destroy
 		if (entity.HasComponent<RelationshipComponent>())
+		{
+			entity.SetParent({});
 			entity.RemoveComponent<RelationshipComponent>();
+		}
 
 		m_Registry.destroy(entity);
 	}

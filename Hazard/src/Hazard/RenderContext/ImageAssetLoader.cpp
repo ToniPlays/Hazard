@@ -69,6 +69,9 @@ namespace Hazard
 
     Coroutine ImageAssetLoader::ImageDataLoadFromSource(JobInfo info, const std::filesystem::path& path, CreateSettings settings)
 	{
+		if (settings.Empty)
+			co_return;
+
 		if (!File::Exists(path))
 			throw JobException(fmt::format("Image source file does not exist: {}", path.string()));
 
@@ -82,9 +85,15 @@ namespace Hazard
 
     Coroutine ImageAssetLoader::CreateImageFromData(JobInfo info, CreateSettings settings)
 	{
+		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
+		if (settings.Empty)
+		{
+			info.Result(asset);
+			co_return;
+		}
+
 		TextureHeader header = info.Graph->GetResults<TextureHeader>()[0];
 
-		Ref<Texture2DAsset> asset = Ref<Texture2DAsset>::Create();
 		if (header.ImageData)
 		{
 			asset->SetImageFormat(header.Format);

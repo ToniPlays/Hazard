@@ -19,7 +19,7 @@ struct VertexOuput
     vec4 Color;
     vec3 WorldPosition;
     vec3 Normal;
-    vec3 TextureCoords;
+    vec2 TextureCoords;
     mat3 WorldNormal;
 };
 
@@ -42,7 +42,7 @@ void main()
     Output.Normal = mat3(transform) * a_Normal;
     Output.WorldNormal = mat3(transform) * mat3(a_Tangent, a_Binormal, a_Normal);
     Output.WorldPosition = worldPosition.xyz;
-    Output.TextureCoords = a_TextureCoords;
+    Output.TextureCoords = a_TextureCoords.xy;
     
     v_EntityID = 0;
 }
@@ -55,7 +55,7 @@ struct VertexOuput
     vec4 Color;
     vec3 WorldPosition;
     vec3 Normal;
-    vec3 TextureCoords;
+    vec2 TextureCoords;
     mat3 WorldNormal;
 };
 
@@ -91,23 +91,26 @@ layout(location = 1) out uint EntityID;
 #include "Utils/PostProcessing.glslh"
 
 layout(binding = 0, set = 1) uniform sampler2D u_Albedo;
-
+layout(binding = 1, set = 1) uniform sampler2D u_NormalMap;
 
 const float gamma = 2.2;
-const float dielectric = 0.04;
+const vec3 dielectric = vec3(0.04);
 
-void main() 
+void main()
 {
-    m_Params.Albedo = texture(u_Albedo, Input.TextureCoords.xy).rgb * u_PushConstants.Albedo.rgb * Input.Color.rgb;
+    m_Params.Albedo = texture(u_Albedo, Input.TextureCoords).rgb * u_PushConstants.Albedo.rgb * Input.Color.rgb;
     m_Params.Metalness = u_PushConstants.Metalness;
     m_Params.Roughness = max(u_PushConstants.Roughness, 0.05);
     m_Params.Normal = normalize(Input.Normal);
+
+    m_Params.Normal = normalize(texture(u_NormalMap, Input.TextureCoords).rgb * 2.0 - 1.0);
+    m_Params.Normal = normalize(Input.WorldNormal * m_Params.Normal);
 
     m_Params.View = normalize(u_Camera.Position.xyz - Input.WorldPosition);
     m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);
 
     vec3 Lr = 2.0 * m_Params.NdotV * m_Params.Normal - m_Params.View;
-    vec3 F0 = mix(vec3(dielectric), m_Params.Albedo, m_Params.Metalness);
+    vec3 F0 = mix(dielectric, m_Params.Albedo, m_Params.Metalness);
 
     //Light calculations
     vec3 Lo = vec3(0.0);

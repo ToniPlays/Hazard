@@ -19,6 +19,8 @@ public:
 	{
         if(m_Handle.promise().m_Dependencies == 0)
             m_Handle.resume();
+		if (m_Handle.promise().m_Exception)
+			std::rethrow_exception(m_Handle.promise().m_Exception);
 	}
 
 	bool CanContinue() const 
@@ -51,10 +53,11 @@ public:
             return Coroutine(handle());
         }
         auto return_void() {}
-		void unhandled_exception() {}
+		void unhandled_exception() { m_Exception = std::current_exception(); }
 
 		std::atomic_uint32_t m_Dependencies = 0;
         void* m_Value = nullptr;
+		std::exception_ptr m_Exception;
 	};
 
 	operator bool() { return m_Handle.address(); }

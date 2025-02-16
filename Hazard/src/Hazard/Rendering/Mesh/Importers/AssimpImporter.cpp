@@ -61,10 +61,10 @@ namespace Hazard
 			aiMaterial* mat = scene->mMaterials[materialIndex];
 
 			auto& material = materials.emplace_back();
-            material.Name = ""; //mat->GetName().C_Str();
+            material.Name = mat->GetName().C_Str();
 			material.MaterialIndex = materialIndex;
 			material.PropertyCount = mat->mNumProperties;
-			material.TextureCount = 0;
+			material.TextureCount = GetMaterialTextures(mat).size();
 		}
 
 		return materials;
@@ -134,28 +134,25 @@ namespace Hazard
 		if (aiMesh->HasNormals())
 		{
 			loadCallback.Add([aiMesh](Vertex3D& vertex, uint64_t index) mutable {
-				aiVector3D normal = aiMesh->mNormals[index];
-				vertex.Normals.x = normal.x;
-				vertex.Normals.y = normal.y;
-				vertex.Normals.z = normal.z;
+				vertex.Normals.x = aiMesh->mNormals[index].x;
+				vertex.Normals.y = aiMesh->mNormals[index].y;
+				vertex.Normals.z = aiMesh->mNormals[index].z;
 			});
 		}
 
 		if (aiMesh->HasTangentsAndBitangents())
 		{
 			loadCallback.Add([aiMesh](Vertex3D& vertex, uint64_t index) mutable {
-				aiVector3D tangent = aiMesh->mTangents[index];
-				vertex.Tangent.x = tangent.x;
-				vertex.Tangent.y = tangent.y;
-				vertex.Tangent.z = tangent.z;
+				vertex.Tangent.x = aiMesh->mTangents[index].x;
+				vertex.Tangent.y = aiMesh->mTangents[index].y;
+				vertex.Tangent.z = aiMesh->mTangents[index].z;
 
-				aiVector3D bitangent = aiMesh->mBitangents[index];
-				vertex.Binormal.x = bitangent.x;
-				vertex.Binormal.y = bitangent.y;
-				vertex.Binormal.z = bitangent.z;
+				vertex.Binormal.x = aiMesh->mBitangents[index].x;
+				vertex.Binormal.y = aiMesh->mBitangents[index].y;
+				vertex.Binormal.z = aiMesh->mBitangents[index].z;
 			});
 		}
-		for (uint32_t channel = 0; channel < AI_MAX_NUMBER_OF_COLOR_SETS; channel++)
+		for (uint32_t channel = 0; channel < 1; channel++)
 		{
 			if (aiMesh->HasTextureCoords(channel))
 			{
@@ -167,6 +164,7 @@ namespace Hazard
 				});
 			}
 		}
+		data.Vertices.reserve(aiMesh->mNumVertices);
 
 		for (uint32_t v = 0; v < aiMesh->mNumVertices; v++)
 		{
@@ -252,10 +250,21 @@ namespace Hazard
 			hooks.Invoke(key, property);
 		}
 
+		auto textures = GetMaterialTextures(mat);
+
 		MeshImporter::MaterialData data = {
-			//.Name = mat->GetName().C_Str(),
-			.Properties = properties
+			.Name = mat->GetName().C_Str(),
+			.Properties = properties,
 		};
+
+		for (auto& [type, index] : textures)
+		{
+			auto textureData = GetTextureData(index);
+			data.Textures[type] = TextureMetadata {
+				.Name = textureData.Name,
+				.TextureIndex = index,
+			};
+		}
 
 		return data;
 	}
@@ -322,10 +331,12 @@ namespace Hazard
 		uint32_t flags = aiProcess_Triangulate;
 		flags |= aiProcess_JoinIdenticalVertices;
 		flags |= aiProcess_GenNormals;
+		flags |= aiProcess_GenUVCoords;
 		flags |= aiProcess_SplitLargeMeshes;
 		flags |= aiProcess_ValidateDataStructure;
 		flags |= aiProcess_OptimizeMeshes;
-		flags |= aiProcess_RemoveRedundantMaterials;
+		flags |= aiProcess_CalcTangentSpace;
+		flags |= aiProcess_GlobalScale;
 
 		m_Importer.SetProgressHandler(new AssimpProgressHandler([this](float progress) {
 			m_LoadCallback.Invoke(progress);
@@ -400,21 +411,52 @@ namespace Hazard
 	{
 		std::unordered_map<TextureType, uint32_t> result;
 
-		Hooks<aiTextureType, void(uint32_t)> hooks;
+		Callback<void(aiTextureType)> hooks;
 
-		hooks.AddHook(aiTextureType_BASE_COLOR, [&result](uint32_t index) mutable { result[TextureType::Albedo] = index; });
-		hooks.AddHook(aiTextureType_DIFFUSE, [&result](uint32_t index) mutable { result[TextureType::Diffuse] = index; });
-		hooks.AddHook(aiTextureType_SPECULAR, [&result](uint32_t index) mutable { result[TextureType::Specular] = index; });
-		hooks.AddHook(aiTextureType_EMISSION_COLOR, [&result](uint32_t index) mutable { result[TextureType::Emission] = index; });
-		hooks.AddHook(aiTextureType_METALNESS, [&result](uint32_t index) mutable { result[TextureType::Metalness] = index; });
-		hooks.AddHook(aiTextureType_NORMALS, [&result](uint32_t index) mutable { result[TextureType::Normal] = index; });
-		hooks.AddHook(aiTextureType_HEIGHT, [&result](uint32_t index) mutable { result[TextureType::Height] = index; });
-		hooks.AddHook(aiTextureType_SHININESS, [&result](uint32_t index) mutable { result[TextureType::Shininess] = index; });
-		hooks.AddHook(aiTextureType_DISPLACEMENT, [&result](uint32_t index) mutable { result[TextureType::Displacement] = index; });
-		hooks.AddHook(aiTextureType_LIGHTMAP, [&result](uint32_t index) mutable { result[TextureType::Lightmap] = index; });
-		hooks.AddHook(aiTextureType_REFLECTION, [&result](uint32_t index) mutable { result[TextureType::Reflection] = index; });
+		const aiScene* scene = GetScene();
+
+		hooks.Add([this, material, scene, &result](aiTextureType type) mutable {
+			aiString path;
+			if (material->GetTexture(type, 0, &path) != AI_SUCCESS) return;
+
+			if ('*' == *path.C_Str()) {
+				int index = std::atoi(path.C_Str() + 1);
+				result[AiTextureTypeToType(type)] = index;
+			}
+			else
+			{
+				HZR_CORE_ASSERT(false, "External file");
+			}
+		});
+
+		for (uint32_t i = aiTextureType_DIFFUSE; i < aiTextureType_UNKNOWN; i++)
+			hooks.Invoke((aiTextureType)i);
 
 		return result;
+	}
+
+	MeshImporter::TextureType AssimpImporter::AiTextureTypeToType(aiTextureType type)
+	{
+		switch (type)
+		{
+			case aiTextureType_DIFFUSE:				return TextureType::Diffuse;
+			case aiTextureType_SPECULAR:			return TextureType::Specular;
+			case aiTextureType_AMBIENT:				return TextureType::Diffuse;
+			case aiTextureType_EMISSIVE:			return TextureType::Emission;
+			case aiTextureType_HEIGHT:				return TextureType::Height;
+			case aiTextureType_NORMALS:				return TextureType::Normal;
+			case aiTextureType_SHININESS:			return TextureType::Shininess;
+			case aiTextureType_DISPLACEMENT:		return TextureType::Displacement;
+			case aiTextureType_LIGHTMAP:			return TextureType::Lightmap;
+			case aiTextureType_REFLECTION:			return TextureType::Reflection;
+			case aiTextureType_BASE_COLOR:			return TextureType::Diffuse;
+			case aiTextureType_NORMAL_CAMERA:		return TextureType::Normal;
+			case aiTextureType_EMISSION_COLOR:		return TextureType::Emission;
+			case aiTextureType_METALNESS:			return TextureType::Metalness;
+			case aiTextureType_DIFFUSE_ROUGHNESS:	return TextureType::Roughness;
+			default:
+				return TextureType::Diffuse;
+		}
 	}
 
 	HazardRenderer::ShaderDataType AssimpImporter::AiPropertyToShaderType(const aiMaterialProperty& material)
@@ -467,6 +509,8 @@ namespace Hazard
 	{
 		const aiScene* scene = GetScene();
 		aiTexture* texture = scene->mTextures[textureIndex];
+
+		HZR_CORE_WARN("Loading texture from index {}", textureIndex);
 
 		if (texture->mHeight == 0)
 		{

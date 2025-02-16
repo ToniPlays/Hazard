@@ -137,7 +137,10 @@ namespace UI
 
 				auto& handler = Application::Get().GetModule<WorldHandler>();
 				Ref<World> world = handler.GetCurrentWorld();
-				SaveAssetSettings settings = {};
+
+				SaveAssetSettings settings = {
+					.Flags = ASSET_MANAGER_SAVE_AND_UPDATE,
+				};
 
 				if (world->GetSourceFilePath().empty())
 				{

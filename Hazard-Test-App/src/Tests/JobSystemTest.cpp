@@ -34,7 +34,7 @@ void JobGraphTest::Init()
 	m_JobSystem = CreateScope<JobSystem>();
 	InitializeHooks();
 
-	Ref<Job> preprocess = Job::Lambda("Preload", [&](JobInfo& info) -> Coroutine {
+	Ref<Job> preprocess = Job::Lambda("Preload", [&](JobInfo info) -> Coroutine {
 		HZR_INFO("Executing function");
 		std::vector<float> results = co_await m_JobSystem->Submit<float>(GetDummyGraph());
         for(float f : results)

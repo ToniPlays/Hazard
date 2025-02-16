@@ -98,17 +98,18 @@ void EditorAssetManager::ImportEngineShaders()
 
 		CreateAssetSettings settings = {
 			.Type = AssetType::Shader,
+			.AccessPath = cache.GetCachePath() / (File::GetNameNoExt(file) + ".hasset"),
 			.SourcePath = file
 		};
 
 		Promise<Ref<ShaderAsset>> promise = AssetManager::CreateAssetAsync<ShaderAsset>(settings);
-		promise.ContinueWith([cache](std::vector<Ref<ShaderAsset>> results) mutable {
+		promise.ContinueWith([cache, path = settings.AccessPath](std::vector<Ref<ShaderAsset>> results) mutable {
 			Ref<ShaderAsset> asset = results[0];
 			if (!asset) return;
 
 			SaveAssetSettings settings = {};
 			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
-			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
+			settings.TargetPath = path;
 
 			AssetManager::SaveAsset(asset, settings);
         });
@@ -205,23 +206,25 @@ void EditorAssetManager::ImportEngineImages()
 			continue;
 		}
 
-		Hazard::ImageAssetLoader::CreateSettings spec = {};
-		spec.FlipOnLoad = true;
+		Hazard::ImageAssetLoader::CreateSettings spec = {
+			.FlipOnLoad = false
+		};
 
 		CreateAssetSettings settings = {
 			.Type = AssetType::Image,
+			.AccessPath = cache.GetCachePath() / (File::GetNameNoExt(file) + ".hasset"),
 			.SourcePath = file,
 			.Settings = &spec,
 		};
 
 		Promise<Ref<Texture2DAsset>> promise = AssetManager::CreateAssetAsync<Texture2DAsset>(settings);
-		promise.ContinueWith([cache](std::vector<Ref<Texture2DAsset>> results) {
+		promise.ContinueWith([cache, path = settings.AccessPath](std::vector<Ref<Texture2DAsset>> results) {
 			Ref<Asset> asset = results[0];
 			if (!asset) return;
 
 			SaveAssetSettings settings = {};
 			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
-			settings.TargetPath = cache.GetCachePath() / (File::GetNameNoExt(asset->GetSourceFilePath()) + ".hasset");
+			settings.TargetPath = path;
 			AssetManager::SaveAsset(asset, settings);
 		});
 	}

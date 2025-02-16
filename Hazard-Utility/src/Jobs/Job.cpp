@@ -32,6 +32,15 @@ void Job::Execute(JobInfo& info)
 			m_JobGraph->OnJobFailed(this);
 		throw e;
 	}
+	catch (std::exception& e)
+	{
+		m_Status = JobStatus::Failure;
+		m_ExecutionTime = timer.ElapsedMillis();
+
+		if (m_JobGraph)
+			m_JobGraph->OnJobFailed(this);
+		throw e;
+	}
 }
 
 void Job::Finish()

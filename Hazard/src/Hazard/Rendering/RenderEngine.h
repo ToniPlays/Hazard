@@ -49,5 +49,6 @@ namespace Hazard
 		uint32_t m_CurrentDrawContext = 0;
 
 		inline static RenderResources* s_Resources = nullptr;
+
 	};
 }

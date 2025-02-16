@@ -197,7 +197,7 @@ namespace Hazard
 			if (!metadata.IsValid())
 				ImportAsset(settings.TargetPath, pack);
 
-			HZR_CORE_INFO("Saved asset: {} ({})", asset->GetSourceFilePath().string(), Utils::AssetTypeToString(asset->GetType()));
+			HZR_CORE_INFO("Saving asset: Target: {} ({})", settings.TargetPath.string(), Utils::AssetTypeToString(asset->GetType()));
 		});
 
 		return graph;
@@ -205,8 +205,7 @@ namespace Hazard
 
 	Ref<JobGraph> AssetManager::GetCreateGraph(CreateAssetSettings settings)
 	{
-		Ref<JobGraph> graph = s_AssetLoader.Create(settings);
-		return graph;
+		return s_AssetLoader.Create(settings);
 	}
 
 	AssetHandle AssetManager::ImportAssetPack(const std::filesystem::path& path, const AssetPack& pack)

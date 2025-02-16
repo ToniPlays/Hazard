@@ -59,7 +59,7 @@ std::vector<Ref<Job>> RuntimeExporter::GetSaveWorldJobs()
 	return jobs;
 }
 
-Coroutine RuntimeExporter::GetAssetDependenciesJob(JobInfo& job, const std::filesystem::path& sourcePath)
+Coroutine RuntimeExporter::GetAssetDependenciesJob(JobInfo job, const std::filesystem::path& sourcePath)
 {
 	if (!File::Exists(sourcePath))
 		throw JobException(fmt::format("File does not exist: {}", sourcePath.string()));
@@ -81,7 +81,7 @@ Coroutine RuntimeExporter::GetAssetDependenciesJob(JobInfo& job, const std::file
     co_return;
 }
 
-Coroutine RuntimeExporter::DispatchAssetJobs(JobInfo& job, std::filesystem::path& assetPath)
+Coroutine RuntimeExporter::DispatchAssetJobs(JobInfo job, std::filesystem::path& assetPath)
 {
 	using namespace Hazard;
 	std::unordered_map<AssetHandle, uint32_t> handles;
@@ -116,7 +116,7 @@ Coroutine RuntimeExporter::DispatchAssetJobs(JobInfo& job, std::filesystem::path
     co_return;
 }
 
-Coroutine RuntimeExporter::SaveWorldAssetJob(JobInfo& job, std::filesystem::path& assetPath, AssetHandle handle)
+Coroutine RuntimeExporter::SaveWorldAssetJob(JobInfo job, std::filesystem::path& assetPath, AssetHandle handle)
 {
 	using namespace Hazard;
 

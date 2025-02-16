@@ -13,12 +13,12 @@ namespace Hazard
 {
 	Ref<JobGraph> MaterialAssetLoader::Load(AssetMetadata& metadata, const LoadAssetSettings& settings)
 	{
-		//Ref<Job> loadMaterialJob = Job::Create(fmt::format("Material {}", metadata.Handle), LoadMaterialAsset, metadata.FilePath);
+		Ref<Job> loadMaterialJob = Job::Create(fmt::format("Material {}", metadata.Handle), LoadMaterialAsset, metadata.FilePath);
 
 		JobGraphInfo info = {
 			.Name = "Material load",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Load", 1.0f, { } },
+			.Stages = { { "Load", 1.0f, { loadMaterialJob } },
 			},
 		};
 
@@ -27,12 +27,12 @@ namespace Hazard
 
 	Ref<JobGraph> MaterialAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		//Ref<Job> saveAssetJob = Job::Create("Material save", SaveMaterialAsset, asset);
+		Ref<Job> saveAssetJob = Job::Create("Material save", SaveMaterialAsset, asset);
 
 		JobGraphInfo info = {
 			.Name = "Material save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Save", 1.0f, { } } }
+			.Stages = { { "Save", 1.0f, { saveAssetJob } } }
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -42,18 +42,18 @@ namespace Hazard
 	{
 		HZR_CORE_ASSERT(settings.Settings, "Material settings required, no defaults available");
 		CreateSettings matSettings = *(CreateSettings*)settings.Settings;
-		//Ref<Job> createAssetJob = Job::Create("Material create", CreateMaterialAsset, matSettings);
+		Ref<Job> createAssetJob = Job::Create("Material create", CreateMaterialAsset, matSettings);
 
 		JobGraphInfo info = {
 			.Name = "Material create",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Create", 1.0f, { } } }
+			.Stages = { { "Create", 1.0f, { createAssetJob } } }
 		};
 
 		return Ref<JobGraph>::Create(info);
 	}
 
-	void MaterialAssetLoader::LoadMaterialAsset(JobInfo& info, const std::filesystem::path& path)
+	Coroutine MaterialAssetLoader::LoadMaterialAsset(JobInfo info, const std::filesystem::path& path)
 	{
 		Ref<CachedBuffer> buffer = File::ReadBinaryFile(path);
 		AssetPack pack = {};
@@ -65,23 +65,27 @@ namespace Hazard
 		material->SetPushConstantData(data);
 
 		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
-		material->Set("u_Albedo", whiteTexture);
+		for (auto& [name, texture] : material->GetTextureParams())
+			material->Set(name, whiteTexture);
 
 		info.Result(material);
+		co_return;
 	}
 
-	void MaterialAssetLoader::CreateMaterialAsset(JobInfo& info, const CreateSettings& settings)
+	Coroutine MaterialAssetLoader::CreateMaterialAsset(JobInfo info, const CreateSettings& settings)
 	{
 		Ref<Material> material = Ref<Material>::Create();
 		material->SetPipeline(ShaderLibrary::GetPipeline("PBR_Static"));
 
 		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
-		material->Set("u_Albedo", whiteTexture);
+		for (auto& [name, texture] : material->GetTextureParams())
+			material->Set(name, whiteTexture);
 
 		info.Result(material);
+		co_return;
 	}
 
-	void MaterialAssetLoader::SaveMaterialAsset(JobInfo& info, Ref<Material> material)
+	Coroutine MaterialAssetLoader::SaveMaterialAsset(JobInfo info, Ref<Material> material)
 	{
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create();
 		Buffer constants = material->GetPushConstantData();
@@ -89,7 +93,15 @@ namespace Hazard
 		buffer->Allocate(constants.Size);
 		buffer->Write(constants.Data, constants.Size);
 
+		for (auto& [name, texture] : material->GetTextureParams())
+		{
+			AssetHandle handle = INVALID_ASSET_HANDLE;
+			//buffer->Write(texture.Binding);
+			//buffer->Write(handle);
+		}
+
 		info.Result(buffer);
+		co_return;
 	}
 }
 

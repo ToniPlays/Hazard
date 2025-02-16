@@ -20,9 +20,9 @@ private:
 	std::vector<Ref<Job>> GetDependencyJobs();
 	std::vector<Ref<Job>> GetSaveWorldJobs();
 	
-	static Coroutine GetAssetDependenciesJob(JobInfo& job, const std::filesystem::path& sourcePath);
-	static Coroutine DispatchAssetJobs(JobInfo& job, std::filesystem::path& assetPath);
-	static Coroutine SaveWorldAssetJob(JobInfo& job, std::filesystem::path& assetPath, AssetHandle handle);
+	static Coroutine GetAssetDependenciesJob(JobInfo job, const std::filesystem::path& sourcePath);
+	static Coroutine DispatchAssetJobs(JobInfo job, std::filesystem::path& assetPath);
+	static Coroutine SaveWorldAssetJob(JobInfo job, std::filesystem::path& assetPath, AssetHandle handle);
 
 private:
 	Platform m_Platform;

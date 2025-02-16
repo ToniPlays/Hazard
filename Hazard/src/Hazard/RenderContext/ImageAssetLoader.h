@@ -28,6 +28,7 @@ namespace Hazard
 		{
 			uint32_t Resolution = 8192;
 			bool FlipOnLoad = true;
+			bool Empty = false;
 		};
 
 	private:

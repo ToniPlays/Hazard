@@ -85,15 +85,17 @@ bool MeshAssetImporter::ImportFromNew()
 {
 	using namespace Hazard;
 
+	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
+	std::filesystem::path rootPath = Directory::FindAvailableName(assetPanel.GetOpenDirectory() / File::GetNameNoExt(m_SourcePath), File::GetNameNoExt(m_SourcePath));
+	std::filesystem::path path = rootPath / (File::GetNameNoExt(m_SourcePath) + ".hasset");
+
 	CreateAssetSettings settings = {
 		.Type = AssetType::Mesh,
+		.AccessPath = path,
 		.SourcePath = m_SourcePath,
 		.Settings = &m_Settings,
 	};
 
-	auto& assetPanel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<UI::AssetPanel>();
-	std::filesystem::path rootPath = Directory::FindAvailableName(assetPanel.GetOpenDirectory() / File::GetNameNoExt(m_SourcePath), File::GetNameNoExt(m_SourcePath));
-	std::filesystem::path path = rootPath / (File::GetNameNoExt(m_SourcePath) + ".hasset");
 	m_Settings.MaterialPath = rootPath / "Materials";
 	m_Settings.TexturePath = rootPath / "Textures";
 
