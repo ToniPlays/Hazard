@@ -17,6 +17,8 @@ public:
 	void Init() override;
 	void Run() override;
 	void Terminate() override;
+
+	void OnEvent(Event& e) override {};
     
     void InitializeHooks();
     

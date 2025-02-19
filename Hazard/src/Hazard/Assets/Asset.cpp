@@ -5,15 +5,15 @@
 
 namespace Hazard
 {
-	Asset::~Asset()
-	{
-		AssetManager::Unload(m_Handle);
-	}
+	Asset::~Asset() {}
 
 	void Asset::SetSourceFilePath(const std::filesystem::path& newPath)
 	{
-		m_SourceAssetPath = newPath; 
-		AssetManager::GetMetadata(m_Handle).SourceFile = newPath;
+		m_SourceAssetPath = newPath;
+		AssetMetadata& metadata = AssetManager::GetMetadata(m_Handle);
+
+		if (metadata.Handle != INVALID_ASSET_HANDLE)
+			metadata.SourceFile = newPath;
 	}
 
 	bool Asset::IsValid() const

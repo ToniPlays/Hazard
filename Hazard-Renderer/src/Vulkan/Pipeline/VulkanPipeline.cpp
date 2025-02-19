@@ -134,7 +134,7 @@ namespace HazardRenderer::Vulkan
 				auto& vkRange = ranges[range.Flags];
 
 				vkRange.stageFlags |= VkUtils::GetVulkanShaderStage(range.Flags);
-				vkRange.size += ShaderDataTypeSize(range.Type);
+				vkRange.size += std::max<uint32_t>(4, ShaderDataTypeSize(range.Type));
 				offsets[range.Flags] = vkRange.size;
 			}
 		}

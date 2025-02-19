@@ -29,12 +29,14 @@ public:
 
 	~CachedBuffer()
 	{
-		m_DataBuffer.Release();
+		if (m_DataBuffer.Data)
+			hdelete m_DataBuffer.Data;
 	}
 
 	void Allocate(uint64_t size)
 	{
-		m_DataBuffer.Allocate(size);
+		m_DataBuffer.Data = hnew uint8_t[size];
+		m_DataBuffer.Size = size;
 		m_DataBuffer.ZeroInitialize();
 	}
 

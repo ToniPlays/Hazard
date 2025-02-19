@@ -101,7 +101,7 @@ bool ImageAssetImporter::ReimportExisting()
 	 
 	Promise<Ref<Texture2DAsset>> promise = AssetManager::SaveAsset<Texture2DAsset>(asset, settings);
 	promise.ContinueWith([handle = asset->GetHandle()](const auto& results) {
-		AssetManager::Reload<Texture2DAsset>(handle).Wait();
+		AssetManager::Reload<Texture2DAsset>(handle);
 	});
 
 	return false;

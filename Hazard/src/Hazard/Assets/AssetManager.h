@@ -32,7 +32,7 @@ namespace Hazard
 	struct SaveAssetSettings
 	{
 		std::filesystem::path TargetPath;
-		uint32_t Flags = ASSET_MANAGER_SAVE_AND_UPDATE | ASSET_MANAGER_COMBINE_ASSET;
+		uint32_t Flags = ASSET_MANAGER_COMBINE_ASSET;
 	};
 
 	struct CreateAssetSettings
@@ -70,6 +70,7 @@ namespace Hazard
 		template<typename T>
 		static Ref<T> CreateAsset(const CreateAssetSettings& settings)
 		{
+			HZR_TIMED_FUNCTION();
 			HZR_PROFILE_FUNCTION();
 			Promise<Ref<T>> promise = CreateAssetAsync<T>(settings);
 			if (!promise) return nullptr;
@@ -79,6 +80,7 @@ namespace Hazard
 		template<typename T>
 		static Promise<Ref<T>> CreateAssetAsync(const CreateAssetSettings& settings)
 		{
+			HZR_TIMED_FUNCTION();
 			HZR_CORE_ASSERT(!settings.AccessPath.empty(), "Access path must not be empty");
 			Ref<JobGraph> graph = GetCreateGraph(settings);
 			if (!graph)
@@ -119,6 +121,7 @@ namespace Hazard
 		template<typename T>
 		static Promise<Ref<T>> SaveAsset(Ref<T> asset, SaveAssetSettings settings = SaveAssetSettings())
 		{
+			HZR_TIMED_FUNCTION();
 			HZR_PROFILE_FUNCTION();
 
 			Ref<JobGraph> graph = GetSaveGraph(asset, settings);
@@ -131,15 +134,16 @@ namespace Hazard
 		template<typename T>
 		static Promise<Ref<T>> Reload(AssetHandle handle)
 		{
+			HZR_TIMED_FUNCTION();
 			std::scoped_lock lock(s_AssetMutex);
 
 			AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 			metadata.LoadState = LoadState::None;
 
-			Ref<JobGraph> graph = GetLoadGraph(metadata, LoadAssetSettings());
-			if (!graph) return Promise<Ref<T>>();
+			s_UnloadAssetAfter.erase(handle);
+			s_LoadedAssets.erase(handle);
 
-			return Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
+			return GetAssetAsync<T>(handle);
 		}
 
 		template<typename T>
@@ -151,7 +155,9 @@ namespace Hazard
 		template<typename T>
 		static Ref<T> GetAsset(AssetHandle handle, LoadAssetSettings settings = LoadAssetSettings())
 		{
+			HZR_TIMED_FUNCTION();
 			HZR_PROFILE_FUNCTION();
+
 			if (handle == INVALID_ASSET_HANDLE)
 				return nullptr;
 
@@ -166,6 +172,8 @@ namespace Hazard
 				return nullptr;
 
 			Promise<Ref<T>> promise = GetAssetAsync<T>(handle, settings);
+			if (!promise) return nullptr;
+
 			promise.Wait();
 
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
@@ -175,6 +183,7 @@ namespace Hazard
 		template<typename T>
 		static Promise<Ref<T>> GetAssetAsync(const std::filesystem::path& path, LoadAssetSettings settings = LoadAssetSettings())
 		{
+			HZR_TIMED_FUNCTION();
 			return GetAssetAsync<T>(AssetHandleFromFile(path), settings);
 		}
 

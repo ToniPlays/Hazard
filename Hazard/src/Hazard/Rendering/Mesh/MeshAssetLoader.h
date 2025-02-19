@@ -63,7 +63,7 @@ namespace Hazard
 		static Coroutine ProcessMeshNode(JobInfo info, Ref<MeshImporter> importer, const MeshImporter::MeshMetadata& mesh);
 		static Coroutine ProcessMaterial(JobInfo info, Ref<MeshImporter> importer, const MeshImporter::MaterialMetadata& material, const std::filesystem::path& materialRoot);
 		static Coroutine ProcessTexture(JobInfo info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot);
-		static Coroutine FinalizeMesh(JobInfo info, Ref<MeshImporter> importer);
+		static Coroutine FinalizeMesh(JobInfo info, Ref<MeshImporter> importer, const CreateSettings& settings);
 
 		static Coroutine ReadMeshDataFromGPU(JobInfo info, Ref<Mesh> mesh);
 		static Coroutine CompileMesh(JobInfo info, Ref<Mesh> mesh);

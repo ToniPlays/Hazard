@@ -96,6 +96,7 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 
 bool JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 {
+	HZR_TIMED_FUNCTION();
 	if (jobs.size() == 0) return false;
 
 	std::scoped_lock lock(m_JobMutex);
@@ -111,6 +112,7 @@ bool JobSystem::QueueJobs(const std::vector<Ref<Job>>& jobs)
 
 void JobSystem::RemoveJob(Ref<Job> job)
 {
+	HZR_TIMED_FUNCTION();
 	m_Jobs.erase(std::find(m_Jobs.begin(), m_Jobs.end(), job));
 
 	m_JobCount = m_Jobs.size();
@@ -135,6 +137,7 @@ void JobSystem::TerminateGraphJobs(Ref<JobGraph> graph)
 
 void JobSystem::OnGraphFinished(Ref<JobGraph> graph)
 {
+	HZR_TIMED_FUNCTION();
 	m_GraphMutex.lock();
 
 	auto it = std::find(m_QueuedGraphs.begin(), m_QueuedGraphs.end(), graph);
@@ -142,6 +145,7 @@ void JobSystem::OnGraphFinished(Ref<JobGraph> graph)
 		m_QueuedGraphs.erase(it);
 
 	m_GraphMutex.unlock();
+
 	m_HookCallbacks.Add([this, graph]() mutable {
 		if (graph->DidFail())
 			m_Hooks.Invoke(JobSystemHook::Failure, graph);
@@ -151,6 +155,7 @@ void JobSystem::OnGraphFinished(Ref<JobGraph> graph)
 
 void JobSystem::WaitForJobsToFinish()
 {
+	HZR_TIMED_FUNCTION();
 	while (m_JobCount != 0)
 		m_JobCount.wait(m_JobCount);
 

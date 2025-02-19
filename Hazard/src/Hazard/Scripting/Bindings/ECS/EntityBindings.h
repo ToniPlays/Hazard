@@ -24,7 +24,7 @@ namespace Hazard
     {
         Coral::TypeId coralType = assembly->GetTypeByName(className).GetTypeId();
         HZR_ASSERT(coralType != -1, "Type not found");
-        HZR_INFO(coralType);
+
         if (coralType)
         {
             hasComponentFuncs[coralType] = [](uint64_t id) {

@@ -5,6 +5,8 @@
 #include <fstream>
 #include <cstdlib>
 
+#include "Buffer/CachedBuffer.h"
+
 using std::filesystem::directory_iterator;
 
 enum class CacheStatus

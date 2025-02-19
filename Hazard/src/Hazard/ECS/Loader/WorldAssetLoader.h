@@ -45,6 +45,7 @@ namespace Hazard
 			buf->Write(SourcePath);
 			return buf;
 		}
+
 		void FromBuffer(Ref<CachedBuffer> buffer)
 		{
 			SourcePath = buffer->Read<std::string>();

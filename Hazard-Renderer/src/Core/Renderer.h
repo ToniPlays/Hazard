@@ -74,7 +74,7 @@ namespace HazardRenderer
 
 			s_IsRendering.wait(true);
 
-			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
+			std::scoped_lock<std::mutex> lock { s_ResourceMutex };
 			auto& queue = s_CommandQueue;
 			auto storageBuffer = queue.RenderCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));
@@ -88,7 +88,7 @@ namespace HazardRenderer
 				pFunc->~FuncT();
 			};
 
-			std::scoped_lock<std::mutex> lock{ s_ResourceMutex };
+			std::scoped_lock<std::mutex> lock { s_ResourceMutex };
 			auto& queue = s_CommandQueue;
 			auto storageBuffer = queue.ResourceCreateCommandQueue->Allocate(renderCmd, sizeof(func));
 			new (storageBuffer) FuncT(std::forward<FuncT>(func));

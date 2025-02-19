@@ -58,6 +58,11 @@ public:
 		else return std::vector<T>();
 	}
 
+	bool AwaitReady() override
+	{
+		return m_JobGraph ? m_JobGraph->HasFinished() : false;
+	}
+
     void OnSuspend() override
 	{
 		if (!m_JobGraph)

@@ -10,11 +10,11 @@ public:
 	RefCount() { m_RefCount = 0; };
 	virtual ~RefCount() = default;
 
-	void IncRefCount() const
+	virtual void IncRefCount() const
 	{
 		m_RefCount++;
 	}
-	void DecRefCount() const
+	virtual void DecRefCount() const
 	{
 		m_RefCount--;
 	}
@@ -23,7 +23,7 @@ public:
 		return m_RefCount.load();
 	}
 
-private:
+protected:
 	mutable std::atomic_uint32_t m_RefCount;
 };
 

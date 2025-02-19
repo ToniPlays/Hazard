@@ -71,6 +71,9 @@ namespace Hazard
 	void GeometryRenderer::PrepareRenderpass(Ref<HazardRenderer::RenderPass> renderPass)
 	{
 		for (auto& [key, data] : *m_GeometryData)
-			data.Material->GetPipeline()->SetRenderPass(renderPass);
+		{
+			if (data.Material->GetPipeline())
+				data.Material->GetPipeline()->SetRenderPass(renderPass);
+		}
 	}
 }

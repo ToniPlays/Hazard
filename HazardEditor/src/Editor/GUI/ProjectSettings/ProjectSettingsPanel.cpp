@@ -22,8 +22,8 @@ namespace UI
 		m_SearchField.SetIcon((const char*)ICON_FK_SEARCH);
 		m_SearchField.SetHint("Search...");
 
-		m_Pages[GENERAL_APP_PROPERTIES] = new ApplicationGeneral();
-		m_Pages[RUNTIME_BUILD_SETTINGS] = new BuildSettings();
+		m_Pages[GENERAL_APP_PROPERTIES] = hnew ApplicationGeneral();
+		m_Pages[RUNTIME_BUILD_SETTINGS] = hnew BuildSettings();
 
 		OpenPage(GENERAL_APP_PROPERTIES);
 	}
@@ -31,7 +31,7 @@ namespace UI
 	ProjectSettingsPanel::~ProjectSettingsPanel()
 	{
 		for (auto& [index, page] : m_Pages)
-			delete page;
+			hdelete page;
 	}
 
 	void ProjectSettingsPanel::OnPanelRender()

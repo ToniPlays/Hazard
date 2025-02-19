@@ -204,10 +204,6 @@ namespace UI
 		node.Render();
 		textureNode.Render();
 
-
-		ImUI::ShiftY(ImGui::GetContentRegionAvail().y - 52);
-		ImUI::ShiftX(4.0f);
-
 		if (ImGui::Button("Save", { 100, 48 }))
 			AssetManager::SaveAsset(material);
 

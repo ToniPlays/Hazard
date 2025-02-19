@@ -17,25 +17,16 @@ namespace Hazard
 
 	void AssetManager::UnloadRequired()
 	{
-		if (s_AssetLoadCallback.Count() > 0)
-		{
-			s_AssetLoadCallback.Invoke();
-			s_AssetLoadCallback.Clear();
-		}
+		s_AssetLoadCallback.Invoke();
+		s_AssetLoadCallback.Clear();
 
 		for (auto& [handle, time] : s_UnloadAssetAfter)
 		{
 			if (time > Time::s_Time) continue;
 
 			s_AssetLoadCallback.Add([handle]() {
-
-				Ref<Asset> asset = s_LoadedAssets[handle];
-				if (!asset) return;
-
-				if (asset->GetRefCount() == 2)
-					asset->DecRefCount();
-
-			});
+				Unload(handle);
+				});
 		}
 	}
 
@@ -73,6 +64,7 @@ namespace Hazard
 
 	AssetHandle AssetManager::AssetHandleFromFile(const std::filesystem::path& file)
 	{
+		HZR_TIMED_FUNCTION();
 		HZR_PROFILE_FUNCTION();
 		auto path = File::GetFileAbsolutePath(file);
 
@@ -92,11 +84,13 @@ namespace Hazard
 
 	bool AssetManager::IsAssetLoaded(AssetHandle handle)
 	{
+		HZR_TIMED_FUNCTION();
 		return GetMetadata(handle).LoadState == LoadState::Loaded;
 	}
 
 	AssetMetadata& AssetManager::GetMetadata(AssetHandle handle)
 	{
+		HZR_TIMED_FUNCTION();
 		HZR_PROFILE_FUNCTION();
 
 		for (auto& [path, metadata] : s_Registry)
@@ -111,15 +105,22 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		if (handle == INVALID_ASSET_HANDLE) return;
+		if (s_LoadedAssets[handle]->GetRefCount() >= 2) return;
+
+		HZR_TIMED_FUNCTION();
+
 
 		std::scoped_lock lock(s_AssetMutex);
 		AssetMetadata& meta = GetMetadata(handle);
 		meta.LoadState = LoadState::None;
+
+		s_UnloadAssetAfter.erase(handle);
 		s_LoadedAssets.erase(handle);
 	}
 
 	Ref<JobGraph> AssetManager::GetLoadGraph(AssetMetadata& metadata, LoadAssetSettings settings)
 	{
+		HZR_TIMED_FUNCTION();
 		Ref<JobGraph> graph = s_AssetLoader.Load(metadata, settings);
 		if (!graph) return nullptr;
 
@@ -135,8 +136,8 @@ namespace Hazard
 			std::scoped_lock lock(s_AssetMutex);
 			s_LoadedAssets[asset->GetHandle()] = asset;
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
-		});
-         
+			});
+
 		return graph;
 	}
 
@@ -153,7 +154,7 @@ namespace Hazard
 
 		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);
 		if (!graph) return nullptr;
-        
+
 		graph->AddOnFinished([graph, asset, settings]() {
 
 			Ref<CachedBuffer> result = graph->GetResults<Ref<CachedBuffer>>()[0];
@@ -198,7 +199,7 @@ namespace Hazard
 				ImportAsset(settings.TargetPath, pack);
 
 			HZR_CORE_INFO("Saving asset: Target: {} ({})", settings.TargetPath.string(), Utils::AssetTypeToString(asset->GetType()));
-		});
+			});
 
 		return graph;
 	}
@@ -210,6 +211,7 @@ namespace Hazard
 
 	AssetHandle AssetManager::ImportAssetPack(const std::filesystem::path& path, const AssetPack& pack)
 	{
+		HZR_TIMED_FUNCTION();
 		HZR_PROFILE_FUNCTION();
 		HZR_CORE_ASSERT(false, "Asset pack import not yet supported");
 
@@ -218,6 +220,7 @@ namespace Hazard
 
 	AssetHandle AssetManager::ImportAsset(const std::filesystem::path& path, const AssetPack& pack)
 	{
+		HZR_TIMED_FUNCTION();
 		auto absolutePath = File::GetFileAbsolutePath(path);
 
 		std::scoped_lock lock(s_AssetMutex);

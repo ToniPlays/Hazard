@@ -45,7 +45,11 @@ namespace Hazard
 			Type = buffer->Read<AssetType>();
 			SourceFile = buffer->Read<std::string>();
 			uint64_t dataSize = buffer->GetSize() - buffer->GetCursor();
-			AssetData = Ref<CachedBuffer>::Create(Buffer::Copy(buffer->GetData(), dataSize, buffer->GetCursor()));
+
+			AssetData = Ref<CachedBuffer>::Create();
+			AssetData->Allocate(dataSize);
+			AssetData->Write(buffer->Read<Buffer>(dataSize));
+			AssetData->ResetCursor();
 		}
 	};
 

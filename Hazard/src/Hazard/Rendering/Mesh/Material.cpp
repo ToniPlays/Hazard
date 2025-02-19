@@ -100,7 +100,7 @@ namespace Hazard
 			param.Type = range.Type;
 			param.Offset = range.Offset;
 
-			requiredSize += ShaderDataTypeSize(range.Type);
+			requiredSize += std::max<uint32_t>(4, ShaderDataTypeSize(range.Type));
 		}
 		m_PushConstants.Allocate(requiredSize);
 		m_PushConstants.ZeroInitialize();

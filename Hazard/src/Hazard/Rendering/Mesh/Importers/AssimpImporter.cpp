@@ -199,7 +199,7 @@ namespace Hazard
 			prop.Name = property->mKey.C_Str();
 			prop.Usage = TextureType::Albedo;
 			prop.Type = AiPropertyToShaderType(*property);
-			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+			prop.Data = Buffer(property->mData, property->mDataLength);
 		});
 
 		hooks.AddHook("$clr.diffuse", [&properties](aiMaterialProperty* property) {
@@ -207,7 +207,7 @@ namespace Hazard
 			prop.Name = property->mKey.C_Str();
 			prop.Usage = TextureType::Diffuse;
 			prop.Type = AiPropertyToShaderType(*property);
-			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+			prop.Data = Buffer(property->mData, property->mDataLength);
 		});
 
 		hooks.AddHook("$clr.specular", [&properties](aiMaterialProperty* property) {
@@ -215,7 +215,7 @@ namespace Hazard
 			prop.Name = property->mKey.C_Str();
 			prop.Usage = TextureType::Specular;
 			prop.Type = AiPropertyToShaderType(*property);
-			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+			prop.Data = Buffer(property->mData, property->mDataLength);
 		});
 
 		hooks.AddHook("$clr.emissive", [&properties](aiMaterialProperty* property) {
@@ -223,7 +223,7 @@ namespace Hazard
 			prop.Name = property->mKey.C_Str();
 			prop.Usage = TextureType::Emission;
 			prop.Type = AiPropertyToShaderType(*property);
-			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+			prop.Data = Buffer(property->mData, property->mDataLength);
 		});
 
 		hooks.AddHook("$mat.gltf.pbrMetallicRoughness.metallicFactor", [&properties](aiMaterialProperty* property) {
@@ -231,7 +231,7 @@ namespace Hazard
 			prop.Name = property->mKey.C_Str();
 			prop.Usage = TextureType::Metalness;
 			prop.Type = AiPropertyToShaderType(*property);
-			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+			prop.Data = Buffer(property->mData, property->mDataLength);
 		});
 
 		hooks.AddHook("$mat.gltf.pbrMetallicRoughness.roughnessFactor", [&properties](aiMaterialProperty* property) {
@@ -239,7 +239,7 @@ namespace Hazard
 			prop.Name = property->mKey.C_Str();
 			prop.Usage = TextureType::Metalness;
 			prop.Type = AiPropertyToShaderType(*property);
-			prop.Data = Buffer::Copy(property->mData, property->mDataLength);
+			prop.Data = Buffer(property->mData, property->mDataLength);
 		});
 
 
@@ -259,9 +259,8 @@ namespace Hazard
 
 		for (auto& [type, index] : textures)
 		{
-			auto textureData = GetTextureData(index);
 			data.Textures[type] = TextureMetadata {
-				.Name = textureData.Name,
+				.Name = scene->mTextures[index]->mFilename.C_Str(),
 				.TextureIndex = index,
 			};
 		}
@@ -338,9 +337,11 @@ namespace Hazard
 		flags |= aiProcess_CalcTangentSpace;
 		flags |= aiProcess_GlobalScale;
 
-		m_Importer.SetProgressHandler(new AssimpProgressHandler([this](float progress) {
+		AssimpProgressHandler* handler = new AssimpProgressHandler([this](float progress) {
 			m_LoadCallback.Invoke(progress);
-		}));
+			});
+
+		m_Importer.SetProgressHandler(handler);
 
 		scene = m_Importer.ReadFile(m_SourcePath.string().c_str(), flags);
 

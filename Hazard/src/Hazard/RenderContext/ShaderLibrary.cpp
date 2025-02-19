@@ -39,6 +39,7 @@ namespace Hazard
 				s_LoadedPipelines["LineShader"] = Pipeline::Create(&specs);
 				}).Wait();
 		}
+
 		{
 			AssetManager::GetAssetAsync<ShaderAsset>("res/Shaders/2D/CircleShader.glsl").ContinueWith([api, setLayout](const auto& results) {
 				Ref<ShaderAsset> asset = results[0];
@@ -91,8 +92,12 @@ namespace Hazard
 					.SetLayouts = { setLayout, materialLayout },
 					.PushConstants = { { "Albedo", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float4, 0 },
 									   { "Metalness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 4 },
-									   { "Roughness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 5 }
-									 },
+									   { "Roughness", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Float, sizeof(float) * 5 },
+									   { "UseNormalMap", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Bool, sizeof(float) * 6 },
+									   { "Padding", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Bool, sizeof(float) * 7 },
+									   { "Padding1", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Bool, sizeof(float) * 8 },
+									   { "Padding2", SHADER_STAGE_FRAGMENT_BIT, ShaderDataType::Bool, sizeof(float) * 9 },
+						 },
 				};
 
 				s_LoadedPipelines["PBR_Static"] = Pipeline::Create(&specs);

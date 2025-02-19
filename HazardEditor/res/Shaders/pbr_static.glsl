@@ -71,7 +71,6 @@ struct PBRParameters
 	vec3 Normal;
 	vec3 View;
 	float NdotV;
-	int Flags;
 } m_Params;
 
 layout(push_constant, std140) uniform PushConstants
@@ -79,6 +78,10 @@ layout(push_constant, std140) uniform PushConstants
     uniform vec4 Albedo;
     uniform float Metalness;
     uniform float Roughness;
+    uniform bool UseNormalMap;
+    uniform bool Padding;
+    uniform bool Padding1;
+    uniform bool Padding2;
 } u_PushConstants;
 
 #include "Uniforms/CameraUniform.glslh"
@@ -103,8 +106,11 @@ void main()
     m_Params.Roughness = max(u_PushConstants.Roughness, 0.05);
     m_Params.Normal = normalize(Input.Normal);
 
-    m_Params.Normal = normalize(texture(u_NormalMap, Input.TextureCoords).rgb * 2.0 - 1.0);
-    m_Params.Normal = normalize(Input.WorldNormal * m_Params.Normal);
+    if (u_PushConstants.UseNormalMap)
+    {
+        m_Params.Normal = normalize(texture(u_NormalMap, Input.TextureCoords).rgb * 2.0 - 1.0);
+        m_Params.Normal = normalize(Input.WorldNormal * m_Params.Normal);
+    }
 
     m_Params.View = normalize(u_Camera.Position.xyz - Input.WorldPosition);
     m_Params.NdotV = max(dot(m_Params.Normal, m_Params.View), 0.0);

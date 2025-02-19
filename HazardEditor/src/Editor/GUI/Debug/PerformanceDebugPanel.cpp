@@ -58,6 +58,7 @@ namespace UI
 		table.SetColumns({ "Category", "Time" });
 
 		const auto timerMap = PerformanceProfiler::GetPerFrameData();
+
 		table.Reserve(timerMap.size());
 		table.RowHeight(24.0f);
 		table.RowContent([style](uint32_t, const RowData& data) {
@@ -155,6 +156,11 @@ namespace UI
 
 		for (Ref<Thread> thread : threads)
 			table.AddRow(thread);
+
+		ImGui::Text("Jobs alive: %u", Job::GetJobsAlive());
+		ImGui::Text("Graphs alive: %u", JobGraph::GetGraphsAlive());
+
+		ImUI::ShiftY(4.0f);
 
 		table.Render();
 	}

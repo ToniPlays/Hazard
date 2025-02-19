@@ -74,6 +74,7 @@ public:
             SendMessage(Severity::Warning, msg);
             return Promise<T>();
         }
+
             
         if (!graph->SubmitJobs(this))
         {
@@ -85,7 +86,7 @@ public:
         }
 
         m_GraphMutex.lock();
-        m_QueuedGraphs.push_back(graph);
+        m_QueuedGraphs.emplace_back(graph);
         m_HookCallbacks.Add([this, graph]() mutable {
             m_Hooks.Invoke(JobSystemHook::Submit, graph);
         });
@@ -98,6 +99,7 @@ public:
 	uint64_t WaitForUpdate();
     void Update() 
     {
+        HZR_TIMED_FUNCTION();
         m_HookCallbacks.Invoke();
         m_HookCallbacks.Clear();
     }
@@ -114,9 +116,9 @@ public:
 	{
 		m_MessageHook.Add(callback);
 	}
+	bool QueueJobs(const std::vector<Ref<Job>>& jobs);
 
 private:
-	bool QueueJobs(const std::vector<Ref<Job>>& jobs);
     void RemoveJob(Ref<Job> job);
 	void TerminateGraphJobs(Ref<JobGraph> graph);
 	void OnGraphFinished(Ref<JobGraph> graph);

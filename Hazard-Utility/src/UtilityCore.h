@@ -87,6 +87,11 @@
 #define BIT(x) (uint64_t)(1 << (uint64_t)(x))
 #define TO_STRING(x) case x: return #x
 
+#define STRINGIFY_LINE(x) #x
+#define LINE(x) STRINGIFY_LINE(x)
+#define LINE() STRINGIFY_LINE(__FUNCTION__ ":" LINE(__LINE__))
+
+
 using namespace std::chrono_literals;
 
 template<typename T>

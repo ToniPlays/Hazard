@@ -34,7 +34,7 @@ void HazardEditorApplication::PreInit()
 	ApplicationCreateInfo appInfo = {
 		.AppName = "Hazard Editor",
 		.BuildVersion = HZR_BUILD_VERSION,
-		.MaxWorkers = 4,
+		.MaxWorkers = std::thread::hardware_concurrency(),
 	};
 
 #ifdef HZR_RELEASE

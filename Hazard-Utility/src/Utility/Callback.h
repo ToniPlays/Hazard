@@ -9,7 +9,9 @@ class Callback
 public:
 
 	Callback() = default;
-	~Callback() = default;
+	~Callback() {
+		Clear();
+	};
 
 	uint32_t Count() const { return m_Callbacks.size(); }
 
@@ -18,7 +20,7 @@ public:
 		if (!callback) return;
 
 		std::scoped_lock lock(m_Mutex);
-		m_Callbacks.push_back(callback);
+		m_Callbacks.emplace_back(callback);
 	}
 	inline void Clear()
 	{
@@ -29,9 +31,9 @@ public:
 	template<typename... Args>
 	void Invoke(const Args... args)
 	{
-		std::scoped_lock lock(m_Mutex);
 		if constexpr (!std::is_same<FuncT, void()>::value)
 		{
+			std::scoped_lock lock(m_Mutex);
 			for (uint32_t i = 0; i < m_Callbacks.size(); i++)
 				m_Callbacks[i](args...);
 		}
@@ -40,10 +42,10 @@ public:
 
 	void Invoke()
 	{
-		std::scoped_lock lock(m_Mutex);
 		if constexpr (std::is_same<FuncT, void()>::value)
 		{
-			for(uint32_t i = 0; i < m_Callbacks.size(); i++)
+			std::scoped_lock lock(m_Mutex);
+			for (uint32_t i = 0; i < m_Callbacks.size(); i++)
 				m_Callbacks[i]();
 		}
 		else assert(false);

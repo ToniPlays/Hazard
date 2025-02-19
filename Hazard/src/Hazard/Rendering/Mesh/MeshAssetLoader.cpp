@@ -65,7 +65,7 @@ namespace Hazard
 		Ref<AssimpImporter> importer = Ref<AssimpImporter>::Create(settings.SourcePath);
 
 		Ref<Job> preprocessJob = Job::Create(fmt::format("Mesh: {}", settings.SourcePath.string()), PreprocessDependencies, importer, importSettings);
-		Ref<Job> finalize = Job::Create(fmt::format("Finalize Mesh: {}", settings.SourcePath.string()), FinalizeMesh, importer);
+		Ref<Job> finalize = Job::Create(fmt::format("Finalize Mesh: {}", settings.SourcePath.string()), FinalizeMesh, importer, importSettings);
 
 		JobGraphInfo info = {
 			.Name = "Mesh create",
@@ -202,17 +202,10 @@ namespace Hazard
 		Ref<Material> asset = (co_await AssetManager::CreateAssetAsync<Material>(settings))[0];
 		SetMaterialProperties(asset, props);
 
-		SaveAssetSettings saveSettings = {
-			.TargetPath = settings.AccessPath,
-			.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
-		};
-
 		MeshDependencyData result = {
 			.Handle = asset->GetHandle(),
 			.MaterialIndex = material.MaterialIndex
 		};
-
-		co_await AssetManager::SaveAsset(asset, saveSettings);
 
 		info.Result(result);
 		info.Current->Finish();
@@ -245,27 +238,21 @@ namespace Hazard
 		asset->SetImageFormat(HazardRenderer::ImageFormat::RGBA);
 		asset->Invalidate(textureData.ImageData);
 
-		SaveAssetSettings saveSettings = {
-			.TargetPath = textureRoot / (textureData.Name + ".hasset"),
-			.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE,
-		};
-
 		MeshDependencyData result = {
 			.Handle = asset->GetHandle(),
 			.TextureName = textureData.Name,
 		};
 
-		co_await AssetManager::SaveAsset(asset, saveSettings);
-
 		info.Result(result);
 		textureData.ImageData.Release();
-		info.Current->Finish();
 
 		exit++;
 		HZR_CORE_INFO("{}/{}", exit, e);
+
+		info.Current->Finish();
 	}
 
-	Coroutine MeshAssetLoader::FinalizeMesh(JobInfo info, Ref<MeshImporter> importer)
+	Coroutine MeshAssetLoader::FinalizeMesh(JobInfo info, Ref<MeshImporter> importer, const CreateSettings& settings)
 	{
 		std::vector<MeshDependencyData> results = info.Graph->GetResults<MeshDependencyData>();
 
@@ -275,8 +262,9 @@ namespace Hazard
 		std::unordered_map<uint64_t, AssetHandle> materialData;
 		std::unordered_map<std::string, AssetHandle> textures;
 
-		for (auto& result : results)
+		for (uint32_t i = 0; i < results.size(); i++)
 		{
+			auto result = results[i];
 			if (result.MeshData.Vertices.size() > 0)
 				meshData.push_back(result.MeshData);
 
@@ -284,7 +272,12 @@ namespace Hazard
 				materialData[result.MaterialIndex] = result.Handle;
 
 			if (result.Handle)
+			{
 				textures[result.TextureName] = result.Handle;
+
+				co_await AssetManager::SaveAsset(AssetManager::GetAsset<Texture2DAsset>(result.Handle));
+				info.Current->Progress((float)i / (float)results.size());
+			}
 
 		}
 
@@ -306,9 +299,12 @@ namespace Hazard
 		{
 			Hazard::MeshImporter::MaterialData data = importer->GetMaterial(material.MaterialIndex);
 			Ref<Material> mat = AssetManager::GetAsset<Material>(materialData[material.MaterialIndex]);
+			if (!mat) continue;
 
 			for (auto& [type, textureData] : data.Textures)
 				SetMaterialTextures(mat, data.Textures, textures);
+
+			co_await AssetManager::SaveAsset(mat);
 		}
 
 		info.Result(mesh);
@@ -380,8 +376,8 @@ namespace Hazard
 			.Size = indexReadback->GetSize(),
 		};
 
-		result.Vertex = Buffer::Copy(vertexReadback->ReadData(vertexRegion));
-		result.Index = Buffer::Copy(indexReadback->ReadData(indexRegion));
+		result.Vertex = vertexReadback->ReadData(vertexRegion);
+		result.Index = indexReadback->ReadData(indexRegion);
 
 		info.Result(result);
 		info.Current->Finish();
@@ -434,6 +430,7 @@ namespace Hazard
 
 		buf->Write<Buffer>(result.Vertex);
 		buf->Write<Buffer>(result.Index);
+
 		info.Result(buf);
 
 		result.Vertex.Release();
@@ -459,7 +456,7 @@ namespace Hazard
 	}
 	void MeshAssetLoader::SetMaterialTextures(Ref<Material> material, std::unordered_map<MeshImporter::TextureType, MeshImporter::TextureMetadata>& textures, const std::unordered_map<std::string, AssetHandle> assets)
 	{
-		std::unordered_map<MeshImporter::TextureType, std::string> keys = { { MeshImporter::TextureType::Albedo, "u_Albedo" }, 
+		std::unordered_map<MeshImporter::TextureType, std::string> keys = { { MeshImporter::TextureType::Albedo, "u_Albedo" },
 																			{ MeshImporter::TextureType::Diffuse, "u_Albedo" },
 																			{ MeshImporter::TextureType::Normal, "u_NormalMap" }
 		};
@@ -467,10 +464,12 @@ namespace Hazard
 		for (auto& [type, texture] : textures)
 		{
 			if (keys.find(type) == keys.end()) continue;
+			if (!assets.contains(texture.Name)) continue;
 
 			std::string key = keys[type];
 			Ref<Texture2DAsset> image = AssetManager::GetAsset<Texture2DAsset>(assets.at(texture.Name));
-			material->Set(key, image->GetSourceImage());
+			if (image)
+				material->Set(key, image);
 		}
 	}
 }

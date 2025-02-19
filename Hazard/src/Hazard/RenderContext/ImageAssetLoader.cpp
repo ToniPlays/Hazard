@@ -155,7 +155,7 @@ namespace Hazard
 		};
 
 		Buffer data = readbackBuffer->ReadData(bufferRegion);
-		info.Result(Ref<CachedBuffer>::Create(data));
+		info.Result(data);
 
 		info.Current->Finish();
         co_return;
@@ -163,7 +163,7 @@ namespace Hazard
 
 	Coroutine ImageAssetLoader::GenerateImageBinary(JobInfo info, Ref<HazardRenderer::Image2D> image)
 	{
-		Ref<CachedBuffer> imageData = info.Graph->GetResults<Ref<CachedBuffer>>()[0];
+		Buffer imageData = info.Graph->GetResults<Buffer>()[0];
 		if (!imageData)
 			throw JobException("Invalid image data");
 
@@ -173,11 +173,13 @@ namespace Hazard
 		};
 
 		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
-		buf->Allocate(sizeof(ImageAssetFileHeader) + imageData->GetSize());
+		buf->Allocate(sizeof(ImageAssetFileHeader) + imageData.Size);
 		buf->Write(file);
-		buf->Write(imageData->GetData(), imageData->GetSize());
+		buf->Write(imageData.Data, imageData.Size);
 
 		info.Result(buf);
+		imageData.Release();
+
         co_return;
 	}
 

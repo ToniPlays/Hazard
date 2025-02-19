@@ -59,16 +59,41 @@ namespace Hazard
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
 
-		Buffer data(pack.AssetData->GetData(), pack.AssetData->GetSize());
+		uint32_t constantSize = pack.AssetData->Read<uint32_t>();
+
+		Buffer data = pack.AssetData->Read<Buffer>(constantSize);
 
 		Ref<Material> material = Ref<Material>::Create(ShaderLibrary::GetPipeline("PBR_Static"));
 		material->SetPushConstantData(data);
+
+		uint32_t textureParamSize = pack.AssetData->Read<uint32_t>();
 
 		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 		for (auto& [name, texture] : material->GetTextureParams())
 			material->Set(name, whiteTexture);
 
+		while (pack.AssetData->Available())
+		{
+			uint32_t binding = pack.AssetData->Read<uint32_t>();
+			AssetHandle handle = pack.AssetData->Read<AssetHandle>();
+
+			if (handle == INVALID_ASSET_HANDLE) continue;
+
+			for (auto& [name, texture] : material->GetTextureParams())
+			{
+				if (texture.Binding == binding)
+				{
+					std::vector<Ref<Texture2DAsset>> asset = (co_await AssetManager::GetAssetAsync<Texture2DAsset>(handle));
+					if (asset.size() == 0) break;
+
+					material->Set(name, asset[0]);
+					break;
+				}
+			}
+		}
+
 		info.Result(material);
+		info.Current->Finish();
 		co_return;
 	}
 
@@ -90,14 +115,21 @@ namespace Hazard
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create();
 		Buffer constants = material->GetPushConstantData();
 
-		buffer->Allocate(constants.Size);
+		uint32_t constantSize = constants.Size;
+		uint32_t textureSize = material->GetTextureParams().size() * (sizeof(uint32_t) + sizeof(AssetHandle));
+
+		buffer->Allocate(sizeof(uint32_t) * 2 + constantSize + textureSize);
+
+		buffer->Write(constantSize);
 		buffer->Write(constants.Data, constants.Size);
+		buffer->Write(textureSize);
 
 		for (auto& [name, texture] : material->GetTextureParams())
 		{
-			AssetHandle handle = INVALID_ASSET_HANDLE;
-			//buffer->Write(texture.Binding);
-			//buffer->Write(handle);
+			AssetHandle handle = texture.Handle;
+
+			buffer->Write(texture.Binding);
+			buffer->Write(handle);
 		}
 
 		info.Result(buffer);

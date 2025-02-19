@@ -55,6 +55,8 @@ namespace Hazard
 			m_ModuleHandler->InitializeAll();
 			m_Application->Init();
 
+			m_Application->GetJobSystem().Update();
+
 			HZR_CORE_WARN("Startup took {0} ms", timer.ElapsedMillis());
 		}
 		catch (HazardRuntimeError& error)

@@ -124,10 +124,10 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		AssetHandle handle = skyLight.EnvironmentMapHandle;
-		if (!AssetManager::IsAssetLoaded(handle)) return;
 
 		Ref<EnvironmentMap> map = AssetManager::GetAsset<EnvironmentMap>(handle);
 		if (!map) return;
+
 		Ref<Material> material = map->GetMaterial();
 		if (!material) return;
 

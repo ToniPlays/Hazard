@@ -4,11 +4,11 @@
 
 #include "spdlog/fmt/fmt.h"
 
-void Job::Execute(JobInfo& info)
+void Job::Execute(JobInfo info)
 {
+	info.ExecutionID = m_InvocationId;
 	info.Current = this;
 	info.Graph = m_JobGraph;
-	info.ExecutionID = m_InvocationId;
 
 	m_Status = JobStatus::Executing;
 	Timer timer;
@@ -18,22 +18,33 @@ void Job::Execute(JobInfo& info)
 
 	try
 	{
-		m_JobCoroutine.MoveNext();
+		if(!m_JobCoroutine.Done())
+			m_JobCoroutine.MoveNext();
+
 		m_ExecutionTime += timer.ElapsedMillis();
+
 		if (m_JobCoroutine.Done())
 			Finish();
+
+		return;
 	}
 	catch (JobException& e)
 	{
+		std::cout << e.what() << std::endl;
+
 		m_Status = JobStatus::Failure;
 		m_ExecutionTime = timer.ElapsedMillis();
 		m_Exception = e;
+
 		if (m_JobGraph)
 			m_JobGraph->OnJobFailed(this);
+
 		throw e;
 	}
 	catch (std::exception& e)
 	{
+		std::cout << e.what() << std::endl;
+
 		m_Status = JobStatus::Failure;
 		m_ExecutionTime = timer.ElapsedMillis();
 
@@ -41,6 +52,9 @@ void Job::Execute(JobInfo& info)
 			m_JobGraph->OnJobFailed(this);
 		throw e;
 	}
+
+	m_Status = JobStatus::Failure;
+	std::cout << "Unknown exit " << m_JobName << std::endl;
 }
 
 void Job::Finish()

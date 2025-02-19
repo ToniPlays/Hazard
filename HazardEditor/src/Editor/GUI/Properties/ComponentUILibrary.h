@@ -485,13 +485,13 @@ namespace UI
 				flags |= (sc.LodLevel != lodLevel) ? BIT(2) : 0;
 			}
 
-			std::filesystem::path path = "None";
+			std::filesystem::path path = "";
 			if (mapHandle != INVALID_ASSET_HANDLE)
-				path = AssetManager::GetMetadata(mapHandle).SourceFile;
+				path = AssetManager::GetMetadata(mapHandle).FilePath;
 			else if (flags & BIT(0))
 				path = "---";
 
-			ImUI::TextField sourceImage(File::GetName(path));
+			ImUI::TextField sourceImage(path.empty() ? "None" : File::GetName(path));
 			sourceImage.SetHint("Environment map");
 			sourceImage.Render();
 

@@ -6,7 +6,7 @@
 
 static Ref<JobGraph> GetDummyGraph()
 {
-	Ref<Job> job = Job::Lambda("Dumb", [](JobInfo& info) -> Coroutine {
+	Ref<Job> job = Job::Lambda("Dumb", [](JobInfo info) -> Coroutine {
         std::this_thread::sleep_for(2000ms);
         info.Result(234.04332f);
 		co_return;
@@ -35,19 +35,18 @@ void JobGraphTest::Init()
 	InitializeHooks();
 
 	Ref<Job> preprocess = Job::Lambda("Preload", [&](JobInfo info) -> Coroutine {
-		HZR_INFO("Executing function");
+		/*HZR_INFO("Executing function");
 		std::vector<float> results = co_await m_JobSystem->Submit<float>(GetDummyGraph());
         for(float f : results)
         {
             HZR_INFO(f);
         }
+		*/
+
 		HZR_INFO("Finished executing function");
         co_return;
 	});
 
-	JobInfo info = {};
-	preprocess->Execute(info);
-	
 	JobGraphInfo graphInfo = {
 		.Name = "World load test",
 		.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
@@ -56,17 +55,17 @@ void JobGraphTest::Init()
 		},
 	};
 
-	//m_Graph = Ref<JobGraph>::Create(graphInfo);
-	//Promise<uint32_t> promise = m_JobSystem->Submit<uint32_t>(m_Graph);
+	m_Graph = Ref<JobGraph>::Create(graphInfo);
+	Promise<uint32_t> promise = m_JobSystem->Submit<uint32_t>(m_Graph);
 
-	//promise.Wait();
+	promise.Wait();
 }
 
 void JobGraphTest::Run()
 {
 	m_JobSystem->Update();
 	m_JobSystem->WaitForJobsToFinish();
-	std::this_thread::sleep_for(60000ms);
+	std::this_thread::sleep_for(1000ms);
 }
 
 void JobGraphTest::Terminate()

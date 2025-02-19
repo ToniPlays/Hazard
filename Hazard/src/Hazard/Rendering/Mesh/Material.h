@@ -23,6 +23,7 @@ namespace Hazard
 		std::string Name;
 		uint32_t Binding;
 		Ref<HazardRenderer::Image> Value;
+		AssetHandle Handle = INVALID_ASSET_HANDLE;
 	};
 
 	class Material : public Asset
@@ -46,6 +47,13 @@ namespace Hazard
 		void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline);
 		bool Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap);
 		bool Set(const std::string& name, Ref<HazardRenderer::Image2D> texture);
+		bool Set(const std::string& name, Ref<Texture2DAsset> texture)
+		{
+			bool success = Set(name, texture->GetSourceImage());
+			if (success)
+				m_TextureParams[name].Handle = texture->GetHandle();
+			return success;
+		}
 
 		template<typename T>
 		T GetConstant(const std::string& name)

@@ -11,16 +11,18 @@ JobGraph::JobGraph(const JobGraphInfo& info)
 	{
 		for (uint32_t i = 0; i < stage.Jobs.size(); i++)
 		{
-			Ref<Job> job = stage.Jobs[i];
+			Ref<Job>& job = stage.Jobs[i];
 			job->m_JobGraph = this;
 			job->m_InvocationId = i;
 		}
 	}
+	s_GraphsAlive++;
 }
 
 bool JobGraph::SubmitJobs(JobSystem* system)
 {
 	std::scoped_lock lock(m_JobMutex);
+
 	m_JobSystem = system;
 	auto& jobs = m_Info.Stages[m_StageIndex].Jobs;
 	if (jobs.size() == 0) return false;
@@ -46,6 +48,7 @@ void JobGraph::ContinueWith(const std::vector<Ref<Job>>& jobs)
 	}
 }
 
+
 float JobGraph::GetProgress()
 {
 	float progress = 0.0f;
@@ -66,6 +69,7 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 {
 	{
 		std::scoped_lock lock(m_JobMutex);
+
 		m_RunningJobs--;
 		m_RunningJobs.notify_all();
 
@@ -74,10 +78,16 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 		if (m_StageIndex + 1 >= m_Info.Stages.size())
 		{
 			m_StageIndex++;
-            m_JobSystem->OnGraphFinished(this);
-            m_OnFinishedCallback.Invoke();
+			m_OnFinishedCallback.Invoke();
+
+			m_OnFinishedCallback.Clear();
+			m_OnFailedCallback.Clear();
+
+			m_JobSystem->OnGraphFinished(this);
+
 			m_HasFinished = true;
 			m_HasFinished.notify_all();
+
 			return;
 		}
 	}
@@ -86,17 +96,25 @@ void JobGraph::OnJobFinished(Ref<Job> job)
 }
 void JobGraph::OnJobFailed(Ref<Job> job)
 {
+	std::scoped_lock lock(m_JobMutex);
+
 	m_RunningJobs--;
 	m_Failed = true;
 	m_Failed.notify_all();
 
 	auto exception = job->GetException();
-	m_OnFailedCallback.Invoke(exception.value());
+	if (!exception)
+		m_OnFailedCallback.Invoke(JobException("Unknown error"));
+	else m_OnFailedCallback.Invoke(exception.value());
+
+	m_OnFailedCallback.Clear();
+
 
 	if (m_Info.Flags & JOB_GRAPH_TERMINATE_ON_ERROR)
 	{
-        m_JobSystem->OnGraphFinished(this);
-        m_OnFailedCallback.Invoke(job->GetException().value());
+		m_OnFinishedCallback.Clear();
+		m_JobSystem->OnGraphFinished(this);
+
 		m_HasFinished = true;
 		m_HasFinished.notify_all();
 
@@ -111,7 +129,12 @@ void JobGraph::SubmitNextStage()
 	m_StageIndex++;
 	if (!SubmitJobs(m_JobSystem))
 	{
-        m_JobSystem->OnGraphFinished(this);
+		m_OnFinishedCallback.Invoke();
+
+		m_OnFinishedCallback.Clear();
+		m_OnFailedCallback.Clear();
+
+		m_JobSystem->OnGraphFinished(this);
 		m_HasFinished = true;
 		m_HasFinished.notify_all();
 	}

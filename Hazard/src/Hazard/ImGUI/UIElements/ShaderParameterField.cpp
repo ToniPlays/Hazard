@@ -64,7 +64,7 @@ namespace Hazard::ImUI
 				InputColor input(m_Name);
 				input.SetValue(color);
 				input.Render();
-				
+
 				m_DidChange = input.DidChange();
 				if (m_DidChange)
 				{
@@ -91,7 +91,19 @@ namespace Hazard::ImUI
 			case HazardRenderer::ShaderDataType::UInt4:
 				break;
 			case HazardRenderer::ShaderDataType::Bool:
+			{
+				ImGui::PushID(m_Name.c_str());
+				bool value = m_Value.Read<bool>();
+
+				if (Checkbox("##val", value))
+				{
+					m_DidChange = true;
+					m_Value.Write(&value, sizeof(bool));
+				}
+
+				ImGui::PopID();
 				break;
+			}
 			default:
 				break;
 		}

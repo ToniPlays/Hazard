@@ -7,6 +7,9 @@
 #include <functional>
 #include "Math/MathCore.h"
 
+#include "spdlog/fmt/fmt.h"
+#include <stacktrace>
+
 class JobSystem;
 
 struct GraphStageInfo 
@@ -29,9 +32,11 @@ class JobGraph : public RefCount
 	friend class Job;
     friend class JobSystem;
     friend class JobPromise;
+
 public:
 	JobGraph(const JobGraphInfo& info);
     ~JobGraph() {
+        s_GraphsAlive--;
         m_HasFinished = true;
         m_HasFinished.notify_all();
     };
@@ -39,6 +44,7 @@ public:
 	const std::string& GetName() const { return m_Info.Name; }
 	uint32_t GetFlags() const { return m_Info.Flags; }
 
+    bool HasFinished() const { return m_HasFinished; }
     bool DidFail() const { return m_Failed; }
 	const JobGraphInfo& GetInfo() const { return m_Info; }
     const std::string& GetStageName() const { return m_Info.Stages[Math::Min<uint32_t>(m_StageIndex, m_Info.Stages.size() - 1)].Name; }
@@ -66,7 +72,7 @@ public:
         return results;
     }
     
-    void AddOnFinished(const std::function<void()>& callback)
+    void AddOnFinished(const std::function<void()>&& callback)
     {
         if (m_HasFinished)
             callback();
@@ -99,6 +105,10 @@ public:
 		return graph;
 	}
 
+    static uint32_t GetGraphsAlive() {
+        return s_GraphsAlive;
+    }
+
 private:
 	void OnJobFinished(Ref<Job> job);
 	void OnJobFailed(Ref<Job> job);
@@ -117,4 +127,6 @@ private:
     
     Callback<void()> m_OnFinishedCallback;
     Callback<void(const JobException&)> m_OnFailedCallback;
+
+    inline static std::atomic_uint32_t s_GraphsAlive = 0;
 };

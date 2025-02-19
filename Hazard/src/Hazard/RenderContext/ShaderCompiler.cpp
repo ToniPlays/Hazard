@@ -148,10 +148,12 @@ namespace Hazard
 
 		return result;
 	}
+
 	bool ShaderCompiler::PreprocessSource(const std::filesystem::path& path, std::string& shaderSource)
 	{
 		return PreprocessIncludes(path, shaderSource);
 	}
+
 	bool ShaderCompiler::PreprocessIncludes(const std::filesystem::path& path, std::string& source)
 	{
 		HZR_PROFILE_FUNCTION();

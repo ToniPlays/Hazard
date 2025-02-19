@@ -2,6 +2,7 @@
 
 #include "Profiling/MemoryDiagnostic.h"
 #include <assert.h>
+#include <iostream>
 
 struct Buffer 
 {
@@ -20,7 +21,7 @@ struct Buffer
         
 		if (size == 0)
 			return;
-        
+
 		Data = hnew uint8_t[size];
 		Size = size;
 	}
