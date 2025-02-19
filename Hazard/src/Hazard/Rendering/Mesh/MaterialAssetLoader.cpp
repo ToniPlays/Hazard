@@ -107,6 +107,7 @@ namespace Hazard
 			material->Set(name, whiteTexture);
 
 		info.Result(material);
+		info.Current->Finish();
 		co_return;
 	}
 
@@ -133,6 +134,7 @@ namespace Hazard
 		}
 
 		info.Result(buffer);
+		info.Current->Finish();
 		co_return;
 	}
 }

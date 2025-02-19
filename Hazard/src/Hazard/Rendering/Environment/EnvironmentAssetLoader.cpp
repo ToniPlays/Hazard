@@ -92,6 +92,7 @@ namespace Hazard
 		Buffer buf = Buffer::Copy(&create, sizeof(CreateSettings));
 		Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(buf);
 		info.Result(buffer);
+		info.Current->Finish();
 		co_return;
 	}
 
@@ -165,6 +166,7 @@ namespace Hazard
 
 		cubemap->RegenerateMips();
 		info.Result(cubemap);
+		info.Current->Finish();
 		co_return;
 	}
 
@@ -183,6 +185,7 @@ namespace Hazard
 
 		std::cout << "Create env" << std::endl;
 		info.Result(asset);
+		info.Current->Finish();
 		co_return;
 	}
 }

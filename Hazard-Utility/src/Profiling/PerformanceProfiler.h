@@ -26,15 +26,17 @@ public:
 	{
 		float Time;
 		float MaxTime;
+		uint32_t Invocations;
 	};
 
 	static void SetPerFrameTiming(const char* name, float time, float maxTime = 0.0f) {
 		if (s_PerFrameData.find(name) == s_PerFrameData.end())
 		{
-			s_PerFrameData[name] = { time, maxTime };
+			s_PerFrameData[name] = { time, maxTime, 1 };
 			return;
 		}
 		s_PerFrameData[name].Time += time;
+		s_PerFrameData[name].Invocations++;
 	}
 	static void Clear() { s_PerFrameData.clear(); }
 	static const std::unordered_map<const char*, TimerData>& GetPerFrameData() { return s_PerFrameData; }

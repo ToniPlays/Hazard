@@ -113,6 +113,8 @@ namespace UI
 			AssetHandle meshHandle = entity.GetComponent<MeshComponent>().MeshHandle;
 
 			auto mesh = AssetManager::GetAsset<Mesh>(meshHandle);
+			if (!mesh) break;
+
 			for (auto& [node, submesh] : mesh->GetSubmeshData())
 				mesh->SetSubmeshMaterialHandle(node, handle);
 		}

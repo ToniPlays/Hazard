@@ -23,7 +23,6 @@ public:
 
 	~Job()
 	{
-
 		if (!m_JobCoroutine.Done())
 			HZR_ASSERT(false, "Exit without completion");
 

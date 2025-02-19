@@ -184,6 +184,7 @@ namespace Hazard
 		};
 
 		info.Result(result);
+		info.Current->Finish();
 		co_return;
 	}
 
@@ -209,6 +210,7 @@ namespace Hazard
 
 		info.Result(result);
 		info.Current->Finish();
+		co_return;
 	}
 
 	Coroutine MeshAssetLoader::ProcessTexture(JobInfo info, Ref<MeshImporter> importer, const MeshImporter::TextureMetadata& texture, const std::filesystem::path& textureRoot)
@@ -250,6 +252,7 @@ namespace Hazard
 		HZR_CORE_INFO("{}/{}", exit, e);
 
 		info.Current->Finish();
+		co_return;
 	}
 
 	Coroutine MeshAssetLoader::FinalizeMesh(JobInfo info, Ref<MeshImporter> importer, const CreateSettings& settings)
@@ -308,6 +311,7 @@ namespace Hazard
 		}
 
 		info.Result(mesh);
+		info.Current->Finish();
 		co_return;
 	}
 
@@ -381,6 +385,7 @@ namespace Hazard
 
 		info.Result(result);
 		info.Current->Finish();
+		co_return;
 	}
 
 	Coroutine MeshAssetLoader::CompileMesh(JobInfo info, Ref<Mesh> mesh)
@@ -435,7 +440,7 @@ namespace Hazard
 
 		result.Vertex.Release();
 		result.Index.Release();
-
+		info.Current->Finish();
 		co_return;
 	}
 

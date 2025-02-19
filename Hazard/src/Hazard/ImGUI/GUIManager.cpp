@@ -9,18 +9,18 @@
 #include "../../../vendor/ImGui_Backend/ImGuizmo.h"
 
 
-namespace Hazard 
+namespace Hazard
 {
 	void GUIManager::Init()
 	{
 		m_Window = &Application::Get().GetModule<RenderContextManager>().GetWindow();
-    
+
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_NavEnableKeyboard;
-		if(GraphicsContext::GetRenderAPI() == RenderAPI::OpenGL)
+		if (GraphicsContext::GetRenderAPI() == RenderAPI::OpenGL)
 			io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
 
@@ -59,13 +59,14 @@ namespace Hazard
 	void GUIManager::Render()
 	{
 		Renderer::Submit([this]() mutable {
+			HZR_TIMED_FUNCTION();
 			m_Platform->BeginFrame();
 			ImGuizmo::BeginFrame();
 
 			if (m_Menubar)
 				m_Menubar->Render();
 
-			if(m_HasDockspace) {
+			if (m_HasDockspace) {
 				using namespace ImUI;
 				ScopedStyleVar style(ImGuiStyleVar_FramePadding, ImVec2(16.0f, 8.0f));
 				Dockspace::BeginDockspace("MainWorkspace", ImGuiDockNodeFlags_NoSplit | ImGuiDockNodeFlags_PassthruCentralNode);
@@ -80,7 +81,7 @@ namespace Hazard
 
 			ImGui::Render();
 			m_Platform->EndFrame();
-		});
+			});
 	}
 	bool GUIManager::OnEvent(Event& e)
 	{
@@ -92,7 +93,7 @@ namespace Hazard
 
 		if (m_Menubar)
 		{
-			if (m_Menubar->OnEvent(e)) 
+			if (m_Menubar->OnEvent(e))
 				return true;
 		}
 
@@ -102,26 +103,26 @@ namespace Hazard
 	{
 		switch (GraphicsContext::GetRenderAPI())
 		{
-	#ifdef HZR_INCLUDE_OPENGL
-		case RenderAPI::OpenGL:
-			m_Platform = hnew EditorPlatformOpenGL(window);
-			break;
-	#endif
-	#ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: {
-			m_Platform = hnew GUIPlatformVulkan(window);
-			break;
+		#ifdef HZR_INCLUDE_OPENGL
+			case RenderAPI::OpenGL:
+				m_Platform = hnew EditorPlatformOpenGL(window);
+				break;
+			#endif
+			#ifdef HZR_INCLUDE_VULKAN
+			case RenderAPI::Vulkan: {
+				m_Platform = hnew GUIPlatformVulkan(window);
+				break;
+			}
+							  #endif
+							  #ifdef HZR_INCLUDE_METAL
+			case RenderAPI::Metal: {
+				m_Platform = hnew GUIPlatformMetal(window);
+				break;
+			}
+							 #endif
+			default:
+				HZR_ASSERT(false, "No suitable rendering backend included");
+				break;
 		}
-	#endif
-	#ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: {
-			m_Platform = hnew GUIPlatformMetal(window);
-			break;
-		}
-	#endif
-		default:
-			HZR_ASSERT(false, "No suitable rendering backend included");
-			break;
-		}
-}
+	}
 }

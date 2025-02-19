@@ -80,6 +80,7 @@ namespace Hazard
 			throw JobException("Image load from source failed");
 
 		info.Result(header);
+		info.Current->Finish();
 		co_return;
 	}
 
@@ -102,8 +103,9 @@ namespace Hazard
 			asset->Invalidate(header.ImageData);
 		}
 
-		info.Result(asset);
 		header.ImageData.Release();
+		info.Result(asset);
+		info.Current->Finish();
         co_return;
 	}
 
@@ -180,6 +182,7 @@ namespace Hazard
 		info.Result(buf);
 		imageData.Release();
 
+		info.Current->Finish();
         co_return;
 	}
 
@@ -203,6 +206,7 @@ namespace Hazard
 		asset->Invalidate(pack.AssetData->Read<Buffer>(pack.AssetData->GetSize() - pack.AssetData->GetCursor()));
 
         info.Result(asset);
+		info.Current->Finish();
         co_return;
 	}
 }

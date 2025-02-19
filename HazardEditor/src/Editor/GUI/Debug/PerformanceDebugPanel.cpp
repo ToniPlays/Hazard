@@ -47,6 +47,7 @@ namespace UI
 			const char* Name;
 			float Time;
 			float MaxTime;
+			uint32_t Invocations;
 		};
 
 		const ImUI::Style& style = ImUI::StyleManager::GetCurrent();
@@ -55,7 +56,7 @@ namespace UI
 		ImVec2 size = ImGui::GetContentRegionAvail();
 
 		ImUI::Table<RowData> table("MemoryUsage", size);
-		table.SetColumns({ "Category", "Time" });
+		table.SetColumns({ "Category", "Time", "Invocations" });
 
 		const auto timerMap = PerformanceProfiler::GetPerFrameData();
 
@@ -65,13 +66,18 @@ namespace UI
 			ImUI::Separator({ 4.0, 24.0f }, data.Time < data.MaxTime ? style.Colors.AxisY : style.Colors.Warning);
 			ImGui::SameLine();
 			ImGui::Text("%s", data.Name);
+
 			ImGui::TableNextColumn();
 			ImUI::ShiftX(4.0f);
 			ImGui::Text("%.4f ms", data.Time);
+
+			ImGui::TableNextColumn();
+			ImUI::ShiftX(4.0f);
+			ImGui::Text("%u", data.Invocations);
 		});
 
 		for (auto& [name, time] : timerMap)
-			table.AddRow({ name, time.Time, time.MaxTime });
+			table.AddRow({ name, time.Time, time.MaxTime, time.Invocations });
 
 		PerformanceProfiler::Clear();
 		table.Render();

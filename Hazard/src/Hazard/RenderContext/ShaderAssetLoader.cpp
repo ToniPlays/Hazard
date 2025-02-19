@@ -80,7 +80,7 @@ namespace Hazard
 
         info.Result(sources);
 		info.ContinueWith(loadingJobs);
-
+		info.Current->Finish();
         co_return;
 	}
 
@@ -112,6 +112,7 @@ namespace Hazard
 		{
 			throw JobException(fmt::format("Compile error: {}", e.what()));
 		}
+		info.Current->Finish();
         co_return;
 	}
 
@@ -126,6 +127,7 @@ namespace Hazard
 			asset->ShaderCode[(RenderAPI)result.API][result.Flags] = result.Data;
 
 		info.Result(asset);
+		info.Current->Finish();
         co_return;
 	}
 
@@ -158,6 +160,7 @@ namespace Hazard
 		}
 
 		info.Result(buf);
+		info.Current->Finish();
         co_return;
 	}
 
@@ -181,6 +184,7 @@ namespace Hazard
 		}
 
 		info.Result(shader);
+		info.Current->Finish();
         co_return;
 	}
 }
