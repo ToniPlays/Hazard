@@ -34,7 +34,7 @@ namespace Hazard
 		void GenerateMesh(const std::vector<MeshImporter::MeshData>& meshData);
 		void GenerateMesh(const std::vector<SubmeshData>& submeshes, Buffer vertexData, Buffer indexData);
 
-		const std::unordered_map<uint64_t, SubmeshData> GetSubmeshData() const { return m_SubmeshData; }
+		const std::unordered_map<uint64_t, SubmeshData>& GetSubmeshData() const { return m_SubmeshData; }
 		const SubmeshData& GetSubmesh(uint64_t node) const { return m_SubmeshData.at(node); };
 		bool IsValidSubmesh(uint64_t node) const { return m_SubmeshData.contains(node); }
 		void SetSubmeshMaterialHandle(uint64_t node, AssetHandle handle);

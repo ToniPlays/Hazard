@@ -7,6 +7,7 @@
 #include "Core/Rendering/Shader.h"
 
 #include <spirv_cross/spirv_reflect.hpp>
+#include <Core/Rendering/DescriptorSetLayout.h>
 
 namespace Hazard
 {
@@ -100,16 +101,89 @@ namespace Hazard
 		uint64_t Length;
 	};
 
+	enum class ShaderPropertyType
+	{
+		String,
+		Number,
+		Bool,
+		Object,
+		Shader
+	};
+
+	struct ShaderCompilerSourceScope
+	{
+		std::string Scope;
+		std::string Source;
+		ShaderPropertyType Type;
+	};
+
+	struct ShaderProperty
+	{
+		std::string Name;
+		std::string DisplayName;
+		HazardRenderer::ShaderDataType Type;
+		uint32_t Set;
+		uint32_t Binding;
+		uint32_t Length;
+		uint32_t TypeFlags;
+		uint32_t AccessFlags;
+	};
+
+	struct ShaderParseFileResult
+	{
+		std::string Name;
+		std::string Language;
+		std::string Version;
+		std::string Type;
+		std::unordered_map<std::string, std::string> PipelineState;
+		std::vector<std::string> Shaders;
+		std::vector<HazardRenderer::PushConstantRange> Constants;
+		std::vector<HazardRenderer::DescriptorSetLayout> Layouts;
+	};
+
+	struct ShaderPropertyElement
+	{
+		std::string Name;
+		std::string Prefix;
+		std::string Type;
+	};
+
+	struct ShaderSourcePropertyBlock
+	{
+		std::string Name;
+		std::string Type;
+		std::string Source;
+
+		std::vector<ShaderPropertyElement> Elements;
+	};
+
+	//TODO: Make this instanced
 	class ShaderCompiler
 	{
 	public:
 		//Only accepts GLSL code for now
 		static std::string GetShaderFromSource(uint32_t type, const std::string& source, HazardRenderer::RenderAPI api);
-		//static uint64_t GetBinaryLength(const std::vector<ShaderStageCode>& binaries);
+
 		static std::unordered_map<uint32_t, std::string> GetShaderSources(const std::filesystem::path& path);
+		static std::unordered_map<uint32_t, std::string> GetShaders(const std::string& source, const std::filesystem::path& relativePath);
+
+		static ShaderParseFileResult ParseShaderFile(const std::filesystem::path& path);
 
 	private:
+
+		static std::unordered_map<std::string, ShaderCompilerSourceScope> ParseShaderObject(const std::string& source);
+		static std::string GenerateShader(const ShaderCompilerSourceScope& scope, std::vector<ShaderProperty>& layouts);
+
+		static std::vector<ShaderProperty> GetLayoutFromProperties(const std::string& source);
+		static std::vector<HazardRenderer::DescriptorSetLayout> GenerateDescriptorLayouts(const std::vector<ShaderProperty>& properties);
+
+		static std::string VerifyEncapsulationWith(const std::string& value, char c);
+
 		static bool PreprocessSource(const std::filesystem::path& path, std::string& shaderSource);
 		static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
+
+		static std::vector<ShaderSourcePropertyBlock> GetShaderPropertyBlocks(const std::string& shaderSource);
+		static std::vector<ShaderPropertyElement> ParseElements(const std::string& source);
+		static std::string GeneratePropertyBlockSource(const ShaderSourcePropertyBlock& block);
 	};
 }

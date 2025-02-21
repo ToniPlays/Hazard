@@ -4,11 +4,11 @@
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/RenderContext/TextureFactory.h"
 #include "EnvironmentMap.h"
-#include <Hazard/RenderContext/ShaderLibrary.h>
 #include "Hazard/Rendering/RenderEngine.h"
 
 #include "Hazard/Assets/AssetPack.h"
 #include <Hazard/RenderContext/ImageAssetLoader.h>
+#include <Hazard/RenderContext/ShaderAsset.h>
 
 namespace Hazard
 {
@@ -133,7 +133,7 @@ namespace Hazard
 		};
 
 		Ref<Cubemap> cubemap = Cubemap::Create(&cubemapSpec);
-		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("EquirectangularToCubemap");
+		Ref<Pipeline> pipeline = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Compute/EquirectangularToCubemap.shader")->GetPipeline();
 		Ref<DescriptorSet> computeSet = DescriptorSet::Create(&setInfo);
 		Ref<RenderCommandBuffer> cmdBuffer = RenderCommandBuffer::Create("Equirectangular to cubemap", DeviceQueue::ComputeBit, 1);
 

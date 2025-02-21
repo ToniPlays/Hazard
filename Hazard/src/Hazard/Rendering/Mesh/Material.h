@@ -30,7 +30,7 @@ namespace Hazard
 	{
 	public:
 		Material() = default;
-		Material(Ref<HazardRenderer::Pipeline> pipeline);
+		Material(AssetHandle pipeline);
 		~Material();
 
 		AssetType GetType() const override { return AssetType::Material; }
@@ -41,10 +41,10 @@ namespace Hazard
 		Buffer GetPushConstantData() const { return m_PushConstants; }
 		void SetPushConstantData(Buffer data) { return m_PushConstants.Write(data.Data, data.Size); }
 
-		Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; };
+		AssetHandle GetPipelineHandle() { return m_PipelineHandle; }
 		Ref<HazardRenderer::DescriptorSet> GetDescriptorSet() const { return m_DescriptorSet; };
 
-		void SetPipeline(Ref<HazardRenderer::Pipeline> pipeline);
+		void SetPipeline(AssetHandle handle);
 		bool Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap);
 		bool Set(const std::string& name, Ref<HazardRenderer::Image2D> texture);
 		bool Set(const std::string& name, Ref<Texture2DAsset> texture)
@@ -90,7 +90,7 @@ namespace Hazard
 		void InvalidateDescriptorSet();
 
 	private:
-		Ref<HazardRenderer::Pipeline> m_Pipeline;
+		AssetHandle m_PipelineHandle = INVALID_ASSET_HANDLE;
 		Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;
 		std::unordered_map<std::string, MaterialParam> m_MaterialParams;
 		std::unordered_map<std::string, TextureParam> m_TextureParams;

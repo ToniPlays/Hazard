@@ -1,6 +1,7 @@
 
 #include <hzrpch.h>
 #include "GeometryRenderer.h"
+#include <Hazard/RenderContext/ShaderAsset.h>
 
 namespace Hazard
 {
@@ -32,13 +33,15 @@ namespace Hazard
 
 		for (auto& [key, data] : *m_GeometryData)
 		{
+			Ref<ShaderAsset> shader = AssetManager::GetAsset<ShaderAsset>(data.Material->GetPipelineHandle());
+			if (!shader) continue;
+
 			Ref<GPUBuffer> vertexBuffer = data.VertexBuffer;
 			Ref<GPUBuffer> indexBuffer = data.IndexBuffer;
-			Ref<Pipeline> pipeline = data.Material->GetPipeline();
 			Ref<DescriptorSet> set = data.Material->GetDescriptorSet();
 			Buffer constants = data.Material->GetPushConstantData();
 
-			m_CommandBuffer->SetPipeline(pipeline);
+			m_CommandBuffer->SetPipeline(shader->GetPipeline());
 			m_CommandBuffer->SetVertexBuffer(vertexBuffer, 0);
 			m_CommandBuffer->SetVertexBuffer(m_TransformBuffer, 1, data.TransformOffset);
 			m_CommandBuffer->SetDescriptorSet(m_CameraDescriptor, 0);
@@ -72,8 +75,9 @@ namespace Hazard
 	{
 		for (auto& [key, data] : *m_GeometryData)
 		{
-			if (data.Material->GetPipeline())
-				data.Material->GetPipeline()->SetRenderPass(renderPass);
+			Ref<ShaderAsset> shader = AssetManager::GetAsset<ShaderAsset>(data.Material->GetPipelineHandle());
+			if (shader)
+				shader->GetPipeline()->SetRenderPass(renderPass);
 		}
 	}
 }

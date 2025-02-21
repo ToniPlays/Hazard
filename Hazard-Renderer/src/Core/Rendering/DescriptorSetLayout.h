@@ -6,6 +6,7 @@ namespace HazardRenderer
 {
 	enum DescriptorType
 	{
+		DESCRIPTOR_TYPE_INVALID_DESCRIPTOR_TYPE,
 		DESCRIPTOR_TYPE_SAMPLER_2D,
 		DESCRIPTOR_TYPE_SAMPLER_CUBE,
 		DESCRIPTOR_TYPE_STORAGE_IMAGE,
@@ -48,7 +49,7 @@ namespace HazardRenderer
 		{
 		}
 
-		const std::vector<DescriptorSetElement>& GetElements() const { return m_Elements; }
+		std::vector<DescriptorSetElement>& GetElements() { return m_Elements; }
 		uint64_t GetElementCount() { return m_Elements.size(); }
 
 		std::vector<DescriptorSetElement>::iterator begin() { return m_Elements.begin(); }

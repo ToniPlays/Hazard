@@ -4,14 +4,15 @@
 #include "Hazard/RenderContext/TextureFactory.h"
 #include "Hazard/Rendering/RenderEngine.h"
 
-#include "Hazard/RenderContext/ShaderLibrary.h"
+#include "Hazard/RenderContext/ShaderAsset.h"
 
 namespace Hazard
 {
 	EnvironmentMap::EnvironmentMap()
 	{
-		Ref<Pipeline> skyboxPipeline = ShaderLibrary::GetPipeline("Skybox");
-		m_Material = Ref<Material>::Create(skyboxPipeline);
+		//Ref<Pipeline> skyboxPipeline = ShaderLibrary::GetPipeline("Skybox");
+		
+		m_Material = Ref<Material>::Create(AssetManager::AssetHandleFromFile(""));
 		m_IrradianceMap = RenderEngine::GetResources().BlackCubemap;
 	}
 
@@ -50,7 +51,7 @@ namespace Hazard
 		};
 
 		Ref<RenderCommandBuffer> computeBuffer = RenderCommandBuffer::Create("Irradiance compute buffer", DeviceQueue::ComputeBit, 1);
-		Ref<Pipeline> compute = ShaderLibrary::GetPipeline("EnvironmentIrradiance");
+		Ref<Pipeline> compute = AssetManager::GetAsset<ShaderAsset>("res/Shaders/Compute/EnvironmentIrradiance.shader")->GetPipeline();
 		Ref<DescriptorSet> descriptor = DescriptorSet::Create(&setInfo);
 
 	

@@ -5,8 +5,6 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Assets/AssetManager.h"
 
-#include "Hazard/RenderContext/ShaderLibrary.h"
-
 namespace Hazard
 {
 	void CircleRenderer::Init()
@@ -53,10 +51,12 @@ namespace Hazard
 
 		m_VertexBuffer->SetData(region);
 
+		/*TODO: FIX
 		Ref<Pipeline> pipeline = m_Material->GetPipeline();
 		pipeline->SetRenderPass(m_RenderPass);
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_IndexBuffer, m_Material, m_CicleBatch->GetIndexCount(), 0);
+		*/
 	}
 
 	void CircleRenderer::SubmitCircle(const glm::mat4& transform, const glm::vec4& color, float thickness, float fade)

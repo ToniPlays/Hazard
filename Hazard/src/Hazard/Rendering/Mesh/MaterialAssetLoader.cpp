@@ -2,7 +2,6 @@
 #include "MaterialAssetLoader.h"
 
 #include "Hazard/Assets/AssetManager.h"
-#include "Hazard/RenderContext/ShaderLibrary.h"
 #include "Material.h"
 #include "Hazard/Assets/AssetPack.h"
 
@@ -63,7 +62,7 @@ namespace Hazard
 
 		Buffer data = pack.AssetData->Read<Buffer>(constantSize);
 
-		Ref<Material> material = Ref<Material>::Create(ShaderLibrary::GetPipeline("PBR_Static"));
+		Ref<Material> material = Ref<Material>::Create(AssetManager::AssetHandleFromFile("res/Shaders/PBR_Static.shader"));
 		material->SetPushConstantData(data);
 
 		uint32_t textureParamSize = pack.AssetData->Read<uint32_t>();
@@ -100,7 +99,7 @@ namespace Hazard
 	Coroutine MaterialAssetLoader::CreateMaterialAsset(JobInfo info, const CreateSettings& settings)
 	{
 		Ref<Material> material = Ref<Material>::Create();
-		material->SetPipeline(ShaderLibrary::GetPipeline("PBR_Static"));
+		material->SetPipeline(INVALID_ASSET_HANDLE);
 
 		Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
 		for (auto& [name, texture] : material->GetTextureParams())

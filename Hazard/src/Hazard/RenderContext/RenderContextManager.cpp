@@ -7,8 +7,6 @@
 #include "PipelineAssetLoader.h"
 #include "ShaderAssetLoader.h"
 
-#include "ShaderLibrary.h"
-
 namespace Hazard 
 {
 	using namespace HazardRenderer;
@@ -16,6 +14,7 @@ namespace Hazard
 	RenderContextManager::RenderContextManager(ApplicationCreateInfo* appInfo, RenderContextCreateInfo* createInfo) : Module("RenderContextManager")
 	{
 		HZR_PROFILE_FUNCTION();
+
 		//Create window and initialize
 		HZR_CORE_ASSERT(Window::IsRenderAPISupported(createInfo->Renderer), "Selected RenderAPI not supported");
 

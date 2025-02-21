@@ -4,7 +4,6 @@
 #include "Mesh/Mesh.h"
 
 #include "Hazard/Assets/AssetManager.h"
-#include "Hazard/RenderContext/ShaderLibrary.h"
 #include "Hazard/RenderContext/RenderContextManager.h"
 #include "Hazard/RenderContext/Texture2D.h"
 #include "Mesh/Material.h"
@@ -103,7 +102,7 @@ namespace Hazard
 
 			auto& defaultResources = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources();
 
-			DefaultPBRMaterial = Ref<Material>::Create(ShaderLibrary::GetPipeline("PBR_Static"));
+			DefaultPBRMaterial = Ref<Material>::Create(INVALID_ASSET_HANDLE);
 			for (auto& [name, texture] : DefaultPBRMaterial->GetTextureParams())
 				DefaultPBRMaterial->Set(name, defaultResources.WhiteTexture);
 

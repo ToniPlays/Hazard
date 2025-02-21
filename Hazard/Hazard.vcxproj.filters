@@ -333,9 +333,6 @@
     <ClInclude Include="src\Hazard\RenderContext\ShaderCompiler.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\ShaderLibrary.h">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\Texture2D.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
@@ -625,9 +622,6 @@
     <ClCompile Include="src\Hazard\RenderContext\ShaderCompiler.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\ShaderLibrary.cpp">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
@@ -705,5 +699,6 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\UIElements\ShaderParameterField.cpp" />
     <ClCompile Include="src\Hazard\ImGUI\UIElements\InputColor.cpp" />
+    <ClCompile Include="src\Hazard\RenderContext\ShaderAsset.cpp" />
   </ItemGroup>
 </Project>

@@ -7,7 +7,6 @@
 #include "Hazard/Assets/AssetPack.h"
 #include "MaterialAssetLoader.h"
 #include "Material.h"
-#include "Hazard/RenderContext/ShaderLibrary.h"
 
 #include "Hazard/Core/Application.h"
 #include "Mesh.h"

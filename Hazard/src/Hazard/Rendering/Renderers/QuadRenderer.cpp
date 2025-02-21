@@ -5,7 +5,7 @@
 #include "Hazard/Core/Application.h"
 #include "Hazard/Assets/AssetManager.h"
 
-#include "Hazard/RenderContext/ShaderLibrary.h"
+#include <Hazard/RenderContext/ShaderAsset.h>
 
 namespace Hazard
 {
@@ -63,8 +63,7 @@ namespace Hazard
 		};
 
 		m_VertexBuffer->SetData(region);
-
-		Ref<Pipeline> pipeline = m_Material->GetPipeline();
+		
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
@@ -198,7 +197,7 @@ namespace Hazard
 
 		m_VertexBuffer = GPUBuffer::Create(&vboInfo);
 
-		m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("QuadShader"));
+		m_Material = Ref<Material>::Create(AssetManager::AssetHandleFromFile("res/Shaders/2D/QuadShader.shader"));
 
 		Ref<Sampler> sampler = RenderContextManager::GetDefaultSampler();
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();

@@ -70,7 +70,7 @@ namespace UI
 
 				ImGui::TableNextColumn();
 				ImUI::ShiftX(4.0f);
-				ImGui::Text("%s", data.Material->GetPipeline()->GetSpecifications().DebugName.c_str());
+				ImGui::Text("%u", data.Material->GetPipelineHandle());
 
 				ImGui::TableNextColumn();
 				ImUI::ShiftX(4.0f);

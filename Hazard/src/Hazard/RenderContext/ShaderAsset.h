@@ -3,6 +3,8 @@
 #include "Hazard/Assets/Asset.h"
 #include "Buffer/Buffer.h"
 
+#include "HazardRendererCore.h"
+
 namespace Hazard
 {
 	class ShaderAsset : public Asset
@@ -15,7 +17,13 @@ namespace Hazard
 
 		AssetType GetType() const override { return AssetType::Shader; }
 
+		Ref<HazardRenderer::Pipeline> GetPipeline() const { return m_Pipeline; }
+
+		void Invalidate();
+
 	public:
-		std::unordered_map<HazardRenderer::RenderAPI, std::unordered_map<uint32_t, std::string>> ShaderCode;
+		HazardRenderer::PipelineSpecification m_Spec;
+		HazardRenderer::BufferLayout m_Layout = {};
+		Ref<HazardRenderer::Pipeline> m_Pipeline;
 	};
 }

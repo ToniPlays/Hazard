@@ -2,12 +2,12 @@
 #include "Material.h"
 
 #include "Hazard/Rendering/RenderEngine.h"
+#include <Hazard/RenderContext/ShaderAsset.h>
 
 namespace Hazard
 {
-	Material::Material(Ref<HazardRenderer::Pipeline> pipeline) : m_Pipeline(pipeline)
+	Material::Material(AssetHandle handle) : m_PipelineHandle(handle)
 	{
-		m_Pipeline = pipeline;
 		Invalidate();
 	}
 
@@ -17,27 +17,24 @@ namespace Hazard
 		m_PushConstants.Release();
 	}
 
-	void Material::SetPipeline(Ref<HazardRenderer::Pipeline> pipeline)
+	void Material::SetPipeline(AssetHandle handle)
 	{
-		if (pipeline == m_Pipeline) return;
+		if (m_PipelineHandle == handle) return;
+		m_PipelineHandle = handle;
 
-		m_Pipeline = pipeline;
 		Invalidate();
 	}
 
 	bool Material::Set(const std::string& name, Ref<HazardRenderer::Cubemap> cubemap)
 	{
-		if (!m_Pipeline) return false;
+		if (!m_DescriptorSet) return false;
 
-		auto& spec = m_Pipeline->GetSpecifications();
-		if (spec.SetLayouts.size() <= 1) return false;
-
-		for (auto& binding : spec.SetLayouts[1])
+		for (auto& [textureName, texture] : m_TextureParams)
 		{
-			if (binding.Name != name) continue;
-			m_TextureParams[binding.Name].Value = cubemap;
-			m_DescriptorSet->Write(binding.Binding, 0, cubemap.As<Image>(), RenderContextManager::GetDefaultSampler(), true);
+			if (textureName != name) continue;
 
+			m_TextureParams[textureName].Value = cubemap;
+			m_DescriptorSet->Write(texture.Binding, 0, cubemap.As<Cubemap>(), RenderContextManager::GetDefaultSampler(), true);
 			return true;
 		}
 		return false;
@@ -45,18 +42,14 @@ namespace Hazard
 
 	bool Material::Set(const std::string& name, Ref<HazardRenderer::Image2D> image)
 	{
-		if (!m_Pipeline) return false;
+		if (!m_DescriptorSet) return false;
 
-		auto& spec = m_Pipeline->GetSpecifications();
-
-		if (spec.SetLayouts.size() <= 1) return false;
-
-		for (auto& binding : spec.SetLayouts[1])
+		for (auto& [textureName, texture] : m_TextureParams)
 		{
-			if (binding.Name != name) continue;
+			if (textureName != name) continue;
 
-			m_TextureParams[binding.Name].Value = image;
-			m_DescriptorSet->Write(binding.Binding, 0, image.As<Image>(), RenderContextManager::GetDefaultSampler(), true);
+			m_TextureParams[textureName].Value = image;
+			m_DescriptorSet->Write(texture.Binding, 0, image.As<Image>(), RenderContextManager::GetDefaultSampler(), true);
 			return true;
 		}
 		return false;
@@ -64,15 +57,17 @@ namespace Hazard
 
 	void Material::Invalidate()
 	{
-		if (!m_Pipeline) return;
+		if (m_PipelineHandle == INVALID_ASSET_HANDLE) return;
+
+		Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>(m_PipelineHandle);
 
 		//Descriptor set 0 reserved for world info
-		auto& spec = m_Pipeline->GetSpecifications();
+		auto& spec = asset->GetPipeline()->GetSpecifications();
 		if (spec.SetLayouts.size() > 1)
 		{
 			auto layout = spec.SetLayouts[1];
 			DescriptorSetCreateInfo setInfo = {
-				.DebugName = fmt::format("Material: {}", m_Pipeline->GetSpecifications().DebugName),
+				.DebugName = fmt::format("Material: {}", spec.DebugName),
 				.Set = 1,
 				.pLayout = &layout,
 			};
@@ -90,7 +85,7 @@ namespace Hazard
 		m_PushConstants.Release();
 		m_MaterialParams.clear();
 
-		auto& spec = m_Pipeline->GetSpecifications();
+		/*auto& spec = m_Pipeline->GetSpecifications();
 
 		uint32_t requiredSize = 0;
 		for (auto& range : spec.PushConstants)
@@ -104,9 +99,11 @@ namespace Hazard
 		}
 		m_PushConstants.Allocate(requiredSize);
 		m_PushConstants.ZeroInitialize();
+		*/
 	}
 	void Material::InvalidateDescriptorSet()
 	{
+		/*
 		m_TextureParams.clear();
 		if (!m_DescriptorSet) return;
 
@@ -121,5 +118,6 @@ namespace Hazard
 				.Binding = param.Binding,
 			};
 		}
+		*/
 	}
 }

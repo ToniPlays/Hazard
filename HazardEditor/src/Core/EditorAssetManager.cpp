@@ -87,7 +87,7 @@ void EditorAssetManager::ImportEngineShaders()
 
 	for (auto& file : Directory::GetAllInDirectory("res/Shaders", true))
 	{
-		if (File::GetFileExtension(file) != ".glsl") continue;
+		if (File::GetFileExtension(file) != ".shader") continue;
 		auto cacheFile = File::GetNameNoExt(file) + ".hasset";
 
 		if (cache.HasFile(cacheFile))

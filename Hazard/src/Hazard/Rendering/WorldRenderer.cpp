@@ -26,14 +26,16 @@ namespace Hazard
 		if (m_CameraData.size() <= m_CameraDescriptors.size()) return;
 
 		//Create descriptor for current camera
-		Ref<Pipeline> pbrShader = ShaderLibrary::GetPipeline("PBR_Static");
-
-		auto layout = pbrShader->GetSpecifications().SetLayouts[0];
+		DescriptorSetLayout setLayout = { { SHADER_STAGE_ALL_GRAPHICS, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D }
+		};
 
 		DescriptorSetCreateInfo setInfo = {
 			.DebugName = "WorldDescriptor",
 			.Set = 0,
-			.pLayout = &layout,
+			.pLayout = &setLayout,
 		};
 
 		m_CameraDescriptors.push_back(DescriptorSet::Create(&setInfo));

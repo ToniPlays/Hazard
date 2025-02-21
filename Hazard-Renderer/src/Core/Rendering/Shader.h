@@ -34,89 +34,40 @@ namespace HazardRenderer
 		SHADER_ACCESS_WRITE = BIT(1),
 	};
 
-	/*
-    struct ShaderMemberType
-    {
-        std::string Name;
-        ShaderDataType Type = ShaderDataType::None;
-        uint32_t Offset = 0;
-    };
+	static uint32_t ShaderStageFlagsFromString(const std::string& type)
+	{
+		std::string val = type;
+		for (auto& c : val)
+			c = std::tolower(c);
 
-	struct ShaderStageInput
-	{
-        ShaderMemberType Type;
-		uint32_t Location = 0;
-	};
-	struct ShaderStageAccelerationStructure
-	{
-		std::string Name;
-		uint32_t Location = 0;
-		uint32_t UsageFlags = 0;
-	};
-	struct ShaderStorageBuffer
-	{
-		std::string Name;
-		uint32_t Location;
-		uint32_t UsageFlags;
-	};
-	struct ShaderUniformBufferDescription
-	{
-		std::string Name;
-		uint32_t Binding = 0;
-		uint64_t Size = 0;
-		uint32_t UsageFlags = 0;
-		uint32_t DescritorSet = UINT32_MAX;
-        
-        std::vector<ShaderMemberType> Members;
-	};
-	struct ShaderImageSampler 
-	{
-		std::string Name;
-		uint32_t Binding = 0;
-		uint32_t Dimension = 0;
-		uint32_t ArraySize = 0;
-		uint32_t DescritorSet = UINT32_MAX;
-		uint32_t Flags = 0;
-	};
-	struct ShaderStorageImage
-	{
-		std::string Name;
-		uint32_t Binding = 0;
-		uint32_t Dimension = 0;
-		uint32_t ArraySize = 0;
-		uint32_t DescritorSet = UINT32_MAX;
-		uint32_t Flags = 0;
-	};
-    struct ShaderPushConstantRange
-    {
-        std::string Name;
-        uint32_t Set = 0;
-        uint32_t Binding = 0;
-		uint64_t Size = 0;
-        uint32_t UsageFlags = 0;
-        
-        std::vector<ShaderMemberType> Members;
-    };
+		if (val == "vertex")		return SHADER_STAGE_VERTEX_BIT;
+		if (val == "fragment")		return SHADER_STAGE_FRAGMENT_BIT;
+		if (val == "pixel")			return SHADER_STAGE_FRAGMENT_BIT;
+		if (val == "compute")		return SHADER_STAGE_COMPUTE_BIT;
+		if (val == "geometry")		return SHADER_STAGE_GEOMETRY_BIT;
+		if (val == "raygen")		return SHADER_STAGE_RAYGEN_BIT;
+		if (val == "miss")			return SHADER_STAGE_MISS_BIT;
+		if (val == "closesthit")	return SHADER_STAGE_CLOSEST_HIT_BIT;
+		if (val == "anyhit")		return SHADER_STAGE_ANY_HIT_BIT;
 
-	struct ShaderStageData
-	{
-		std::unordered_map<uint32_t, ShaderStageInput> Inputs;
-		uint32_t Stride = 0;
-	};
+		return SHADER_STAGE_NONE;
+	}
 
-	struct ShaderData 
+	static std::string ShaderStageFlagsToString(uint32_t flag)
 	{
-		std::unordered_map<uint32_t, ShaderStageData> Stages;
-		//Set Binding, buffer
-		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderUniformBufferDescription>> UniformsDescriptions;
-		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStageAccelerationStructure>> AccelerationStructures;
-		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStorageBuffer>> StorageBuffers;
-		//Set binding sampler
-		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderImageSampler>> ImageSamplers;
-		std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderStorageImage>> StorageImages;
-        std::unordered_map<uint32_t, std::unordered_map<uint32_t, ShaderPushConstantRange>> PushConstants;
-	};
-	*/
+		if (flag & SHADER_STAGE_NONE) return "SHADER_STAGE_NONE";
+		if (flag & SHADER_STAGE_VERTEX_BIT) return "SHADER_STAGE_VERTEX_BIT";
+		if (flag & SHADER_STAGE_FRAGMENT_BIT) return "SHADER_STAGE_FRAGMENT_BIT";
+		if (flag & SHADER_STAGE_COMPUTE_BIT) return "SHADER_STAGE_COMPUTE_BIT";
+		if (flag & SHADER_STAGE_GEOMETRY_BIT) return "SHADER_STAGE_GEOMETRY_BIT";
+		if (flag & SHADER_STAGE_RAYGEN_BIT) return "SHADER_STAGE_RAYGEN_BIT";
+		if (flag & SHADER_STAGE_MISS_BIT) return "SHADER_STAGE_MISS_BIT";
+		if (flag & SHADER_STAGE_CLOSEST_HIT_BIT) return "SHADER_STAGE_CLOSEST_HIT_BIT";
+		if (flag & SHADER_STAGE_ANY_HIT_BIT) return "SHADER_STAGE_ANY_HIT_BIT";
+		if (flag & SHADER_STAGE_ALL_GRAPHICS) return "SHADER_STAGE_ALL_GRAPHICS";
+
+		return "UNKNOWN";
+	}
 
 	class Shader : public RefCount
 	{

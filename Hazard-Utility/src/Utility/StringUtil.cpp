@@ -3,13 +3,13 @@
 #include <sstream>
 
 
-std::vector<std::string> StringUtil::SplitString(const std::string& string, char delim) 
+std::vector<std::string> StringUtil::SplitString(const std::string& string, char delim)
 {
 	std::vector<std::string> result;
 	std::istringstream f(string);
 	std::string s;
 
-	while (getline(f, s, delim)) 
+	while (getline(f, s, delim))
 	{
 		if (!s.empty())
 			result.push_back(s);
@@ -103,23 +103,36 @@ bool StringUtil::IsMatching(const std::string& value, const std::string& compare
 std::string_view StringUtil::Between(const std::string_view& source, const std::string& start, const std::string& end)
 {
 	uint64_t startPos = source.find(start);
-	uint64_t endPos = source.find(end, startPos + 1);
+	
+	uint64_t endPos = startPos;
+	while (source.find(end, endPos + 1) != std::string::npos)
+	{
+		endPos = source.find(end, endPos + 1);
+	}
 
 	return source.substr(startPos + start.length(), endPos - startPos - end.length());
 }
 
-std::string StringUtil::GetPreprocessor(const char* type, const std::string& source, uint64_t endPosition, uint64_t* offset)
+std::string StringUtil::GetPreprocessor(const std::string& type, const std::string& source, uint64_t endPosition, uint64_t* offset)
 {
 	uint64_t valueOffset = OffsetOf(source, type, endPosition);
 
-	if (valueOffset == std::string::npos) 
+	if (valueOffset == std::string::npos)
 	{
-		*offset = std::string::npos;
+		if (offset != nullptr)
+			*offset = std::string::npos;
 		return "";
 	}
 
 	uint64_t lineEndOffset = source.find_first_of("\r\n", valueOffset);
 	std::string line = source.substr(valueOffset, lineEndOffset - valueOffset);
-	*offset = valueOffset + line.length();
-	return line.substr(line.find_first_of(' ') + 1);
+
+	if (offset != nullptr)
+		*offset = valueOffset + line.length();
+
+	uint64_t startPos = line.find_first_of(' ', 1);
+	if (startPos == std::string::npos)
+		return "empty";
+
+	return line.substr(startPos + 1);
 }

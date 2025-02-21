@@ -3,8 +3,6 @@
 #include "LineRenderer.h"
 #include "../HRenderer.h"
 #include "Hazard/Assets/AssetManager.h"
-#include "Hazard/RenderContext/ShaderLibrary.h"
-
 
 namespace Hazard
 {
@@ -51,7 +49,6 @@ namespace Hazard
 
 		m_VertexBuffer->SetData(region);
 
-		Ref<Pipeline> pipeline = ShaderLibrary::GetPipeline("LineShader");
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Material, m_LineBatch->GetCount());
 	}
 
@@ -91,7 +88,7 @@ namespace Hazard
 			.Size = m_Data.MaxVertices * sizeof(LineVertex),
 		};
 
-		m_Material = Ref<Material>::Create(ShaderLibrary::GetPipeline("LineShader"));
+		m_Material = Ref<Material>::Create(AssetManager::AssetHandleFromFile("res/Shaders/Debug/LineShader.shader"));
 		m_VertexBuffer = GPUBuffer::Create(&vertexBufferInfo);
 	}
 }

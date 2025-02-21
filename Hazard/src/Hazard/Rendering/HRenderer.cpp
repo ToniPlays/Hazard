@@ -132,11 +132,13 @@ namespace Hazard
 		if (!material) return;
 
 		auto& env = s_Engine->GetDrawList();
+		/* TOOD: FIX
 		env.Environment.Pipeline = material->GetPipeline();
 		env.Environment.RadianceMap = map->GetRadianceMap();
 		env.Environment.IrradianceMap = map->GetIrradianceMap();
 		env.Environment.Constants.LodLevel = skyLight.LodLevel;
 		env.Environment.Constants.Intensity = skyLight.Intensity;
+		*/
 	}
 
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)

@@ -63,10 +63,9 @@ namespace Hazard
 		m_LineRenderer.EndScene();
 		m_CircleRenderer.EndScene();
 	}
+
 	void RenderEngine::Init()
 	{
-		ShaderLibrary::Init(m_RenderContextManager->GetWindow().GetWindowInfo().SelectedAPI);
-
 		s_Resources->Initialize();
 		m_QuadRenderer.Init();
 		m_QuadRenderer.CreateResources();
@@ -77,11 +76,13 @@ namespace Hazard
 		m_CircleRenderer.Init();
 		m_CircleRenderer.CreateResources();
 	}
+
 	void RenderEngine::Update()
 	{
 		HZR_PROFILE_FUNCTION();
 		ClearDrawLists();
 	}
+
 	void RenderEngine::Render()
 	{
 		HZR_PROFILE_FUNCTION();

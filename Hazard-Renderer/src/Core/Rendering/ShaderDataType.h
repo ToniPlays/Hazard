@@ -2,6 +2,8 @@
 
 #include "Core/Core.h"
 
+#include "DescriptorSetLayout.h"
+
 namespace HazardRenderer
 {
 	enum class ShaderDataType
@@ -21,7 +23,8 @@ namespace HazardRenderer
 		UInt2,
 		UInt3,
 		UInt4,
-		Bool
+		Bool,
+		Other,
 	};
 
 	static uint32_t ShaderDataTypeSize(ShaderDataType type)
@@ -43,10 +46,10 @@ namespace HazardRenderer
 			case ShaderDataType::UInt3:    return (uint32_t)4 * 4;
 			case ShaderDataType::UInt4:    return (uint32_t)4 * 3;
 			case ShaderDataType::Bool:     return (uint32_t)1;
-			case ShaderDataType::None:     return (uint32_t)0;
 		}
 		return 0;
 	}
+
 	static int ComponentCount(ShaderDataType type)
 	{
 		switch (type)
@@ -66,10 +69,20 @@ namespace HazardRenderer
 			case ShaderDataType::UInt3:    return 3;
 			case ShaderDataType::UInt4:    return 4;
 			case ShaderDataType::Bool:     return 1;
-			case ShaderDataType::None:     return 0;
 		}
 		return 0;
 	}
+
+	static int ShaderDataTypeLocationSize(ShaderDataType type)
+	{
+		switch (type)
+		{
+			case ShaderDataType::Mat3:	return 3;
+			case ShaderDataType::Mat4:	return 4;
+			default:					return 1;
+		}
+	}
+
 	static std::string ShaderDataTypeToString(ShaderDataType type)
 	{
 		switch (type)
@@ -89,8 +102,52 @@ namespace HazardRenderer
 			case ShaderDataType::UInt3:    return "UInt3";
 			case ShaderDataType::UInt4:    return "UInt4";
 			case ShaderDataType::Bool:     return "Bool";
-			case ShaderDataType::None:     return "None";
+			case ShaderDataType::Other:     return "Other";
 		}
-		return "";
+		return "None";
+	}
+	static ShaderDataType ShaderDataTypeFromString(const std::string& type)
+	{
+		std::string val = type;
+		for (auto& c : val)
+			c = tolower(c);
+
+		if (val == "float") return ShaderDataType::Float;
+		if (val == "float2") return ShaderDataType::Float2;
+		if (val == "float3") return ShaderDataType::Float3;
+		if (val == "float4") return ShaderDataType::Float4;
+		if (val == "mat3") return ShaderDataType::Mat3;
+		if (val == "mat4") return ShaderDataType::Mat4;
+		if (val == "int") return ShaderDataType::Int;
+		if (val == "int2") return ShaderDataType::Int2;
+		if (val == "int3") return ShaderDataType::Int3;
+		if (val == "int4") return ShaderDataType::Int4;
+		if (val == "uInt") return ShaderDataType::UInt;
+		if (val == "uInt2") return ShaderDataType::UInt2;
+		if (val == "uInt3") return ShaderDataType::UInt3;
+		if (val == "uInt4") return ShaderDataType::UInt4;
+		if (val == "bool") return ShaderDataType::Bool;
+		if (val == "none") return ShaderDataType::None;
+		return ShaderDataType::Other;
+	}
+
+	static std::string GetShaderDescriptorType(uint32_t type)
+	{
+		if (type & DESCRIPTOR_TYPE_SAMPLER_2D) return "sampler2D";
+		if (type & DESCRIPTOR_TYPE_SAMPLER_CUBE) return "samplerCube";
+
+		return 0;
+	}
+
+	static uint32_t GetShaderDescriptorType(const std::string& type)
+	{
+		if (type == "Sampler2D")				return DESCRIPTOR_TYPE_SAMPLER_2D;
+		if (type == "SamplerCube")				return DESCRIPTOR_TYPE_SAMPLER_CUBE;
+		if (type == "StorageImage")				return DESCRIPTOR_TYPE_STORAGE_IMAGE;
+		if (type == "IniformBuffer")			return DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		if (type == "StorageBuffer")			return DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		if (type == "AccelerationStructure")	return DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE;
+
+		return 0;
 	}
 }
