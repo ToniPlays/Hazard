@@ -16,20 +16,9 @@ enum class AssetType : uint32_t
 	Mesh,
 	Script,
 	Buffer,
-	Pipeline,
 	Shader,
     Material,
     Last
-};
-
-enum class ResourceType 
-{
-	Undefined = 0,
-	VertexBuffer,
-	IndexBuffer,
-	UniformBuffer,
-	Pipeline,
-	Mesh
 };
 
 namespace Hazard::Utils

@@ -34,7 +34,7 @@ namespace Hazard
 		for (auto& [key, data] : *m_GeometryData)
 		{
 			Ref<ShaderAsset> shader = AssetManager::GetAsset<ShaderAsset>(data.Material->GetPipelineHandle());
-			if (!shader) continue;
+			if (!shader || !shader->GetPipeline()) continue;
 
 			Ref<GPUBuffer> vertexBuffer = data.VertexBuffer;
 			Ref<GPUBuffer> indexBuffer = data.IndexBuffer;
@@ -75,8 +75,9 @@ namespace Hazard
 	{
 		for (auto& [key, data] : *m_GeometryData)
 		{
+			data.Material->Invalidate();
 			Ref<ShaderAsset> shader = AssetManager::GetAsset<ShaderAsset>(data.Material->GetPipelineHandle());
-			if (shader)
+			if (shader && shader->GetPipeline())
 				shader->GetPipeline()->SetRenderPass(renderPass);
 		}
 	}

@@ -395,14 +395,10 @@ namespace Hazard
 			Buffer Index;
 		} result = info.Graph->GetResults<Result>()[0];
 
-		auto meshData = mesh->GetSubmeshData();
-
-		uint64_t nodeNameLength = 0;
-		for (auto& [node, submesh] : meshData)
-			nodeNameLength += submesh.NodeName.length() + sizeof(uint64_t);
+		auto& meshData = mesh->GetSubmeshData();
 
 		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
-		buf->Allocate(sizeof(MeshFileHeader) + sizeof(SubmeshHeader) * meshData.size() + nodeNameLength + result.Vertex.Size + result.Index.Size);
+		buf->AllowResize(true);
 
 		MeshFileHeader meshHeader = {
 			.SubmeshCount = meshData.size(),

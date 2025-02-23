@@ -74,6 +74,7 @@ namespace Hazard
 			HZR_PROFILE_FUNCTION();
 			Promise<Ref<T>> promise = CreateAssetAsync<T>(settings);
 			if (!promise) return nullptr;
+
 			return promise.Wait().GetResults()[0];
 
 		}
@@ -84,9 +85,7 @@ namespace Hazard
 			HZR_CORE_ASSERT(!settings.AccessPath.empty(), "Access path must not be empty");
 			Ref<JobGraph> graph = GetCreateGraph(settings);
 			if (!graph)
-			{
 				return Promise<Ref<T>>();
-			}
 
 			Promise<Ref<T>> promise = Application::Get().GetJobSystem().Submit<Ref<T>>(graph);
 
@@ -108,15 +107,15 @@ namespace Hazard
 
 				std::scoped_lock mutex(s_AssetMutex);
 				s_LoadedAssets[asset->GetHandle()] = asset;
-                s_Registry[settings.AccessPath] = metadata;
+				s_Registry[settings.AccessPath] = metadata;
 
 				HZR_CORE_INFO("Created asset: {}", metadata.FilePath.string());
 
 				}).Catch([](const JobException& e) {
 					HZR_CORE_ERROR("Something went wrong: {0}", e.what());
-				});
+					});
 
-			return promise;
+				return promise;
 		}
 		template<typename T>
 		static Promise<Ref<T>> SaveAsset(Ref<T> asset, SaveAssetSettings settings = SaveAssetSettings())
@@ -131,19 +130,15 @@ namespace Hazard
 		}
 
 		static void Unload(AssetHandle handle);
-		template<typename T>
-		static Promise<Ref<T>> Reload(AssetHandle handle)
+		
+		static void Reload(AssetHandle handle)
 		{
 			HZR_TIMED_FUNCTION();
-			std::scoped_lock lock(s_AssetMutex);
 
+			//Force reload by settings load state to none
 			AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 			metadata.LoadState = LoadState::None;
 
-			s_UnloadAssetAfter.erase(handle);
-			s_LoadedAssets.erase(handle);
-
-			return GetAssetAsync<T>(handle);
 		}
 
 		template<typename T>
@@ -161,13 +156,14 @@ namespace Hazard
 			if (handle == INVALID_ASSET_HANDLE)
 				return nullptr;
 
-			if (s_LoadedAssets[handle] != nullptr)
+			AssetMetadata& metadata = GetMetadata(handle);
+
+			if (s_LoadedAssets.contains(handle) && metadata.LoadState == LoadState::Loaded)
 			{
 				s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
 				return s_LoadedAssets[handle].As<T>();
 			}
 
-			AssetMetadata& metadata = GetMetadata(handle);
 			if (metadata.Type == AssetType::Undefined)
 				return nullptr;
 
@@ -176,8 +172,14 @@ namespace Hazard
 
 			promise.Wait();
 
+			if (!promise.Succeeded())
+			{
+				HZR_CORE_INFO("Promise did fail: {}", !promise.Succeeded());
+				return s_LoadedAssets[handle];
+			}
+
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
-            return promise.GetResults()[0];
+			return promise.GetResults()[0];
 		}
 
 		template<typename T>
@@ -195,14 +197,14 @@ namespace Hazard
 			if (handle == INVALID_ASSET_HANDLE)
 				return Promise<Ref<T>>();
 
-			if (s_LoadedAssets[handle])
+			AssetMetadata& metadata = GetMetadata(handle);
+			if (s_LoadedAssets[handle] && metadata.LoadState == LoadState::Loaded)
 			{
 				s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
 				Ref<JobGraph> graph = JobGraph::EmptyWithResult<Ref<T>>({ s_LoadedAssets[handle] });
 				return Promise<Ref<T>>::Create(graph);
 			}
 
-			AssetMetadata& metadata = GetMetadata(handle);
 			if (!metadata.IsValid()) return Promise<Ref<T>>();
 
 			Ref<JobGraph> graph = GetLoadGraph(metadata, settings);

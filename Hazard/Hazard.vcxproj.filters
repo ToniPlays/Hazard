@@ -100,6 +100,9 @@
     <Filter Include="vendor\ImGui_Backend">
       <UniqueIdentifier>{04610A97-F0EF-9360-990E-A85B857CA406}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\ImTextEdit">
+      <UniqueIdentifier>{032A9CBD-6F40-9A53-B8B7-2575240D6BDB}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Hazard.h">
@@ -252,10 +255,16 @@
     <ClInclude Include="src\Hazard\ImGUI\UIElements\Dropdown.h">
       <Filter>src\Hazard\ImGUI\UIElements</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\InputColor.h">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClInclude>
     <ClInclude Include="src\Hazard\ImGUI\UIElements\InputFloat.h">
       <Filter>src\Hazard\ImGUI\UIElements</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ImGUI\UIElements\InputNumber.h">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\ImGUI\UIElements\ShaderParameterField.h">
       <Filter>src\Hazard\ImGUI\UIElements</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\ImGUI\UIElements\Table.h">
@@ -495,8 +504,9 @@
     <ClInclude Include="vendor\ImGui_Backend\imgui_impl_vulkan.h">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\ImGUI\UIElements\ShaderParameterField.h" />
-    <ClInclude Include="src\Hazard\ImGUI\UIElements\InputColor.h" />
+    <ClInclude Include="vendor\ImTextEdit\ImTextEdit.h">
+      <Filter>vendor\ImTextEdit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">
@@ -568,7 +578,13 @@
     <ClCompile Include="src\Hazard\ImGUI\UIElements\Dropdown.cpp">
       <Filter>src\Hazard\ImGUI\UIElements</Filter>
     </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\InputColor.cpp">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\UIElements\InputFloat.cpp">
+      <Filter>src\Hazard\ImGUI\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\ImGUI\UIElements\ShaderParameterField.cpp">
       <Filter>src\Hazard\ImGUI\UIElements</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\ImGUI\UIElements\Table.cpp">
@@ -614,6 +630,9 @@
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContextManager.cpp">
+      <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\ShaderAsset.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\ShaderAssetLoader.cpp">
@@ -697,8 +716,8 @@
     <ClCompile Include="vendor\ImGui_Backend\imgui_impl_vulkan.cpp">
       <Filter>vendor\ImGui_Backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\ImGUI\UIElements\ShaderParameterField.cpp" />
-    <ClCompile Include="src\Hazard\ImGUI\UIElements\InputColor.cpp" />
-    <ClCompile Include="src\Hazard\RenderContext\ShaderAsset.cpp" />
+    <ClCompile Include="vendor\ImTextEdit\ImTextEdit.cpp">
+      <Filter>vendor\ImTextEdit</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

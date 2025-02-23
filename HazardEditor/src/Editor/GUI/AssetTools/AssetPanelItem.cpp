@@ -16,6 +16,7 @@
 #include <Hazard/ImGUI/GUIManager.h>
 #include "AssetEditors/MeshAssetEditorPanel.h"
 #include "AssetEditors/MaterialAssetEditorPanel.h"
+#include <Editor/GUI/TextEdit/TextEditPanel.h>
 
 using namespace Hazard;
 
@@ -266,6 +267,13 @@ namespace UI
 				panel.SetMaterialHandle(handle);
 				break;
 			}
+			case AssetType::Shader:
+			{
+				auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<TextEditPanel>();
+				panel.OpenFile(metadata.SourceFile);
+				break;
+			}
+
             default: break;
 		}
 	}

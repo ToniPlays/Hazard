@@ -26,7 +26,7 @@ namespace UI
 		bool OnEvent(Event& e) override { return false; };
 		void OnPanelRender() override;
 
-		void DrawProgressCard(Ref<JobGraph> graph);
+		void DrawProgressCard(JobGraphProgress& info);
 
 	private:
 		std::mutex m_JobMutex;

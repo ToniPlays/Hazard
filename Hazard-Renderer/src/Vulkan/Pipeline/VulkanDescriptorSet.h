@@ -27,6 +27,8 @@ namespace HazardRenderer::Vulkan
 		VulkanDescriptorSet(DescriptorSetCreateInfo* createInfo);
 		~VulkanDescriptorSet();
 
+		const std::string& GetDebugName() const { return m_DebugName; }
+
 		const DescriptorSetLayout& GetLayout() override { return m_Layout; }
 
 		void Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll = false) override;

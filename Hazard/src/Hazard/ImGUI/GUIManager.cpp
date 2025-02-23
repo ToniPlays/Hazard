@@ -1,3 +1,5 @@
+#include <hzrpch.h>
+
 #include "GUIManager.h"
 #include "Hazard.h"
 #include "Hazard/RenderContext/RenderContextManager.h"

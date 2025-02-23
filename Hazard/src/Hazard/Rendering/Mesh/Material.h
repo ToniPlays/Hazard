@@ -84,16 +84,19 @@ namespace Hazard
 				m_PushConstants.Write(&value, ShaderDataTypeSize(param.Type), param.Offset);
 		}
 
+		bool Invalidate();
+
 	private:
-		void Invalidate();
 		void InvalidatePushConstants();
 		void InvalidateDescriptorSet();
 
 	private:
 		AssetHandle m_PipelineHandle = INVALID_ASSET_HANDLE;
+		UID m_ShaderIteration = 0;
 		Ref<HazardRenderer::DescriptorSet> m_DescriptorSet;
 		std::unordered_map<std::string, MaterialParam> m_MaterialParams;
 		std::unordered_map<std::string, TextureParam> m_TextureParams;
+
 
 		Buffer m_PushConstants;
 	};

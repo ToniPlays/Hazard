@@ -9,10 +9,8 @@
 namespace Hazard
 {
 	EnvironmentMap::EnvironmentMap()
-	{
-		//Ref<Pipeline> skyboxPipeline = ShaderLibrary::GetPipeline("Skybox");
-		
-		m_Material = Ref<Material>::Create(AssetManager::AssetHandleFromFile(""));
+	{		
+		m_Material = Ref<Material>::Create(AssetManager::AssetHandleFromFile("res/Shaders/Skybox.shader"));
 		m_IrradianceMap = RenderEngine::GetResources().BlackCubemap;
 	}
 

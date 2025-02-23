@@ -21,6 +21,22 @@ namespace Hazard
 	{
 		using namespace HazardRenderer;
 
+		if (metadata.PackFlags & ASSET_PACK_REFERENCES_FILE)
+		{
+			ShaderCreateSettings create = {
+				.FromExisting = true,
+			};
+
+			CreateAssetSettings settings = {
+				.Type = AssetType::Shader,
+				.AccessPath = metadata.FilePath,
+				.SourcePath = metadata.SourceFile,
+				.Settings = &create
+			};
+
+			return Create(settings);
+		}
+
 		Ref<Job> loadingJob = Job::Create(fmt::format("Shader load: {}", metadata.Handle), LoadShaderAsset, metadata.Handle);
 
 		JobGraphInfo info = {
@@ -34,12 +50,18 @@ namespace Hazard
 
 	Ref<JobGraph> ShaderAssetLoader::Save(Ref<Asset> asset, const SaveAssetSettings& settings)
 	{
-		Ref<Job> binaryJob = Job::Create(fmt::format("{}", settings.TargetPath.string()), GenerateShaderAssetBinary, asset);
+		Ref<Job> job = Job::Lambda("Dummy", [](JobInfo info) -> Coroutine {
+			info.Result(Ref<CachedBuffer>::Create());
+			co_return;
+		});
+
+		if(settings.Flags & ASSET_MANAGER_COMBINE_ASSET)
+			job = Job::Create(fmt::format("{}", settings.TargetPath.string()), GenerateShaderAssetBinary, asset);
 
 		JobGraphInfo info = {
 			.Name = "Shader save",
 			.Flags = JOB_GRAPH_TERMINATE_ON_ERROR,
-			.Stages = { { "Generate", 1.0f, { binaryJob } } },
+			.Stages = { { "Generate", 1.0f, { job } } },
 		};
 
 		return Ref<JobGraph>::Create(info);
@@ -49,7 +71,6 @@ namespace Hazard
 	{
 		Ref<Job> preprocessJob = Job::Create(fmt::format("Shader create: {0}", settings.SourcePath.string()), PreprocessShaderSourceCode, settings);
 		Ref<Job> createJob = Job::Create(fmt::format("Shader create: {0}", settings.SourcePath.string()), CreateShaderAsset);
-
 
 		JobGraphInfo info = {
 			.Name = "Shader create",
@@ -68,10 +89,39 @@ namespace Hazard
 	Coroutine ShaderAssetLoader::PreprocessShaderSourceCode(JobInfo info, const CreateAssetSettings& settings)
 	{
 		using namespace HazardRenderer;
+
+		Ref<ShaderAsset> asset = Ref<ShaderAsset>::Create();
+		ShaderCreateSettings shaderSettings = {};
+
+		if (settings.Settings)
+			shaderSettings = *(ShaderCreateSettings*)settings.Settings;
+
+		if (!shaderSettings.FromExisting)
+		{
+			File::WriteFile(settings.SourcePath, "");
+
+			info.ContinueWith({ Job::Lambda("Generate", [asset](JobInfo info) -> Coroutine {
+				ShaderCompileResult result = {
+					.Asset = asset
+				};
+				info.Result(result);
+
+				info.Graph->AddOnFinished([asset]() {
+					//Save asset after creation, problems if you do it first
+					AssetManager::SaveAsset(asset);
+					});
+				co_return;
+				})
+			});
+
+			co_return;
+		}
+
+
 		std::unordered_map<uint32_t, std::string> sources;
 
 		ShaderParseFileResult result;
-		Ref<ShaderAsset> asset = Ref<ShaderAsset>::Create();
+
 
 		if (File::GetFileExtension(settings.SourcePath) == ".shader")
 		{
@@ -84,7 +134,24 @@ namespace Hazard
 				ss << shader;
 
 			result.Shaders.clear();
-			ProcessShaderAsset(asset, result);
+			ProcessShaderAsset(asset, result.Type);
+
+			Hooks<std::string, void(Ref<ShaderAsset>, const std::string&)> hooks;
+
+			hooks.AddHook("DepthWrite ", [](Ref<ShaderAsset> asset, const std::string& value) mutable {
+				if (value == "True")
+					asset->m_Spec.Flags |= PIPELINE_DEPTH_WRITE;
+				});
+
+			hooks.AddHook("Depth ", [](Ref<ShaderAsset> asset, const std::string& value) mutable {
+				asset->m_Spec.DepthOperator = DepthOp::LessOrEqual;
+				asset->m_Spec.Flags |= PIPELINE_DEPTH_TEST;
+				});
+
+
+			for (auto& [name, value] : result.PipelineState)
+				hooks.Invoke(name, asset, value);
+
 
 			File::WriteFile("res/debug/" + File::GetNameNoExt(settings.SourcePath) + ".glsl", ss.str());
 			sources = ShaderCompiler::GetShaders(ss.str(), settings.SourcePath);
@@ -95,21 +162,12 @@ namespace Hazard
 			sources = ShaderCompiler::GetShaderSources(settings.SourcePath);
 		}
 
-
-		DescriptorSetLayout defaultLayout = { { SHADER_STAGE_ALL_GRAPHICS, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
-											  { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-											  { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
-											  { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D }
-		};
-
+		asset->m_Type = result.Type;
 		asset->m_Spec.DebugName = result.Name;
-		asset->m_Spec.Usage = PipelineUsage::GraphicsBit;
+		asset->m_Spec.Usage = result.Type.empty() ? PipelineUsage::ComputeBit : PipelineUsage::GraphicsBit;
 		asset->m_Spec.pBufferLayout = &asset->m_Layout;
-		asset->m_Spec.SetLayouts = { defaultLayout };
+		asset->m_Spec.SetLayouts = result.Layouts;
 		asset->m_Spec.PushConstants = result.Constants;
-
-		for (auto& layout : result.Layouts)
-			asset->m_Spec.SetLayouts.push_back(layout);
 
 		std::vector<Ref<Job>> loadingJobs;
 
@@ -117,7 +175,7 @@ namespace Hazard
 		{
 			for (auto& [stage, source] : sources)
 			{
-				Ref<Job> job = Job::Create(fmt::format("Compile shader"), CompileShaderSourceCode, api, stage, asset);
+				Ref<Job> job = Job::Create(fmt::format("Compile shader {}", File::GetNameNoExt(settings.SourcePath)), CompileShaderSourceCode, api, stage, asset);
 				loadingJobs.push_back(job);
 			}
 		}
@@ -146,11 +204,12 @@ namespace Hazard
 			if (source.empty())
 				throw JobException("Shader source is empty");
 
-			auto compiled = ShaderCompiler::GetShaderFromSource(stageFlags, source, (RenderAPI)api);
+			std::string compiled = ShaderCompiler::GetShaderFromSource(stageFlags, source, (RenderAPI)api);
+
 
 			ShaderCompileResult result = {
 				.API = api,
-				.Data = std::move(compiled),
+				.Data = compiled,
 				.Flags = stageFlags,
 				.Asset = asset,
 			};
@@ -159,7 +218,7 @@ namespace Hazard
 		}
 		catch (CompileException e)
 		{
-			throw JobException(fmt::format("Compile error on {}: {}", ShaderStageFlagsToString(stageFlags), e.what()));
+			throw JobException(fmt::format("{} Compile error on {}: {}", info.Current->GetName(), ShaderStageFlagsToString(stageFlags), e.what()));
 		}
 
 		info.Current->Finish();
@@ -173,15 +232,24 @@ namespace Hazard
 		auto results = info.Graph->GetResults<ShaderCompileResult>();
 		Ref<ShaderAsset> asset = results[0].Asset;
 
-		std::unordered_map<HazardRenderer::RenderAPI, std::unordered_map<uint32_t, std::string>> code;
+		if (asset->m_Spec.Usage == PipelineUsage::None)
+		{
+			info.Result(asset);
+			co_return;
+		}
 
 		for (auto& result : results)
-			code[(RenderAPI)result.API][result.Flags] = result.Data;
+			asset->m_ShaderSources[result.API][result.Flags] = result.Data;
 
 		PipelineSpecification& specs = asset->m_Spec;
-		specs.Shaders = code[GraphicsContext::GetRenderAPI()];
+		specs.Shaders = asset->m_ShaderSources[(uint32_t)GraphicsContext::GetRenderAPI()];
 
-		asset->m_Pipeline = Pipeline::Create(&specs);
+		if (specs.Shaders.size() == 0)
+			throw JobException(fmt::format("{}: No shader sources found", info.Current->GetName()));
+		else 
+			asset->m_Pipeline = Pipeline::Create(&specs);
+
+		asset->m_Spec.Shaders.clear();
 		info.Result(asset);
 		co_return;
 	}
@@ -189,36 +257,59 @@ namespace Hazard
 	Coroutine ShaderAssetLoader::GenerateShaderAssetBinary(JobInfo info, Ref<ShaderAsset> asset)
 	{
 		using namespace HazardRenderer;
-		/*
-		auto& code = "";
 
-		std::vector<ShaderAPIHeader> headers;
-		uint64_t totalCodeSize = 0;
+		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
+		buf->AllowResize(true);
+		PipelineSpecification& spec = asset->m_Spec;
 
-		for (auto& [api, shaders] : code)
+		buf->Write(asset->m_Type);
+		buf->Write(spec.DebugName);
+		buf->Write(spec.Usage);
+		buf->Write(spec.MaxRayDepth);
+		buf->Write(spec.Flags);
+		buf->Write(spec.DepthOperator);
+		buf->Write<uint16_t>(spec.PushConstants.size());
+
+		for (auto& constant : spec.PushConstants)
 		{
-			for (auto& [stageFlags, shaderCode] : shaders)
-			{
+			buf->Write(constant.Name);
+			buf->Write(constant.Type);
+			buf->Write(constant.Offset);
+			buf->Write(constant.Flags);
+		}
 
-				ShaderAPIHeader& header = headers.emplace_back();
-				header.ApiFlags = (uint32_t)api;
-				header.StageFlags = stageFlags;
-				totalCodeSize += shaderCode.length() + sizeof(uint64_t);
+		buf->Write<uint16_t>(spec.SetLayouts.size());
+
+		uint8_t index = 0;
+		for (auto& set : spec.SetLayouts)
+		{
+			buf->Write(index);
+			buf->Write<uint16_t>(set.GetElementCount());
+
+			for (auto& e : set.GetElements())
+			{
+				buf->Write(e.Name);
+				buf->Write(e.Binding);
+				buf->Write(e.Length);
+				buf->Write(e.Type);
+				buf->Write(e.Flags);
+			}
+			index++;
+		}
+
+		for (auto& [api, stages] : asset->GetShaderSources())
+		{
+			buf->Write(api);
+			buf->Write<uint8_t>(stages.size());
+
+			for (auto& [stage, source] : stages)
+			{
+				buf->Write(stage);
+				buf->Write(source);
 			}
 		}
 
-		Ref<CachedBuffer> buf = Ref<CachedBuffer>::Create();
-		buf->Allocate(headers.size() * sizeof(ShaderAPIHeader) + totalCodeSize);
-
-		for (auto& header : headers)
-		{
-			buf->Write(header);
-			buf->Write(code[(RenderAPI)header.ApiFlags][header.StageFlags]);
-		}
-
 		info.Result(buf);
-		info.Current->Finish();
-		*/
 		co_return;
 	}
 
@@ -231,61 +322,97 @@ namespace Hazard
 
 		AssetPack pack = {};
 		pack.FromBuffer(buffer);
+		Ref<CachedBuffer> buf = pack.AssetData;
+
+		HZR_CORE_ASSERT(!(pack.Flags & ASSET_PACK_REFERENCES_FILE), "We reference a file instead");
 
 		Ref<ShaderAsset> shader = Ref<ShaderAsset>::Create();
 
-		while (pack.AssetData->Available())
+		PipelineSpecification& spec = shader->m_Spec;
+
+		shader->m_Type = buf->Read<std::string>();
+		spec.DebugName = buf->Read<std::string>();
+		spec.Usage = buf->Read<PipelineUsage>();
+		spec.MaxRayDepth = buf->Read<uint16_t>();
+		spec.Flags = buf->Read<uint32_t>();
+		spec.DepthOperator = buf->Read<DepthOp>();
+
+		uint32_t pushConstants = buf->Read<uint16_t>();
+
+		for (uint32_t i = 0; i < pushConstants; i++)
 		{
-			ShaderAPIHeader header = pack.AssetData->Read<ShaderAPIHeader>();
-			auto source = pack.AssetData->Read<std::string>();
-			//shader->ShaderCode[(RenderAPI)header.ApiFlags][header.StageFlags] = source;
+			auto& constant = spec.PushConstants.emplace_back();
+			constant.Name = buf->Read<std::string>();
+			constant.Type = buf->Read<ShaderDataType>();
+			constant.Offset = buf->Read<uint32_t>();
+			constant.Flags = buf->Read<uint32_t>();
 		}
 
+		uint32_t setCount = buf->Read<uint16_t>();
+
+		for (uint32_t i = 0; i < setCount; i++)
+		{
+			uint32_t setIndex = buf->Read<uint8_t>();
+			uint32_t elementCount = buf->Read<uint16_t>();
+			auto& set = spec.SetLayouts.emplace_back();
+
+			for (uint32_t e = 0; e < elementCount; e++)
+			{
+				auto& element = set.GetElements().emplace_back();
+				element.Name = buf->Read<std::string>();
+				element.Binding = buf->Read<uint32_t>();
+				element.Length = buf->Read<uint32_t>();
+				element.Type = buf->Read<DescriptorType>();
+				element.Flags = buf->Read<uint32_t>();
+			}
+		}
+
+		while (buf->Available())
+		{
+			uint32_t api = buf->Read<uint32_t>();
+			uint8_t stages = buf->Read<uint8_t>();
+
+			for (uint32_t i = 0; i < stages; i++)
+			{
+				uint32_t stage = buf->Read<uint32_t>();
+				std::string source = buf->Read<std::string>();
+				shader->m_ShaderSources[api][stage] = source;
+			}
+		}
+
+		ProcessShaderAsset(shader, shader->m_Type);
+		spec.pBufferLayout = &shader->m_Layout;
+		spec.Shaders = shader->m_ShaderSources[(uint32_t)GraphicsContext::GetRenderAPI()];
+
+		shader->m_Pipeline = Pipeline::Create(&spec);
 		info.Result(shader);
 		info.Current->Finish();
 		co_return;
 	}
 
-	void ShaderAssetLoader::ProcessShaderAsset(Ref<ShaderAsset> asset, const ShaderParseFileResult& result)
+	void ShaderAssetLoader::ProcessShaderAsset(Ref<ShaderAsset> asset, const std::string& result)
 	{
 		using namespace HazardRenderer;
 
-		if (result.Type == "Line")
+		if (result == "Line")
 		{
 			asset->m_Layout = LineVertex::Layout();
 			asset->m_Spec.Flags |= PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST | PIPELINE_DRAW_LINE;
 		}
-		else if (result.Type == "2D/Quad")
+		else if (result == "2D/Quad")
 		{
 			asset->m_Layout = QuadVertex::Layout();
 			asset->m_Spec.Flags |= PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL;
 		}
-		else if (result.Type == "2D/Circle")
+		else if (result == "2D/Circle")
 		{
 			asset->m_Layout = CircleVertex::Layout();
 			asset->m_Spec.Flags |= PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL;
 		}
-		else if (result.Type == "3D/Lit")
+		else if (result == "3D/Lit")
 		{
 			asset->m_Layout = Vertex3D::Layout();
 			asset->m_Spec.Flags |= PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST | PIPELINE_DRAW_FILL;
 		}
-		else throw JobException(fmt::format("Unknown shader type: {}", result.Type));
-
-		Hooks<std::string, void(Ref<ShaderAsset>, const std::string&)> hooks;
-
-		hooks.AddHook("DepthWrite ", [](Ref<ShaderAsset> asset, const std::string& value) mutable {
-			if (value == "True")
-				asset->m_Spec.Flags |= PIPELINE_DEPTH_WRITE;
-		});
-
-		hooks.AddHook("Depth ", [](Ref<ShaderAsset> asset, const std::string& value) mutable {
-			asset->m_Spec.DepthOperator = DepthOp::LessOrEqual;
-			asset->m_Spec.Flags |= PIPELINE_DEPTH_TEST;
-			});
-
-
-		for (auto& [name, value] : result.PipelineState)
-			hooks.Invoke(name, asset, value);
 	}
 }

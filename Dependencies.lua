@@ -45,6 +45,9 @@ Dependencies = {
         IncludeDir = "%{wks.location}/Hazard/vendor/ImGui",
         CommonLib = "ImGui"
     },
+    ImTextEdit = {
+        IncludeDir = "%{wks.location}/Hazard/vendor/ImTextEdit",
+    },
     OpenGL = {},
     Vulkan = {
         IncludeDir = "%{VULKAN_SDK}/Include",

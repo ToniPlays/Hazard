@@ -9,8 +9,23 @@ Shader "3D/Lit_Static"
 
 	Properties 
 	{
-		u_Albedo ("Albedo", Sampler2D, 1, 0, 1)
-		u_NormalMap ("NormalMap", Sampler2D, 1, 1, 1)
+		u_Camera ("Camera", Buffer, 0, 0, 1)
+		u_RadianceMap ("RadianceMap", SamplerCube, 0, 1, 1)
+		u_IrradianceMap ("IrradianceMap", SamplerCube, 0, 2, 1)
+		u_BRDFLut ("BRDFLut", Sampler2D, 0, 3, 1)
+		_Albedo ("Albedo", Sampler2D, 1, 0, 1)
+		_NormalMap ("NormalMap", Sampler2D, 1, 1, 1)
+	}
+
+	Constants 
+	{
+		Albedo ("Albedo", float4)
+		Metalness ("Metalness", float)
+		Roughness ("Roughness", float)
+		UseNormalMap ("UseNormalMap", bool)
+		Padding1 ("Padding1", bool)
+		Padding2 ("Padding2", bool)
+		Padding3 ("Padding3", bool)
 	}
 
 	Vertex
@@ -71,7 +86,8 @@ Shader "3D/Lit_Static"
 
 	Fragment
 	{
-		Include {
+		Include
+		{
 			"Uniforms/CameraUniform.glslh"
 			"Utils/Common.glslh"
 			"Utils/Lighting.glslh"
@@ -96,31 +112,34 @@ Shader "3D/Lit_Static"
 				uint EntityID;
 			};
 
-			/*layout(push_constant, std140) uniform PushConstants
-			{
-				uniform vec4 Albedo;
-				uniform float Metalness;
-				uniform float Roughness;
-				uniform bool UseNormalMap;
-				uniform bool Padding;
-				uniform bool Padding1;
-				uniform bool Padding2;
-			} u_PushConstants;
-			*/
-
 			const float gamma = 2.2;
 			const vec3 dielectric = vec3(0.04);
 
+			vec3 IBL(vec3 F0, vec3 Lr, vec3 normal, vec3 albedo, float NDotV, float roughness, float metalness)
+{
+				vec3 irradiance = texture(u_IrradianceMap, normal).rgb;
+				vec3 F = FresnelSchlickRoughness(F0, NDotV, roughness);
+				vec3 kD = (1.0 - F) * (1.0 - metalness);
+				vec3 diffuseIBL = albedo * irradiance;
+
+				int radianceTexelLeves = textureQueryLevels(u_RadianceMap);
+				vec3 specularIrradiance	= textureLod(u_RadianceMap, RotateVectorAboutY(1.0, Lr), roughness * radianceTexelLeves).rgb;
+
+				//Sample BRDF
+				vec2 specularBRDF				= texture(u_BRDFLut, vec2(NDotV, roughness)).rg;
+				vec3 specularIBL				= specularIrradiance * (F0 * specularBRDF.x + specularBRDF.y);
+				return kD * diffuseIBL + specularIBL;
+			}
+
 			void main() 
 			{
-				vec3 albedo = texture(u_Albedo, IN.TextureCoords).rgb * u_PushConstants.Albedo.rgb * IN.Color.rgb;
-				float metalness = u_PushConstants.Metalness;
-				float roughness = max(u_PushConstants.Roughness, 0.05);
+				vec3 albedo = texture(_Albedo, IN.TextureCoords).rgb * CONSTANT.Albedo.rgb * IN.Color.rgb;
+				float roughness = max(CONSTANT.Roughness, 0.05);
 				vec3 normal = normalize(IN.Normal);
 
-				if (u_PushConstants.UseNormalMap)
+				if (CONSTANT.UseNormalMap)
 				{
-					normal = normalize(texture(u_NormalMap, IN.TextureCoords).rgb * 2.0 - 1.0);
+					normal = normalize(texture(_NormalMap, IN.TextureCoords).rgb * 2.0 - 1.0);
 					normal = normalize(IN.WorldNormal * normal);
 				}
 
@@ -128,13 +147,13 @@ Shader "3D/Lit_Static"
 				float NdotV = max(dot(normal, view), 0.0);
 
 				vec3 Lr = 2.0 * NdotV * normal - view;
-				vec3 F0 = mix(dielectric, albedo, metalness);
+				vec3 F0 = mix(dielectric, albedo, CONSTANT.Metalness);
 
 				//Light calculations
 				vec3 Lo = vec3(0.0);
 				
 				//Calculate final color
-				vec3 ibl = IBL(F0, Lr, IN.Normal, albedo, NdotV, roughness, metalness);
+				vec3 ibl = IBL(F0, Lr, IN.Normal, albedo, NdotV, roughness, CONSTANT.Metalness);
 
 				vec3 color = IN.Color.rgb;
 				color = ACESTonemap(ibl + Lo);

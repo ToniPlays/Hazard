@@ -7,6 +7,14 @@ Shader "Debug/LineShader"
 	Depth "Less"
 	DepthWrite True
 
+	Properties 
+	{
+		u_Camera ("Camera", Buffer, 0, 0, 1)
+		u_RadianceMap ("RadianceMap", SamplerCube, 0, 1, 1)
+		u_IrradianceMap ("IrradianceMap", SamplerCube, 0, 2, 1)
+		u_BRDFLut ("BRDFLut", Sampler2D, 0, 3, 1)
+	}
+
 	Vertex
 	{
 		Include 

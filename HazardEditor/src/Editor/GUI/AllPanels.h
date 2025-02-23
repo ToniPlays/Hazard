@@ -19,5 +19,7 @@
 #include "Properties/Properties.h"
 #include "Properties/Hierarchy.h"
 
+#include "TextEdit/TextEditPanel.h"
+
 #include "Viewport/Viewport.h"
 #include "Viewport/GameViewport.h"

@@ -87,6 +87,8 @@ public:
 		return m_Event.handled;
 	}
 
+	bool DidHandle() const { return m_DidHandle; }
+
 private:
 	Event& m_Event;
 	bool m_DidHandle = false;

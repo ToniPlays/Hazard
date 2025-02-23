@@ -1,3 +1,5 @@
+#include <hzrpch.h>
+
 #include "KeyboardInputDevice.h"
 #include "Input.h"
 

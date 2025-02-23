@@ -115,7 +115,9 @@ namespace Hazard
 
 				return mslSource;
 			}
-			default: return "";
+			default:
+				HZR_CORE_ASSERT(false, "Unknown RenderAPI");
+				break;
 		}
 	#else
 		return "UNSUPPORTED";
@@ -168,14 +170,13 @@ namespace Hazard
 		auto props = ParseShaderObject(source);
 
 		auto parsedProperties = GetLayoutFromProperties(props["Properties"].Source);
+		auto parsedConstants = GetLayoutFromProperties(props["Constants"].Source);
 
 		ShaderParseFileResult result = {
 			.Name = name,
 			.Language = props["Language"].Source,
 			.Version = props["Version"].Source,
 			.Type = props["Type"].Source,
-			.Constants = {},
-			.Layouts = GenerateDescriptorLayouts(parsedProperties),
 		};
 
 
@@ -183,7 +184,7 @@ namespace Hazard
 		{
 			if (prop.Type != ShaderPropertyType::Shader) continue;
 
-			auto source = GenerateShader(prop, parsedProperties);
+			auto source = GenerateShader(prop, parsedProperties, parsedConstants);
 			result.Shaders.push_back(fmt::format("#type {}\n#version {}\n{}", prop.Scope, result.Version, source));
 		}
 
@@ -197,6 +198,9 @@ namespace Hazard
 				break;
 			}
 		}
+
+		result.Layouts = GenerateDescriptorLayouts(parsedProperties),
+		result.Constants = GeneratePushConstants(parsedConstants);
 
 		return result;
 	}
@@ -215,6 +219,7 @@ namespace Hazard
 												   { "Type", ShaderPropertyType::String, true },
 												   { "Version", ShaderPropertyType::Number, true },
 												   { "Properties", ShaderPropertyType::Object },
+												   { "Constants", ShaderPropertyType::Object },
 												   { "Vertex", ShaderPropertyType::Shader},
 												   { "Fragment", ShaderPropertyType::Shader },
 												   { "Compute", ShaderPropertyType::Shader },
@@ -312,7 +317,7 @@ namespace Hazard
 		return result;
 	}
 
-	std::string ShaderCompiler::GenerateShader(const ShaderCompilerSourceScope& scope, std::vector<ShaderProperty>& layouts)
+	std::string ShaderCompiler::GenerateShader(const ShaderCompilerSourceScope& scope, std::vector<ShaderProperty>& layouts, std::vector<ShaderProperty>& constants)
 	{
 		auto properties = ParseShaderObject(scope.Source);
 		std::stringstream ss;
@@ -330,6 +335,7 @@ namespace Hazard
 		auto shaderBlocks = GetShaderPropertyBlocks(properties["Shader"].Source);
 
 		ss << "{UNIFORM_BLOCK}" << "\n";
+		ss << "{PUSH_CONSTANT_BLOCK}" << "\n";
 		ss << properties["Shader"].Source << "\n";
 
 		std::string source = ss.str();
@@ -357,26 +363,10 @@ namespace Hazard
 			}
 		}
 
-		std::stringstream uniformStream;
-		uniformStream << "\n";
+		ProcessUniformBlocks(source, layouts, ShaderStageFlagsFromString(scope.Scope));
+		ProcessPushConstantBlock(source, constants, ShaderStageFlagsFromString(scope.Scope));
 
-		for (auto& uniform : layouts)
-		{
-			if (!StringUtil::Contains(source, uniform.Name)) continue;
-			uniform.TypeFlags |= ShaderStageFlagsFromString(scope.Scope);
-
-			std::string arr = "";
-			if (uniform.Length > 1)
-				arr = "[" + std::to_string(uniform.Length) + "]";
-
-			std::string type = ShaderDataTypeToString(uniform.Type);
-			if (uniform.Type == ShaderDataType::Other)
-				type = GetShaderDescriptorType(uniform.TypeFlags);
-
-			uniformStream << fmt::format("layout (set = {}, binding = {}) uniform {} {}{};", uniform.Set, uniform.Binding, type, uniform.Name, arr) << "\n";
-		}
-		
-		return StringUtil::Replace(source, "{UNIFORM_BLOCK}", uniformStream.str());
+		return source;
 	}
 
 	std::vector<ShaderProperty> ShaderCompiler::GetLayoutFromProperties(const std::string& source)
@@ -393,27 +383,27 @@ namespace Hazard
 			value.Name = line.substr(0, line.find_first_of(' '));
 
 			auto data = StringUtil::Between(line, "(", ")");
-			auto split = StringUtil::SplitString(data.data(), ',');
+			auto split = StringUtil::SplitString(std::string(data), ',');
 
 			for (auto& s : split)
 				s.erase(0, s.find_first_not_of(' '));
 
-			if (data.size() > 0)
+			if (split.size() > 0)
 				value.DisplayName = VerifyEncapsulationWith(split[0], '"');
-			if (data.size() > 1)
+			if (split.size() > 1)
 			{
 				value.Type = HazardRenderer::ShaderDataTypeFromString(split[1]);
 				if (value.Type == ShaderDataType::Other)
 					value.TypeFlags = HazardRenderer::GetShaderDescriptorType(split[1]);
 			}
-			if (data.size() > 2)
+			if (split.size() > 2)
 				value.Set = std::stoi(split[2]);
-			if (data.size() > 3)
+			if (split.size() > 3)
 				value.Binding = std::stoi(split[3]);
-			if (data.size() > 4)
+			if (split.size() > 4)
 				value.Length = std::stoi(split[4]);
 
-			value.AccessFlags = SHADER_STAGE_ALL_GRAPHICS;
+			value.AccessFlags = 0;
 		}
 
 		return result;
@@ -424,14 +414,19 @@ namespace Hazard
 		std::vector<HazardRenderer::DescriptorSetLayout> result;
 		for (auto& prop : properties)
 		{
-			while (prop.Set > result.size())
+
+			while (prop.Set >= result.size())
 				result.emplace_back();
 		}
 
 		for (auto& prop : properties)
 		{
-			DescriptorSetElement e = { prop.AccessFlags, prop.Name, prop.Binding, prop.Length, (DescriptorType)prop.TypeFlags };
-			result[prop.Set - 1].GetElements().emplace_back(e);  //TODO: FIX -1
+			uint32_t flags = prop.AccessFlags;
+			if (prop.Set == 0)
+				flags |= SHADER_STAGE_FRAGMENT_BIT;
+
+			DescriptorSetElement e = { flags, prop.Name, prop.Binding, prop.Length, (DescriptorType)prop.TypeFlags };
+			result[prop.Set].GetElements().emplace_back(e);  //TODO: FIX -1
 		}
 
 		return result;
@@ -583,5 +578,89 @@ namespace Hazard
 		}
 
 		return ss.str();
+	}
+
+	void ShaderCompiler::ProcessUniformBlocks(std::string& source, std::vector<ShaderProperty>& layouts, uint32_t stageFlags)
+	{
+		std::stringstream uniformStream;
+		uniformStream << "\n";
+
+		for (auto& uniform : layouts)
+		{
+			if (!StringUtil::Contains(source, uniform.Name)) continue;
+			uniform.AccessFlags |= stageFlags;
+
+			std::string arr = "";
+			if (uniform.Length > 1)
+				arr = "[" + std::to_string(uniform.Length) + "]";
+
+			std::string type = ShaderDataTypeToString(uniform.Type);
+			if (uniform.Type == ShaderDataType::Other)
+				type = GetShaderDescriptorType(uniform.TypeFlags);
+
+			if (uniform.TypeFlags & ~(DESCRIPTOR_TYPE_SAMPLER_2D | DESCRIPTOR_TYPE_SAMPLER_CUBE)) continue;
+
+			uniformStream << fmt::format("layout (set = {}, binding = {}) uniform {} {}{};", uniform.Set, uniform.Binding, type, uniform.Name, arr) << "\n";
+		}
+
+
+		source = StringUtil::Replace(source, "{UNIFORM_BLOCK}", uniformStream.str());
+	}
+
+	void ShaderCompiler::ProcessPushConstantBlock(std::string& source, std::vector<ShaderProperty>& constants, uint32_t stageFlags)
+	{
+		std::stringstream constantStream;
+		constantStream << "\n";
+
+		bool emitBlock = false;
+
+		for (auto& constant : constants)
+		{
+			if (!StringUtil::Contains(source, "CONSTANT." + constant.Name)) continue;
+			emitBlock = true;
+			break;
+		}
+
+		if (!emitBlock)
+		{
+			source = StringUtil::Replace(source, "{PUSH_CONSTANT_BLOCK}", "");
+			return;
+		}
+
+		constantStream << "layout(push_constant, std140) uniform PushConstants\n{";
+
+		for (auto& constant : constants)
+		{
+			constant.AccessFlags |= stageFlags;
+
+			std::string type = ShaderDataTypeToString(constant.Type);
+			if (constant.Type == ShaderDataType::Other)
+				throw JobException(fmt::format("Unknown push constant type: {}", constant.Type));
+
+			constantStream << fmt::format("\tuniform {} {};", ShaderDataTypeToGLSLString(constant.Type), constant.Name, type) << "\n";
+		}
+		constantStream << "\} CONSTANT;";
+
+		source = StringUtil::Replace(source, "{PUSH_CONSTANT_BLOCK}", constantStream.str());
+	}
+
+	std::vector<HazardRenderer::PushConstantRange> ShaderCompiler::GeneratePushConstants(std::vector<ShaderProperty>& constants)
+	{
+		std::vector<HazardRenderer::PushConstantRange> result;
+		result.reserve(constants.size());
+
+		uint32_t offset = 0;
+
+		for (auto& prop : constants)
+		{
+			auto& constant = result.emplace_back();
+			constant.Name = prop.Name;
+			constant.Flags = prop.AccessFlags;
+			constant.Type = prop.Type;
+			constant.Offset = offset;
+			offset += ShaderDataTypeSize(prop.Type);
+		}
+
+		return result;
 	}
 }

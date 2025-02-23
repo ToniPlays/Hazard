@@ -1,3 +1,5 @@
+#include <hzrpch.h>
+
 #include "GamepadInputDevice.h"
 #include "Input.h"
 

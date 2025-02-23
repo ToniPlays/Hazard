@@ -25,7 +25,7 @@ namespace Hazard
 
 		Ref<CachedBuffer> ToBuffer()
 		{
-			uint32_t len = SourceFile.length() + sizeof(uint64_t) + (AssetData ? AssetData->GetSize() : 0);
+			uint32_t len = SourceFile.length() + sizeof(uint64_t) + (AssetData ? AssetData->GetCursor() : 0);
 			Ref<CachedBuffer> buffer = Ref<CachedBuffer>::Create(sizeof(uint32_t) + sizeof(uint64_t) + sizeof(AssetType) + len);
 
 			buffer->Write(Flags);
@@ -33,7 +33,7 @@ namespace Hazard
 			buffer->Write(Type);
 			buffer->Write(SourceFile);
 			if (AssetData)
-				buffer->Write(AssetData->GetData(), AssetData->GetSize());
+				buffer->Write(AssetData->GetData(), AssetData->GetCursor());
 
 			return buffer;
 		}

@@ -106,9 +106,7 @@ std::string_view StringUtil::Between(const std::string_view& source, const std::
 	
 	uint64_t endPos = startPos;
 	while (source.find(end, endPos + 1) != std::string::npos)
-	{
 		endPos = source.find(end, endPos + 1);
-	}
 
 	return source.substr(startPos + start.length(), endPos - startPos - end.length());
 }

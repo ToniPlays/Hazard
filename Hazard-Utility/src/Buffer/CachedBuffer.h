@@ -83,6 +83,10 @@ public:
 	template<typename T>
 	uint64_t Write(T value)
 	{
+		uint64_t requiredSize = m_CurrentBufferOffset + sizeof(T);
+		if (m_AllowResize && requiredSize >= m_DataBuffer.Size)
+			Resize((float)requiredSize * 1.5f);
+
 		m_DataBuffer.Write(&value, sizeof(T), m_CurrentBufferOffset);
 		m_CurrentBufferOffset += sizeof(T);
 		return sizeof(T);
@@ -91,6 +95,10 @@ public:
 	template<>
 	uint64_t Write(Buffer value)
 	{
+		uint64_t requiredSize = m_CurrentBufferOffset + value.Size;
+		if (m_AllowResize && requiredSize >= m_DataBuffer.Size)
+			Resize((float)requiredSize * 1.5f);
+
 		m_DataBuffer.Write(value.Data, value.Size, m_CurrentBufferOffset);
 		m_CurrentBufferOffset += value.Size;
 		return value.Size;
@@ -100,6 +108,10 @@ public:
 	uint64_t Write(std::string value)
 	{
 		uint64_t length = value.length();
+		uint64_t requiredSize = m_CurrentBufferOffset + length + sizeof(uint64_t);
+		if (m_AllowResize && requiredSize >= m_DataBuffer.Size)
+			Resize((float)requiredSize  * 1.5f);
+
 		m_DataBuffer.Write(&length, sizeof(uint64_t), m_CurrentBufferOffset);
 		m_CurrentBufferOffset += sizeof(uint64_t);
 
@@ -112,6 +124,9 @@ public:
 	template<typename T>
 	uint64_t Write(T* data, uint64_t dataLength)
 	{
+		if (m_AllowResize && m_CurrentBufferOffset + dataLength >= m_DataBuffer.Size)
+			Resize((float)m_DataBuffer.Size * 1.5f);
+
 		m_DataBuffer.Write((const void*)data, dataLength, m_CurrentBufferOffset);
 		m_CurrentBufferOffset += dataLength;
 		return dataLength;
@@ -130,11 +145,18 @@ public:
 
 		m_DataBuffer = Buffer();
 		m_DataBuffer.Allocate(size);
-		m_DataBuffer.TryWrite(oldBuffer.Data, oldBuffer.Size);
+		m_DataBuffer.ZeroInitialize();
+		HZR_ASSERT(m_DataBuffer.TryWrite(oldBuffer.Data, oldBuffer.Size), "Failed to resize buffer");
 		oldBuffer.Release();
+	}
+
+	void AllowResize(bool resize)
+	{
+		m_AllowResize = resize;
 	}
 
 private:
 	Buffer m_DataBuffer;
 	uint64_t m_CurrentBufferOffset = 0;
+	bool m_AllowResize = false;
 };

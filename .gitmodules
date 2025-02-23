@@ -29,3 +29,6 @@
 	path = Hazard/vendor/Coral
 	url = https://github.com/StudioCherno/Coral.git
 	branch = dev
+[submodule "Hazard/vendor/ImTextEdit"]
+	path = Hazard/vendor/ImTextEdit
+	url = https://github.com/VagueLobster/ImTextEdit.git

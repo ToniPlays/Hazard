@@ -36,6 +36,7 @@ project "HazardEditor"
     References("GLM")
     References("Spdlog")
     References("ImGUI")
+	References("ImTextEdit")
     References("YAML")
     References("EnTT")
     References("Coral")

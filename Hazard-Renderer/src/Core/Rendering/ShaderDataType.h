@@ -122,29 +122,56 @@ namespace HazardRenderer
 		if (val == "int2") return ShaderDataType::Int2;
 		if (val == "int3") return ShaderDataType::Int3;
 		if (val == "int4") return ShaderDataType::Int4;
-		if (val == "uInt") return ShaderDataType::UInt;
-		if (val == "uInt2") return ShaderDataType::UInt2;
-		if (val == "uInt3") return ShaderDataType::UInt3;
-		if (val == "uInt4") return ShaderDataType::UInt4;
+		if (val == "uint") return ShaderDataType::UInt;
+		if (val == "uint2") return ShaderDataType::UInt2;
+		if (val == "uint3") return ShaderDataType::UInt3;
+		if (val == "uint4") return ShaderDataType::UInt4;
 		if (val == "bool") return ShaderDataType::Bool;
 		if (val == "none") return ShaderDataType::None;
 		return ShaderDataType::Other;
 	}
 
+	static std::string ShaderDataTypeToGLSLString(ShaderDataType type)
+	{
+		switch (type)
+		{
+			case ShaderDataType::Float:    return "float";
+			case ShaderDataType::Float2:   return "vec2";
+			case ShaderDataType::Float3:   return "vec3";
+			case ShaderDataType::Float4:   return "vec4";
+			case ShaderDataType::Mat3:     return "mat3";
+			case ShaderDataType::Mat4:     return "mat4";
+			case ShaderDataType::Int:      return "unt";
+			case ShaderDataType::Int2:     return "int2";
+			case ShaderDataType::Int3:     return "int3";
+			case ShaderDataType::Int4:     return "int4";
+			case ShaderDataType::UInt:     return "uint";
+			case ShaderDataType::UInt2:    return "uint2";
+			case ShaderDataType::UInt3:    return "uint3";
+			case ShaderDataType::UInt4:    return "uint4";
+			case ShaderDataType::Bool:     return "bool";
+			case ShaderDataType::Other:    return "";
+		}
+		return "None";
+	}
+
+
 	static std::string GetShaderDescriptorType(uint32_t type)
 	{
 		if (type & DESCRIPTOR_TYPE_SAMPLER_2D) return "sampler2D";
 		if (type & DESCRIPTOR_TYPE_SAMPLER_CUBE) return "samplerCube";
+		if (type & DESCRIPTOR_TYPE_UNIFORM_BUFFER) return "uniformBuffer";
+		if (type & DESCRIPTOR_TYPE_STORAGE_IMAGE) return "imageCube";
 
-		return 0;
+		return "";
 	}
 
 	static uint32_t GetShaderDescriptorType(const std::string& type)
 	{
 		if (type == "Sampler2D")				return DESCRIPTOR_TYPE_SAMPLER_2D;
 		if (type == "SamplerCube")				return DESCRIPTOR_TYPE_SAMPLER_CUBE;
-		if (type == "StorageImage")				return DESCRIPTOR_TYPE_STORAGE_IMAGE;
-		if (type == "IniformBuffer")			return DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		if (type == "ImageCube")				return DESCRIPTOR_TYPE_STORAGE_IMAGE;
+		if (type == "Buffer")					return DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		if (type == "StorageBuffer")			return DESCRIPTOR_TYPE_STORAGE_BUFFER;
 		if (type == "AccelerationStructure")	return DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE;
 

@@ -19,9 +19,12 @@ namespace UI
 		AddMenuItem("File/New", nullptr);
 		AddMenuItem("File/New/Project");
 		AddMenuItem("File/New/Project/Crap/BunchOfShit", nullptr);
-		AddMenuItem("File/Open/OpenNew", nullptr);
+		AddMenuItem("File/Open/Open in editor", [](){
+			auto& panel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<TextEditPanel>();
+			panel.OpenFile();
+			});
 		AddMenuItem("File/Save", [&]() {
-			Ref<World> world = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
+			//Ref<World> world = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();
 			//AssetManager::SaveAsset(world);
 		});
 		AddMenuItem("File/Save as", nullptr);

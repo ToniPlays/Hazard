@@ -32,6 +32,9 @@ namespace Hazard
 
 		AssetType Type = AssetType::Undefined;
 		LoadState LoadState = LoadState::None;
+		uint32_t PackFlags = 0;
+		UID IterationID = UID();
+
 		std::filesystem::path FilePath = "";	//Can be whatever
 		std::filesystem::path SourceFile = "";	//Original asset location
 

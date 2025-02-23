@@ -3,6 +3,7 @@
 #include "HRenderer.h"
 #include "WorldRenderer.h"
 #include "Hazard/Assets/AssetManager.h"
+#include <Hazard/RenderContext/ShaderAsset.h>
 
 namespace Hazard
 {
@@ -132,13 +133,14 @@ namespace Hazard
 		if (!material) return;
 
 		auto& env = s_Engine->GetDrawList();
-		/* TOOD: FIX
-		env.Environment.Pipeline = material->GetPipeline();
+
+		Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>(material->GetPipelineHandle());
+
+		env.Environment.Pipeline = asset->GetPipeline();
 		env.Environment.RadianceMap = map->GetRadianceMap();
 		env.Environment.IrradianceMap = map->GetIrradianceMap();
 		env.Environment.Constants.LodLevel = skyLight.LodLevel;
 		env.Environment.Constants.Intensity = skyLight.Intensity;
-		*/
 	}
 
 	void HRenderer::SubmitDirectionalLight(const TransformComponent& transform, DirectionalLightComponent& directionalLight)

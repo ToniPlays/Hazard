@@ -1,5 +1,6 @@
 
 #include "Hazard/Assets/IAssetLoader.h"
+#include "ShaderAsset.h"
 #include "Core/RenderContextCreateInfo.h"
 #include "Utility/Coroutine.h"
 
@@ -26,6 +27,12 @@ namespace Hazard
 		Ref<JobGraph> Save(Ref<Asset> asset, const SaveAssetSettings& settings) override;
 		Ref<JobGraph> Create(const CreateAssetSettings& settings) override;
 
+	public:
+		struct ShaderCreateSettings 
+		{
+			bool FromExisting = true;
+		};
+
 	private:
 
 		static Coroutine PreprocessShaderSourceCode(JobInfo info, const CreateAssetSettings& settings);
@@ -36,7 +43,7 @@ namespace Hazard
 		static Coroutine GenerateShaderAssetBinary(JobInfo info, Ref<ShaderAsset> asset);
 		static Coroutine LoadShaderAsset(JobInfo info, AssetHandle handle);
 
-		static void ProcessShaderAsset(Ref<ShaderAsset> asset, const ShaderParseFileResult& result);
+		static void ProcessShaderAsset(Ref<ShaderAsset> asset, const std::string& result);
 
 		struct ShaderCompileResult
 		{
@@ -45,5 +52,6 @@ namespace Hazard
 			uint32_t Flags;
 			Ref<ShaderAsset> Asset;
 		};
+
 	};
 }

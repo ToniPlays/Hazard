@@ -63,8 +63,17 @@ namespace Hazard
 		};
 
 		m_VertexBuffer->SetData(region);
-		
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
+
+		if (m_Material->Invalidate())
+		{
+			Ref<Image2D> whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
+
+			for (uint32_t i = m_Data.TextureIndex; i < m_Data.Samplers; i++)
+				set->Write(0, i, whiteTexture, RenderContextManager::GetDefaultSampler());
+		}
+		
+		if (!set) return;
 
 		for (uint32_t i = 0; i < m_Data.TextureIndex; i++)
             set->Write(0, i, m_Data.TextureSlots[i], RenderContextManager::GetDefaultSampler());
@@ -201,6 +210,8 @@ namespace Hazard
 
 		Ref<Sampler> sampler = RenderContextManager::GetDefaultSampler();
 		Ref<DescriptorSet> set = m_Material->GetDescriptorSet();
+
+		if (!set) return;
 
 		for (uint32_t i = 0; i < m_Data.Samplers; i++)
 			set->Write(0, i, m_Data.TextureSlots[i], sampler, true);

@@ -1,3 +1,5 @@
+#include <hzrpch.h>
+
 #include "ShaderAsset.h"
 
 namespace Hazard

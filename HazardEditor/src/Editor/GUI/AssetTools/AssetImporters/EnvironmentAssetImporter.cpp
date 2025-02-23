@@ -111,7 +111,7 @@ bool EnvironmentAssetImporter::ReimportExisting()
 		};
 
 		AssetManager::SaveAsset(env, settings).ContinueWith([handle](const std::vector<Ref<EnvironmentMap>>& results) {
-			AssetManager::Reload<EnvironmentMap>(handle);
+			AssetManager::Reload(handle);
 		});
 		});
 

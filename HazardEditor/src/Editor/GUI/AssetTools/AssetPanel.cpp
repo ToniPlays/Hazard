@@ -14,6 +14,7 @@
 #include <Editor/EditorWorldManager.h>
 #include <Hazard/ImGUI/GUIManager.h>
 #include <Hazard/Rendering/Mesh/MaterialAssetLoader.h>
+#include <Hazard/RenderContext/ShaderAssetLoader.h>
 
 namespace UI
 {
@@ -296,7 +297,7 @@ namespace UI
 				changed = true;
 				});
 			ImUI::MenuItem("Material", [&]() {
-				CreateMaterialAsset();
+				
 				changed = true;
 				});
 
@@ -313,7 +314,24 @@ namespace UI
 			ImUI::Submenu("Editor", nullptr);
 			ImUI::Submenu("Materials and textures", [&]() {
 				ImUI::MenuItem("Material", nullptr);
-				ImUI::MenuItem("Shader", nullptr);
+				ImUI::MenuItem("Shader", [&]() {
+
+					auto path = File::FindAvailableName(m_CurrentPath, "Shader", ".shader");
+
+					ShaderAssetLoader::ShaderCreateSettings shaderSettings = {
+						.FromExisting = false,
+					};
+
+					CreateAssetSettings settings = {
+						.Type = AssetType::Shader,
+						.AccessPath = m_CurrentPath / (File::GetNameNoExt(path) + ".hasset"),
+						.SourcePath = m_CurrentPath / (File::GetNameNoExt(path) + ".shader"),
+						.Settings = &shaderSettings
+					};
+
+
+					AssetManager::CreateAsset<ShaderAsset>(settings);
+					});
 				ImUI::MenuItem("Environment map", [&]() {
 					CreateEnvironmentMapAsset();
 					changed = true;
@@ -428,7 +446,7 @@ namespace UI
 	AssetHandle AssetPanel::GetItemHandle(const std::filesystem::path& item)
 	{
 		AssetHandle handle = AssetManager::AssetHandleFromFile(item);
-		if (handle != INVALID_ASSET_HANDLE) return handle;
+		if (handle != INVALID_ASSET_HANDLE || File::GetFileExtension(item) != ".hasset") return handle;
 
 		HZR_INFO("Found asset that has moved: {}", item.string());
 
@@ -475,41 +493,26 @@ namespace UI
 		}
 
 		auto ext = File::GetFileExtension(path);
+		AssetType type = Hazard::Utils::AssetTypeFromExtension(ext);
+		if(ext == ".hasset")
+			type = AssetManager::GetMetadata(AssetManager::AssetHandleFromFile(path)).Type;
 
-		std::unordered_map<std::string, std::string> keys = { { ".cs", "Script" } };
-
-		for (auto& [key, value] : keys)
+		switch (type)
 		{
-			if (key == ext)
+			case AssetType::Image:
 			{
-				AssetHandle handle = EditorAssetManager::GetIconHandle(value);
+				AssetHandle handle = AssetManager::AssetHandleFromFile(path);
+				if (AssetManager::IsAssetLoaded(handle))
+					return AssetManager::GetAsset<Texture2DAsset>(handle);
+
+				AssetManager::GetAssetAsync<Texture2DAsset>(handle);
+			}
+			default:
+			{
+				AssetHandle handle = EditorAssetManager::GetIconHandle(Hazard::Utils::AssetTypeToString(type));
 				return AssetManager::GetAsset<Texture2DAsset>(handle);
 			}
 		}
-		if (ext == ".hasset")
-		{
-			AssetMetadata& meta = AssetManager::GetMetadata(AssetManager::AssetHandleFromFile(path));
-			switch (meta.Type)
-			{
-				case AssetType::World:
-				{
-					AssetHandle handle = EditorAssetManager::GetIconHandle("World");
-					return AssetManager::GetAsset<Texture2DAsset>(handle);
-				}
-				case AssetType::Image:
-				{
-					AssetHandle handle = AssetManager::AssetHandleFromFile(path);
-					if (AssetManager::IsAssetLoaded(handle))
-						return AssetManager::GetAsset<Texture2DAsset>(handle);
-
-					AssetManager::GetAssetAsync<Texture2DAsset>(handle);
-				}
-				default: break;
-			}
-		}
-
-		AssetHandle handle = EditorAssetManager::GetIconHandle("Default");
-		return AssetManager::GetAsset<Texture2DAsset>(handle);
 	}
 
 	std::vector<FolderStructureData> AssetPanel::GenerateFolderStructure()
@@ -564,10 +567,6 @@ namespace UI
 		Directory::Create(directoryPath);
 
 		Refresh();
-	}
-
-	void AssetPanel::CreateMaterialAsset() {
-
 	}
 
 	void AssetPanel::CreateEnvironmentMapAsset() {

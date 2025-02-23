@@ -105,17 +105,21 @@ namespace Hazard
 	{
 		HZR_PROFILE_FUNCTION();
 		if (handle == INVALID_ASSET_HANDLE) return;
+
+		std::scoped_lock lock(s_AssetMutex);
+
+		if (s_LoadedAssets.find(handle) == s_LoadedAssets.end()) return;
 		if (s_LoadedAssets[handle]->GetRefCount() >= 2) return;
 
 		HZR_TIMED_FUNCTION();
 
-
-		std::scoped_lock lock(s_AssetMutex);
 		AssetMetadata& meta = GetMetadata(handle);
 		meta.LoadState = LoadState::None;
 
 		s_UnloadAssetAfter.erase(handle);
 		s_LoadedAssets.erase(handle);
+
+		HZR_CORE_INFO("Unloaded {}", meta.Handle);
 	}
 
 	Ref<JobGraph> AssetManager::GetLoadGraph(AssetMetadata& metadata, LoadAssetSettings settings)
@@ -123,6 +127,7 @@ namespace Hazard
 		HZR_TIMED_FUNCTION();
 		Ref<JobGraph> graph = s_AssetLoader.Load(metadata, settings);
 		if (!graph) return nullptr;
+
 
 		graph->AddOnFinished([graph, handle = metadata.Handle]() mutable {
 			Ref<Asset> asset = graph->GetResults<Ref<Asset>>()[0];
@@ -132,10 +137,18 @@ namespace Hazard
 			asset->m_Handle = metadata.Handle;
 			asset->m_SourceAssetPath = metadata.SourceFile;
 			metadata.LoadState = LoadState::Loaded;
+			metadata.IterationID = UID();
 
 			std::scoped_lock lock(s_AssetMutex);
 			s_LoadedAssets[asset->GetHandle()] = asset;
 			s_UnloadAssetAfter[handle] = Time::s_Time + ASSET_UNLOAD_TIME;
+
+			HZR_CORE_INFO("Loaded {}", metadata.Handle);
+
+		});
+
+		graph->AddOnFailed([](const JobException& e) {
+			HZR_CORE_ERROR(e.what());
 			});
 
 		return graph;
@@ -182,16 +195,10 @@ namespace Hazard
 			else
 			{
 				pack.Flags |= ASSET_PACK_REFERENCES_FILE;
-
-				if (!pack.SourceFile.empty())
-				{
-					if (!File::WriteBinaryFile(pack.SourceFile, result->GetData(), result->GetSize()))
-						throw JobException(fmt::format("Could not save source file: {}", pack.SourceFile));
-				}
 			}
 
 			auto buffer = pack.ToBuffer();
-			if (!File::WriteBinaryFile(settings.TargetPath, buffer->GetData(), buffer->GetSize()))
+			if (!File::WriteBinaryFile(settings.TargetPath, buffer->GetData(), buffer->GetCursor()))
 				throw JobException(fmt::format("Could not save asset file: {}", settings.TargetPath.string()));
 
 			AssetMetadata& metadata = GetMetadata(asset->GetHandle());
@@ -230,6 +237,7 @@ namespace Hazard
 			.Handle = pack.Handle,
 			.Type = pack.Type,
 			.LoadState = s_LoadedAssets.contains(pack.Handle) ? LoadState::Loaded : LoadState::None,
+			.PackFlags = pack.Flags,
 			.FilePath = absolutePath,
 			.SourceFile = pack.SourceFile
 		};

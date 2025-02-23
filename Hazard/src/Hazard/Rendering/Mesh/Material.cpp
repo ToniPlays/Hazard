@@ -55,16 +55,25 @@ namespace Hazard
 		return false;
 	}
 
-	void Material::Invalidate()
+	bool Material::Invalidate()
 	{
-		if (m_PipelineHandle == INVALID_ASSET_HANDLE) return;
+		if (m_PipelineHandle == INVALID_ASSET_HANDLE) return false;
 
 		Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>(m_PipelineHandle);
+		if (!asset) return false;
+		UID iter = AssetManager::GetMetadata(m_PipelineHandle).IterationID;
+
+		if (iter == m_ShaderIteration) return false;
+		m_ShaderIteration = iter;
 
 		//Descriptor set 0 reserved for world info
-		auto& spec = asset->GetPipeline()->GetSpecifications();
+		auto& spec = asset->GetSpecifications();
 		if (spec.SetLayouts.size() > 1)
 		{
+			if (m_DescriptorSet)
+				if (m_DescriptorSet->GetLayout() == spec.SetLayouts[1])
+					return true;
+
 			auto layout = spec.SetLayouts[1];
 			DescriptorSetCreateInfo setInfo = {
 				.DebugName = fmt::format("Material: {}", spec.DebugName),
@@ -78,6 +87,7 @@ namespace Hazard
 		}
 
 		InvalidatePushConstants();
+		return true;
 	}
 
 	void Material::InvalidatePushConstants()
@@ -85,10 +95,10 @@ namespace Hazard
 		m_PushConstants.Release();
 		m_MaterialParams.clear();
 
-		/*auto& spec = m_Pipeline->GetSpecifications();
+		Ref<ShaderAsset> asset = AssetManager::GetAsset<ShaderAsset>(m_PipelineHandle);
 
 		uint32_t requiredSize = 0;
-		for (auto& range : spec.PushConstants)
+		for (auto& range : asset->GetPipeline()->GetSpecifications().PushConstants)
 		{
 			auto& param = m_MaterialParams[range.Name];
 			param.Name = range.Name;
@@ -99,25 +109,33 @@ namespace Hazard
 		}
 		m_PushConstants.Allocate(requiredSize);
 		m_PushConstants.ZeroInitialize();
-		*/
 	}
 	void Material::InvalidateDescriptorSet()
 	{
-		/*
 		m_TextureParams.clear();
 		if (!m_DescriptorSet) return;
 
-		const DescriptorSetLayout& layout = m_DescriptorSet->GetLayout();
+		HZR_CORE_INFO("Invalidate material {}", m_DescriptorSet->GetDebugName());
+
+		DescriptorSetLayout layout = m_DescriptorSet->GetLayout();
+
+		auto& whiteTexture = Application::Get().GetModule<RenderContextManager>().GetWindow().GetContext()->GetDefaultResources().WhiteTexture;
+
+		auto params = m_TextureParams;
 
 		for (auto& param : layout.GetElements())
 		{
-			if (param.Type & ~(DESCRIPTOR_TYPE_SAMPLER_2D, DESCRIPTOR_TYPE_SAMPLER_CUBE)) continue;
+			if (param.Type & ~(DESCRIPTOR_TYPE_SAMPLER_2D | DESCRIPTOR_TYPE_SAMPLER_CUBE)) continue;
 
-			m_TextureParams[param.Name] = TextureParam {
-				.Name = param.Name,
-				.Binding = param.Binding,
-			};
+			auto& p = m_TextureParams[param.Name];
+			p.Name = param.Name;
+			p.Binding = param.Binding;
+
+			if (p.Value)
+				Set(param.Name, p.Value.As<Hazard::Texture2DAsset>());
+			else Set(param.Name, whiteTexture);
 		}
-		*/
+
+		m_TextureParams = std::move(params);
 	}
 }

@@ -2,6 +2,7 @@
 #version 450
 
 
+
 			layout(location = 0) in vec4 IN_Color;
 			
 
@@ -18,6 +19,7 @@
 #type Vertex
 #version 450
 #include "../Uniforms/CameraUniform.glslh"
+
 
 
 			layout(location = 0) in vec3 IN_Position;

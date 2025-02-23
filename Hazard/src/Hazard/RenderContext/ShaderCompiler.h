@@ -172,7 +172,7 @@ namespace Hazard
 	private:
 
 		static std::unordered_map<std::string, ShaderCompilerSourceScope> ParseShaderObject(const std::string& source);
-		static std::string GenerateShader(const ShaderCompilerSourceScope& scope, std::vector<ShaderProperty>& layouts);
+		static std::string GenerateShader(const ShaderCompilerSourceScope& scope, std::vector<ShaderProperty>& layouts, std::vector<ShaderProperty>& constants);
 
 		static std::vector<ShaderProperty> GetLayoutFromProperties(const std::string& source);
 		static std::vector<HazardRenderer::DescriptorSetLayout> GenerateDescriptorLayouts(const std::vector<ShaderProperty>& properties);
@@ -185,5 +185,9 @@ namespace Hazard
 		static std::vector<ShaderSourcePropertyBlock> GetShaderPropertyBlocks(const std::string& shaderSource);
 		static std::vector<ShaderPropertyElement> ParseElements(const std::string& source);
 		static std::string GeneratePropertyBlockSource(const ShaderSourcePropertyBlock& block);
+
+		static void ProcessUniformBlocks(std::string& source, std::vector<ShaderProperty>& properties, uint32_t stageFlags);
+		static void ProcessPushConstantBlock(std::string& source, std::vector<ShaderProperty>& constants, uint32_t stageFlags);
+		static std::vector<HazardRenderer::PushConstantRange> GeneratePushConstants(std::vector<ShaderProperty>& constants);
 	};
 }

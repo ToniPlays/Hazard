@@ -432,7 +432,6 @@ namespace HazardRenderer::Vulkan
 
 		HZR_ASSERT(pipeline, "Pipeline cannot be null");
 		m_CurrentPipeline = pipeline.As<VulkanPipeline>();
-
 		Ref<VulkanRenderCommandBuffer> instance = this;
 
 		Renderer::Submit([instance, pipeline = m_CurrentPipeline]() mutable {

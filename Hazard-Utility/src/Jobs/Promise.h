@@ -26,7 +26,7 @@ public:
 
 	bool Succeeded() const
 	{
-		return m_JobGraph->GetFlags() & JOB_GRAPH_SUCCEEDED;
+		return !m_JobGraph->DidFail();
 	}
 
 	Promise<T> Wait() const
@@ -45,7 +45,7 @@ public:
 		return *this;
 	}
 
-	Promise<T> Catch(std::function<void(const JobException&)> callback) {
+	Promise<T> Catch(const std::function<void(const JobException&)>& callback) {
 		if (m_JobGraph)
 			m_JobGraph->AddOnFailed(callback);
 		return *this;

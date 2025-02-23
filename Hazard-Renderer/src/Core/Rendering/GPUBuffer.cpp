@@ -15,13 +15,13 @@ namespace HazardRenderer
 		switch (GraphicsContext::GetRenderAPI())
 		{
 #ifdef HZR_INCLUDE_OPENGL
-		//case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLGPUBuffer>::Create(createInfo); break;
+		//case RenderAPI::OpenGL: return Ref<OpenGL::OpenGLGPUBuffer>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_VULKAN
-		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanGPUBuffer>::Create(createInfo); break;
+		case RenderAPI::Vulkan: return Ref<Vulkan::VulkanGPUBuffer>::Create(createInfo);
 #endif
 #ifdef HZR_INCLUDE_METAL
-		case RenderAPI::Metal: return Ref<Metal::MetalGPUBuffer>::Create(createInfo); break;
+		case RenderAPI::Metal: return Ref<Metal::MetalGPUBuffer>::Create(createInfo);
 #endif
 		default:
 			return nullptr;

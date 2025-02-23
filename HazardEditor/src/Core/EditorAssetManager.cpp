@@ -8,6 +8,7 @@
 #include <Filesystem/FileCache.h>
 #include <Hazard/Rendering/Mesh/MeshAssetLoader.h>
 #include <Hazard/RenderContext/ImageAssetLoader.h>
+#include <Hazard/RenderContext/ShaderAssetLoader.h>
 
 using namespace Hazard;
 
@@ -37,7 +38,8 @@ void EditorAssetManager::LoadEditorAssets()
 		{ "World",				"res/Icons/world.png"},
 		{ "Script",				"res/Icons/csharp.png"},
 		{ "Camera",				"res/Icons/camera.png"},
-		{ "DirectionalLight",	"res/Icons/directionalLight.png" }
+		{ "DirectionalLight",	"res/Icons/directionalLight.png" },
+		{ "Shader",				"res/Icons/Shader.png" }
 	};
     
 	Timer timer;
@@ -99,7 +101,7 @@ void EditorAssetManager::ImportEngineShaders()
 		CreateAssetSettings settings = {
 			.Type = AssetType::Shader,
 			.AccessPath = cache.GetCachePath() / (File::GetNameNoExt(file) + ".hasset"),
-			.SourcePath = file
+			.SourcePath = file,
 		};
 
 		Promise<Ref<ShaderAsset>> promise = AssetManager::CreateAssetAsync<ShaderAsset>(settings);
@@ -108,7 +110,7 @@ void EditorAssetManager::ImportEngineShaders()
 			if (!asset) return;
 
 			SaveAssetSettings settings = {};
-			settings.Flags = ASSET_MANAGER_COMBINE_ASSET | ASSET_MANAGER_SAVE_AND_UPDATE;
+			settings.Flags = ASSET_MANAGER_SAVE_AND_UPDATE;
 			settings.TargetPath = path;
 
 			AssetManager::SaveAsset(asset, settings);
@@ -133,8 +135,8 @@ void EditorAssetManager::ImportEngineEnvironments()
 		if (cache.HasFile(cacheFile))
 		{
 			AssetManager::Import(cache.Get(cacheFile));
-		}
 			continue;
+		}
 
 		CreateAssetSettings settings = {
 			.Type = AssetType::EnvironmentMap,

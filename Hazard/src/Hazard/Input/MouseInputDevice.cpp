@@ -1,3 +1,4 @@
+#include <hzrpch.h>
 
 #include "MouseInputDevice.h"
 #include "Input.h"

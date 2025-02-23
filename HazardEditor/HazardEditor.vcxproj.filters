@@ -49,6 +49,9 @@
     <Filter Include="src\Editor\GUI\Properties">
       <UniqueIdentifier>{B386BB3A-1F49-EFC4-68F9-7D51D4FAC7A2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Editor\GUI\TextEdit">
+      <UniqueIdentifier>{D1320D9F-3D6A-5536-4674-B959B22A7C2F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Editor\GUI\Viewport">
       <UniqueIdentifier>{66D9757F-D210-BE16-DB1A-223A47D1E40F}</UniqueIdentifier>
     </Filter>
@@ -60,6 +63,9 @@
     </Filter>
     <Filter Include="src\Exporter">
       <UniqueIdentifier>{950C937C-816F-2221-2AF5-5AD71637EEA3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\LangDefs">
+      <UniqueIdentifier>{00DB8F02-EC3D-1FA7-95C3-575D8105EB29}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Project">
       <UniqueIdentifier>{732C2D2D-DFE1-A522-68D6-9FF9D48A9C26}</UniqueIdentifier>
@@ -198,6 +204,9 @@
     <ClInclude Include="src\Editor\GUI\Properties\ScriptFieldUI.h">
       <Filter>src\Editor\GUI\Properties</Filter>
     </ClInclude>
+    <ClInclude Include="src\Editor\GUI\TextEdit\TextEditPanel.h">
+      <Filter>src\Editor\GUI\TextEdit</Filter>
+    </ClInclude>
     <ClInclude Include="src\Editor\GUI\Viewport\GameViewport.h">
       <Filter>src\Editor\GUI\Viewport</Filter>
     </ClInclude>
@@ -222,6 +231,9 @@
     <ClInclude Include="src\Exporter\RuntimeExporter.h">
       <Filter>src\Exporter</Filter>
     </ClInclude>
+    <ClInclude Include="src\LangDefs\LanguageDefinitions.h">
+      <Filter>src\LangDefs</Filter>
+    </ClInclude>
     <ClInclude Include="src\Project\HazardProject.h">
       <Filter>src\Project</Filter>
     </ClInclude>
@@ -231,6 +243,7 @@
     <ClInclude Include="src\Project\ProjectSettingsSchema.h">
       <Filter>src\Project</Filter>
     </ClInclude>
+    <ClInclude Include="src\LangDefs\ShaderLanguage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -326,6 +339,9 @@
     <ClCompile Include="src\Editor\GUI\Properties\Properties.cpp">
       <Filter>src\Editor\GUI\Properties</Filter>
     </ClCompile>
+    <ClCompile Include="src\Editor\GUI\TextEdit\TextEditPanel.cpp">
+      <Filter>src\Editor\GUI\TextEdit</Filter>
+    </ClCompile>
     <ClCompile Include="src\Editor\GUI\Viewport\GameViewport.cpp">
       <Filter>src\Editor\GUI\Viewport</Filter>
     </ClCompile>
@@ -343,6 +359,12 @@
     </ClCompile>
     <ClCompile Include="src\Exporter\RuntimeExporter.cpp">
       <Filter>src\Exporter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LangDefs\CppDefinition.h">
+      <Filter>src\LangDefs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LangDefs\GLSLDefinition.h">
+      <Filter>src\LangDefs</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\HazardProject.cpp">
       <Filter>src\Project</Filter>

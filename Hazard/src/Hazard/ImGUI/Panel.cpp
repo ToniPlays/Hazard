@@ -1,3 +1,5 @@
+#include <hzrpch.h>
+
 #include "Panel.h"
 #include "GUIManager.h"
 
@@ -24,6 +26,7 @@ namespace Hazard::ImUI
 
 		if (m_IsOpen)
 		{
+			m_Focused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 			m_Hovered = MouseOverWindow();
 			OnPanelRender();
 		}

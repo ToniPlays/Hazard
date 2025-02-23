@@ -72,14 +72,14 @@ public:
         return results;
     }
     
-    void AddOnFinished(const std::function<void()>&& callback)
+    void AddOnFinished(const std::function<void()>& callback)
     {
         if (m_HasFinished)
             callback();
         else m_OnFinishedCallback.Add(callback);
     }
     
-    void AddOnFailed(const std::function<void(JobException)>&& callback)
+    void AddOnFailed(const std::function<void(const JobException&)>& callback)
     {
         m_OnFailedCallback.Add(callback);
     }

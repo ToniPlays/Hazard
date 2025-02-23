@@ -21,6 +21,8 @@ namespace HazardRenderer
 	public:
 		virtual const DescriptorSetLayout& GetLayout() = 0;
 
+		virtual const std::string& GetDebugName() const = 0;
+
 		virtual void Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll = false) = 0;
 		virtual void Write(uint32_t binding, Ref<GPUBuffer> buffer, uint32_t size, uint32_t offset = 0, bool updateAll = false) = 0;
 

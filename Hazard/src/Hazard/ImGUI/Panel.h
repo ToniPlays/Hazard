@@ -30,9 +30,13 @@ namespace Hazard::ImUI
 
 			if (!window) return;
 
-
 			m_IsOpen = true;
 			ImGui::BringWindowToFocusFront(window);
+		}
+
+		bool IsFocused()
+		{
+			return m_Focused;
 		}
 
 		bool MouseOverWindow()
@@ -61,5 +65,6 @@ namespace Hazard::ImUI
 		bool m_Hovered = false;
 		bool m_DestroyOnClose = true;
 		bool m_IsOpen = true;
+		bool m_Focused = false;
 	};
 }

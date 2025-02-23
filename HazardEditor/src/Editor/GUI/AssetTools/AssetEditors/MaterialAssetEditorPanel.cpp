@@ -194,7 +194,7 @@ namespace UI
 					AssetManager::GetAssetAsync<Texture2DAsset>(handle).ContinueWith([name, material](const auto& results) mutable {
 						Ref<Texture2DAsset> image = results[0];
 						Application::Get().SubmitMainThread([material, name, image]() mutable {
-							material->Set(name, image->GetSourceImage());
+							material->Set(name, image);
 							});
 						});
 					});

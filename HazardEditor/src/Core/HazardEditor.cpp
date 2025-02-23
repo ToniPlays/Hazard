@@ -179,6 +179,7 @@ void HazardEditorApplication::InitializeGUIPanels()
 	manager.New<UI::Hierarchy>();
 	manager.New<UI::Properties>();
 	manager.New<UI::ProgressOverlay>();
+	manager.New<UI::TextEditPanel>();
 }
 
 Hazard::Application* Hazard::CreateApplication()

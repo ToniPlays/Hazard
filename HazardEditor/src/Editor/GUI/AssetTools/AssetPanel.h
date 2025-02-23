@@ -76,7 +76,6 @@ namespace UI
 	private:
 		void CreateFolder(const std::filesystem::path& path);
 
-		void CreateMaterialAsset();
 		void CreateEnvironmentMapAsset();
 
 	private:

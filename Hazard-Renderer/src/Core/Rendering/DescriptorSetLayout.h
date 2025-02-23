@@ -4,15 +4,15 @@
 
 namespace HazardRenderer
 {
-	enum DescriptorType
+	enum DescriptorType : uint16_t
 	{
-		DESCRIPTOR_TYPE_INVALID_DESCRIPTOR_TYPE,
-		DESCRIPTOR_TYPE_SAMPLER_2D,
-		DESCRIPTOR_TYPE_SAMPLER_CUBE,
-		DESCRIPTOR_TYPE_STORAGE_IMAGE,
-		DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-		DESCRIPTOR_TYPE_STORAGE_BUFFER,
-		DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE,
+		DESCRIPTOR_TYPE_INVALID_DESCRIPTOR_TYPE = BIT(0),
+		DESCRIPTOR_TYPE_SAMPLER_2D = BIT(1),
+		DESCRIPTOR_TYPE_SAMPLER_CUBE = BIT(2),
+		DESCRIPTOR_TYPE_STORAGE_IMAGE = BIT(3),
+		DESCRIPTOR_TYPE_UNIFORM_BUFFER = BIT(4),
+		DESCRIPTOR_TYPE_STORAGE_BUFFER = BIT(5),
+		DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE = BIT(6),
 	};
 
 	struct DescriptorSetElement
@@ -56,6 +56,22 @@ namespace HazardRenderer
 		std::vector<DescriptorSetElement>::iterator end() { return m_Elements.end(); }
 		std::vector<DescriptorSetElement>::const_iterator begin() const { return m_Elements.begin(); }
 		std::vector<DescriptorSetElement>::const_iterator end() const { return m_Elements.end(); }
+
+		bool operator == (const DescriptorSetLayout& other) const
+		{
+			if (m_Elements.size() != other.m_Elements.size()) return false;
+
+			for (uint32_t i = 0; i < m_Elements.size(); i++)
+			{
+				auto& l = m_Elements[i];
+				auto& r = other.m_Elements[i];
+				if (l.Type != r.Type || l.Binding != r.Binding || l.Length != r.Length || l.Flags != r.Flags)
+					return false;
+			}
+
+			return true;
+		}
+
 
 	private:
 		std::vector<DescriptorSetElement> m_Elements;

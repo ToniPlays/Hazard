@@ -16,7 +16,6 @@ namespace Hazard::Utils
 		if (type == "Mesh")					return AssetType::Mesh;
 		if (type == "EnvironmentMap")		return AssetType::EnvironmentMap;
 		if (type == "Script")				return AssetType::Script;
-		if (type == "Pipeline")				return AssetType::Pipeline;
 		if (type == "Shader")				return AssetType::Shader;
 		if (type == "Material")             return AssetType::Material;
 		if (type == "Buffer")				return AssetType::Buffer;
@@ -35,7 +34,6 @@ namespace Hazard::Utils
 			case AssetType::PhysicsMaterial:	return "PhysicsMaterial";
 			case AssetType::EnvironmentMap:		return "EnvironmentMap";
 			case AssetType::Script:				return "Script";
-			case AssetType::Pipeline:			return "Pipeline";
 			case AssetType::Shader:				return "Shader";
 			case AssetType::Material:           return "Material";
 			case AssetType::Buffer:				return "Buffer";

@@ -12,7 +12,9 @@ project "Hazard"
 		"src/**.h",
 		"src/**.cpp",
 		"vendor/ImGui_Backend/**.h",
-		"vendor/ImGui_Backend/**.cpp"
+		"vendor/ImGui_Backend/**.cpp",
+		"vendor/ImTextEdit/**.h",
+		"vendor/ImTextEdit/**.cpp"
 	}
 
     includedirs
@@ -31,6 +33,7 @@ project "Hazard"
     References("GLM")
     References("Spdlog")
     References("ImGUI")
+	References("ImTextEdit")
     References("YAML")
     References("EnTT")
     References("Coral")

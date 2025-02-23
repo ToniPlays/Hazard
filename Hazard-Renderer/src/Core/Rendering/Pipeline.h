@@ -8,7 +8,7 @@
 
 namespace HazardRenderer
 {
-	enum class PipelineUsage 
+	enum class PipelineUsage : uint8_t
 	{
 		None = 0,
 		GraphicsBit,
@@ -28,7 +28,7 @@ namespace HazardRenderer
 		PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST = BIT(8),
 		PIPELINE_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = BIT(9),
 	};
-	enum class DepthOp 
+	enum class DepthOp : uint8_t
 	{
 		None = 0,
 		Never,
@@ -45,8 +45,8 @@ namespace HazardRenderer
 	{
 		std::string Name;
 		uint32_t Flags;
-		ShaderDataType Type;
 		uint32_t Offset;
+		ShaderDataType Type;
 	};
 
 	struct PipelineSpecification
@@ -56,7 +56,7 @@ namespace HazardRenderer
 
 		BufferLayout* pBufferLayout;
 		Ref<RenderPass> pTargetRenderPass = nullptr;
-		uint32_t MaxRayDepth = 0;
+		uint16_t MaxRayDepth = 0;
 		uint32_t Flags = 0;
 
 		DepthOp DepthOperator = DepthOp::LessOrEqual;

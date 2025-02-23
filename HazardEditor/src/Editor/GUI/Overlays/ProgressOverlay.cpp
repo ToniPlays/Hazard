@@ -59,16 +59,14 @@ namespace UI
 	{
 		std::scoped_lock lock(m_JobMutex);
 		for (auto& info : m_JobGraphs)
-		{
-			Ref<JobGraph>& graph = info.Graph;
-			DrawProgressCard(graph);
-		}
+			DrawProgressCard(info);
 
 		ImGui::Separator();
 	}
-	void ProgressOverlay::DrawProgressCard(Ref<JobGraph> graph)
+	void ProgressOverlay::DrawProgressCard(JobGraphProgress& info)
 	{
 		const Hazard::ImUI::Style& style = Hazard::ImUI::StyleManager::GetCurrent();
+		Ref<JobGraph>& graph = info.Graph;
         const std::string& currentJob = graph->GetStageName();
 		float progress = graph->GetProgress();
 
@@ -88,8 +86,12 @@ namespace UI
 		if (!currentJob.empty())
 			ImGui::Text("%s", currentJob.c_str());
 
-		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, graph->GetFlags() & JOB_GRAPH_FAILED ? style.Colors.AxisX : style.Colors.AxisZ);
+		ImGui::PushStyleColor(ImGuiCol_PlotHistogram, graph->DidFail() ? style.Colors.AxisX : style.Colors.AxisZ);
 		ImGui::ProgressBar(progress, { panelWidth, 32});
+
+		if (graph->DidFail() && ImGui::IsItemClicked())
+			info.RemoveAfter = 0.01f;
+
 		ImGui::PopStyleColor();
 	}
 }
