@@ -29,6 +29,9 @@ Dependencies = {
     PortableFD = {
         IncludeDir = "%{wks.location}/Hazard/vendor/portable-file-dialogs"
     },
+    FileWatch = {
+        IncludeDir = "%{wks.location}/Hazard/vendor/FileWatch"
+    },
     Assimp = {
         IncludeDir = "%{wks.location}/Hazard/vendor/assimp/include",
         LibraryDir = "%{wks.location}vendor/libmacos",

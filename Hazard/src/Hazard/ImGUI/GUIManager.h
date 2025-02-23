@@ -26,15 +26,15 @@ namespace Hazard
 		bool OnEvent(Event& e) override;
 
 		template<typename T>
-		T* GetRenderable(uint32_t id)
-		{
-			return (T*)FindRenderable<T>(id);
-		}
-
-		template<typename T>
-		T& New()
+		T& New(const std::string& id = "")
 		{
 			T* panel = hnew T();
+			if constexpr (std::is_base_of<ImUI::Panel, T>::value)
+			{
+				if (!id.empty())
+					((ImUI::Panel*)panel)->SetTitle(id);
+			}
+
 			m_Renderables[typeid(T).hash_code()].push_back(panel);
 			return *panel;
 		}
@@ -53,10 +53,27 @@ namespace Hazard
 		}
 
 		template<typename T>
-		T& GetExistingOrNew()
+		T& GetExistingOrNew(const std::string& id = "")
 		{
-			ImUI::GUIRenderable* panel = FindAny<T>();
-			return panel ? (T&)*panel : New<T>();
+			if constexpr (std::is_base_of<ImUI::Panel, T>::value)
+			{
+				//Multiple panels are possible
+
+				auto& panels = m_Renderables[typeid(ImUI::Panel).hash_code()];
+				for (auto renderable : panels)
+				{
+					auto& panel = *(ImUI::Panel*)renderable;
+					if (panel.GetTitle() == id)
+						return (T&)*renderable;
+				}
+				return New<T>(id);
+			}
+
+			ImUI::GUIRenderable* renderable = FindAny<T>();
+			if (!renderable)
+				return New<T>(id);
+
+			return renderable ? (T&)*renderable : New<T>(id);
 		}
 
 		template<typename T>
@@ -72,23 +89,6 @@ namespace Hazard
 
 	private:
 		void InitImGuiPlatform(HazardRenderer::Window& window);
-
-		template<typename T>
-		ImUI::GUIRenderable* FindRenderable(uint64_t handle)
-		{
-			if (handle == 0) 
-				return nullptr;
-
-			auto& panels = m_Renderables[typeid(T).hash_code()];
-
-			for (auto& panel : panels)
-			{
-				if (panel->GetPanelID() == handle) 
-					return panel;
-			}
-
-			return nullptr;
-		}
 
 		template<typename T>
 		ImUI::GUIRenderable* FindAny()

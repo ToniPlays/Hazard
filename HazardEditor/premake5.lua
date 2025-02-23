@@ -32,6 +32,7 @@ project "HazardEditor"
     References("HazardScript")
     References("Hazard")
     References("YAML")
+	References("FileWatch")
     References("Assimp")
     References("GLM")
     References("Spdlog")

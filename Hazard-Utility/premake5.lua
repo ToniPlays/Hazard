@@ -23,6 +23,7 @@ project "Hazard-Utility"
     References("YAML")
     References("GLM")
     References("PortableFD")
+	References("FileWatch")
     
 	filter "system:ios"
         files {

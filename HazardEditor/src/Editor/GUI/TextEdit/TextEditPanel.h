@@ -18,7 +18,6 @@ namespace UI
 		void OnPanelRender() override;
 		bool OnEvent(Event& e) override;
 
-		void OpenFile();
 		void OpenFile(const std::filesystem::path& path);
 
 		bool OnKeyPressed(KeyPressedEvent& e);
@@ -31,6 +30,7 @@ namespace UI
 	private:
 		ImTextEdit m_TextEditor;
 		std::filesystem::path m_Path;
+		Scope<File::Watcher> m_Watcher;
 
 		float m_TextSize = 16.0;
 	};

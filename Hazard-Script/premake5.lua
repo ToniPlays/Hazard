@@ -21,3 +21,6 @@ project "Hazard-Script"
         (Dependencies.Spdlog.IncludeDir),
         (Dependencies.Coral.IncludeDir),
 	}
+
+	
+	References("FileWatch")

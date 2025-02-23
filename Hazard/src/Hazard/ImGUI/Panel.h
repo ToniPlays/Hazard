@@ -17,7 +17,8 @@ namespace Hazard::ImUI
 		virtual ~Panel() = default;
 
 		const std::string& GetTitle() const { return m_Title; }
-		
+		void SetTitle(const std::string& title) { m_Title = title; }
+
 		virtual void OnOpen() {}
 		virtual void OnClose() {}
 
@@ -25,12 +26,14 @@ namespace Hazard::ImUI
 
 		void BringToFront()
 		{
+			if (!m_IsOpen)
+				OnOpen();
+			m_IsOpen = true;
+
 			ImGuiWindow* window = ImGui::FindWindowByName(m_Title.c_str());
-			OnOpen();
 
 			if (!window) return;
 
-			m_IsOpen = true;
 			ImGui::BringWindowToFocusFront(window);
 		}
 
@@ -62,6 +65,7 @@ namespace Hazard::ImUI
 
 	protected:
 		std::string m_Title = "Undefined panel";
+
 		bool m_Hovered = false;
 		bool m_DestroyOnClose = true;
 		bool m_IsOpen = true;

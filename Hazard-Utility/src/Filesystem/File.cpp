@@ -112,6 +112,14 @@ bool File::Move(const std::filesystem::path& src, const std::filesystem::path& d
 	return true;
 }
 
+Scope<File::Watcher> File::Watch(const std::filesystem::path& file, const std::function<void(FileEvent)>& callback)
+{
+	Scope<Watcher> watcher = CreateScope<Watcher>(file, filewatch::ChangeLastWrite, [callback](const std::filesystem::path& path, const filewatch::Event e) {
+		callback((FileEvent)e);
+		});
+	return watcher;
+}
+
 std::string File::ReadFile(const std::filesystem::path& file)
 {
 	std::string result;

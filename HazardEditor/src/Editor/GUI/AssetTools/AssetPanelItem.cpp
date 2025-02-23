@@ -269,7 +269,9 @@ namespace UI
 			}
 			case AssetType::Shader:
 			{
-				auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<TextEditPanel>();
+				std::string id = fmt::format("File: {}##{}", File::GetName(metadata.SourceFile), metadata.SourceFile.string());
+
+				auto& panel = Application::Get().GetModule<GUIManager>().GetExistingOrNew<TextEditPanel>(id);
 				panel.OpenFile(metadata.SourceFile);
 				break;
 			}

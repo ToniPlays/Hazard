@@ -231,7 +231,16 @@
     <ClInclude Include="src\Exporter\RuntimeExporter.h">
       <Filter>src\Exporter</Filter>
     </ClInclude>
+    <ClInclude Include="src\LangDefs\CppDefinition.h">
+      <Filter>src\LangDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LangDefs\GLSLDefinition.h">
+      <Filter>src\LangDefs</Filter>
+    </ClInclude>
     <ClInclude Include="src\LangDefs\LanguageDefinitions.h">
+      <Filter>src\LangDefs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LangDefs\ShaderLanguage.h">
       <Filter>src\LangDefs</Filter>
     </ClInclude>
     <ClInclude Include="src\Project\HazardProject.h">
@@ -243,7 +252,6 @@
     <ClInclude Include="src\Project\ProjectSettingsSchema.h">
       <Filter>src\Project</Filter>
     </ClInclude>
-    <ClInclude Include="src\LangDefs\ShaderLanguage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Hazard\vendor\ImGui_Backend\ImGuizmo.cpp">
@@ -359,12 +367,6 @@
     </ClCompile>
     <ClCompile Include="src\Exporter\RuntimeExporter.cpp">
       <Filter>src\Exporter</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LangDefs\CppDefinition.h">
-      <Filter>src\LangDefs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LangDefs\GLSLDefinition.h">
-      <Filter>src\LangDefs</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\HazardProject.cpp">
       <Filter>src\Project</Filter>

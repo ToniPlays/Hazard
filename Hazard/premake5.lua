@@ -32,6 +32,7 @@ project "Hazard"
     References("HazardScript")
     References("GLM")
     References("Spdlog")
+	References("FileWatch")
     References("ImGUI")
 	References("ImTextEdit")
     References("YAML")

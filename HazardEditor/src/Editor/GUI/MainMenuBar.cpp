@@ -20,8 +20,14 @@ namespace UI
 		AddMenuItem("File/New/Project");
 		AddMenuItem("File/New/Project/Crap/BunchOfShit", nullptr);
 		AddMenuItem("File/Open/Open in editor", [](){
-			auto& panel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<TextEditPanel>();
-			panel.OpenFile();
+
+			auto path = File::OpenFileDialog();
+			if (path.empty())
+				return;
+
+			std::string id = fmt::format("File: {}##{}", File::GetName(path), path);
+			auto& panel = Application::Get().GetModule<Hazard::GUIManager>().GetExistingOrNew<TextEditPanel>(id);
+			panel.OpenFile(path);
 			});
 		AddMenuItem("File/Save", [&]() {
 			//Ref<World> world = Application::Get().GetModule<WorldHandler>().GetCurrentWorld();

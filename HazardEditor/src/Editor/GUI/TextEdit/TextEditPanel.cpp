@@ -7,7 +7,7 @@ namespace UI
 {
 	TextEditPanel::TextEditPanel() : ImUI::Panel("Text edit")
 	{
-
+		m_IsOpen = false;
 	}
 
 	bool TextEditPanel::OnEvent(Event& e)
@@ -18,14 +18,6 @@ namespace UI
 		return dispatcher.DidHandle();
 	}
 
-	void TextEditPanel::OpenFile()
-	{
-		auto path = File::OpenFileDialog();
-		if (path.empty())
-			BringToFront();
-		else OpenFile(path);
-	}
-
 	void TextEditPanel::OpenFile(const std::filesystem::path& path)
 	{
 		std::string source = File::ReadFile(path);
@@ -33,6 +25,15 @@ namespace UI
 		m_Path = path;
 
 		SetLanguageDefinition(File::GetFileExtension(path));
+
+		m_Watcher = File::Watch(m_Path, [this](FileEvent e) {
+			if (e == FileEvent::Modified)
+			{
+				std::string source = File::ReadFile(m_Path);
+				m_TextEditor.SetText(source);
+			}
+			});
+		BringToFront();
 	}
 
 	bool TextEditPanel::OnKeyPressed(KeyPressedEvent& e)

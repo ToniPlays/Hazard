@@ -6,6 +6,7 @@
 #include <cstdlib>
 
 #include "Buffer/CachedBuffer.h"
+#include "FileWatch.hpp"
 
 using std::filesystem::directory_iterator;
 
@@ -26,11 +27,21 @@ enum class CopyOptions
 	DirectoriesOnly = (int)std::filesystem::copy_options::directories_only
 };
 
+enum class FileEvent {
+	Added,
+	Removed,
+	Modified,
+	RenamedOld,
+	RenamedNew
+};
+
 class CachedBuffer;
 
 class File 
 {
 public:
+	using Watcher = filewatch::FileWatch<std::filesystem::path>;
+
 	static std::string OpenFileDialog();
 	static std::string OpenFileDialog(const std::vector<std::string>& filters);
 	static std::string SaveFile(const std::vector<std::string>& filters, const std::filesystem::path& defaultPath = "");
@@ -49,6 +60,8 @@ public:
 
 	static bool WriteFile(const std::filesystem::path& file, const std::string& content = "");
 	static bool Move(const std::filesystem::path& src, const std::filesystem::path& dst);
+
+	static Scope<Watcher> Watch(const std::filesystem::path& file, const std::function<void(FileEvent)>& callback);
 
 	static std::filesystem::path GetFileAbsolutePath(const std::filesystem::path& file);
 	static std::filesystem::path GetDirectoryOf(const std::filesystem::path& file);
