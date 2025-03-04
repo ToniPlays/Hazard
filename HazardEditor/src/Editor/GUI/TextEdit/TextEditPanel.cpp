@@ -3,6 +3,7 @@
 
 #include "LangDefs/LanguageDefinitions.h"
 
+
 namespace UI
 {
 	TextEditPanel::TextEditPanel() : ImUI::Panel("Text edit")
@@ -27,10 +28,12 @@ namespace UI
 		SetLanguageDefinition(File::GetFileExtension(path));
 
 		m_Watcher = File::Watch(m_Path, [this](FileEvent e) {
-			if (e == FileEvent::Modified)
+
+			if (e == FileEvent::Modified && !m_Focused)
 			{
-				std::string source = File::ReadFile(m_Path);
-				m_TextEditor.SetText(source);
+				Application::Get().SubmitMainThread([this]() {
+					m_TextEditor.SetText(File::ReadFile(m_Path));
+					});
 			}
 			});
 		BringToFront();

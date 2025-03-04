@@ -69,9 +69,11 @@ Shader "3D/Lit_Static"
 					vec4(IN.MRow0.z, IN.MRow1.z, IN.MRow2.z, 0.0),
 					vec4(IN.MRow0.w, IN.MRow1.w, IN.MRow2.w, 1.0)
 				);
+				
+				gl_Position = OUT.Position;
 
 				vec4 worldPosition = transform * vec4(IN.Position, 1.0);
-				gl_Position = u_Camera.ViewProjection * worldPosition;
+				gl_Position =  u_Camera.ViewProjection * worldPosition;
 
 				OUT.Color = IN.Color;
 				OUT.Normal = mat3(transform) * IN.Normal;

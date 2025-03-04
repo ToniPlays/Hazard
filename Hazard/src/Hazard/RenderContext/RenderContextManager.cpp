@@ -4,7 +4,6 @@
 #include "Hazard/Core/HazardLoop.h"
 #include "Hazard/Assets/AssetManager.h"
 #include "ImageAssetLoader.h"
-#include "PipelineAssetLoader.h"
 #include "ShaderAssetLoader.h"
 
 namespace Hazard 

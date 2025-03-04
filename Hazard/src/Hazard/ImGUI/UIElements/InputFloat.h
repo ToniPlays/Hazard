@@ -11,7 +11,7 @@ namespace Hazard::ImUI
 	{
 	public:
 		InputFloat() = default;
-		InputFloat(const std::string& title, uint32_t count) : m_Title(title)
+		InputFloat(const std::string& title, uint32_t count, uint32_t columnWidth = 125) : m_Title(title), m_ColumnWidth(columnWidth)
 		{
 			m_Configs.resize(count);
 		};
@@ -42,6 +42,7 @@ namespace Hazard::ImUI
 
 		std::string m_Title;
 		uint32_t m_Flags = 0;
+		uint32_t m_ColumnWidth = 125;
 
 		struct FieldConfig
 		{

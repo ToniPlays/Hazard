@@ -5,8 +5,6 @@
 
 namespace Hazard 
 {
-	
-
 	struct ImageAssetFileHeader
 	{
 		HazardRenderer::Extent Extent;

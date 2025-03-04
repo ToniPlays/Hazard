@@ -96,7 +96,8 @@ namespace UI
 
 			rotation = glm::degrees(rotation);
 
-			ImUI::InputFloat translationInput("Translation", 3);
+			ImUI::InputFloat translationInput("Translation", 3, 80);
+
 			translationInput.ConfigureField(0, "X", style.Colors.AxisX, flags & BIT(0));
 			translationInput.ConfigureField(1, "Y", style.Colors.AxisY, flags & BIT(1));
 			translationInput.ConfigureField(2, "Z", style.Colors.AxisZ, flags & BIT(2));
@@ -122,7 +123,7 @@ namespace UI
 
 			ImGui::Separator();
 
-			ImUI::InputFloat rotationInput("Rotation", 3);
+			ImUI::InputFloat rotationInput("Rotation", 3, 80);
 			rotationInput.ConfigureField(0, "X", style.Colors.AxisX, flags & BIT(3));
 			rotationInput.ConfigureField(1, "Y", style.Colors.AxisY, flags & BIT(4));
 			rotationInput.ConfigureField(2, "Z", style.Colors.AxisZ, flags & BIT(5));
@@ -148,7 +149,7 @@ namespace UI
 
 			ImGui::Separator();
 
-			ImUI::InputFloat scaleInput("Scale", 3);
+			ImUI::InputFloat scaleInput("Scale", 3, 80);
 			scaleInput.ConfigureField(0, "X", style.Colors.AxisX, flags & BIT(6));
 			scaleInput.ConfigureField(1, "Y", style.Colors.AxisY, flags & BIT(7));
 			scaleInput.ConfigureField(2, "Z", style.Colors.AxisZ, flags & BIT(8));

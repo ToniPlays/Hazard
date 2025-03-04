@@ -41,7 +41,7 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfoVulkan))
-					throw CompileException(compiler.GetErrorMessage());
+					throw CompileException(0, compiler.GetErrorMessage());
 
 				std::vector<ShaderDefine> glDefines = { { "OPENGL_API" } };
 
@@ -57,14 +57,14 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfoVkToGL))
-					throw CompileException(compiler.GetErrorMessage());
+					throw CompileException(0, compiler.GetErrorMessage());
 
 				compilationTime += compiler.GetCompileTime();
 
 				//Get OpenGL shader source from Vulkan binaries
 				std::string glSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), glSource))
-					throw CompileException(compiler.GetErrorMessage());
+					throw CompileException(0, compiler.GetErrorMessage());
 
 				return glSource;
 			}
@@ -85,7 +85,7 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfo))
-					throw CompileException(compiler.GetErrorMessage());
+					throw CompileException(0, compiler.GetErrorMessage());
 
 				return std::string((char*)compiler.GetCompiledBinary().Data, compiler.GetCompiledBinary().Size);
 			}
@@ -106,12 +106,12 @@ namespace Hazard
 				};
 
 				if (!compiler.Compile(&compileInfo))
-					throw CompileException(compiler.GetErrorMessage());
+					throw CompileException(0, compiler.GetErrorMessage());
 
 
 				std::string mslSource;
 				if (!compiler.Decompile(compiler.GetCompiledBinary(), mslSource))
-					throw CompileException(compiler.GetErrorMessage());
+					throw CompileException(0, compiler.GetErrorMessage());
 
 				return mslSource;
 			}
@@ -157,303 +157,6 @@ namespace Hazard
 		return result;
 	}
 
-	ShaderParseFileResult ShaderCompiler::ParseShaderFile(const std::filesystem::path& path)
-	{
-		std::string source = File::ReadFile(path);
-		if (source.empty())
-			throw JobException(fmt::format("Unable to read file", path.string()));
-
-		std::string name = StringUtil::GetPreprocessor("Shader", source, 0);
-		name = VerifyEncapsulationWith(name, '"');
-
-		source = StringUtil::Between(source, "{", "}");
-		auto props = ParseShaderObject(source);
-
-		auto parsedProperties = GetLayoutFromProperties(props["Properties"].Source);
-		auto parsedConstants = GetLayoutFromProperties(props["Constants"].Source);
-
-		ShaderParseFileResult result = {
-			.Name = name,
-			.Language = props["Language"].Source,
-			.Version = props["Version"].Source,
-			.Type = props["Type"].Source,
-		};
-
-
-		for (auto& [name, prop] : props)
-		{
-			if (prop.Type != ShaderPropertyType::Shader) continue;
-
-			auto source = GenerateShader(prop, parsedProperties, parsedConstants);
-			result.Shaders.push_back(fmt::format("#type {}\n#version {}\n{}", prop.Scope, result.Version, source));
-		}
-
-		const std::string states[] = { "Depth ", "DepthWrite " };
-		for (auto& [name, prop] : props)
-		{
-			for (auto& state : states)
-			{
-				if (state != name) continue;
-				result.PipelineState[state] = prop.Source;
-				break;
-			}
-		}
-
-		result.Layouts = GenerateDescriptorLayouts(parsedProperties),
-		result.Constants = GeneratePushConstants(parsedConstants);
-
-		return result;
-	}
-
-
-	std::unordered_map<std::string, ShaderCompilerSourceScope> ShaderCompiler::ParseShaderObject(const std::string& source)
-	{
-		struct Property {
-			const std::string Name;
-			ShaderPropertyType Type;
-			bool Required;
-			std::string DefaultValue;
-		};
-
-		const std::vector<Property> properties = { { "Language", ShaderPropertyType::String, true },
-												   { "Type", ShaderPropertyType::String, true },
-												   { "Version", ShaderPropertyType::Number, true },
-												   { "Properties", ShaderPropertyType::Object },
-												   { "Constants", ShaderPropertyType::Object },
-												   { "Vertex", ShaderPropertyType::Shader},
-												   { "Fragment", ShaderPropertyType::Shader },
-												   { "Compute", ShaderPropertyType::Shader },
-												   { "Include", ShaderPropertyType::Object },
-												   { "Shader", ShaderPropertyType::Object } ,
-												   { "Depth ", ShaderPropertyType::String, false, "Less" },
-												   { "DepthWrite ", ShaderPropertyType::Bool, false, "True" },
-		};
-
-		std::unordered_map<std::string, ShaderCompilerSourceScope> result;
-
-		std::istringstream stream(source);
-		std::string line;
-
-		std::string currentScope;
-		uint32_t scopeDepth = 0;
-
-		while (std::getline(stream, line))
-		{
-			line.erase(std::remove(line.begin(), line.end(), '\n'), line.end());
-			line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
-
-			std::string srcLine = line;
-			line.erase(0, line.find_first_not_of(' \t'));
-
-			if (!currentScope.empty())
-			{
-				bool isScopeLine = false;
-				if (line.find_first_of('{') != std::string::npos)
-				{
-					scopeDepth++;
-					isScopeLine = scopeDepth == 1;
-				}
-				else if (line.find_first_of('}') != std::string::npos)
-				{
-					scopeDepth--;
-					isScopeLine = scopeDepth == 0;
-				}
-
-				if (!isScopeLine)
-					result[currentScope].Source += srcLine + "\n";
-
-				if (scopeDepth == 0)
-					currentScope.clear();
-
-				continue;
-			}
-
-			for (auto& prop : properties)
-			{
-				if (!line.starts_with(prop.Name)) continue;
-
-				switch (prop.Type)
-				{
-					case ShaderPropertyType::String:
-					{
-						std::string value = StringUtil::GetPreprocessor(prop.Name, line, 0);
-						result[prop.Name] = { prop.Name, VerifyEncapsulationWith(value, '"'), prop.Type };
-						break;
-					}
-					case ShaderPropertyType::Number:
-					{
-						try {
-							std::string value = StringUtil::GetPreprocessor(prop.Name, line, 0);
-							std::stoi(value);
-							result[prop.Name] = { prop.Name, value, prop.Type };
-							break;
-						}
-						catch (std::exception e)
-						{
-							throw JobException("String was not number");
-						}
-					}
-					case ShaderPropertyType::Bool:
-					{
-						std::string value = StringUtil::GetPreprocessor(prop.Name, line, 0);
-						result[prop.Name] = { prop.Name, value, prop.Type };
-						break;
-					}
-					case ShaderPropertyType::Shader:
-					case ShaderPropertyType::Object:
-					{
-						currentScope = prop.Name;
-
-						result[prop.Name] = { currentScope, "", prop.Type };
-						if (line.find_last_of("{") != std::string::npos)
-							scopeDepth++;
-
-						break;
-					}
-				}
-			}
-		}
-
-		return result;
-	}
-
-	std::string ShaderCompiler::GenerateShader(const ShaderCompilerSourceScope& scope, std::vector<ShaderProperty>& layouts, std::vector<ShaderProperty>& constants)
-	{
-		auto properties = ParseShaderObject(scope.Source);
-		std::stringstream ss;
-
-		std::istringstream stream(properties["Include"].Source);
-		std::string line;
-
-		while (std::getline(stream, line))
-		{
-			line.erase(0, line.find_first_not_of('\t'));
-			ss << "#include " << line << "\n";
-		}
-
-
-		auto shaderBlocks = GetShaderPropertyBlocks(properties["Shader"].Source);
-
-		ss << "{UNIFORM_BLOCK}" << "\n";
-		ss << "{PUSH_CONSTANT_BLOCK}" << "\n";
-		ss << properties["Shader"].Source << "\n";
-
-		std::string source = ss.str();
-
-		//Preprocess structs
-		for (auto& block : shaderBlocks)
-		{
-			if (block.Type.empty()) continue;
-			source = StringUtil::Replace(source, block.Source, GeneratePropertyBlockSource(block));
-		}
-
-
-		//Handle structs
-		for (auto& block : shaderBlocks)
-		{
-			if (block.Type.find("_IN") != std::string::npos)
-			{
-				for (auto& e : block.Elements)
-					source = StringUtil::Replace(source, fmt::format("IN.{}", e.Name), fmt::format("IN_{}", e.Name));
-			}
-			else if (block.Type.find("_OUT") != std::string::npos)
-			{
-				for (auto& e : block.Elements)
-					source = StringUtil::Replace(source, fmt::format("OUT.{}", e.Name), fmt::format("OUT_{}", e.Name));
-			}
-		}
-
-		ProcessUniformBlocks(source, layouts, ShaderStageFlagsFromString(scope.Scope));
-		ProcessPushConstantBlock(source, constants, ShaderStageFlagsFromString(scope.Scope));
-
-		return source;
-	}
-
-	std::vector<ShaderProperty> ShaderCompiler::GetLayoutFromProperties(const std::string& source)
-	{
-		std::vector<ShaderProperty> result;
-
-		std::istringstream stream(source);
-		std::string line;
-
-		while (std::getline(stream, line))
-		{
-			line.erase(0, line.find_first_not_of(' \t'));
-			auto& value = result.emplace_back();
-			value.Name = line.substr(0, line.find_first_of(' '));
-
-			auto data = StringUtil::Between(line, "(", ")");
-			auto split = StringUtil::SplitString(std::string(data), ',');
-
-			for (auto& s : split)
-				s.erase(0, s.find_first_not_of(' '));
-
-			if (split.size() > 0)
-				value.DisplayName = VerifyEncapsulationWith(split[0], '"');
-			if (split.size() > 1)
-			{
-				value.Type = HazardRenderer::ShaderDataTypeFromString(split[1]);
-				if (value.Type == ShaderDataType::Other)
-					value.TypeFlags = HazardRenderer::GetShaderDescriptorType(split[1]);
-			}
-			if (split.size() > 2)
-				value.Set = std::stoi(split[2]);
-			if (split.size() > 3)
-				value.Binding = std::stoi(split[3]);
-			if (split.size() > 4)
-				value.Length = std::stoi(split[4]);
-
-			value.AccessFlags = 0;
-		}
-
-		return result;
-	}
-
-	std::vector<HazardRenderer::DescriptorSetLayout> ShaderCompiler::GenerateDescriptorLayouts(const std::vector<ShaderProperty>& properties)
-	{
-		std::vector<HazardRenderer::DescriptorSetLayout> result;
-		for (auto& prop : properties)
-		{
-
-			while (prop.Set >= result.size())
-				result.emplace_back();
-		}
-
-		for (auto& prop : properties)
-		{
-			uint32_t flags = prop.AccessFlags;
-			if (prop.Set == 0)
-				flags |= SHADER_STAGE_FRAGMENT_BIT;
-
-			DescriptorSetElement e = { flags, prop.Name, prop.Binding, prop.Length, (DescriptorType)prop.TypeFlags };
-			result[prop.Set].GetElements().emplace_back(e);  //TODO: FIX -1
-		}
-
-		return result;
-	}
-
-	std::string ShaderCompiler::VerifyEncapsulationWith(const std::string& value, char c)
-	{
-		if (value.empty()) return "";
-
-		uint64_t offset = 0;
-		while (value[offset] == ' ')
-			offset++;
-
-
-		if (value[offset] != c)
-			throw JobException(fmt::format("Unexpected '{0}', expected '{1}', parsing {2}", value[0], c, value));
-
-		offset = value.find_first_of(c, offset + 1);
-
-		if (offset == std::string::npos)
-			throw JobException(fmt::format("Unexpected '{0}', expected '{1}', parsing {2}", value[value.length() - 1], c, value));
-
-		std::string result = value.substr(value.find_first_of(c) + 1, offset - 1);
-
-		return result;
-	}
-
 	bool ShaderCompiler::PreprocessSource(const std::filesystem::path& path, std::string& shaderSource)
 	{
 		return PreprocessIncludes(path, shaderSource);
@@ -486,181 +189,5 @@ namespace Hazard
 			source = StringUtil::Replace(source, line, File::ReadFile(path.parent_path() / includePath));
 		}
 		return success;
-	}
-
-	std::vector<ShaderSourcePropertyBlock> ShaderCompiler::GetShaderPropertyBlocks(const std::string& shaderSource)
-	{
-		std::vector<ShaderSourcePropertyBlock> result;
-
-		std::regex regex(R"((struct|union|class)\s+(\S+)(?:\s*:\s*(\S+))?\s*\{([^}]*)\}\s*;)");
-		std::smatch match;
-
-		ShaderSourcePropertyBlock current = {};
-		std::string source = shaderSource;
-
-		while (std::regex_search(source, match, regex))
-		{
-			auto& v = result.emplace_back();
-			if (match[1].str() != "struct")
-				throw JobException(fmt::format("Unexcepted type: {}", match[1].str()));
-			v.Name = match[2].str();
-			v.Type = match[3].str();
-			v.Elements = ParseElements(match[4]);
-			v.Source = match[0];
-			source = match.suffix();
-		}
-
-		return result;
-	}
-
-	std::vector<ShaderPropertyElement> ShaderCompiler::ParseElements(const std::string& source)
-	{
-		std::vector<ShaderPropertyElement> result;
-
-		auto lines = StringUtil::SplitString(source, ';');
-		for (uint32_t i = 0; i < lines.size(); i++)
-			lines[i] = std::regex_replace(lines[i], std::regex("[\t\r\n]"), "");
-
-		std::stringstream ss;
-
-		for (auto& line : lines)
-		{
-			if (line.empty()) continue;
-
-			auto values = StringUtil::SplitString(line, ' ');
-
-			if (values.size() < 2)
-				throw JobException(fmt::format("Failed to parse line {}", line));
-
-			if (values.size() == 2)
-			{
-				auto& v = result.emplace_back();
-				v.Type = values[0];
-				v.Name = values[1];
-			}
-			if (values.size() == 3)
-			{
-				auto& v = result.emplace_back();
-				v.Prefix = values[0];
-				v.Type = values[1];
-				v.Name = values[2];
-			}
-
-			float i = 0;
-		}
-
-		return result;
-	}
-
-	std::string ShaderCompiler::GeneratePropertyBlockSource(const ShaderSourcePropertyBlock& block)
-	{
-		uint32_t location = 0;
-		std::stringstream ss;
-
-		std::string prefix = "";
-		std::string type = "";
-
-		if (block.Type.find("_IN") != std::string::npos)
-		{
-			prefix = "IN_";
-			type = "in ";
-		}
-		else if (block.Type.find("_OUT") != std::string::npos)
-		{
-			prefix = "OUT_";
-			type = "out ";
-		}
-
-		for (auto& e : block.Elements)
-		{
-			ss << fmt::format("layout(location = {0}) {1}{2}{3} {4}{5};\n\t\t\t", location, type, e.Prefix.empty() ? "" : e.Prefix + " ", e.Type, prefix, e.Name);
-			location += ShaderDataTypeLocationSize(ShaderDataTypeFromString(e.Type));
-		}
-
-		return ss.str();
-	}
-
-	void ShaderCompiler::ProcessUniformBlocks(std::string& source, std::vector<ShaderProperty>& layouts, uint32_t stageFlags)
-	{
-		std::stringstream uniformStream;
-		uniformStream << "\n";
-
-		for (auto& uniform : layouts)
-		{
-			if (!StringUtil::Contains(source, uniform.Name)) continue;
-			uniform.AccessFlags |= stageFlags;
-
-			std::string arr = "";
-			if (uniform.Length > 1)
-				arr = "[" + std::to_string(uniform.Length) + "]";
-
-			std::string type = ShaderDataTypeToString(uniform.Type);
-			if (uniform.Type == ShaderDataType::Other)
-				type = GetShaderDescriptorType(uniform.TypeFlags);
-
-			if (uniform.TypeFlags & ~(DESCRIPTOR_TYPE_SAMPLER_2D | DESCRIPTOR_TYPE_SAMPLER_CUBE)) continue;
-
-			uniformStream << fmt::format("layout (set = {}, binding = {}) uniform {} {}{};", uniform.Set, uniform.Binding, type, uniform.Name, arr) << "\n";
-		}
-
-
-		source = StringUtil::Replace(source, "{UNIFORM_BLOCK}", uniformStream.str());
-	}
-
-	void ShaderCompiler::ProcessPushConstantBlock(std::string& source, std::vector<ShaderProperty>& constants, uint32_t stageFlags)
-	{
-		std::stringstream constantStream;
-		constantStream << "\n";
-
-		bool emitBlock = false;
-
-		for (auto& constant : constants)
-		{
-			if (!StringUtil::Contains(source, "CONSTANT." + constant.Name)) continue;
-			emitBlock = true;
-			break;
-		}
-
-		if (!emitBlock)
-		{
-			source = StringUtil::Replace(source, "{PUSH_CONSTANT_BLOCK}", "");
-			return;
-		}
-
-		constantStream << "layout(push_constant, std140) uniform PushConstants\n{";
-
-		for (auto& constant : constants)
-		{
-			constant.AccessFlags |= stageFlags;
-
-			std::string type = ShaderDataTypeToString(constant.Type);
-			if (constant.Type == ShaderDataType::Other)
-				throw JobException(fmt::format("Unknown push constant type: {}", constant.Type));
-
-			constantStream << fmt::format("\tuniform {} {};", ShaderDataTypeToGLSLString(constant.Type), constant.Name, type) << "\n";
-		}
-		constantStream << "\} CONSTANT;";
-
-		source = StringUtil::Replace(source, "{PUSH_CONSTANT_BLOCK}", constantStream.str());
-	}
-
-	std::vector<HazardRenderer::PushConstantRange> ShaderCompiler::GeneratePushConstants(std::vector<ShaderProperty>& constants)
-	{
-		std::vector<HazardRenderer::PushConstantRange> result;
-		result.reserve(constants.size());
-
-		uint32_t offset = 0;
-
-		for (auto& prop : constants)
-		{
-			auto& constant = result.emplace_back();
-			constant.Name = prop.Name;
-			constant.Flags = prop.AccessFlags;
-			constant.Type = prop.Type;
-			constant.Offset = offset;
-			offset += ShaderDataTypeSize(prop.Type);
-		}
-
-		return result;
 	}
 }

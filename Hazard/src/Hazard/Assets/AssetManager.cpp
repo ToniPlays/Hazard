@@ -109,6 +109,12 @@ namespace Hazard
 		std::scoped_lock lock(s_AssetMutex);
 
 		if (s_LoadedAssets.find(handle) == s_LoadedAssets.end()) return;
+		if (!s_LoadedAssets[handle])
+		{
+			s_LoadedAssets.erase(handle);
+			return;
+		}
+
 		if (s_LoadedAssets[handle]->GetRefCount() >= 2) return;
 
 		HZR_TIMED_FUNCTION();
@@ -129,7 +135,7 @@ namespace Hazard
 		if (!graph) return nullptr;
 
 
-		graph->AddOnFinished([graph, handle = metadata.Handle]() mutable {
+		graph->AddOnFinished([graph = graph.Raw(), handle = metadata.Handle]() mutable {
 			Ref<Asset> asset = graph->GetResults<Ref<Asset>>()[0];
 			if (!asset) return;
 
@@ -168,7 +174,7 @@ namespace Hazard
 		Ref<JobGraph> graph = s_AssetLoader.Save(asset, settings);
 		if (!graph) return nullptr;
 
-		graph->AddOnFinished([graph, asset, settings]() {
+		graph->AddOnFinished([graph = graph.Raw(), asset, settings]() {
 
 			Ref<CachedBuffer> result = graph->GetResults<Ref<CachedBuffer>>()[0];
 			if (!result)

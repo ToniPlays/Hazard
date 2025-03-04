@@ -6,6 +6,8 @@
 #include "CompileException.h"
 
 #include <Hazard/RenderContext/ShaderAsset.h>
+#include <Hazard/RenderContext/ShaderParser/ShaderTokenizer.h>
+#include <Hazard/RenderContext/ShaderParser/ShaderParser.h>
 #include "Hazard/Assets/AssetManager.h"
 #include "Hazard/Assets/AssetPack.h"
 #include "Hazard/Core/Application.h"
@@ -53,9 +55,9 @@ namespace Hazard
 		Ref<Job> job = Job::Lambda("Dummy", [](JobInfo info) -> Coroutine {
 			info.Result(Ref<CachedBuffer>::Create());
 			co_return;
-		});
+			});
 
-		if(settings.Flags & ASSET_MANAGER_COMBINE_ASSET)
+		if (settings.Flags & ASSET_MANAGER_COMBINE_ASSET)
 			job = Job::Create(fmt::format("{}", settings.TargetPath.string()), GenerateShaderAssetBinary, asset);
 
 		JobGraphInfo info = {
@@ -112,19 +114,29 @@ namespace Hazard
 					});
 				co_return;
 				})
-			});
+				});
 
 			co_return;
 		}
 
+		if (File::GetFileExtension(settings.SourcePath) == ".shader")
+		{
+			auto tokenizer = Shading::ShaderTokenizer(settings.SourcePath);
+			tokenizer.Tokenize();
 
+			auto& tokens = tokenizer.GetTokens();
+
+			auto parser = Shading::ShaderParser(tokens);
+			parser.Parse();
+
+			float i = 0;
+		}
+
+		/*
 		std::unordered_map<uint32_t, std::string> sources;
 
 		ShaderParseFileResult result;
 
-
-		if (File::GetFileExtension(settings.SourcePath) == ".shader")
-		{
 			HZR_CORE_INFO("Loading shader as shader file");
 			result = ShaderCompiler::ParseShaderFile(settings.SourcePath);
 
@@ -186,6 +198,7 @@ namespace Hazard
 		info.Result(sources);
 		info.ContinueWith(loadingJobs);
 		info.Current->Finish();
+		*/
 
 		co_return;
 	}
@@ -246,7 +259,7 @@ namespace Hazard
 
 		if (specs.Shaders.size() == 0)
 			throw JobException(fmt::format("{}: No shader sources found", info.Current->GetName()));
-		else 
+		else
 			asset->m_Pipeline = Pipeline::Create(&specs);
 
 		asset->m_Spec.Shaders.clear();

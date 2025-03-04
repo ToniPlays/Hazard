@@ -14,7 +14,7 @@ namespace Hazard::ImUI
 		if (!m_Title.empty())
 		{
 			ImGui::Columns(2, 0, false);
-			ImGui::SetColumnWidth(0, 125);
+			ImGui::SetColumnWidth(0, m_ColumnWidth);
 			ImUI::ShiftY(4.0f);
 			ImGui::Text("%s", m_Title.c_str());
 			ImUI::ShiftY(4.0f);

@@ -26,6 +26,7 @@ project "Hazard-Test-App"
     References("Hazard")
     References("GLM")
     References("Spdlog")
+    References("EnTT")
     References("YAML")
     References("Coral")
     References("Assimp")
@@ -34,6 +35,7 @@ project "Hazard-Test-App"
     References("Vulkan")
     References("Metal")
     References("VMA")
+    References("FileWatch")
 
 	filter "system:windows"
         References("GLFW")

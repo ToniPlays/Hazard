@@ -61,6 +61,9 @@
     <Filter Include="src\Hazard\RenderContext">
       <UniqueIdentifier>{6AE5904A-560A-E0CA-7F55-C55A6BD9DEE8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Hazard\RenderContext\ShaderParser">
+      <UniqueIdentifier>{DD2A76D7-49EF-74C7-1255-A5917ED810FD}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Hazard\Rendering">
       <UniqueIdentifier>{E30264EE-CF91-EDB7-78B0-01B3641EFE5D}</UniqueIdentifier>
     </Filter>
@@ -327,9 +330,6 @@
     <ClInclude Include="src\Hazard\RenderContext\ImageAssetLoader.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
-    <ClInclude Include="src\Hazard\RenderContext\PipelineAssetLoader.h">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\RenderContextManager.h">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClInclude>
@@ -341,6 +341,18 @@
     </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\ShaderCompiler.h">
       <Filter>src\Hazard\RenderContext</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderParser\ShaderParseResult.h">
+      <Filter>src\Hazard\RenderContext\ShaderParser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderParser\ShaderParser.h">
+      <Filter>src\Hazard\RenderContext\ShaderParser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderParser\ShaderTokenizer.h">
+      <Filter>src\Hazard\RenderContext\ShaderParser</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderParser\ShaderTokens.h">
+      <Filter>src\Hazard\RenderContext\ShaderParser</Filter>
     </ClInclude>
     <ClInclude Include="src\Hazard\RenderContext\Texture2D.h">
       <Filter>src\Hazard\RenderContext</Filter>
@@ -626,9 +638,6 @@
     <ClCompile Include="src\Hazard\RenderContext\ImageAssetLoader.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
-    <ClCompile Include="src\Hazard\RenderContext\PipelineAssetLoader.cpp">
-      <Filter>src\Hazard\RenderContext</Filter>
-    </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\RenderContextManager.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
     </ClCompile>
@@ -640,6 +649,12 @@
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\ShaderCompiler.cpp">
       <Filter>src\Hazard\RenderContext</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\ShaderParser\ShaderParser.cpp">
+      <Filter>src\Hazard\RenderContext\ShaderParser</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Hazard\RenderContext\ShaderParser\ShaderTokenizer.cpp">
+      <Filter>src\Hazard\RenderContext\ShaderParser</Filter>
     </ClCompile>
     <ClCompile Include="src\Hazard\RenderContext\Texture2D.cpp">
       <Filter>src\Hazard\RenderContext</Filter>

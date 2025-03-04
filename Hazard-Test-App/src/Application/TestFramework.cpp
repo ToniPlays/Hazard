@@ -7,6 +7,7 @@
 #include "Tests/CoroutineTest.h"
 #include "Tests/JobSystemTest.h"
 
+#include "Tests/Sandbox.h"
 #include "Tests/TriangleTest.h"
 #include "Tests/TexturedQuad.h"
 #include "Tests/UniformBufferTest.h"
@@ -68,6 +69,7 @@ void TestFramework::Init()
 
 	Application::GetModule<InputManager>().InvalidateSchema(schema);
 
+    m_Tests.push_back(new Sandbox());
     m_Tests.push_back(new JobGraphTest());
     //m_Tests.push_back(new CoroutineTest());
 	m_Tests.push_back(new TriangleTest());

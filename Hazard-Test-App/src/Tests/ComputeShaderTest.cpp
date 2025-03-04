@@ -69,7 +69,7 @@ void ComputeShaderTest::Init()
 	computeSpec.DebugName = "Compute";
 	computeSpec.Usage = PipelineUsage::ComputeBit;
 	computeSpec.SetLayouts = { computeDescriptorLayout };
-	computeSpec.PushConstants = { { "Idk", SHADER_STAGE_COMPUTE_BIT, ShaderDataType::Float4, 0 } };
+	computeSpec.PushConstants = { { "Idk", SHADER_STAGE_COMPUTE_BIT, 0, ShaderDataType::Float4 } };
 	computeSpec.Shaders = {
 		{ SHADER_STAGE_COMPUTE_BIT, File::ReadFile(fmt::format("assets/compiled/shaders/compute.Compute.{}", extensions[m_Window->GetWindowInfo().SelectedAPI])) } };
 

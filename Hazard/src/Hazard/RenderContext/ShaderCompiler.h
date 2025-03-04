@@ -129,34 +129,6 @@ namespace Hazard
 		uint32_t AccessFlags;
 	};
 
-	struct ShaderParseFileResult
-	{
-		std::string Name;
-		std::string Language;
-		std::string Version;
-		std::string Type;
-		std::unordered_map<std::string, std::string> PipelineState;
-		std::vector<std::string> Shaders;
-		std::vector<HazardRenderer::PushConstantRange> Constants;
-		std::vector<HazardRenderer::DescriptorSetLayout> Layouts;
-	};
-
-	struct ShaderPropertyElement
-	{
-		std::string Name;
-		std::string Prefix;
-		std::string Type;
-	};
-
-	struct ShaderSourcePropertyBlock
-	{
-		std::string Name;
-		std::string Type;
-		std::string Source;
-
-		std::vector<ShaderPropertyElement> Elements;
-	};
-
 	//TODO: Make this instanced
 	class ShaderCompiler
 	{
@@ -167,27 +139,8 @@ namespace Hazard
 		static std::unordered_map<uint32_t, std::string> GetShaderSources(const std::filesystem::path& path);
 		static std::unordered_map<uint32_t, std::string> GetShaders(const std::string& source, const std::filesystem::path& relativePath);
 
-		static ShaderParseFileResult ParseShaderFile(const std::filesystem::path& path);
-
 	private:
-
-		static std::unordered_map<std::string, ShaderCompilerSourceScope> ParseShaderObject(const std::string& source);
-		static std::string GenerateShader(const ShaderCompilerSourceScope& scope, std::vector<ShaderProperty>& layouts, std::vector<ShaderProperty>& constants);
-
-		static std::vector<ShaderProperty> GetLayoutFromProperties(const std::string& source);
-		static std::vector<HazardRenderer::DescriptorSetLayout> GenerateDescriptorLayouts(const std::vector<ShaderProperty>& properties);
-
-		static std::string VerifyEncapsulationWith(const std::string& value, char c);
-
 		static bool PreprocessSource(const std::filesystem::path& path, std::string& shaderSource);
 		static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
-
-		static std::vector<ShaderSourcePropertyBlock> GetShaderPropertyBlocks(const std::string& shaderSource);
-		static std::vector<ShaderPropertyElement> ParseElements(const std::string& source);
-		static std::string GeneratePropertyBlockSource(const ShaderSourcePropertyBlock& block);
-
-		static void ProcessUniformBlocks(std::string& source, std::vector<ShaderProperty>& properties, uint32_t stageFlags);
-		static void ProcessPushConstantBlock(std::string& source, std::vector<ShaderProperty>& constants, uint32_t stageFlags);
-		static std::vector<HazardRenderer::PushConstantRange> GeneratePushConstants(std::vector<ShaderProperty>& constants);
 	};
 }
