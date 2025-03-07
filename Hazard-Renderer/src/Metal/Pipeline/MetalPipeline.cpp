@@ -20,7 +20,7 @@ namespace HazardRenderer::Metal
         if(specs->pBufferLayout)
             m_Layout = BufferLayout(*specs->pBufferLayout);
 
-        m_Shader = Shader::Create(specs->Shaders).As<MetalShader>();
+        m_Shader = Shader::Create(specs->DebugName, specs->Shaders).As<MetalShader>();
         Invalidate();
     }
     MetalPipeline::~MetalPipeline()

@@ -5,8 +5,13 @@ VULKAN_SDK = os.getenv("VULKAN_SDK")
 if VULKAN_SDK == nil then
 	print("Vulkan SDK not found")
 else
+    if os.target() == "macosx" then
+        VULKAN_SDK = VULKAN_SDK .. "/macOS"
+    end
+
 	print("Vulkan SDK at " .. VULKAN_SDK) 
 end
+
 
 Dependencies = {
     YAML = {

@@ -61,7 +61,13 @@ namespace Hazard
 			aiMaterial* mat = scene->mMaterials[materialIndex];
 
 			auto& material = materials.emplace_back();
+#ifdef HZR_PLATFORM_WINDOWS
             material.Name = mat->GetName().C_Str();
+      
+#else
+            material.Name = fmt::format("{}", UID());
+#endif
+            
 			material.MaterialIndex = materialIndex;
 			material.PropertyCount = mat->mNumProperties;
 			material.TextureCount = GetMaterialTextures(mat).size();
@@ -252,11 +258,19 @@ namespace Hazard
 
 		auto textures = GetMaterialTextures(mat);
 
+#ifdef HZR_PLATFORM_WINDOWS
 		MeshImporter::MaterialData data = {
 			.Name = mat->GetName().C_Str(),
 			.Properties = properties,
 		};
-
+      
+#else
+        MeshImporter::MaterialData data = {
+            .Name = fmt::format("Material: {}", UID()),
+            .Properties = properties,
+        };
+#endif
+        
 		for (auto& [type, index] : textures)
 		{
 			data.Textures[type] = TextureMetadata {

@@ -70,7 +70,7 @@ namespace UI
 
 				ImGui::TableNextColumn();
 				ImUI::ShiftX(4.0f);
-				ImGui::Text("%u", data.Material->GetPipelineHandle());
+                ImGui::Text("%llu", (uint64_t)data.Material->GetPipelineHandle());
 
 				ImGui::TableNextColumn();
 				ImUI::ShiftX(4.0f);
@@ -78,7 +78,7 @@ namespace UI
 
 				ImGui::TableNextColumn();
 				ImUI::ShiftX(4.0f);
-				ImGui::Text("%u", data.Transforms.size());
+                ImGui::Text("%zu", data.Transforms.size());
 
 				ImGui::TableNextColumn();
 				ImUI::ShiftX(4.0f);

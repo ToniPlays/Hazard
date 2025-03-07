@@ -4,7 +4,7 @@
 #ifdef HZR_INCLUDE_METAL
 
 #include "Core/Rendering/RenderCommandBuffer.h"
-#include "MetalPipeline.h"
+#include "Pipeline/MetalPipeline.h"
 #include "MetalSwapchain.h"
 #include "MetalTopLevelAS.h"
 #include "MetalBottomLevelAS.h"
@@ -26,7 +26,7 @@ namespace HazardRenderer::Metal
         
         void Begin() override;
         void End() override;
-        void Submit() override;
+        RenderCommandBufferAwaitable Submit() override;
         
         void BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear = false) override;
         void BeginRenderPass_RT(Ref<RenderPass> renderPass, bool explicitClear = false);
@@ -61,7 +61,7 @@ namespace HazardRenderer::Metal
         void DispatchCompute(GroupSize GlobalGroupSize) override;
         void TraceRays(const TraceRaysInfo& traceRaysInfo) override;
         
-        void OnCompleted(std::function<void()> callback) override {};
+        void OnCompleted(const std::function<void()>& callback) override {};
           
     public:
         //Metal specific

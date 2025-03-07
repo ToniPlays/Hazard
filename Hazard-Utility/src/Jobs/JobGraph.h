@@ -8,7 +8,6 @@
 #include "Math/MathCore.h"
 
 #include "spdlog/fmt/fmt.h"
-#include <stacktrace>
 
 class JobSystem;
 

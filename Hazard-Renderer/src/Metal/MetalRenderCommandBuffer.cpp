@@ -62,9 +62,10 @@ namespace HazardRenderer::Metal
                 instance->m_ComputeEncoder->endEncoding();
         });
     }
-    void MetalRenderCommandBuffer::Submit()
+    RenderCommandBufferAwaitable MetalRenderCommandBuffer::Submit()
     {
-        if(m_OwnedBySwapchain) return;
+        
+        if(m_OwnedBySwapchain) return RenderCommandBufferAwaitable(this);
         
         Ref<MetalRenderCommandBuffer> instance = this;
         
@@ -72,6 +73,7 @@ namespace HazardRenderer::Metal
             instance->m_CommandBuffer->commit();
             instance->m_CommandBuffer->waitUntilCompleted();
         });
+        return RenderCommandBufferAwaitable(this);
     }
 
     void MetalRenderCommandBuffer::BeginRenderPass(Ref<RenderPass> renderPass, bool explicitClear)

@@ -45,6 +45,9 @@ namespace HazardRenderer::Metal
     public:
         MetalDescriptorSet(DescriptorSetCreateInfo* info);
         ~MetalDescriptorSet() = default;
+        
+        const std::string& GetDebugName() const override { return m_DebugName; }
+        const DescriptorSetLayout& GetLayout() override { return m_Layout; }
 
         void Write(uint32_t binding, uint32_t index, Ref<Image> image, Ref<Sampler> sampler, bool updateAll = false) override;
         void Write(uint32_t binding, Ref<GPUBuffer> buffer, uint32_t size, uint32_t offset = 0, bool updateAll = false) override;

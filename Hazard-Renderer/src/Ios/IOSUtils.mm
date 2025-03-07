@@ -5,6 +5,8 @@
 //  Created by Toni Simoska on 21.11.2024.
 //
 
+#if HZR_PLATFORM_IOS
+
 #include "IOSUtils.h"
 #import <UIKit/UIKit.h>
 
@@ -45,3 +47,4 @@ namespace HazardRenderer
         return (uint8_t)GetWindowOrientation(window) & (uint8_t)orientation;
     }
 }
+#endif

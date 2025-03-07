@@ -40,7 +40,7 @@ class CachedBuffer;
 class File 
 {
 public:
-	using Watcher = filewatch::FileWatch<std::filesystem::path>;
+	using Watcher = filewatch::FileWatch<std::string>;
 
 	static std::string OpenFileDialog();
 	static std::string OpenFileDialog(const std::vector<std::string>& filters);
