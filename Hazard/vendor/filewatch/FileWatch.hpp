@@ -911,6 +911,8 @@ namespace filewatch {
 		}
 
 		StringType fullPathOf(const StringType& file) {
+            if(file[0] == '/') return file;
+            
 			return _path + '/' + file;
 		}
 

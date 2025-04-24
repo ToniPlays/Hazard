@@ -19,12 +19,13 @@ namespace Hazard::Shading
 		ScopeBegin,
 		ScopeEnd,
 		Operator,
+        Scope,
 		Unknown
 	};
 
 	struct ShadingLanguageDefinitions
 	{
-		std::vector<std::string> Keywords = { "Shader", "Type", "Language", "Version", "Include", "Properties", "Constants", "Pass", 
+		std::vector<std::string> Keywords = { "Shader", "Type", "Language", "Version", "Depth", "DepthWrite", "Include", "Properties", "Constants", "Pass", 
 			"Vertex", "Fragment", "Pixel", "Compute", "Raygen", "Miss", "Hit", "AnyHit", "default", "case", "break", "continue", "if", "else"
 		};
 
@@ -64,6 +65,7 @@ namespace Hazard::Shading
 			case Hazard::Shading::TokenType::ScopeBegin:	return "ScopeBegin";
 			case Hazard::Shading::TokenType::ScopeEnd:		return "ScopeEnd";
 			case Hazard::Shading::TokenType::Operator:		return "Operator";
+            case Hazard::Shading::TokenType::Scope:         return "Scope";
 			case Hazard::Shading::TokenType::Unknown:		return "Unknown";
 		}
 		return "Unknown";

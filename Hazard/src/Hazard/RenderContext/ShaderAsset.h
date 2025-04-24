@@ -14,7 +14,7 @@ namespace Hazard
 	public:
 		ShaderAsset() = default;
 		~ShaderAsset() {
-			std::cout << m_Spec.DebugName << std::endl;
+			std::cout << "Destroyed: " << m_Spec.DebugName << std::endl;
 		};
 
 		AssetType GetType() const override { return AssetType::Shader; }

@@ -47,6 +47,8 @@ namespace Hazard
 			.Data = m_LineBatch->GetData(),
 		};
 
+        m_Material->Invalidate();
+        
 		m_VertexBuffer->SetData(region);
 
 		HRenderer::SubmitMesh(glm::mat4(1.0f), m_VertexBuffer, m_Material, m_LineBatch->GetCount());

@@ -109,7 +109,7 @@ namespace Hazard
 				s_LoadedAssets[asset->GetHandle()] = asset;
 				s_Registry[settings.AccessPath] = metadata;
 
-				HZR_CORE_INFO("Created asset: {}", metadata.FilePath.string());
+				//HZR_CORE_INFO("Created asset: {}", metadata.FilePath.string());
 
 				}).Catch([](const JobException& e) {
 					HZR_CORE_ERROR("Something went wrong: {0}", e.what());
@@ -138,7 +138,6 @@ namespace Hazard
 			//Force reload by settings load state to none
 			AssetMetadata& metadata = AssetManager::GetMetadata(handle);
 			metadata.LoadState = LoadState::None;
-
 		}
 
 		template<typename T>

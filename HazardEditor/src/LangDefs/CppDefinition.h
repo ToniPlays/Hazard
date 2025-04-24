@@ -2,6 +2,7 @@
 
 #include <ImTextEdit.h>
 
+
 namespace LanguageDefinitions
 {
 	static const ImTextEdit::LanguageDefinition& CPlusPlus()

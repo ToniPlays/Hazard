@@ -25,6 +25,12 @@ void Thread::Execute(JobSystem* system, Ref<Job> job)
 		m_LastError = e.what();
 		throw e;
 	}
+    catch(std::exception e)
+    {
+        m_Status = ThreadStatus::Failed;
+        m_LastError = e.what();
+        throw e;
+    }
 }
 
 JobSystem::JobSystem(uint32_t threads) : m_Running(true)
@@ -77,9 +83,9 @@ void JobSystem::ThreadFunc(Ref<Thread> thread)
 
 			m_StatusHook.Invoke(thread, ThreadStatus::Finished);
 		}
-		catch (JobException e)
+		catch (std::exception e)
 		{
-			std::string msg = fmt::format("JobException: {0} {1}", job->GetName(), e.what());
+			std::string msg = fmt::format("Exception: {0} {1}", job->GetName(), e.what());
 			SendMessage(Severity::Error, msg);
 			m_StatusHook.Invoke(thread, thread->GetStatus());
 		}

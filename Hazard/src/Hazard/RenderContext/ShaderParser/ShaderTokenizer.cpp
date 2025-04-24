@@ -52,10 +52,11 @@ namespace Hazard::Shading
 					parsed = ParseOperator(remaining);
 				if (parsed == 0)
 					parsed = ParseSymbol(remaining);
+                if (parsed == 0)
+                    parsed = ParseKeyword(remaining);
 				if (parsed == 0)
 					parsed = ParseIdentifier(remaining);
-				if (parsed == 0)
-					parsed = ParseKeyword(remaining);
+				
 
 				if (parsed > 0)
 				{
@@ -139,7 +140,7 @@ namespace Hazard::Shading
 	uint64_t ShaderTokenizer::ParseIdentifier(const std::string& source)
 	{
 		uint64_t index = 0;
-		while (index < source.length() && !std::isspace(source[index]) && (std::isalpha(source[index]) || std::isdigit(source[index])))
+		while (index < source.length() && !std::isspace(source[index]))
 			index++;
 
 		m_Tokens.push_back({ TokenType::Identifier, source.substr(0, index), m_Line });
@@ -164,7 +165,7 @@ namespace Hazard::Shading
 		std::string keyword = source.substr(0, index);
 
 		if (std::find(m_Defs.Keywords.begin(), m_Defs.Keywords.end(), keyword) == m_Defs.Keywords.end())
-			throw CompileException(0, fmt::format("Unknown keyword: \"{}\"", keyword));
+            return 0;
 
 		m_Tokens.push_back({ TokenType::Keyword, keyword, m_Line });
 		return keyword.length() + 1;

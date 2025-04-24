@@ -183,7 +183,6 @@ namespace Hazard
 		if (cubemap)
 			asset->Invalidate();
 
-		std::cout << "Create env" << std::endl;
 		info.Result(asset);
 		info.Current->Finish();
 		co_return;

@@ -22,8 +22,8 @@ Shader "Debug/LineShader"
 			"../Uniforms/CameraUniform.glslh"
 		}
 
-		Shader 
-		{			
+		Source
+		{
 			struct VS_In : VS_IN
 			{
 				vec3 Position;
@@ -45,7 +45,7 @@ Shader "Debug/LineShader"
 
 	Fragment
 	{
-		Shader
+		Source
 		{
 			struct VS_Out : FS_IN
 			{

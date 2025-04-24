@@ -86,8 +86,6 @@ namespace Hazard
 		return Ref<JobGraph>::Create(info);
 	}
 
-
-
 	Coroutine ShaderAssetLoader::PreprocessShaderSourceCode(JobInfo info, const CreateAssetSettings& settings)
 	{
 		using namespace HazardRenderer;
@@ -106,6 +104,7 @@ namespace Hazard
 				ShaderCompileResult result = {
 					.Asset = asset
 				};
+                
 				info.Result(result);
 
 				info.Graph->AddOnFinished([asset]() {
@@ -118,6 +117,8 @@ namespace Hazard
 
 			co_return;
 		}
+        
+        std::unordered_map<uint32_t, std::string> sources;
 
 		if (File::GetFileExtension(settings.SourcePath) == ".shader")
 		{
@@ -128,59 +129,22 @@ namespace Hazard
 
 			auto parser = Shading::ShaderParser(tokens);
 			parser.Parse();
-
-			float i = 0;
+            auto result = parser.GetRootScope();
+            
+            result.Scopes["scope"].RequireValue<std::string>("Type", asset->m_Type);
+            
+            asset->m_Spec.DebugName = result.Values["Shader"];
+            asset->m_Spec.Usage = PipelineUsage::GraphicsBit;
+            asset->m_Spec.MaxRayDepth = result.Scopes["scope"].GetValueOrDefault<uint32_t>("RayDepth", 1);
+            
+            asset->m_Spec.Flags |= result.Scopes["scope"].GetValueOrDefault("DetphWrite", true) ? PIPELINE_DEPTH_WRITE : 0;
+            
+            HZR_CORE_INFO("Got shader: {}", asset->m_Spec.DebugName);
+            
 		}
-
-		/*
-		std::unordered_map<uint32_t, std::string> sources;
-
-		ShaderParseFileResult result;
-
-			HZR_CORE_INFO("Loading shader as shader file");
-			result = ShaderCompiler::ParseShaderFile(settings.SourcePath);
-
-			std::stringstream ss;
-
-			for (auto& shader : result.Shaders)
-				ss << shader;
-
-			result.Shaders.clear();
-			ProcessShaderAsset(asset, result.Type);
-
-			Hooks<std::string, void(Ref<ShaderAsset>, const std::string&)> hooks;
-
-			hooks.AddHook("DepthWrite ", [](Ref<ShaderAsset> asset, const std::string& value) mutable {
-				if (value == "True")
-					asset->m_Spec.Flags |= PIPELINE_DEPTH_WRITE;
-				});
-
-			hooks.AddHook("Depth ", [](Ref<ShaderAsset> asset, const std::string& value) mutable {
-				asset->m_Spec.DepthOperator = DepthOp::LessOrEqual;
-				asset->m_Spec.Flags |= PIPELINE_DEPTH_TEST;
-				});
-
-
-			for (auto& [name, value] : result.PipelineState)
-				hooks.Invoke(name, asset, value);
-
-
-			File::WriteFile("res/debug/" + File::GetNameNoExt(settings.SourcePath) + ".glsl", ss.str());
-			sources = ShaderCompiler::GetShaders(ss.str(), settings.SourcePath);
-		}
-		else
-		{
-			HZR_CORE_ASSERT(false, "We dropped support, plz fix");
-			sources = ShaderCompiler::GetShaderSources(settings.SourcePath);
-		}
-
-		asset->m_Type = result.Type;
-		asset->m_Spec.DebugName = result.Name;
-		asset->m_Spec.Usage = result.Type.empty() ? PipelineUsage::ComputeBit : PipelineUsage::GraphicsBit;
-		asset->m_Spec.pBufferLayout = &asset->m_Layout;
-		asset->m_Spec.SetLayouts = result.Layouts;
-		asset->m_Spec.PushConstants = result.Constants;
-
+        
+        
+        
 		std::vector<Ref<Job>> loadingJobs;
 
 		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
@@ -193,12 +157,12 @@ namespace Hazard
 		}
 
 		if (loadingJobs.size() == 0)
-			throw JobException(fmt::format("No shader sources specified for {}", result.Name));
+			throw JobException(fmt::format("No shader sources specified for {}", File::GetNameNoExt(settings.AccessPath)));
 
 		info.Result(sources);
 		info.ContinueWith(loadingJobs);
 		info.Current->Finish();
-		*/
+		
 
 		co_return;
 	}
