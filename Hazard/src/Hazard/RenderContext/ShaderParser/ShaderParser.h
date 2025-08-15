@@ -2,6 +2,7 @@
 
 #include "UtilityCore.h"
 #include "ShaderTokens.h"
+#include "ParseException.h"
 
 struct ParsedScope {
     std::unordered_map<std::string, std::string> Values;
@@ -22,9 +23,13 @@ struct ParsedScope {
     template<typename T>
     bool RequireValue(const char* value, T& target)
     {
-        if(Values.find(value) == Values.end())
-            return false;
-        target = Values[value];
+        if (Values.find(value) == Values.end())
+            throw ParseException(fmt::format("Require value not found: {}", value));
+
+        if constexpr (std::is_same<T, uint32_t>::value)
+            target = stoi(Values[value]);
+        else target = Values[value];
+
         return true;
     }
 };

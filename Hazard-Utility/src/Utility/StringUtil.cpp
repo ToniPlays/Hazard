@@ -1,6 +1,7 @@
 
 #include "StringUtil.h"
 #include <sstream>
+#include <regex>
 
 
 std::vector<std::string> StringUtil::SplitString(const std::string& string, char delim)
@@ -63,10 +64,16 @@ std::string StringUtil::Replace(const std::string& value, const std::string& fin
 	while ((pos = value.find(find, pos)) != std::string::npos)
 	{
 		result.replace(pos, strlen(find.c_str()), replaceWith);
-		pos += strlen(find.c_str());
+		pos += replaceWith.length() + 1;
 	}
 
 	return result;
+}
+
+std::string StringUtil::Replace(const std::string& value, std::regex find, const std::string& replaceWith)
+{
+	std::regex pattern(find);
+	return std::regex_replace(value, pattern, replaceWith);
 }
 
 std::string& StringUtil::ToLower(std::string& string)

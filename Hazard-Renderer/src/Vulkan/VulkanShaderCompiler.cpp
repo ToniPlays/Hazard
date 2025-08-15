@@ -62,7 +62,6 @@ namespace HazardRenderer::Vulkan
                 options.AddMacroDefinition(define.Name, define.Value);
             else options.AddMacroDefinition(define.Name);
         }
-
         shaderc::Compiler compiler;
         shaderc::CompilationResult result = compiler.CompileGlslToSpv(compileInfo->Source, 
             ShaderStageToShaderC((uint32_t)compileInfo->Stage), compileInfo->Name.c_str(), options);

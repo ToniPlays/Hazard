@@ -113,31 +113,7 @@ void TestFramework::GenerateShaders()
         { RenderAPI::Vulkan, "vk" },
         { RenderAPI::Metal, "mtl" }
 	};
-    
-    
-	for (auto& api : compileFor)
-	{
-		for (auto& source : sources)
-		{
-			for (auto& [type, shader] : ShaderCompiler::GetShaderSources(source))
-			{
-                std::string shaderType = Utils::ShaderStageToString(type);
-                auto path = outputDir / std::filesystem::path(fmt::format("{0}.{1}.{2}", File::GetNameNoExt(source), shaderType, extensions[api]));
-				if (File::Exists(path)) continue;
 
-				auto shaderSourceCode = ShaderCompiler::GetShaderFromSource(type, shader, api);
-
-				if (api == RenderAPI::Vulkan)
-				{
-					HZR_ASSERT(File::WriteBinaryFile(path, (void*)shaderSourceCode.c_str(), shaderSourceCode.length()), "Failed to write file");
-				}
-				else
-				{
-					HZR_ASSERT(File::WriteFile(path, shaderSourceCode), "Failed to write file");
-				}
-			}
-		}
-	}
 #endif
      */
 }

@@ -136,14 +136,19 @@ namespace Hazard
             asset->m_Spec.DebugName = result.Values["Shader"];
             asset->m_Spec.Usage = PipelineUsage::GraphicsBit;
             asset->m_Spec.MaxRayDepth = result.Scopes["scope"].GetValueOrDefault<uint32_t>("RayDepth", 1);
-            
             asset->m_Spec.Flags |= result.Scopes["scope"].GetValueOrDefault("DetphWrite", true) ? PIPELINE_DEPTH_WRITE : 0;
             
+			ShaderCompiler compiler(settings.SourcePath);
+
+			for (auto& [key, sourceBlock] : result.Scopes["scope"].Scopes)
+			{
+				uint32_t version;
+				result.Scopes["scope"].RequireValue<uint32_t>("Version", version);
+				sources[ShaderStageFlagsFromString(key)] = compiler.GenerateGLSLFromBlock(version, sourceBlock);
+			}
+
             HZR_CORE_INFO("Got shader: {}", asset->m_Spec.DebugName);
-            
 		}
-        
-        
         
 		std::vector<Ref<Job>> loadingJobs;
 
@@ -163,7 +168,6 @@ namespace Hazard
 		info.ContinueWith(loadingJobs);
 		info.Current->Finish();
 		
-
 		co_return;
 	}
 
@@ -181,7 +185,8 @@ namespace Hazard
 			if (source.empty())
 				throw JobException("Shader source is empty");
 
-			std::string compiled = ShaderCompiler::GetShaderFromSource(stageFlags, source, (RenderAPI)api);
+			ShaderCompiler compiler("");
+			std::string compiled = compiler.GetShaderFromSource(stageFlags, source, (RenderAPI)api);
 
 
 			ShaderCompileResult result = {
@@ -209,6 +214,8 @@ namespace Hazard
 		auto results = info.Graph->GetResults<ShaderCompileResult>();
 		Ref<ShaderAsset> asset = results[0].Asset;
 
+		ProcessShaderAsset(asset, asset->m_Type);
+
 		if (asset->m_Spec.Usage == PipelineUsage::None)
 		{
 			info.Result(asset);
@@ -226,7 +233,7 @@ namespace Hazard
 		else
 			asset->m_Pipeline = Pipeline::Create(&specs);
 
-		asset->m_Spec.Shaders.clear();
+		asset->m_ShaderSources.clear();
 		info.Result(asset);
 		co_return;
 	}
@@ -371,10 +378,17 @@ namespace Hazard
 	{
 		using namespace HazardRenderer;
 
+		DescriptorSetLayout setLayout = { { SHADER_STAGE_ALL_GRAPHICS, "u_Camera", 0, DESCRIPTOR_TYPE_UNIFORM_BUFFER },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_RadianceMap", 1, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_IrradianceMap", 2, DESCRIPTOR_TYPE_SAMPLER_CUBE },
+										  { SHADER_STAGE_FRAGMENT_BIT, "u_BRDFLut", 3, DESCRIPTOR_TYPE_SAMPLER_2D }
+		};
+
 		if (result == "Line")
 		{
 			asset->m_Layout = LineVertex::Layout();
 			asset->m_Spec.Flags |= PIPELINE_PRIMITIVE_TOPOLOGY_LINE_LIST | PIPELINE_DRAW_LINE;
+			asset->m_Spec.SetLayouts.push_back(setLayout);
 		}
 		else if (result == "2D/Quad")
 		{

@@ -13,6 +13,7 @@
 #include "Jobs/JobException.h"
 #include <regex>
 
+
 namespace Hazard
 {
 	using namespace HazardRenderer;
@@ -124,70 +125,65 @@ namespace Hazard
 	#endif
 	}
 
-	std::unordered_map<uint32_t, std::string> ShaderCompiler::GetShaderSources(const std::filesystem::path& path)
+	std::string ShaderCompiler::GenerateGLSLFromBlock(uint32_t version, ParsedScope& block)
 	{
-		HZR_PROFILE_FUNCTION();
-		HZR_ASSERT(File::Exists(path), fmt::format("Shader source file does not exist {}", File::GetFileAbsolutePath(path).string()));
+		std::string source, includes;
+		includes = block.GetValueOrDefault<std::string>("Include", "");
+		block.RequireValue("Source", source);
 
-		std::string sourceFile = File::ReadFile(path);
-		return GetShaders(sourceFile, path);
-	}
+		includes = StringUtil::Replace(includes, std::regex(R"(\t)"), "");
+		includes = StringUtil::Replace(includes, std::regex(R"(\n)"), "");
+		includes = StringUtil::Replace(includes, std::regex(R"(\r)"), "");
+		source = source.substr(StringUtil::OffsetOf(source, "{") + 1);
 
-	std::unordered_map<uint32_t, std::string> ShaderCompiler::GetShaders(const std::string& source, const std::filesystem::path& relativePath)
-	{
-		std::unordered_map<uint32_t, std::string> result;
+		if(includes.length() > 1)
+			includes = includes.substr(1);
 
-		const char* typeToken = "#type";
-		uint64_t endPos = 0;
+		std::regex regex(R"(struct\s+(\w+)\s*:\s*(\w+)\s*\{([^}]*)\})");
 
-		while (endPos != std::string::npos)
+		std::string processedSource = source;
+
+		for (std::sregex_iterator it(source.begin(), source.end(), regex), end; it != end; ++it)
 		{
-			std::string type = StringUtil::GetPreprocessor(typeToken, source, endPos, &endPos);
-			if (endPos == std::string::npos) continue;
+			const std::smatch& m = *it;
+			std::string type = m[2].str().substr(m[2].str().find_first_of('_') + 1);
+			std::string src = "";
+			std::string find = m[0].str();
 
-			uint64_t nextTokenPos = source.find(typeToken, endPos);
-			std::string src = nextTokenPos == std::string::npos ? source.substr(endPos) : source.substr(endPos, nextTokenPos - endPos);
-
-			if (!PreprocessSource(relativePath, src))
-				continue;
-
-			result[Utils::ShaderStageFromString(type)] = src;
-		}
-
-		return result;
-	}
-
-	bool ShaderCompiler::PreprocessSource(const std::filesystem::path& path, std::string& shaderSource)
-	{
-		return PreprocessIncludes(path, shaderSource);
-	}
-
-	bool ShaderCompiler::PreprocessIncludes(const std::filesystem::path& path, std::string& source)
-	{
-		HZR_PROFILE_FUNCTION();
-		std::string token = "#include";
-		uint64_t offset = 0;
-
-		bool success = true;
-
-		while (offset != std::string::npos)
-		{
-			std::string value = StringUtil::GetPreprocessor(token.c_str(), source, offset, &offset);
-			if (offset == std::string::npos) continue;
-
-			std::string_view includePath = StringUtil::Between(value, "\"", "\"");
-			std::string line = token + " " + value;
-			std::filesystem::path inclPath = path.parent_path() / includePath;
-
-			if (!File::Exists(inclPath))
+			if(m[2] == "FS_OUT")
 			{
-				std::cout << fmt::format("{2}: {0} could not open file {1}", token, inclPath.string(), path.string()) << std::endl;
-				success = false;
-				continue;
-			}
+				uint32_t location = 0;
+				for (auto& row : StringUtil::SplitString(m[3], ';'))
+				{
+					std::string data = StringUtil::Replace(row, std::regex(R"(^\s+|\s+\Z)"), "");
+					if (data.length() == 0) continue;
+					
 
-			source = StringUtil::Replace(source, line, File::ReadFile(path.parent_path() / includePath));
+					auto dataType = StringUtil::SplitString(data, ' ');
+					src += fmt::format("layout(location = {}) out {} o_{};\n", location, dataType[0], dataType[1]);
+					location++;
+
+					//Replace all OUT.X variables
+					processedSource = StringUtil::Replace(processedSource, fmt::format("OUT.{}", dataType[1]), fmt::format("o_{}", dataType[1]));
+				}
+				find += ";";
+			}
+			else src = fmt::format("struct {0} {{\n{1}\n}} {2}", m[1].str(), m[3].str(), type);
+
+			processedSource = StringUtil::Replace(processedSource, find, src);
 		}
-		return success;
+
+		std::vector<std::string> paths = StringUtil::SplitString(includes, ',');
+		std::string includeSource = "";
+
+		for (auto& path : paths)
+		{
+			auto target = std::filesystem::weakly_canonical(m_Path.parent_path() / path);
+			includeSource += fmt::format("//Include file: {}\n{}\n\n", target.string(), File::ReadFile(target));
+		}
+
+		std::string result = fmt::format("#version {}\n\n{}\n{}", version, includeSource, processedSource);
+		HZR_TRACE(processedSource);
+		return result;
 	}
 }

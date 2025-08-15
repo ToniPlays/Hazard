@@ -519,6 +519,7 @@
     <ClInclude Include="vendor\ImTextEdit\ImTextEdit.h">
       <Filter>vendor\ImTextEdit</Filter>
     </ClInclude>
+    <ClInclude Include="src\Hazard\RenderContext\ShaderParser\ParseException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Hazard\Assets\Asset.cpp">

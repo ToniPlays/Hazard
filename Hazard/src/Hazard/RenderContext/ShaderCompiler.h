@@ -3,6 +3,7 @@
 #include "Core/Core.h"
 
 #include "Core/Rendering/Shader.h"
+#include "ShaderParser/ShaderParser.h"
 #include "Core/RenderContextCreateInfo.h"
 #include "Core/Rendering/Shader.h"
 
@@ -133,14 +134,13 @@ namespace Hazard
 	class ShaderCompiler
 	{
 	public:
+		ShaderCompiler(const std::filesystem::path& path) : m_Path(std::filesystem::weakly_canonical(path)) {}
 		//Only accepts GLSL code for now
-		static std::string GetShaderFromSource(uint32_t type, const std::string& source, HazardRenderer::RenderAPI api);
+		std::string GetShaderFromSource(uint32_t type, const std::string& source, HazardRenderer::RenderAPI api);
 
-		static std::unordered_map<uint32_t, std::string> GetShaderSources(const std::filesystem::path& path);
-		static std::unordered_map<uint32_t, std::string> GetShaders(const std::string& source, const std::filesystem::path& relativePath);
+		std::string GenerateGLSLFromBlock(uint32_t version, ParsedScope& block);
 
 	private:
-		static bool PreprocessSource(const std::filesystem::path& path, std::string& shaderSource);
-		static bool PreprocessIncludes(const std::filesystem::path& path, std::string& source);
+		std::filesystem::path m_Path;
 	};
 }

@@ -1,6 +1,10 @@
+#include <hzrpch.h>
+
 #include "ShaderParser.h"
 #include "../CompileException.h"
 #include <Utility/Hooks.h>
+
+#include "spdlog/fmt/fmt.h"
 
 namespace Hazard::Shading
 {
@@ -41,10 +45,10 @@ namespace Hazard::Shading
                 return 1;
             }
             case TokenType::ScopeEnd:
-                m_NextScopeName = "";
+                m_NextScopeName = "scope";
                 m_ScopeStack.pop_back();
                 return 1;
-            default:
+            default: 
                 break;
         }
         return 1;
@@ -63,15 +67,12 @@ namespace Hazard::Shading
         {
             if(keywordType == TokenType::Scope)
             {
-                HZR_CORE_WARN("Checking scope for {}", key.Value);
                 m_NextScopeName = key.Value;
                 return 1;
             }
             
-            
             if(keywordType == TokenType::Property)
             {
-                HZR_CORE_WARN("Getting propery string for {}", key.Value);
                 uint32_t i = 0;
                 uint32_t scopeBegin = 0;
                 while(i < m_Tokens.size())
@@ -81,7 +82,6 @@ namespace Hazard::Shading
                     if(token.Type == TokenType::ScopeBegin)
                     {
                         scopeBegin++;
-                        continue;
                     }
                     else if (token.Type == TokenType::ScopeEnd)
                     {

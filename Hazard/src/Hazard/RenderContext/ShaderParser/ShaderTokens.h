@@ -25,7 +25,7 @@ namespace Hazard::Shading
 
 	struct ShadingLanguageDefinitions
 	{
-		std::vector<std::string> Keywords = { "Shader", "Type", "Language", "Version", "Depth", "DepthWrite", "Include", "Properties", "Constants", "Pass", 
+		std::vector<std::string> Keywords = { "Shader", "Type", "Language", "Version", "Depth", "DepthWrite", "Include", "Properties", "Source", "Constants", "Pass",
 			"Vertex", "Fragment", "Pixel", "Compute", "Raygen", "Miss", "Hit", "AnyHit", "default", "case", "break", "continue", "if", "else"
 		};
 
