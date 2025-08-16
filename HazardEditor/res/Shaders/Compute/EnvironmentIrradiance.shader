@@ -2,6 +2,7 @@ Shader "Compute/GenEnvironmentIrradiance"
 {
 	Language "GLSL"
 	Version 450
+	Type "Compute"
 
 	Constants
 	{
@@ -12,11 +13,11 @@ Shader "Compute/GenEnvironmentIrradiance"
 	{
 		Include 
 		{
-			"../Utils/Common.glslh"
+			"../Utils/Common.glslh",
 			"../Utils/EnvironmentMapping.glslh"
 		}
 
-		Shader 
+		Source 
 		{			
 
 			layout(set = 0, binding = 0, rgba16f) restrict writeonly uniform imageCube o_IrradianceMap;
@@ -48,7 +49,3 @@ Shader "Compute/GenEnvironmentIrradiance"
 		}
 	}
 }
-
-
-#type Compute
-#version 450 core

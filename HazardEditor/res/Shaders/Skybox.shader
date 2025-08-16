@@ -28,7 +28,7 @@ Shader "Skybox/Default"
 			"Uniforms/CameraUniform.glslh"
 		}
 
-		Shader 
+		Source 
 		{			
 			struct VS_Out : VS_OUT 
 			{
@@ -59,7 +59,7 @@ Shader "Skybox/Default"
 			"Utils/PostProcessing.glslh"
 		}
 
-		Shader
+		Source
 		{
 			struct VS_Out : FS_IN
 			{

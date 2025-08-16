@@ -89,7 +89,6 @@ void EditorAssetManager::ImportEngineShaders()
 
 	for (auto& file : Directory::GetAllInDirectory("res/Shaders", true))
 	{
-        if(File::GetName(file) != "LineShader.shader") continue;
 		if (File::GetFileExtension(file) != ".shader") continue;
 		auto cacheFile = File::GetNameNoExt(file) + ".hasset";
 

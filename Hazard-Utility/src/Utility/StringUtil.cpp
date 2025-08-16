@@ -61,10 +61,10 @@ std::string StringUtil::Replace(const std::string& value, const std::string& fin
 	std::string result = value;
 	uint64_t pos = 0;
 
-	while ((pos = value.find(find, pos)) != std::string::npos)
+	while ((pos = result.find(find, pos)) != std::string::npos)
 	{
 		result.replace(pos, strlen(find.c_str()), replaceWith);
-		pos += replaceWith.length() + 1;
+		pos += replaceWith.length();
 	}
 
 	return result;

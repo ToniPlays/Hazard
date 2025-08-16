@@ -35,7 +35,7 @@ Shader "3D/Lit_Static"
 			"Uniforms/CameraUniform.glslh"
 		}
 
-		Shader 
+		Source 
 		{			
 			struct VS_In : VS_IN
 			{
@@ -58,7 +58,7 @@ Shader "3D/Lit_Static"
 				vec3 Normal;
 				vec2 TextureCoords;
 				mat3 WorldNormal;
-				flat uint EntityID;
+				uint EntityID;
 			};
 
 			void main() 
@@ -90,13 +90,13 @@ Shader "3D/Lit_Static"
 	{
 		Include
 		{
-			"Uniforms/CameraUniform.glslh"
-			"Utils/Common.glslh"
-			"Utils/Lighting.glslh"
+			"Uniforms/CameraUniform.glslh",
+			"Utils/Common.glslh",
+			"Utils/Lighting.glslh",
 			"Utils/PostProcessing.glslh"
 		}
 
-		Shader
+		Source
 		{
 			struct VS_Out : FS_IN 
 			{

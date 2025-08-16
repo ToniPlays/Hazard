@@ -138,7 +138,10 @@ namespace Hazard
 		//Only accepts GLSL code for now
 		std::string GetShaderFromSource(uint32_t type, const std::string& source, HazardRenderer::RenderAPI api);
 
-		std::string GenerateGLSLFromBlock(uint32_t version, ParsedScope& block);
+		std::string GenerateGLSLFromBlock(uint32_t version, ParsedScope& block, ParsedScope& root);
+
+	private:
+		std::string ProcessSource(const std::string& source);
 
 	private:
 		std::filesystem::path m_Path;

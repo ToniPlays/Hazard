@@ -122,32 +122,39 @@ namespace Hazard
 
 		if (File::GetFileExtension(settings.SourcePath) == ".shader")
 		{
-			auto tokenizer = Shading::ShaderTokenizer(settings.SourcePath);
-			tokenizer.Tokenize();
+			try {
+				auto tokenizer = Shading::ShaderTokenizer(settings.SourcePath);
+				tokenizer.Tokenize();
 
-			auto& tokens = tokenizer.GetTokens();
+				auto& tokens = tokenizer.GetTokens();
 
-			auto parser = Shading::ShaderParser(tokens);
-			parser.Parse();
-            auto result = parser.GetRootScope();
-            
-            result.Scopes["scope"].RequireValue<std::string>("Type", asset->m_Type);
-            
-            asset->m_Spec.DebugName = result.Values["Shader"];
-            asset->m_Spec.Usage = PipelineUsage::GraphicsBit;
-            asset->m_Spec.MaxRayDepth = result.Scopes["scope"].GetValueOrDefault<uint32_t>("RayDepth", 1);
-            asset->m_Spec.Flags |= result.Scopes["scope"].GetValueOrDefault("DetphWrite", true) ? PIPELINE_DEPTH_WRITE : 0;
-            
-			ShaderCompiler compiler(settings.SourcePath);
+				auto parser = Shading::ShaderParser(tokens);
+				parser.Parse();
+				auto result = parser.GetRootScope();
 
-			for (auto& [key, sourceBlock] : result.Scopes["scope"].Scopes)
-			{
-				uint32_t version;
-				result.Scopes["scope"].RequireValue<uint32_t>("Version", version);
-				sources[ShaderStageFlagsFromString(key)] = compiler.GenerateGLSLFromBlock(version, sourceBlock);
+				result.Scopes["scope"].RequireValue<std::string>("Type", asset->m_Type);
+
+				asset->m_Spec.DebugName = result.Values["Shader"];
+				asset->m_Spec.Usage = PipelineUsage::GraphicsBit;
+				asset->m_Spec.MaxRayDepth = result.Scopes["scope"].GetValueOrDefault<uint32_t>("RayDepth", 1);
+				asset->m_Spec.Flags |= result.Scopes["scope"].GetValueOrDefault("DetphWrite", true) ? PIPELINE_DEPTH_WRITE : 0;
+
+				ShaderCompiler compiler(settings.SourcePath);
+
+				for (auto& [key, sourceBlock] : result.Scopes["scope"].Scopes)
+				{
+					uint32_t version;
+					result.Scopes["scope"].RequireValue<uint32_t>("Version", version);
+					sources[ShaderStageFlagsFromString(key)] = compiler.GenerateGLSLFromBlock(version, sourceBlock, result.Scopes["scope"]);
+
+					auto path = File::GetFileAbsolutePath(fmt::format("Library/debug/{0}_{1}.glsl", File::GetNameNoExt(settings.SourcePath), key));
+					File::WriteFile(path, sources[ShaderStageFlagsFromString(key)]);
+				}
 			}
-
-            HZR_CORE_INFO("Got shader: {}", asset->m_Spec.DebugName);
+			catch (CompileException e)
+			{
+				throw JobException(fmt::format("Compile exception at line {}: {}", e.get_line(), e.what()));
+			}
 		}
         
 		std::vector<Ref<Job>> loadingJobs;
@@ -227,6 +234,7 @@ namespace Hazard
 
 		PipelineSpecification& specs = asset->m_Spec;
 		specs.Shaders = asset->m_ShaderSources[(uint32_t)GraphicsContext::GetRenderAPI()];
+		specs.pBufferLayout = &asset->m_Layout;
 
 		if (specs.Shaders.size() == 0)
 			throw JobException(fmt::format("{}: No shader sources found", info.Current->GetName()));

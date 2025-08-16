@@ -4,8 +4,13 @@ Shader "Debug/LineShader"
 	Type "Line"
 	Version 450
 
-	Depth "Less"
-	DepthWrite True
+	Pass {
+		Depth "<"
+		DepthWrite True
+		
+		CullFace "None"
+		Queue "Opaque"
+	}
 
 	Properties 
 	{
