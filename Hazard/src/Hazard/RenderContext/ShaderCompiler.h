@@ -18,14 +18,17 @@ namespace Hazard
 		{
 			using namespace HazardRenderer;
 
-			if (type == "Vertex")		return SHADER_STAGE_VERTEX_BIT;
-			if (type == "Fragment")		return SHADER_STAGE_FRAGMENT_BIT;
-			if (type == "Pixel")		return SHADER_STAGE_FRAGMENT_BIT;
-			if (type == "Compute")		return SHADER_STAGE_COMPUTE_BIT;
-			if (type == "Raygen")		return SHADER_STAGE_RAYGEN_BIT;
-			if (type == "Miss")			return SHADER_STAGE_MISS_BIT;
-			if (type == "ClosestHit")	return SHADER_STAGE_CLOSEST_HIT_BIT;
-			if (type == "AnyHit")		return SHADER_STAGE_ANY_HIT_BIT;
+			std::string t = type;
+			StringUtil::ToLower(t);
+
+			if (t == "vertex")		return SHADER_STAGE_VERTEX_BIT;
+			if (t == "fragment")		return SHADER_STAGE_FRAGMENT_BIT;
+			if (t == "pixel")		return SHADER_STAGE_FRAGMENT_BIT;
+			if (t == "compute")		return SHADER_STAGE_COMPUTE_BIT;
+			if (t == "raygen")		return SHADER_STAGE_RAYGEN_BIT;
+			if (t == "miss")			return SHADER_STAGE_MISS_BIT;
+			if (t == "closesthit")	return SHADER_STAGE_CLOSEST_HIT_BIT;
+			if (t == "anyhit")		return SHADER_STAGE_ANY_HIT_BIT;
 			HZR_ASSERT(false, "Undefined shader stage");
 			return SHADER_STAGE_NONE;
 		}
@@ -111,13 +114,6 @@ namespace Hazard
 		Shader
 	};
 
-	struct ShaderCompilerSourceScope
-	{
-		std::string Scope;
-		std::string Source;
-		ShaderPropertyType Type;
-	};
-
 	struct ShaderProperty
 	{
 		std::string Name;
@@ -137,11 +133,18 @@ namespace Hazard
 		ShaderCompiler(const std::filesystem::path& path) : m_Path(std::filesystem::weakly_canonical(path)) {}
 		//Only accepts GLSL code for now
 		std::string GetShaderFromSource(uint32_t type, const std::string& source, HazardRenderer::RenderAPI api);
+		std::unordered_map<uint32_t, std::string> SplitSource(const std::string& source);
 
-		std::string GenerateGLSLFromBlock(uint32_t version, ParsedScope& block, ParsedScope& root);
+		std::string EmitGLSL(std::shared_ptr<Shading::ATLNode> root);
 
 	private:
-		std::string ProcessSource(const std::string& source);
+		void EmitProperties(std::ostringstream& out, std::shared_ptr<Shading::ATLNode> node, uint32_t stageFlags);
+		void EmitPushConstants(std::ostringstream& out, std::shared_ptr<Shading::ATLNode> node);
+		void EmitScope(std::ostringstream& out, std::shared_ptr<Shading::ATLNode> node);
+		void EmitIncludes(std::ostringstream& out, std::shared_ptr<Shading::ATLNode> node);
+
+		std::string TransformGLSL(const std::string& source);
+		std::string PostProcessUniformStructs(const std::string& source);
 
 	private:
 		std::filesystem::path m_Path;

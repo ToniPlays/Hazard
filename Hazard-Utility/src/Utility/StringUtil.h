@@ -21,6 +21,7 @@ public:
 	static bool IsMatching(const std::string& value, const std::string& compareTo, bool caseSensitive = false, bool stripWhiteSpaces = true, bool stripUnderScores = true);
 	static bool Contains(std::string_view source, std::string_view find) { return source.find(find) != std::string::npos; }
 	static std::string_view Between(const std::string_view& source, const std::string& start, const std::string& end);
+	static std::string RemoveEmpty(const std::string& source);
 
 	static std::string GetPreprocessor(const std::string& type, const std::string& source, uint64_t endPosition, uint64_t* offset = nullptr);
 

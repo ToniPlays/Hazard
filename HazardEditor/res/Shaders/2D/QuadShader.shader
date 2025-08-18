@@ -14,11 +14,11 @@ Shader "2D/QuadShader"
 	
 	Properties
 	{
-		Camera Camera(0, 0);
-		SamplerCube RadianceMap (0, 1);
-		SamplerCube IrradianceMap (0, 2);
-		Sampler2D BRDFLut(0, 3);
-		Sampler2D Textures (1, 0, 32);
+		u_Camera ("Camera", CameraBlock, 0, 0, 1)
+		u_RadianceMap ("RadianceMap", samplerCube, 0, 1, 1)
+		u_IrradianceMap ("IrradianceMap", samplerCube, 0, 2, 1)
+		u_BRDFLut ("BRDFLut", sampler2D, 1, 0, 1)
+		u_Textures ("Textures", sampler2D, 1, 0, 32)
 	}
 
 	Vertex
@@ -43,7 +43,7 @@ Shader "2D/QuadShader"
 			{
 				vec4 Color;
 				vec2 TextureCoords;
-				float TextureIndex;
+				flat float TextureIndex;
 			};
 
 			void main() 
@@ -59,7 +59,13 @@ Shader "2D/QuadShader"
 
 	Fragment
 	{
-		Source {
+		Include
+		{
+			"../Uniforms/CameraUniform.glslh"
+		}
+
+		Source 
+		{
 			struct FS_In : FS_IN
 			{
 				vec4 Color;
@@ -80,16 +86,16 @@ Shader "2D/QuadShader"
 				vec4 textureColor = vec4(1.0);
 	
 				switch(index) {
-					case  0: 	 textureColor = texture(u_Textures[  0], uv);  break;
-					case  1: 	 textureColor = texture(u_Textures[  1], uv);  break;
-					case  2: 	 textureColor = texture(u_Textures[  2], uv);  break;
-					case  3: 	 textureColor = texture(u_Textures[  3], uv);  break;
-					case  4: 	 textureColor = texture(u_Textures[  4], uv);  break;
-					case  5: 	 textureColor = texture(u_Textures[  5], uv);  break;
-					case  6: 	 textureColor = texture(u_Textures[  6], uv);  break;
-					case  7: 	 textureColor = texture(u_Textures[  7], uv);  break;
-					case  8: 	 textureColor = texture(u_Textures[  8], uv);  break;
-					case  9: 	 textureColor = texture(u_Textures[  9], uv);  break;
+					case 0: 	 textureColor = texture(u_Textures[  0], uv);  break;
+					case 1: 	 textureColor = texture(u_Textures[  1], uv);  break;
+					case 2: 	 textureColor = texture(u_Textures[  2], uv);  break;
+					case 3: 	 textureColor = texture(u_Textures[  3], uv);  break;
+					case 4: 	 textureColor = texture(u_Textures[  4], uv);  break;
+					case 5: 	 textureColor = texture(u_Textures[  5], uv);  break;
+					case 6: 	 textureColor = texture(u_Textures[  6], uv);  break;
+					case 7: 	 textureColor = texture(u_Textures[  7], uv);  break;
+					case 8: 	 textureColor = texture(u_Textures[  8], uv);  break;
+					case 9: 	 textureColor = texture(u_Textures[  9], uv);  break;
 					case 10:  textureColor = texture(u_Textures[10], uv);  break;
 					case 11:  textureColor = texture(u_Textures[11], uv);  break;
 					case 12:  textureColor = texture(u_Textures[12], uv);  break;
@@ -116,7 +122,7 @@ Shader "2D/QuadShader"
 
 				OUT.Color = textureColor * IN.Color;
 
-				if(OUT.Color.a <= 0.0001f) discard;
+				if(OUT.Color.a <= 0.0001) discard;
 			}
 		}
 	}

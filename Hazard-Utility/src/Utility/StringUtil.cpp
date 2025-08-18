@@ -118,6 +118,19 @@ std::string_view StringUtil::Between(const std::string_view& source, const std::
 	return source.substr(startPos + start.length(), endPos - startPos - end.length());
 }
 
+std::string StringUtil::RemoveEmpty(const std::string& source)
+{
+	std::istringstream stream(source);
+	std::ostringstream out;
+	std::string line;
+
+	while (std::getline(stream, line))
+		if (line.find_first_not_of(" \t\r\n") != std::string::npos)
+			out << line << "\n";
+
+	return out.str();
+}
+
 std::string StringUtil::GetPreprocessor(const std::string& type, const std::string& source, uint64_t endPosition, uint64_t* offset)
 {
 	uint64_t valueOffset = OffsetOf(source, type, endPosition);

@@ -8,6 +8,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <Utility/StringUtil.h>
 
 namespace HazardRenderer
 {
@@ -37,8 +38,7 @@ namespace HazardRenderer
 	static uint32_t ShaderStageFlagsFromString(const std::string& type)
 	{
 		std::string val = type;
-		for (auto& c : val)
-			c = std::tolower(c);
+		StringUtil::ToLower(val);
 
 		if (val == "vertex")		return SHADER_STAGE_VERTEX_BIT;
 		if (val == "fragment")		return SHADER_STAGE_FRAGMENT_BIT;

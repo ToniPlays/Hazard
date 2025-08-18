@@ -8,100 +8,146 @@
 
 namespace Hazard::Shading
 {
-	void ShaderParser::Parse()
-	{
-		m_KeywordValueTypes = { { "Shader", TokenType::String },
-								{ "Language", TokenType::String, },
-								{ "Type", TokenType::String },
-								{ "Version", TokenType::Number },
-								{ "Pass", TokenType::Property },
-								{ "Depth", TokenType::String },
-								{ "DepthWrite", TokenType::Identifier },
-								{ "Constants", TokenType::Property },
-								{ "Properties", TokenType::Property },
-								{ "Vertex", TokenType::Scope },
-								{ "Fragment", TokenType::Scope },
-								{ "Compute", TokenType::Scope },
-								{ "Source", TokenType::Property },
-								{ "Include", TokenType::Property },
-		};
+    void ShaderParser::ParseToken(std::shared_ptr<ATLNode> parent)
+    {
+        if (m_Index >= m_Tokens.size())
+            return;
 
-		uint32_t currentToken = 0;
-		while (currentToken < m_Tokens.size())
-			currentToken += ParseToken(currentToken);
+        const ShaderParserToken& token = m_Tokens[m_Index];
 
-		float i = 0;
-	}
+        switch (token.Type)
+        {
+            case TokenType::Identifier:
+            case TokenType::Keyword:
+            {
+                std::string key = token.Value;
+                m_Index = SkipNonSemanticTokens(m_Index + 1);
 
-	uint32_t ShaderParser::ParseToken(uint32_t index)
-	{
-		ShaderParserToken& token = m_Tokens[index];
-		switch (token.Type)
-		{
-			case TokenType::Keyword:
-				return ParseKeyword(index);
-			case TokenType::ScopeBegin:
-			{
-				GetCurrentScope()->Scopes[m_NextScopeName] = {};
-				m_ScopeStack.push_back(m_NextScopeName);
-				return 1;
-			}
-			case TokenType::ScopeEnd:
-				m_NextScopeName = "scope";
-				m_ScopeStack.pop_back();
-				return 1;
-			default:
-				break;
-		}
-		return 1;
-	}
+                // Check for a scope
+                if (m_Index < m_Tokens.size() && m_Tokens[m_Index].Type == TokenType::ScopeBegin)
+                {
+                    m_Index++; // consume '{'
+                    auto child = std::make_shared<ATLNode>();
+                    child->Name = key;
+                    if (key == "Include" || key == "Source")
+                    {
+                        std::ostringstream values;
+                        int scopeDepth = 1;
 
-	uint32_t ShaderParser::ParseKeyword(uint32_t index)
-	{
-		ShaderParserToken& key = m_Tokens[index];
-		ShaderParserToken& value = m_Tokens[index + 1];
+                        while (m_Index < m_Tokens.size() && scopeDepth > 0)
+                        {
+                            const auto& t = m_Tokens[m_Index];
 
-		if (m_KeywordValueTypes.find(key.Value) == m_KeywordValueTypes.end())
-			throw CompileException(key.Line, fmt::format("Unknow {}", key.Value));
+                            if (t.Type == TokenType::ScopeBegin)
+                                scopeDepth++;
+                            else if (t.Type == TokenType::ScopeEnd)
+                                scopeDepth--;
+                            else if (t.Type == TokenType::Comment)
+                            {
+                                m_Index++;
+                                continue;
+                            }
+                            else if(t.Type == TokenType::Keyword)
+                            {
+                                values << t.Value << " ";
+                                m_Index++;
+                                continue;
+                            }
 
-		auto keywordType = m_KeywordValueTypes[key.Value];
-		if (value.Type != keywordType)
-		{
-			if (keywordType == TokenType::Scope)
-			{
-				m_NextScopeName = key.Value;
-				return 1;
-			}
+                            if (scopeDepth > 0)
+                                values << t.Value;
 
-			if (keywordType == TokenType::Property)
-			{
-				uint32_t i = 0;
-				uint32_t scopeBegin = 0;
-				while (i < m_Tokens.size())
-				{
-					auto& token = m_Tokens[index + i];
-					i++;
-					if (token.Type == TokenType::ScopeBegin)
-					{
-						scopeBegin++;
-					}
-					else if (token.Type == TokenType::ScopeEnd)
-					{
-						scopeBegin--;
-						if (scopeBegin == 0)
-							break;
-					}
+                            m_Index++;
+                        }
 
-					if (scopeBegin > 0)
-						GetCurrentScope()->Values[key.Value] += token.Value;
-				}
-				return i + 1;
-			}
+                        child->Value = values.str(); // preserve entire block exactly
+                    }
+                    else
+                    {
+                        ParseScope(child); // normal nested scope
+                    }
+                    parent->Children[key] = child;
+                }
+                // Check for multi-token parenthesis value
+                // Check for multi-token parenthesis value
+                else if (m_Index < m_Tokens.size() && m_Tokens[m_Index].Value == "(")
+                {
+                    m_Index++; // consume '('
+                    std::ostringstream valueStream;
+                    int parenCount = 1;
 
-			throw CompileException(key.Line, fmt::format("Value for {} must be {}, instead it was {}", key.Value, TokenTypeToString(keywordType), TokenTypeToString(value.Type)));
-		}
-		GetCurrentScope()->Values[key.Value] = value.Value;
+                    while (m_Index < m_Tokens.size() && parenCount > 0)
+                    {
+                        const auto& t = m_Tokens[m_Index];
 
-		return 2;
-	}
+                        if (t.Value == "(")
+                            parenCount++;
+                        else if (t.Value == ")")
+                            parenCount--;
+                        else if (t.Type != TokenType::Whitespace && t.Type != TokenType::Comment)
+                            valueStream << t.Value << " ";  // preserve spacing
+
+                        m_Index++;
+                    }
+
+                    // Trim trailing space
+                    std::string value = valueStream.str();
+                    if (!value.empty() && value.back() == ' ')
+                        value.pop_back();
+
+                    auto child = std::make_shared<ATLNode>();
+                    child->Name = key;
+                    child->Value = value;
+                    parent->Children[key] = child;
+                }
+
+                // It's a single-value property
+                else if (m_Index < m_Tokens.size())
+                {
+                    auto child = std::make_shared<ATLNode>();
+                    child->Name = key;
+                    child->Value = m_Tokens[m_Index].Value;
+                    parent->Children[key] = child;
+                    m_Index++;
+                }
+                break;
+            }
+
+            case TokenType::ScopeEnd:
+                // Should never happen here; handled in ParseScope
+                m_Index++;
+                break;
+
+            default:
+                // Ignore whitespace, comments, etc.
+                m_Index++;
+                break;
+        }
+    }
+    void ShaderParser::ParseScope(std::shared_ptr<ATLNode> parent)
+    {
+        while (m_Index < m_Tokens.size())
+        {
+            const ShaderParserToken& token = m_Tokens[m_Index];
+
+            if (token.Type == TokenType::ScopeEnd)
+            {
+                m_Index++; // consume '}'
+                return;
+            }
+
+            ParseToken(parent);
+        }
+    }
+    uint32_t ShaderParser::SkipNonSemanticTokens(uint32_t index)
+    {
+        while (index < m_Tokens.size())
+        {
+            if (m_Tokens[index].Type == TokenType::Whitespace ||m_Tokens[index].Type == TokenType::Comment)
+                index++;
+            else
+                break;
+        }
+        return index;
+    }
 }

@@ -14,10 +14,10 @@ Shader "Debug/LineShader"
 
 	Properties 
 	{
-		u_Camera ("Camera", Buffer, 0, 0, 1)
-		u_RadianceMap ("RadianceMap", SamplerCube, 0, 1, 1)
-		u_IrradianceMap ("IrradianceMap", SamplerCube, 0, 2, 1)
-		u_BRDFLut ("BRDFLut", Sampler2D, 0, 3, 1)
+		u_Camera ("Camera", CameraBlock, 0, 0, 1)
+		u_RadianceMap ("RadianceMap", samplerCube, 0, 1, 1)
+		u_IrradianceMap ("IrradianceMap", samplerCube, 0, 2, 1)
+		u_BRDFLut ("BRDFLut", sampler2D, 0, 3, 1)
 	}
 
 	Vertex
@@ -50,6 +50,11 @@ Shader "Debug/LineShader"
 
 	Fragment
 	{
+		Include 
+		{
+			"../Uniforms/CameraUniform.glslh"
+		}
+
 		Source
 		{
 			struct VS_Out : FS_IN

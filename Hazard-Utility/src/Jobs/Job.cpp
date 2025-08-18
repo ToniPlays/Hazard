@@ -30,8 +30,6 @@ void Job::Execute(JobInfo info)
 	}
 	catch (JobException& e)
 	{
-		std::cout << e.what() << std::endl;
-
 		m_Status = JobStatus::Failure;
 		m_ExecutionTime = timer.ElapsedMillis();
 		m_Exception = e;
@@ -43,8 +41,6 @@ void Job::Execute(JobInfo info)
 	}
 	catch (std::exception& e)
 	{
-		std::cout << e.what() << std::endl;
-
 		m_Status = JobStatus::Failure;
 		m_ExecutionTime = timer.ElapsedMillis();
 

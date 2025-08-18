@@ -104,7 +104,7 @@ namespace Hazard
 				ShaderCompileResult result = {
 					.Asset = asset
 				};
-                
+
 				info.Result(result);
 
 				info.Graph->AddOnFinished([asset]() {
@@ -117,46 +117,30 @@ namespace Hazard
 
 			co_return;
 		}
-        
-        std::unordered_map<uint32_t, std::string> sources;
+
+		std::unordered_map<uint32_t, std::string> sources;
 
 		if (File::GetFileExtension(settings.SourcePath) == ".shader")
 		{
-			try {
-				auto tokenizer = Shading::ShaderTokenizer(settings.SourcePath);
-				tokenizer.Tokenize();
+			auto tokenizer = Shading::ShaderTokenizer(settings.SourcePath);
+			tokenizer.Tokenize();
 
-				auto& tokens = tokenizer.GetTokens();
+			auto& tokens = tokenizer.GetTokens();
 
-				auto parser = Shading::ShaderParser(tokens);
-				parser.Parse();
-				auto result = parser.GetRootScope();
-
-				result.Scopes["scope"].RequireValue<std::string>("Type", asset->m_Type);
-
-				asset->m_Spec.DebugName = result.Values["Shader"];
-				asset->m_Spec.Usage = PipelineUsage::GraphicsBit;
-				asset->m_Spec.MaxRayDepth = result.Scopes["scope"].GetValueOrDefault<uint32_t>("RayDepth", 1);
-				asset->m_Spec.Flags |= result.Scopes["scope"].GetValueOrDefault("DetphWrite", true) ? PIPELINE_DEPTH_WRITE : 0;
-
-				ShaderCompiler compiler(settings.SourcePath);
-
-				for (auto& [key, sourceBlock] : result.Scopes["scope"].Scopes)
-				{
-					uint32_t version;
-					result.Scopes["scope"].RequireValue<uint32_t>("Version", version);
-					sources[ShaderStageFlagsFromString(key)] = compiler.GenerateGLSLFromBlock(version, sourceBlock, result.Scopes["scope"]);
-
-					auto path = File::GetFileAbsolutePath(fmt::format("Library/debug/{0}_{1}.glsl", File::GetNameNoExt(settings.SourcePath), key));
-					File::WriteFile(path, sources[ShaderStageFlagsFromString(key)]);
-				}
-			}
-			catch (CompileException e)
+			auto parser = Shading::ShaderParser(tokens);
+			const auto& root = parser.Parse();
+		
+			ShaderCompiler compiler(settings.SourcePath);
+			std::string glsl = compiler.EmitGLSL(root);
+			sources = compiler.SplitSource(glsl);
+			
+			for (auto& [stage, source] : sources)
 			{
-				throw JobException(fmt::format("Compile exception at line {}: {}", e.get_line(), e.what()));
+				auto path = File::GetFileAbsolutePath(fmt::format("Library/debug/{0}_{1}.glsl", File::GetNameNoExt(settings.SourcePath), ShaderStageFlagsToString(stage)));
+				File::WriteFile(path, source);
 			}
 		}
-        
+
 		std::vector<Ref<Job>> loadingJobs;
 
 		for (uint32_t api = (uint32_t)RenderAPI::First; api <= (uint32_t)RenderAPI::Last; api++)
@@ -174,7 +158,7 @@ namespace Hazard
 		info.Result(sources);
 		info.ContinueWith(loadingJobs);
 		info.Current->Finish();
-		
+
 		co_return;
 	}
 

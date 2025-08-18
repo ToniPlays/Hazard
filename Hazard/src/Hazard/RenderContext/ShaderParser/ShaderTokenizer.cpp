@@ -140,7 +140,7 @@ namespace Hazard::Shading
 	uint64_t ShaderTokenizer::ParseIdentifier(const std::string& source)
 	{
 		uint64_t index = 0;
-		while (index < source.length() && !std::isspace(source[index]))
+		while (index < source.length() && !std::isspace(source[index]) && std::isalnum(source[index]))
 			index++;
 
 		m_Tokens.push_back({ TokenType::Identifier, source.substr(0, index), m_Line });

@@ -1,14 +1,14 @@
-layout(std140, set = 0, binding = 0) uniform Camera {
-	uniform mat4 ViewProjection;
-	uniform mat4 InverseViewProjection;
-	uniform mat4 Projection;
-	uniform mat4 InverseProjection;
-	uniform mat4 View;
-	uniform mat4 InverseView;
-	uniform vec2 NDCToViewMul;
-	uniform vec2 NDCToViewAdd;
-	uniform vec2 DepthUnpack;
-	uniform vec2 CameraTanHalfFOV;
-	uniform vec4 Position;
-	uniform vec4 Unused2;
-} u_Camera;
+struct CameraBlock {
+	mat4 ViewProjection;
+	mat4 InverseViewProjection;
+	mat4 Projection;
+	mat4 InverseProjection;
+	mat4 View;
+	mat4 InverseView;
+	vec2 NDCToViewMul;
+	vec2 NDCToViewAdd;
+	vec2 DepthUnpack;
+	vec2 CameraTanHalfFOV;
+	vec4 Position;
+	vec4 Unused2;
+};
