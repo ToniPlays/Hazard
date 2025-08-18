@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ImTextEdit.h>
+#include <ImTextEdit.cpp>
 
 
 namespace LanguageDefinitions

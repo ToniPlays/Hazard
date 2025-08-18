@@ -32,6 +32,7 @@ project "HazardLauncher"
 	References("Box2D")
 	References("ImGUI")
 	References("Coral")
+    References("FileWatch")
 	References("HazardUtility")
 	References("HazardRenderer")
 	References("HazardScript")

@@ -1,6 +1,5 @@
 #include "Sandbox.h"
 
-#include <Windows.h>
 
 void Sandbox::Reset()
 {

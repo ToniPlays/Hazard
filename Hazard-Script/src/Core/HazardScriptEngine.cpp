@@ -117,6 +117,7 @@ namespace HazardScript
 				std::cout << msg << std::endl;
 			}),
 		};
+        
         Coral::CoralInitStatus status = m_HostInstance.Initialize(settings);
 		HZR_ASSERT(status == Coral::CoralInitStatus::Success, "Failed to initialize Coral");
 	}

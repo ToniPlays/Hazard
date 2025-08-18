@@ -9,17 +9,21 @@ namespace UI
 {
 	Console::Console() : Panel("Console", false)
 	{
-		auto& window = Application::Get().GetModule<RenderContextManager>().GetWindow();
-		auto& scriptEngine = Application::Get().GetModule<ScriptEngine>();
+        auto& app = Application::Get();
+		auto& window = app.GetModule<RenderContextManager>().GetWindow();
+		
 
 		window.AddDebugCallback([this](const RenderMessage& message) {
 			uint32_t messageFlags = GetMessageFlagsFromSeverity(message.Severity);
 			AddMessage({ message.Description, message.StackTrace, messageFlags });
 		});
-
-		scriptEngine.AddDebugCallback([this](const HazardScript::ScriptMessage& message) {
-			AddMessage({ message.Message, message.StackTrace, GetMessageFlagsFromSeverity(message.Severity) });
-		});
+        
+        if(app.HasModule<ScriptEngine>()) {
+            auto& scriptEngine = app.GetModule<ScriptEngine>();
+            scriptEngine.AddDebugCallback([this](const HazardScript::ScriptMessage& message) {
+                AddMessage({ message.Message, message.StackTrace, GetMessageFlagsFromSeverity(message.Severity) });
+            });
+        }
 
 		JobSystem& system = Application::Get().GetJobSystem();
 		system.Hook(JobSystemHook::Message, [this](Severity severity, const std::string& message) {

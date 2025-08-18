@@ -73,7 +73,7 @@ void HazardEditorApplication::PreInit()
 		.AppInfo = &appInfo,
 		.RenderContextInfo = &renderContextInfo,
 		.RendererInfo = &rendererInfo,
-		.ScriptEngineInfo = &scriptEngine,
+		//.ScriptEngineInfo = &scriptEngine,
 		.EntityComponent = &entity,
 		.GuiInfo = &guiInfo,
 	};
@@ -93,8 +93,12 @@ void HazardEditorApplication::Init()
 	Editor::EditorWorldManager::Init();
 	EditorAssetManager::PostInit();
 
-	auto& scriptEngine = GetModule<ScriptEngine>();
-	scriptEngine.ReloadAssemblies();
+	
+    if(HasModule<ScriptEngine>())
+    {
+        auto& scriptEngine = GetModule<ScriptEngine>();
+        scriptEngine.ReloadAssemblies();
+    }
 
 	InitializeGUIPanels();
 }
